@@ -45,20 +45,20 @@ class ScoutCards
                                       )
                                       VALUES 
                                       (
-                                      ' . (($this->MatchId == null) ? 'NULL' : $database->quote($this->MatchId)) .',
-                                      ' . (($this->TeamId == null) ? 'NULL' : $database->quote($this->TeamId)) .',
-                                      ' . (($this->CompletedBy == null) ? 'NULL' : $database->quote($this->CompletedBy)) .',
-                                      ' . (($this->BlueAllianceFinalScore == null) ? 'NULL' : $database->quote($this->BlueAllianceFinalScore)) .',
-                                      ' . (($this->RedAllianceFinalScore == null) ? 'NULL' : $database->quote($this->RedAllianceFinalScore)) .',
-                                      ' . (($this->AutonomousExitHabitat == null) ? 'NULL' : $database->quote($this->AutonomousExitHabitat)) .',
-                                      ' . (($this->AutonomousHatchPanelsSecured == null) ? 'NULL' : $database->quote($this->AutonomousHatchPanelsSecured)) .',
-                                      ' . (($this->AutonomousCargoStored == null) ? 'NULL' : $database->quote($this->AutonomousCargoStored)) .',
-                                      ' . (($this->TeleopHatchPanelsSecured == null) ? 'NULL' : $database->quote($this->TeleopHatchPanelsSecured)) .',
-                                      ' . (($this->TeleopCargoStored == null) ? 'NULL' : $database->quote($this->TeleopCargoStored)) .',
-                                      ' . (($this->TeleopRocketsCompleted == null) ? 'NULL' : $database->quote($this->TeleopRocketsCompleted)) .',
-                                      ' . (($this->EndGameReturnedToHabitat == null) ? 'NULL' : $database->quote($this->EndGameReturnedToHabitat)) .',
-                                      ' . (($this->Notes == null) ? 'NULL' : $database->quote($this->Notes)) .',
-                                      ' . (($this->CompletedDate == null) ? 'NULL' : $database->quote($this->CompletedDate)) .'
+                                      ' . ((empty($this->MatchId)) ? 'NULL' : $database->quote($this->MatchId)) .',
+                                      ' . ((empty($this->TeamId)) ? 'NULL' : $database->quote($this->TeamId)) .',
+                                      ' . ((empty($this->CompletedBy)) ? 'NULL' : $database->quote($this->CompletedBy)) .',
+                                      ' . ((empty($this->BlueAllianceFinalScore)) ? 'NULL' : $database->quote($this->BlueAllianceFinalScore)) .',
+                                      ' . ((empty($this->RedAllianceFinalScore)) ? 'NULL' : $database->quote($this->RedAllianceFinalScore)) .',
+                                      ' . ((empty($this->AutonomousExitHabitat)) ? 'NULL' : $database->quote($this->AutonomousExitHabitat)) .',
+                                      ' . ((empty($this->AutonomousHatchPanelsSecured)) ? 'NULL' : $database->quote($this->AutonomousHatchPanelsSecured)) .',
+                                      ' . ((empty($this->AutonomousCargoStored)) ? 'NULL' : $database->quote($this->AutonomousCargoStored)) .',
+                                      ' . ((empty($this->TeleopHatchPanelsSecured)) ? 'NULL' : $database->quote($this->TeleopHatchPanelsSecured)) .',
+                                      ' . ((empty($this->TeleopCargoStored)) ? 'NULL' : $database->quote($this->TeleopCargoStored)) .',
+                                      ' . ((empty($this->TeleopRocketsCompleted)) ? 'NULL' : $database->quote($this->TeleopRocketsCompleted)) .',
+                                      ' . ((empty($this->EndGameReturnedToHabitat)) ? 'NULL' : $database->quote($this->EndGameReturnedToHabitat)) .',
+                                      ' . ((empty($this->Notes)) ? 'NULL' : $database->quote($this->Notes)) .',
+                                      ' . ((empty($this->CompletedDate)) ? 'NULL' : $database->quote($this->CompletedDate)) .'
                                       );';
 
             if($database->query($sql))
@@ -75,20 +75,20 @@ class ScoutCards
         else
         {
             $sql = "UPDATE " . ScoutCards::$TABLE_NAME . " SET 
-            MatchId = " . (($this->MatchId == null) ? "NULL" : $database->quote($this->MatchId)) .", 
-            TeamId = " . (($this->TeamId == null) ? "NULL" : $database->quote($this->TeamId)) .", 
-            CompletedBy = " . (($this->CompletedBy == null) ? "NULL" : $database->quote($this->CompletedBy)) .", 
-            BlueAllianceFinalScore = " . (($this->BlueAllianceFinalScore == null) ? "NULL" : $database->quote($this->BlueAllianceFinalScore)) .", 
-            RedAllianceFinalScore = " . (($this->RedAllianceFinalScore == null) ? "NULL" : $database->quote($this->RedAllianceFinalScore)) .", 
-            AutonomousExitHabitat = " . (($this->AutonomousExitHabitat == null) ? "NULL" : $database->quote($this->AutonomousExitHabitat)) .", 
-            AutonomousHatchPanelsSecured = " . (($this->AutonomousHatchPanelsSecured == null) ? "NULL" : $database->quote($this->AutonomousHatchPanelsSecured)) .", 
-            AutonomousCargoStored = " . (($this->AutonomousCargoStored == null) ? "NULL" : $database->quote($this->AutonomousCargoStored)) .", 
-            TeleopHatchPanelsSecured = " . (($this->TeleopHatchPanelsSecured == null) ? "NULL" : $database->quote($this->TeleopHatchPanelsSecured)) .", 
-            TeleopCargoStored = " . (($this->TeleopCargoStored == null) ? "NULL" : $database->quote($this->TeleopCargoStored)) .", 
-            TeleopRocketsCompleted = " . (($this->TeleopRocketsCompleted == null) ? "NULL" : $database->quote($this->TeleopRocketsCompleted)) .", 
-            EndGameReturnedToHabitat = " . (($this->EndGameReturnedToHabitat == null) ? "NULL" : $database->quote($this->EndGameReturnedToHabitat)) .", 
-            Notes = " . (($this->Notes == null) ? "NULL" : $database->quote($this->Notes)) .", 
-            CompletedDate = " . (($this->CompletedDate == null) ? "NULL" : $database->quote($this->CompletedDate)) ."
+            MatchId = " . ((empty($this->MatchId)) ? "NULL" : $database->quote($this->MatchId)) .", 
+            TeamId = " . ((empty($this->TeamId)) ? "NULL" : $database->quote($this->TeamId)) .", 
+            CompletedBy = " . ((empty($this->CompletedBy)) ? "NULL" : $database->quote($this->CompletedBy)) .", 
+            BlueAllianceFinalScore = " . ((empty($this->BlueAllianceFinalScore)) ? "NULL" : $database->quote($this->BlueAllianceFinalScore)) .", 
+            RedAllianceFinalScore = " . ((empty($this->RedAllianceFinalScore)) ? "NULL" : $database->quote($this->RedAllianceFinalScore)) .", 
+            AutonomousExitHabitat = " . ((empty($this->AutonomousExitHabitat)) ? "NULL" : $database->quote($this->AutonomousExitHabitat)) .", 
+            AutonomousHatchPanelsSecured = " . ((empty($this->AutonomousHatchPanelsSecured)) ? "NULL" : $database->quote($this->AutonomousHatchPanelsSecured)) .", 
+            AutonomousCargoStored = " . ((empty($this->AutonomousCargoStored)) ? "NULL" : $database->quote($this->AutonomousCargoStored)) .", 
+            TeleopHatchPanelsSecured = " . ((empty($this->TeleopHatchPanelsSecured)) ? "NULL" : $database->quote($this->TeleopHatchPanelsSecured)) .", 
+            TeleopCargoStored = " . ((empty($this->TeleopCargoStored)) ? "NULL" : $database->quote($this->TeleopCargoStored)) .", 
+            TeleopRocketsCompleted = " . ((empty($this->TeleopRocketsCompleted)) ? "NULL" : $database->quote($this->TeleopRocketsCompleted)) .", 
+            EndGameReturnedToHabitat = " . ((empty($this->EndGameReturnedToHabitat)) ? "NULL" : $database->quote($this->EndGameReturnedToHabitat)) .", 
+            Notes = " . ((empty($this->Notes)) ? "NULL" : $database->quote($this->Notes)) .", 
+            CompletedDate = " . ((empty($this->CompletedDate)) ? "NULL" : $database->quote($this->CompletedDate)) ."
             WHERE (Id = " . $database->quote($this->Id) . ");";
 
             if($database->query($sql))
@@ -100,8 +100,6 @@ class ScoutCards
             $database->close();
             return false;
         }
-
-
     }
 
 
