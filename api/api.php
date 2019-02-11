@@ -1,6 +1,7 @@
 <?php
 require_once('../config.php');
 require_once('../classes/ScoutCards.php');
+require_once('../classes/Teams.php');
 
 if($_POST['key'] != API_KEY)
 {
@@ -41,6 +42,16 @@ switch($action)
             $response['Status'] = 'Error';
             $response['Response'] = 'Failed to save scout card.';
         }
+
+        echo json_encode($response);
+
+        break;
+
+    case 'GetTeamsForEvent':
+        $response = array();
+
+        $response['Status'] = 'Success';
+        $response['Response'] = Teams::getTeamsForEvent(filter_var($_POST['EventId'], FILTER_SANITIZE_STRING));
 
         echo json_encode($response);
 

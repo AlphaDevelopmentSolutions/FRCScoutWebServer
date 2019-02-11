@@ -60,6 +60,38 @@ class Teams
         return false;
     }
 
+    public static function getTeamsForEvent($eventId)
+    {
+        $database = new Database();
+        $teams = $database->query(
+            "SELECT 
+                      * 
+                    FROM 
+                      teams 
+                    WHERE 
+                      id IN 
+                      (
+                        SELECT 
+                          TeamId 
+                        FROM 
+                          event_team_list 
+                        WHERE EventId = " . $database->quote($eventId) . ")"
+        );
+        $database->close();
+
+        $response = array();
+
+        if($teams && $teams->num_rows > 0)
+        {
+            while ($row = $teams->fetch_assoc())
+            {
+                $response[] = $row;
+            }
+        }
+
+        return $response;
+    }
+
 }
 
 ?>
