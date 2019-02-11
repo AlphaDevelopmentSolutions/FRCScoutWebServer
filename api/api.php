@@ -2,7 +2,10 @@
 require_once('../config.php');
 require_once('../classes/ScoutCards.php');
 
-validateKey();
+if($_POST['key'] != API_KEY)
+{
+    die('Invalid key.');
+}
 
 $action = $_POST['action'];
 
@@ -12,6 +15,7 @@ switch($action)
         $response = array();
         $scoutCard = new ScoutCards();
 
+        $scoutCard->Id = filter_var($_POST['Id'], FILTER_SANITIZE_NUMBER_INT);
         $scoutCard->MatchId = filter_var($_POST['MatchId'], FILTER_SANITIZE_NUMBER_INT);
         $scoutCard->TeamId = filter_var($_POST['TeamId'], FILTER_SANITIZE_NUMBER_INT);
         $scoutCard->CompletedBy = filter_var($_POST['CompletedBy'], FILTER_SANITIZE_STRING);
@@ -42,11 +46,6 @@ switch($action)
 
         break;
 }
-
-
-
-
-
 
 
 ?>
