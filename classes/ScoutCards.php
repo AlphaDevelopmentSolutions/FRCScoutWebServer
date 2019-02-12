@@ -5,6 +5,7 @@ class ScoutCards
     public $Id;
     public $MatchId;
     public $TeamId;
+    public $EventId;
     public $CompletedBy;
     public $BlueAllianceFinalScore;
     public $RedAllianceFinalScore;
@@ -30,6 +31,7 @@ class ScoutCards
                                       (
                                       MatchId,
                                       TeamId,
+                                      EventId,
                                       CompletedBy,
                                       BlueAllianceFinalScore,
                                       RedAllianceFinalScore,
@@ -47,15 +49,16 @@ class ScoutCards
                                       (
                                       ' . ((empty($this->MatchId)) ? 'NULL' : $database->quote($this->MatchId)) .',
                                       ' . ((empty($this->TeamId)) ? 'NULL' : $database->quote($this->TeamId)) .',
+                                      ' . ((empty($this->EventId)) ? 'NULL' : $database->quote($this->EventId)) .',
                                       ' . ((empty($this->CompletedBy)) ? 'NULL' : $database->quote($this->CompletedBy)) .',
-                                      ' . ((empty($this->BlueAllianceFinalScore)) ? 'NULL' : $database->quote($this->BlueAllianceFinalScore)) .',
-                                      ' . ((empty($this->RedAllianceFinalScore)) ? 'NULL' : $database->quote($this->RedAllianceFinalScore)) .',
-                                      ' . ((empty($this->AutonomousExitHabitat)) ? 'NULL' : $database->quote($this->AutonomousExitHabitat)) .',
-                                      ' . ((empty($this->AutonomousHatchPanelsSecured)) ? 'NULL' : $database->quote($this->AutonomousHatchPanelsSecured)) .',
-                                      ' . ((empty($this->AutonomousCargoStored)) ? 'NULL' : $database->quote($this->AutonomousCargoStored)) .',
-                                      ' . ((empty($this->TeleopHatchPanelsSecured)) ? 'NULL' : $database->quote($this->TeleopHatchPanelsSecured)) .',
-                                      ' . ((empty($this->TeleopCargoStored)) ? 'NULL' : $database->quote($this->TeleopCargoStored)) .',
-                                      ' . ((empty($this->TeleopRocketsCompleted)) ? 'NULL' : $database->quote($this->TeleopRocketsCompleted)) .',
+                                      ' . ((empty($this->BlueAllianceFinalScore)) ? '0' : $database->quote($this->BlueAllianceFinalScore)) .',
+                                      ' . ((empty($this->RedAllianceFinalScore)) ? '0' : $database->quote($this->RedAllianceFinalScore)) .',
+                                      ' . ((empty($this->AutonomousExitHabitat)) ? '0' : $database->quote($this->AutonomousExitHabitat)) .',
+                                      ' . ((empty($this->AutonomousHatchPanelsSecured)) ? '0' : $database->quote($this->AutonomousHatchPanelsSecured)) .',
+                                      ' . ((empty($this->AutonomousCargoStored)) ? '0' : $database->quote($this->AutonomousCargoStored)) .',
+                                      ' . ((empty($this->TeleopHatchPanelsSecured)) ? '0' : $database->quote($this->TeleopHatchPanelsSecured)) .',
+                                      ' . ((empty($this->TeleopCargoStored)) ? '0' : $database->quote($this->TeleopCargoStored)) .',
+                                      ' . ((empty($this->TeleopRocketsCompleted)) ? '0' : $database->quote($this->TeleopRocketsCompleted)) .',
                                       ' . ((empty($this->EndGameReturnedToHabitat)) ? 'NULL' : $database->quote($this->EndGameReturnedToHabitat)) .',
                                       ' . ((empty($this->Notes)) ? 'NULL' : $database->quote($this->Notes)) .',
                                       ' . ((empty($this->CompletedDate)) ? 'NULL' : $database->quote($this->CompletedDate)) .'
@@ -77,6 +80,7 @@ class ScoutCards
             $sql = "UPDATE " . ScoutCards::$TABLE_NAME . " SET 
             MatchId = " . ((empty($this->MatchId)) ? "NULL" : $database->quote($this->MatchId)) .", 
             TeamId = " . ((empty($this->TeamId)) ? "NULL" : $database->quote($this->TeamId)) .", 
+            EventId = " . ((empty($this->EventId)) ? "NULL" : $database->quote($this->EventId)) .", 
             CompletedBy = " . ((empty($this->CompletedBy)) ? "NULL" : $database->quote($this->CompletedBy)) .", 
             BlueAllianceFinalScore = " . ((empty($this->BlueAllianceFinalScore)) ? "NULL" : $database->quote($this->BlueAllianceFinalScore)) .", 
             RedAllianceFinalScore = " . ((empty($this->RedAllianceFinalScore)) ? "NULL" : $database->quote($this->RedAllianceFinalScore)) .", 
