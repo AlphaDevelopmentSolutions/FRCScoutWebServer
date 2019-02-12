@@ -3,6 +3,7 @@ require_once('../config.php');
 require_once('../classes/ScoutCards.php');
 require_once('../classes/Teams.php');
 require_once('../classes/Users.php');
+require_once('../classes/Events.php');
 
 if($_POST['key'] != API_KEY)
 {
@@ -63,6 +64,16 @@ switch($action)
 
         $response['Status'] = 'Success';
         $response['Response'] = Users::getUsers();
+
+        echo json_encode($response);
+
+        break;
+
+    case 'GetEvents':
+        $response = array();
+
+        $response['Status'] = 'Success';
+        $response['Response'] = Events::getEvents();
 
         echo json_encode($response);
 
