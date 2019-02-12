@@ -60,7 +60,7 @@ class Teams
         return false;
     }
 
-    public static function getTeamsForEvent($eventId)
+    public static function getTeamsAtEvent($eventId)
     {
         $database = new Database();
         $teams = $database->query(

@@ -2,6 +2,7 @@
 require_once('../config.php');
 require_once('../classes/ScoutCards.php');
 require_once('../classes/Teams.php');
+require_once('../classes/Users.php');
 
 if($_POST['key'] != API_KEY)
 {
@@ -47,11 +48,21 @@ switch($action)
 
         break;
 
-    case 'GetTeamsForEvent':
+    case 'GetTeamsAtEvent':
         $response = array();
 
         $response['Status'] = 'Success';
-        $response['Response'] = Teams::getTeamsForEvent(filter_var($_POST['EventId'], FILTER_SANITIZE_STRING));
+        $response['Response'] = Teams::getTeamsAtEvent(filter_var($_POST['EventId'], FILTER_SANITIZE_STRING));
+
+        echo json_encode($response);
+
+        break;
+
+    case 'GetUsers':
+        $response = array();
+
+        $response['Status'] = 'Success';
+        $response['Response'] = Users::getUsers();
 
         echo json_encode($response);
 
