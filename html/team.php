@@ -148,7 +148,7 @@ $team->load($teamId);
                         Red Alliance Score - ' . $scoutCard['RedAllianceFinalScore'] .
                       '</div>
                       <div class="mdl-card__actions">
-                        <a href="/scout-card.php?ScoutCardId=' . $scoutCard['Id']  .'" class="mdl-button">View</a>
+                        <a href="/scout-card.php?scoutCardId=' . $scoutCard['Id']  .'" class="mdl-button">View</a>
                       </div>
                     </div>
                   </section>

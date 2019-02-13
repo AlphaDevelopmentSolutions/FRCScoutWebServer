@@ -55,7 +55,8 @@ html, body {
 }
 .mdl-demo main > .mdl-layout__tab-panel {
   padding: 8px;
-  padding-top: 48px;
+  padding-top: 22px;
+  padding-bottom: 22px;
 }
 .mdl-demo .mdl-card {
   height: auto;
@@ -71,6 +72,8 @@ html, body {
 }
 .mdl-demo .mdl-card .mdl-card__supporting-text {
   margin: 40px;
+  margin-top: 10px;
+  margin-bottom: 10px;
   -webkit-flex-grow: 1;
       -ms-flex-positive: 1;
           flex-grow: 1;
