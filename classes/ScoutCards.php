@@ -106,6 +106,32 @@ class ScoutCards
         }
     }
 
+    public static function getScoutCardsForTeam($teamId)
+    {
+        $database = new Database();
+        $scoutCards = $database->query(
+            "SELECT 
+                      * 
+                    FROM 
+                      scout_cards 
+                    WHERE 
+                      TeamId = " . $database->quote($teamId)
+        );
+        $database->close();
+
+        $response = array();
+
+        if($scoutCards && $scoutCards->num_rows > 0)
+        {
+            while ($row = $scoutCards->fetch_assoc())
+            {
+                $response[] = $row;
+            }
+        }
+
+        return $response;
+    }
+
 
 }
 

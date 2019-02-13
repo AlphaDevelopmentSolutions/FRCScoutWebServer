@@ -13,6 +13,29 @@ class Events
 
     private static $TABLE_NAME = 'events';
 
+    function load($id)
+    {
+        $database = new Database();
+        $sql = 'SELECT * FROM '.$this::$TABLE_NAME.' WHERE '.'BlueAllianceId = '.$database->quote($id);
+        $rs = $database->query($sql);
+
+        if($rs && $rs->num_rows > 0) {
+            $row = $rs->fetch_assoc();
+
+            if(is_array($row)) {
+                foreach($row as $key => $value){
+                    if(property_exists($this, $key)){
+                        $this->$key = $value;
+                    }
+                }
+            }
+
+            return true;
+        }
+
+        return false;
+    }
+
     function save()
     {
         $database = new Database();
