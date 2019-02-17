@@ -135,8 +135,8 @@ $event->load($eventId);
           <a href="" class="mdl-layout__tab is-active">Team <?php echo $teamId; ?></a>
         </div>
           <div class="mdl-layout__tab-bar mdl-js-ripple-effect mdl-color--primary-dark">
-              <a href="/stats.php?eventId=<?php echo $event->BlueAllianceId; ?>" class="mdl-layout__tab ">Stats</a>
-              <a href="/match-overview.php?eventId=<?php echo $event->BlueAllianceId; ?>" class="mdl-layout__tab">Match Overview</a>
+              <a href="/team-matches.php?eventId=<?php echo $event->BlueAllianceId; ?>&teamId=<?php echo $team->Id; ?>" class="mdl-layout__tab is-active">Matches</a>
+              <a href="/team-pits.php?eventId=<?php echo $event->BlueAllianceId; ?>&teamId=<?php echo $team->Id; ?>" class="mdl-layout__tab">Pits</a>
           </div>
       </header>
       <main class="mdl-layout__content">

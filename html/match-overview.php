@@ -113,7 +113,7 @@ $event->load($eventId);
                         </div>
                 </div>
                       <div class="mdl-card__actions">
-                        <a href="/team.php?eventId=' . $eventId . '&teamId=' . $team['Id'] . '" class="mdl-button">View</a>
+                        <a href="/team-matches.php?eventId=' . $eventId . '&teamId=' . $team['Id'] . '" class="mdl-button">View</a>
                       </div>
                     </div>
                   </section>

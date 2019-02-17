@@ -1,15 +1,32 @@
 <?php
 require_once("config.php");
-require_once("classes/ScoutCards.php");
+require_once("classes/PitCards.php");
 require_once("classes/Events.php");
 
-$scoutCardId = $_GET['scoutCardId'];
+$pitCardId = $_GET['pitCardId'];
 
-$scoutCard = new ScoutCards();
-$scoutCard->load($scoutCardId);
+$pitCard = new PitCards();
+$pitCard->load($pitCardId);
 
 $event = new Events();
-$event->load($scoutCard->EventId);
+$event->load($pitCard->EventId);
+
+$url = "http://scouting.wiredcats5885.ca/ajax/GetOPRStats.php";
+
+$ch = curl_init();
+
+curl_setopt($ch, CURLOPT_URL, $url);
+curl_setopt($ch, CURLOPT_POST, 1);
+curl_setopt($ch, CURLOPT_POSTFIELDS,
+//    "eventCode=" . $event->BlueAllianceId);
+    "eventCode=2018onwin");
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+$response = curl_exec($ch);
+$stats = json_decode($response, true);
+
+$opr = $stats['oprs']['frc' . $pitCard->TeamId];
+$dpr = $stats['dprs']['frc' . $pitCard->TeamId];
+$ccwms = $stats['ccwms']['frc' . $pitCard->TeamId];
 
 ?>
 
@@ -20,7 +37,7 @@ $event->load($scoutCard->EventId);
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="description" content="A front-end template that helps you build fast, modern mobile web apps.">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
-    <title>Match <?php echo $scoutCard->MatchId ?></title>
+    <title>Pit Card <?php echo $pitCard->Id ?></title>
 
     <!-- Add to homescreen for Chrome on Android -->
     <meta name="mobile-web-app-capable" content="yes">
@@ -62,15 +79,15 @@ $event->load($scoutCard->EventId);
         <div class="mdl-layout--large-screen-only mdl-layout__header-row">
         </div>
         <div class="mdl-layout--large-screen-only mdl-layout__header-row">
-          <h3>Match <?php echo $scoutCard->MatchId ?></h3>
+          <h3>Pit Card <?php echo $pitCard->Id ?></h3>
         </div>
         <div class="mdl-layout--large-screen-only mdl-layout__header-row">
         </div>
         <div class="mdl-layout__tab-bar mdl-js-ripple-effect mdl-color--primary-dark">
           <a href="/" class="mdl-layout__tab">Events</a>
-          <a href="/teams.php?eventId=<?php echo $scoutCard->EventId; ?>" class="mdl-layout__tab ">Teams</a>
-          <a href="/team-matches.php?teamId=<?php echo $scoutCard->TeamId?>&eventId=<?php echo $scoutCard->EventId;?>" class="mdl-layout__tab">Team <?php echo $scoutCard->TeamId; ?></a>
-          <a href="" class="mdl-layout__tab is-active">Match <?php echo $scoutCard->MatchId; ?></a>
+          <a href="/teams.php?eventId=<?php echo $pitCard->EventId; ?>" class="mdl-layout__tab ">Teams</a>
+          <a href="/team-pits.php?teamId=<?php echo $pitCard->TeamId?>&eventId=<?php echo $pitCard->EventId;?>" class="mdl-layout__tab">Team <?php echo $pitCard->TeamId; ?></a>
+          <a href="" class="mdl-layout__tab is-active">Pit Card <?php echo $pitCard->Id; ?></a>
         </div>
       </header>
       <main class="mdl-layout__content">
@@ -81,77 +98,57 @@ $event->load($scoutCard->EventId);
                       <strong style="padding-left: 40px; padding-top: 10px;">Pre Game</strong>
                       <div class="mdl-card__supporting-text">
                           <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                              <input class="mdl-textfield__input" type="text" value="<?php echo $scoutCard->TeamId ?>" >
+                              <input class="mdl-textfield__input" type="text" value="<?php echo $pitCard->TeamId ?>" >
                               <label class="mdl-textfield__label" >Team Id</label>
                           </div>
 
                           <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                              <input class="mdl-textfield__input" type="text" value="<?php echo $scoutCard->CompletedBy ?>" >
+                              <input class="mdl-textfield__input" type="text" value="<?php echo $pitCard->CompletedBy ?>" >
                               <label class="mdl-textfield__label" >Scouter</label>
                           </div>
+
                           <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                              <input class="mdl-textfield__input" type="text" value="<?php echo $scoutCard->MatchId ?>" >
-                              <label class="mdl-textfield__label" >Match Number</label>
-                          </div>
-                          <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                              <input class="mdl-textfield__input" type="text" value="<?php echo $scoutCard->BlueAllianceFinalScore ?>" >
-                              <label class="mdl-textfield__label" >Blue Alliance Score</label>
+                              <input class="mdl-textfield__input" type="text" value="<?php echo $pitCard->DriveStyle ?>" >
+                              <label class="mdl-textfield__label" >Drive Style?</label>
                           </div>
 
                           <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                              <input class="mdl-textfield__input" type="text" value="<?php echo $scoutCard->RedAllianceFinalScore ?>" >
-                              <label class="mdl-textfield__label" >Red Alliance Score</label>
-                          </div>
-                      </div>
-
-                      <strong style="padding-left: 40px; padding-top: 10px;">Autonomous</strong>
-                      <div class="mdl-card__supporting-text">
-                          <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                              <input class="mdl-textfield__input" type="text" value="<?php echo (($scoutCard->AutonomousExitHabitat == 1) ? 'Yes' : 'No') ?>" >
-                              <label class="mdl-textfield__label" >Exit Habitat</label>
+                              <input class="mdl-textfield__input" type="text" value="<?php echo $pitCard->Hatch ?>" >
+                              <label class="mdl-textfield__label" >Hatch?</label>
                           </div>
 
                           <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                              <input class="mdl-textfield__input" type="text" value="<?php echo $scoutCard->AutonomousHatchPanelsSecured ?>" >
-                              <label class="mdl-textfield__label" >Hatch Panels Secured</label>
+                              <input class="mdl-textfield__input" type="text" value="<?php echo $pitCard->Cargo ?>" >
+                              <label class="mdl-textfield__label" >Cargo?</label>
                           </div>
 
                           <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                              <input class="mdl-textfield__input" type="text" value="<?php echo $scoutCard->AutonomousCargoStored ?>" >
-                              <label class="mdl-textfield__label" >Cargo Stored</label>
-                          </div>
-                      </div>
-
-                      <strong style="padding-left: 40px; padding-top: 10px;">Teleop</strong>
-                      <div class="mdl-card__supporting-text">
-                          <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                              <input class="mdl-textfield__input" type="text" value="<?php echo $scoutCard->TeleopHatchPanelsSecured ?>" >
-                              <label class="mdl-textfield__label" >Hatch Panels Secured</label>
+                              <input class="mdl-textfield__input" type="text" value="<?php echo $pitCard->Climb ?>" >
+                              <label class="mdl-textfield__label" >Climb?</label>
                           </div>
 
                           <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                              <input class="mdl-textfield__input" type="text" value="<?php echo $scoutCard->TeleopCargoStored ?>" >
-                              <label class="mdl-textfield__label" >Cargo Stored</label>
-                          </div>
-
-                          <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                              <input class="mdl-textfield__input" type="text" value="<?php echo $scoutCard->TeleopRocketsCompleted ?>" >
-                              <label class="mdl-textfield__label" >Rockets Completed</label>
-                          </div>
-                      </div>
-
-                      <strong style="padding-left: 40px; padding-top: 10px;">End Game</strong>
-                      <div class="mdl-card__supporting-text">
-                          <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                              <input class="mdl-textfield__input" type="text" value="<?php echo $scoutCard->EndGameReturnedToHabitat ?>" >
-                              <label class="mdl-textfield__label" >Returned To Habitat</label>
-                          </div>
-
-                          <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                              <input class="mdl-textfield__input" type="text" value="<?php echo $scoutCard->Notes ?>" >
+                              <input class="mdl-textfield__input" type="text" value="<?php echo $pitCard->Notes ?>" >
                               <label class="mdl-textfield__label" >Notes</label>
                           </div>
+
+                          <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                              <input class="mdl-textfield__input" type="text" value="<?php echo $opr ?>" >
+                              <label class="mdl-textfield__label" >Blue Alliance OPR</label>
+                          </div>
+
+                          <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                              <input class="mdl-textfield__input" type="text" value="<?php echo $dpr ?>" >
+                              <label class="mdl-textfield__label" >Blue Alliance DPR</label>
+                          </div>
+
+                          <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                              <input class="mdl-textfield__input" type="text" value="<?php echo $ccwms ?>" >
+                              <label class="mdl-textfield__label" >Blue Alliance CCWMS</label>
+                          </div>
+
                       </div>
+                  </div>
 
               </section>
           </div>
