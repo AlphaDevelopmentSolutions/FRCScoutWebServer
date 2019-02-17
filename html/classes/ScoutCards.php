@@ -129,7 +129,7 @@ class ScoutCards
         }
     }
 
-    public static function getScoutCardsForTeam($teamId)
+    public static function getScoutCardsForTeam($teamId, $eventId)
     {
         $database = new Database();
         $scoutCards = $database->query(
@@ -138,7 +138,9 @@ class ScoutCards
                     FROM 
                       scout_cards 
                     WHERE 
-                      TeamId = " . $database->quote($teamId)
+                      TeamId = " . $database->quote($teamId) .
+                    'AND
+                        EventId = ' . $database->quote($eventId)
         );
         $database->close();
 

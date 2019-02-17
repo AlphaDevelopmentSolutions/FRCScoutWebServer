@@ -1,6 +1,6 @@
 <?php
-include_once("../config.php");
-include_once("../classes/ScoutCards.php");
+require_once("config.php");
+require_once("classes/ScoutCards.php");
 
 $scoutCardId = $_GET['scoutCardId'];
 
@@ -65,7 +65,7 @@ $scoutCard->load($scoutCardId);
         <div class="mdl-layout__tab-bar mdl-js-ripple-effect mdl-color--primary-dark">
           <a href="/" class="mdl-layout__tab">Events</a>
           <a href="/teams.php?eventId=<?php echo $scoutCard->EventId; ?>" class="mdl-layout__tab ">Teams</a>
-          <a href="/team.php?teamId=<?php echo $scoutCard->TeamId?>" class="mdl-layout__tab">Team <?php echo $scoutCard->TeamId; ?></a>
+          <a href="/team.php?teamId=<?php echo $scoutCard->TeamId?>&eventId=<?php echo $scoutCard->EventId;?>" class="mdl-layout__tab">Team <?php echo $scoutCard->TeamId; ?></a>
           <a href="" class="mdl-layout__tab is-active">Match <?php echo $scoutCard->MatchId; ?></a>
         </div>
       </header>
@@ -103,7 +103,7 @@ $scoutCard->load($scoutCardId);
                       <strong style="padding-left: 40px; padding-top: 10px;">Autonomous</strong>
                       <div class="mdl-card__supporting-text">
                           <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                              <input class="mdl-textfield__input" type="text" value="<?php echo $scoutCard->AutonomousExitHabitat ?>" >
+                              <input class="mdl-textfield__input" type="text" value="<?php echo (($scoutCard->AutonomousExitHabitat == 1) ? 'Yes' : 'No') ?>" >
                               <label class="mdl-textfield__label" >Exit Habitat</label>
                           </div>
 

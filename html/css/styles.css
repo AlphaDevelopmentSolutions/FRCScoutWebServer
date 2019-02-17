@@ -244,3 +244,8 @@ html, body {
   color: white;
   padding-right: 1em;
 }
+
+#stats_table_wrapper
+{
+  padding: 1em 5em 0 5em;
+}

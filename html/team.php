@@ -1,7 +1,7 @@
 <?php
-include_once("../config.php");
-include_once("../classes/Teams.php");
-include_once("../classes/ScoutCards.php");
+require_once("config.php");
+require_once("classes/Teams.php");
+require_once("classes/ScoutCards.php");
 
 $eventId = $_GET['eventId'];
 $teamId = $_GET['teamId'];
@@ -135,7 +135,7 @@ $team->load($teamId);
 
           <?php
 
-          foreach(ScoutCards::getScoutCardsForTeam($teamId) as $scoutCard)
+          foreach(ScoutCards::getScoutCardsForTeam($teamId, $eventId) as $scoutCard)
           {
             echo
             '

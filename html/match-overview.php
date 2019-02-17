@@ -66,11 +66,11 @@ $event->load($eventId);
         </div>
         <div class="mdl-layout__tab-bar mdl-js-ripple-effect mdl-color--primary-dark">
             <a href="/" class="mdl-layout__tab">Events</a>
-            <a href="" class="mdl-layout__tab is-active">Teams</a>
+            <a href="" class="mdl-layout__tab">Teams</a>
         </div>
         <div class="mdl-layout__tab-bar mdl-js-ripple-effect mdl-color--primary-dark">
             <a href="/stats.php?eventId=<?php echo $event->BlueAllianceId; ?>" class="mdl-layout__tab ">Stats</a>
-            <a href="/match-overview.php?eventId=<?php echo $event->BlueAllianceId; ?>" class="mdl-layout__tab ">Match Overview</a>
+            <a href="/match-overview.php?eventId=<?php echo $event->BlueAllianceId; ?>" class="mdl-layout__tab is-active">Match Overview</a>
         </div>
     </header>
     <main class="mdl-layout__content">

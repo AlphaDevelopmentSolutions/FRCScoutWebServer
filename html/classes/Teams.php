@@ -87,17 +87,17 @@ class Teams
     {
         $database = new Database();
         $teams = $database->query(
-            "SELECT 
-                      * 
-                    FROM 
-                      teams 
-                    WHERE 
-                      id IN 
+            "SELECT
+                      *
+                    FROM
+                      teams
+                    WHERE
+                      id IN
                       (
-                        SELECT 
-                          TeamId 
-                        FROM 
-                          event_team_list 
+                        SELECT
+                          TeamId
+                        FROM
+                          event_team_list
                         WHERE EventId = " . $database->quote($eventId) . ")"
         );
         $database->close();
@@ -113,6 +113,7 @@ class Teams
         }
 
         return $response;
+
     }
 
 }
