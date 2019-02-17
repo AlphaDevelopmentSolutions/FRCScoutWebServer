@@ -37,21 +37,37 @@ switch($_POST['action'])
             //calc AVG
             foreach (ScoutCards::getScoutCardsForTeam($team['Id'], $eventId) as $scoutCard)
             {
+
+
+
                 $autoExitHabitat += $scoutCard['AutonomousExitHabitat'];
                 $autoHatchPanels += $scoutCard['AutonomousHatchPanelsSecured'];
                 $autoCargoStored += $scoutCard['AutonomousCargoStored'];
                 $teleopHatchPanels += $scoutCard['TeleopHatchPanelsSecured'];
                 $teleopCargoStored += $scoutCard['TeleopCargoStored'];
                 $teleopRocketsComplete += $scoutCard['TeleopRocketsComplete'];
-                $endGameReturnedToHabitat += $scoutCard['EndGameReturnedToHabitat'];
+                if($scoutCard['EndGameReturnedToHabitat'] == "No")
+                    $endGameReturnedToHabitat += 0;
+
+                else
+                    $endGameReturnedToHabitat += substr($scoutCard['EndGameReturnedToHabitat'], strpos($scoutCard['EndGameReturnedToHabitat'], " "));
 
                 $autoExitHabitatMax = (($scoutCard['AutonomousExitHabitat'] > $autoExitHabitatMax) ? $scoutCard['AutonomousExitHabitat'] : $autoExitHabitatMax);
-                $autoHatchPanelsMax = (($scoutCard['AutonomousHatchPanelsSecured'] > $autoExitHabitatMax) ? $scoutCard['AutonomousHatchPanelsSecured'] : $autoExitHabitatMax);;
-                $autoCargoStoredMax = (($scoutCard['AutonomousCargoStored'] > $autoExitHabitatMax) ? $scoutCard['AutonomousCargoStored'] : $autoExitHabitatMax);;
-                $teleopHatchPanelsMax = (($scoutCard['TeleopHatchPanelsSecured'] > $autoExitHabitatMax) ? $scoutCard['TeleopHatchPanelsSecured'] : $autoExitHabitatMax);;
-                $teleopCargoStoredMax = (($scoutCard['TeleopCargoStored'] > $autoExitHabitatMax) ? $scoutCard['TeleopCargoStored'] : $autoExitHabitatMax);;
-                $teleopRocketsCompleteMax = (($scoutCard['TeleopRocketsComplete'] > $autoExitHabitatMax) ? $scoutCard['TeleopRocketsComplete'] : $autoExitHabitatMax);;
-                $endGameReturnedToHabitatMax = (($scoutCard['EndGameReturnedToHabitat'] > $autoExitHabitatMax) ? $scoutCard['EndGameReturnedToHabitat'] : $autoExitHabitatMax);;
+                $autoHatchPanelsMax = (($scoutCard['AutonomousHatchPanelsSecured'] > $autoHatchPanelsMax) ? $scoutCard['AutonomousHatchPanelsSecured'] : $autoHatchPanelsMax);
+                $autoCargoStoredMax = (($scoutCard['AutonomousCargoStored'] > $autoCargoStoredMax) ? $scoutCard['AutonomousCargoStored'] : $autoCargoStoredMax);
+                $teleopHatchPanelsMax = (($scoutCard['TeleopHatchPanelsSecured'] > $teleopHatchPanelsMax) ? $scoutCard['TeleopHatchPanelsSecured'] : $teleopHatchPanelsMax);
+                $teleopCargoStoredMax = (($scoutCard['TeleopCargoStored'] > $teleopCargoStoredMax) ? $scoutCard['TeleopCargoStored'] : $teleopCargoStoredMax);
+                $teleopRocketsCompleteMax = (($scoutCard['TeleopRocketsComplete'] > $teleopRocketsCompleteMax) ? $scoutCard['TeleopRocketsComplete'] : $teleopRocketsCompleteMax);
+
+
+
+                if($scoutCard['EndGameReturnedToHabitat'] == "No")
+                    $endGameReturnedToHabitatMax = (0 > $endGameReturnedToHabitatMax) ? 0 : $endGameReturnedToHabitatMax;
+
+                else
+                    $endGameReturnedToHabitatMax = ((substr($scoutCard['EndGameReturnedToHabitat'], strpos($scoutCard['EndGameReturnedToHabitat'], " ")) > $endGameReturnedToHabitatMax) ? substr($scoutCard['EndGameReturnedToHabitat'], strpos($scoutCard['EndGameReturnedToHabitat'], " ")) : $endGameReturnedToHabitatMax);
+
+
 
                 $i++;
 
@@ -67,7 +83,7 @@ switch($_POST['action'])
             $data[] = $teleopHatchPanels / $scoutCardCount;
             $data[] = $teleopCargoStored / $scoutCardCount;
             $data[] = $teleopRocketsComplete / $scoutCardCount;
-            $data[] = $endGameReturnedToHabitat / $scoutCardCount;
+            $data[] = (($endGameReturnedToHabitat / $scoutCardCount > 0) ? "Level " . $endGameReturnedToHabitat / $scoutCardCount : "No");
 
 
 
@@ -82,7 +98,7 @@ switch($_POST['action'])
             $data[] = $teleopHatchPanelsMax;
             $data[] = $teleopCargoStoredMax;
             $data[] = $teleopRocketsCompleteMax;
-            $data[] = $endGameReturnedToHabitatMax;
+            $data[] = (($endGameReturnedToHabitatMax > 0) ? "Level " . $endGameReturnedToHabitatMax : "No");
 
             $return_array[] = $data;
 

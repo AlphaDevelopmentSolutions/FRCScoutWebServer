@@ -45,6 +45,7 @@ $event->load($eventId);
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.css">
 
     <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
 
 
@@ -80,7 +81,27 @@ $event->load($eventId);
         </div>
     </header>
     <main class="mdl-layout__content">
+        <div style="padding: 1em 5em 0 5em;">
 
+            <div class="container" style="width: 500px; margin-left: unset; padding-left: unset;">
+                <div class="row">
+                    <div class="col">
+                        <div style="width: 100px; height: 10px; background-color: #FFD966;"></div>
+                        AUTONOMOUS
+                    </div>
+                    <div class="col">
+                        <div style="width: 100px; height: 10px; background-color: #00FFFF;"></div>
+                        TELEOP
+                    </div>
+                    <div class="col">
+                        <div style="width: 100px; height: 10px; background-color: #9400ff;"></div>
+                        END GAME
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
         <table id="stats_table" class="display stats-table">
             <thead>
             <tr>
@@ -92,7 +113,7 @@ $event->load($eventId);
                 <th style="background-color: #00FFFF;">Hatch Panels</th>
                 <th style="background-color: #00FFFF;">Cargo</th>
                 <th style="background-color: #00FFFF;">Rockets Complete</th>
-                <th>Returned To Habitat</th>
+                <th style="background-color: #9400ff; color: white;">Returned To Habitat</th>
             </tr>
             </thead>
             <tbody>
@@ -216,6 +237,15 @@ $event->load($eventId);
 
                            case 7:
                                if($(this).html() > 0)
+                                   $(this).css('background-color', '#64FF62');
+
+                               else
+                                   $(this).css('background-color', '#E67C73');
+
+                               break;
+
+                           case 8:
+                               if($(this).html() !== "No")
                                    $(this).css('background-color', '#64FF62');
 
                                else

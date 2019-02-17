@@ -6,6 +6,7 @@ class ScoutCards
     public $MatchId;
     public $TeamId;
     public $EventId;
+    public $AllianceColor;
     public $CompletedBy;
     public $BlueAllianceFinalScore;
     public $RedAllianceFinalScore;
@@ -55,6 +56,7 @@ class ScoutCards
                                       MatchId,
                                       TeamId,
                                       EventId,
+                                      AllianceColor,
                                       CompletedBy,
                                       BlueAllianceFinalScore,
                                       RedAllianceFinalScore,
@@ -73,6 +75,7 @@ class ScoutCards
                                       ' . ((empty($this->MatchId)) ? 'NULL' : $database->quote($this->MatchId)) .',
                                       ' . ((empty($this->TeamId)) ? 'NULL' : $database->quote($this->TeamId)) .',
                                       ' . ((empty($this->EventId)) ? 'NULL' : $database->quote($this->EventId)) .',
+                                      ' . ((empty($this->AllianceColor)) ? 'NULL' : $database->quote($this->AllianceColor)) .',
                                       ' . ((empty($this->CompletedBy)) ? 'NULL' : $database->quote($this->CompletedBy)) .',
                                       ' . ((empty($this->BlueAllianceFinalScore)) ? '0' : $database->quote($this->BlueAllianceFinalScore)) .',
                                       ' . ((empty($this->RedAllianceFinalScore)) ? '0' : $database->quote($this->RedAllianceFinalScore)) .',
@@ -104,6 +107,7 @@ class ScoutCards
             MatchId = " . ((empty($this->MatchId)) ? "NULL" : $database->quote($this->MatchId)) .", 
             TeamId = " . ((empty($this->TeamId)) ? "NULL" : $database->quote($this->TeamId)) .", 
             EventId = " . ((empty($this->EventId)) ? "NULL" : $database->quote($this->EventId)) .", 
+            AllianceColor = " . ((empty($this->AllianceColor)) ? "NULL" : $database->quote($this->AllianceColor)) .", 
             CompletedBy = " . ((empty($this->CompletedBy)) ? "NULL" : $database->quote($this->CompletedBy)) .", 
             BlueAllianceFinalScore = " . ((empty($this->BlueAllianceFinalScore)) ? "NULL" : $database->quote($this->BlueAllianceFinalScore)) .", 
             RedAllianceFinalScore = " . ((empty($this->RedAllianceFinalScore)) ? "NULL" : $database->quote($this->RedAllianceFinalScore)) .", 

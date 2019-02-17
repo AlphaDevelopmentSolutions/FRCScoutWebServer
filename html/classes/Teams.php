@@ -125,7 +125,9 @@ class Teams
                     FROM
                       scout_cards
                     WHERE
-                      MatchId = " . $matchId
+                      MatchId = " . $matchId . "
+                    AND
+                        AllianceColor = 'BLUE'"
         );
         $database->close();
 
@@ -152,7 +154,9 @@ class Teams
                     FROM
                       scout_cards
                     WHERE
-                      MatchId = " . $matchId
+                      MatchId = " . $matchId . "
+                    AND
+                        AllianceColor = 'RED'"
         );
         $database->close();
 
