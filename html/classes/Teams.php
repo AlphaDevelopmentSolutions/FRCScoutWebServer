@@ -116,6 +116,60 @@ class Teams
 
     }
 
+    public static function getBlueAllianceTeamsForMatch($matchId)
+    {
+        $database = new Database();
+        $teams = $database->query(
+            "SELECT
+                      TeamId
+                    FROM
+                      scout_cards
+                    WHERE
+                      MatchId = " . $matchId
+        );
+        $database->close();
+
+        $response = array();
+
+        if($teams && $teams->num_rows > 0)
+        {
+            while ($row = $teams->fetch_assoc())
+            {
+                $response[] = $row;
+            }
+        }
+
+        return $response;
+
+    }
+
+    public static function getRedAllianceTeamsForMatch($matchId)
+    {
+        $database = new Database();
+        $teams = $database->query(
+            "SELECT
+                      TeamId
+                    FROM
+                      scout_cards
+                    WHERE
+                      MatchId = " . $matchId
+        );
+        $database->close();
+
+        $response = array();
+
+        if($teams && $teams->num_rows > 0)
+        {
+            while ($row = $teams->fetch_assoc())
+            {
+                $response[] = $row;
+            }
+        }
+
+        return $response;
+
+    }
+
 }
 
 ?>

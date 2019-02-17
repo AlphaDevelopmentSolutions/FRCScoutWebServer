@@ -2,6 +2,7 @@
 require_once("config.php");
 require_once("classes/Teams.php");
 require_once("classes/Events.php");
+require_once("classes/Matches.php");
 
 $eventId = $_GET['eventId'];
 
@@ -40,6 +41,8 @@ $event->load($eventId);
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.deep_purple-pink.min.css">
     <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
 
 
     <style>
@@ -66,7 +69,7 @@ $event->load($eventId);
         </div>
         <div class="mdl-layout__tab-bar mdl-js-ripple-effect mdl-color--primary-dark">
             <a href="/" class="mdl-layout__tab">Events</a>
-            <a href="" class="mdl-layout__tab">Teams</a>
+            <a href="/teams.php?eventId=<?php echo $event->BlueAllianceId; ?>" class="mdl-layout__tab">Teams</a>
         </div>
         <div class="mdl-layout__tab-bar mdl-js-ripple-effect mdl-color--primary-dark">
             <a href="/stats.php?eventId=<?php echo $event->BlueAllianceId; ?>" class="mdl-layout__tab ">Stats</a>
@@ -77,16 +80,38 @@ $event->load($eventId);
 
         <?php
 
-        foreach (Teams::getTeamsAtEvent($eventId) as $team) {
-            echo
+        foreach (Matches::getMatchIds($event->BlueAllianceId) as $matchId) {
+            $html =
                 '
                 <div class="mdl-layout__tab-panel is-active" id="overview">
                   <section class="section--center mdl-grid mdl-grid--no-spacing mdl-shadow--2dp">
                     <div class="mdl-card mdl-cell mdl-cell--12-col">
                       <div class="mdl-card__supporting-text">
-                        <h4>' . $team['Id'] . ' - ' . $team['Name'] . '</h4>
-                        ' . $team['City'] . ', ' . $team['StateProvince'] . ', ' . $team['Country'] .
-                '</div>
+                        <h4>Match ' . $matchId['MatchId'] . '</h4>
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-sm">
+                                    Blue Alliance
+                                    ';
+
+            foreach (Teams::getBlueAllianceTeamsForMatch($matchId['MatchId']) AS $team)
+            {
+                $html .= '<div>' . $team['TeamId'] . '</div>';
+            }
+            $html .= '
+                                </div>
+                                <div class="col-sm">
+                                    Red Alliance';
+
+            foreach (Teams::getRedAllianceTeamsForMatch($matchId['MatchId']) AS $team)
+            {
+                $html .= '<div>' . $team['TeamId'] . '</div>';
+            }
+
+            $html .='                    </div>
+                            </div>
+                        </div>
+                </div>
                       <div class="mdl-card__actions">
                         <a href="/team.php?eventId=' . $eventId . '&teamId=' . $team['Id'] . '" class="mdl-button">View</a>
                       </div>
@@ -94,6 +119,8 @@ $event->load($eventId);
                   </section>
                 </div>
             ';
+
+            echo $html;
         }
 
         ?>

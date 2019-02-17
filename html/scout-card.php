@@ -1,11 +1,15 @@
 <?php
 require_once("config.php");
 require_once("classes/ScoutCards.php");
+require_once("classes/Events.php");
 
 $scoutCardId = $_GET['scoutCardId'];
 
 $scoutCard = new ScoutCards();
 $scoutCard->load($scoutCardId);
+
+$event = new Events();
+$event->load($scoutCard->EventId);
 
 ?>
 
@@ -68,6 +72,10 @@ $scoutCard->load($scoutCardId);
           <a href="/team.php?teamId=<?php echo $scoutCard->TeamId?>&eventId=<?php echo $scoutCard->EventId;?>" class="mdl-layout__tab">Team <?php echo $scoutCard->TeamId; ?></a>
           <a href="" class="mdl-layout__tab is-active">Match <?php echo $scoutCard->MatchId; ?></a>
         </div>
+          <div class="mdl-layout__tab-bar mdl-js-ripple-effect mdl-color--primary-dark">
+              <a href="/stats.php?eventId=<?php echo $event->BlueAllianceId; ?>" class="mdl-layout__tab ">Stats</a>
+              <a href="/match-overview.php?eventId=<?php echo $event->BlueAllianceId; ?>" class="mdl-layout__tab">Match Overview</a>
+          </div>
       </header>
       <main class="mdl-layout__content">
 
