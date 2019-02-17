@@ -5,11 +5,14 @@ class PitCards
     public $Id;
     public $TeamId;
     public $EventId;
-    public $OPR;
     public $DriveStyle;
-    public $Hatch;
-    public $Cargo;
-    public $Climb;
+    public $AutoExitHabitat;
+    public $AutoHatch;
+    public $AutoCargo;
+    public $TeleopHatch;
+    public $TeleopCargo;
+    public $TeleopRocketsComplete;
+    public $ReturnToHabitat;
     public $Notes;
     public $CompletedBy;
 
@@ -138,6 +141,35 @@ class PitCards
                       TeamId = " . $database->quote($teamId) .
                     'AND
                         EventId = ' . $database->quote($eventId)
+        );
+        $database->close();
+
+        $response = array();
+
+        if($scoutCards && $scoutCards->num_rows > 0)
+        {
+            while ($row = $scoutCards->fetch_assoc())
+            {
+                $response[] = $row;
+            }
+        }
+
+        return $response;
+    }
+
+    public static function getNewestPitCard($teamId, $eventId)
+    {
+        $database = new Database();
+        $scoutCards = $database->query(
+            "SELECT 
+                      * 
+                    FROM 
+                      " . PitCards::$TABLE_NAME . " 
+                    WHERE 
+                      TeamId = " . $database->quote($teamId) .
+                    'AND
+                        EventId = ' . $database->quote($eventId) .
+                    'ORDER BY Id DESC LIMIT 1'
         );
         $database->close();
 
