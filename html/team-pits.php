@@ -93,17 +93,6 @@ $ccwms = $stats['ccwms']['frc' . $pitCard->TeamId];
           <div class="mdl-layout--large-screen-only mdl-layout__header-row">
               <h3><?php echo $team->City . ', ' . $team->StateProvince . ', ' . $team->Country ?></h3><br>
           </div>
-          <div style="height: unset" class="mdl-layout--large-screen-only mdl-layout__header-row">
-              <h6 style="margin: unset"><strong>OPR</strong> <?php echo $opr ?></h6>
-          </div>
-
-          <div style="height: unset" class="mdl-layout--large-screen-only mdl-layout__header-row">
-              <h6 style="margin: unset"><strong>DPR</strong> <?php echo $dpr ?></h6>
-          </div>
-
-          <div style="height: unset" class="mdl-layout--large-screen-only mdl-layout__header-row">
-              <h6 style="margin: unset"><strong>CCWMS</strong> <?php echo $ccwms ?></h6>
-          </div>
           <div class="mdl-layout--large-screen-only mdl-layout__header-row">
               <?php
               if(!empty($team->FacebookURL))
@@ -158,21 +147,33 @@ $ccwms = $stats['ccwms']['frc' . $pitCard->TeamId];
               ?>
 
           </div>
-          <div class="mdl-layout--large-screen-only mdl-layout__header-row">
-              <h6><a id="show-stats-btn" href="#" style="color:white" onclick="showQuickStats()">Show Stats</a></h6>
+          <div style="height: unset" class="mdl-layout--large-screen-only mdl-layout__header-row">
+              <h6 style="margin: unset"><strong>OPR:</strong> <?php echo $opr ?></h6>
+          </div>
+
+          <div style="height: unset" class="mdl-layout--large-screen-only mdl-layout__header-row">
+              <h6 style="margin: unset"><strong>DPR:</strong> <?php echo $dpr ?></h6>
+          </div>
+
+          <div style="height: unset" class="mdl-layout--large-screen-only mdl-layout__header-row">
+              <h6 style="margin: unset"><strong>CCWMS:</strong> <?php echo $ccwms ?></h6>
           </div>
           <div id="quick-stats" style="padding-left: 40px" hidden>
-              <strong>Drive Style</strong>: <?php echo $pitCard->DriveStyle ?><br>
-              <strong>Auto Exit Habitat</strong>: <?php echo $pitCard->AutoExitHabitat ?><br>
-              <strong>Auto Hatch Panels</strong>: <?php echo $pitCard->AutoHatch ?><br>
-              <strong>Auto Cargo</strong>: <?php echo $pitCard->AutoCargo ?><br>
-              <strong>Teleop Hatch</strong>: <?php echo $pitCard->TeleopHatch ?><br>
-              <strong>Teleop Cargo</strong>: <?php echo $pitCard->TeleopCargo ?><br>
-              <strong>Teleop Rockets Complete</strong>: <?php echo $pitCard->TeleopRocketsComplete ?><br>
-              <strong>Return To Habitat</strong>: <?php echo $pitCard->ReturnToHabitat ?><br>
-              <strong>Notes</strong>: <?php echo $pitCard->Notes ?><br>
-              <strong>Completed By</strong>: <?php echo $pitCard->CompletedBy ?><br>
+              <h6 style="margin: unset"><strong>Drive Style:</strong> <?php echo $pitCard->DriveStyle ?></h6>
+              <h6 style="margin: unset"><strong>Auto Exit Habitat:</strong> <?php echo $pitCard->AutoExitHabitat ?></h6>
+              <h6 style="margin: unset"><strong>Auto Hatch Panels:</strong> <?php echo $pitCard->AutoHatch ?></h6>
+              <h6 style="margin: unset"><strong>Auto Cargo:</strong> <?php echo $pitCard->AutoCargo ?></h6>
+              <h6 style="margin: unset"><strong>Teleop Hatch:</strong> <?php echo $pitCard->TeleopHatch ?></h6>
+              <h6 style="margin: unset"><strong>Teleop Cargo:</strong> <?php echo $pitCard->TeleopCargo ?></h6>
+              <h6 style="margin: unset"><strong>Teleop Rockets Complete:</strong> <?php echo $pitCard->TeleopRocketsComplete ?></h6>
+              <h6 style="margin: unset"><strong>Return To Habitat:</strong> <?php echo $pitCard->ReturnToHabitat ?></h6>
+              <h6 style="margin: unset"><strong>Notes:</strong> <?php echo $pitCard->Notes ?></h6>
+              <h6 style="margin: unset"><strong>Completed By:</strong> <?php echo $pitCard->CompletedBy ?></h6>
           </div>
+          <div style="height: unset" class="mdl-layout--large-screen-only mdl-layout__header-row">
+              <h6 style="margin: unset" ><a id="show-stats-btn" href="#" style="color:white" onclick="showQuickStats()">Show More</a></h6>
+          </div>
+
         <div class="mdl-layout--large-screen-only mdl-layout__header-row">
         </div>
         <div class="mdl-layout__tab-bar mdl-js-ripple-effect mdl-color--primary-dark">
@@ -246,13 +247,13 @@ $ccwms = $stats['ccwms']['frc' . $pitCard->TeamId];
 
           if($('#quick-stats').attr('hidden'))
           {
-              $('#show-stats-btn').html('Hide Stats');
+              $('#show-stats-btn').html('Show Less');
               $('#quick-stats').removeAttr('hidden');
           }
 
           else
           {
-              $('#show-stats-btn').html('Show Stats');
+              $('#show-stats-btn').html('Show More');
               $('#quick-stats').attr('hidden', 'hidden');
           }
 
