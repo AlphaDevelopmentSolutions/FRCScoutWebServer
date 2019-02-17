@@ -1,6 +1,7 @@
 <?php
 require_once('../config.php');
 require_once('../classes/ScoutCards.php');
+require_once('../classes/PitCards.php');
 require_once('../classes/Teams.php');
 require_once('../classes/Users.php');
 require_once('../classes/Events.php');
@@ -39,6 +40,38 @@ switch($action)
         {
             $response['Status'] = 'Success';
             $response['Response'] = $scoutCard->Id;
+        }
+        else
+        {
+            $response['Status'] = 'Error';
+            $response['Response'] = 'Failed to save scout card.';
+        }
+
+        echo json_encode($response);
+
+        break;
+
+    case 'SubmitPitCard':
+        $response = array();
+        $pitCard = new PitCards();
+
+        $pitCard->TeamId = filter_var($_POST['TeamId'], FILTER_SANITIZE_NUMBER_INT);
+        $pitCard->EventId = filter_var($_POST['EventId'], FILTER_SANITIZE_STRING);
+        $pitCard->DriveStyle = filter_var($_POST['DriveStyle'], FILTER_SANITIZE_STRING);
+        $pitCard->AutoExitHabitat = filter_var($_POST['AutoExitHabitat'], FILTER_SANITIZE_STRING);
+        $pitCard->AutoHatch = filter_var($_POST['AutoHatch'], FILTER_SANITIZE_STRING);
+        $pitCard->AutoCargo = filter_var($_POST['AutoCargo'], FILTER_SANITIZE_STRING);
+        $pitCard->TeleopHatch = filter_var($_POST['TeleopHatch'], FILTER_SANITIZE_STRING);
+        $pitCard->TeleopCargo = filter_var($_POST['TeleopCargo'], FILTER_SANITIZE_STRING);
+        $pitCard->TeleopRocketsComplete = filter_var($_POST['TeleopRocketsComplete'], FILTER_SANITIZE_STRING);
+        $pitCard->ReturnToHabitat = filter_var($_POST['ReturnToHabitat'], FILTER_SANITIZE_STRING);
+        $pitCard->Notes = filter_var($_POST['Notes'], FILTER_SANITIZE_STRING);
+        $pitCard->CompletedBy = filter_var($_POST['CompletedBy'], FILTER_SANITIZE_STRING);
+
+        if($pitCard->save())
+        {
+            $response['Status'] = 'Success';
+            $response['Response'] = $pitCard->Id;
         }
         else
         {
