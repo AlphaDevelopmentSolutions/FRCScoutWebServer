@@ -160,7 +160,7 @@ $ccwms = $stats['ccwms']['frc' . $pitCard->TeamId];
                               <label class="mdl-textfield__label" >Notes</label>
                           </div>
                       </div>
-
+                  </div>
               </section>
           </div>
 
