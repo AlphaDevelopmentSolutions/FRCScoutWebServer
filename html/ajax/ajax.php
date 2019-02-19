@@ -77,13 +77,13 @@ switch($_POST['action'])
 
             $data[] = $teamNumber;
             $data[] = 'AVG';
-            $data[] = $autoExitHabitat / $scoutCardCount;
-            $data[] = $autoHatchPanels / $scoutCardCount;
-            $data[] = $autoCargoStored / $scoutCardCount;
-            $data[] = $teleopHatchPanels / $scoutCardCount;
-            $data[] = $teleopCargoStored / $scoutCardCount;
-            $data[] = $teleopRocketsComplete / $scoutCardCount;
-            $data[] = (($endGameReturnedToHabitat / $scoutCardCount > 0) ? "Level " . $endGameReturnedToHabitat / $scoutCardCount : "No");
+            $data[] = round($autoExitHabitat / $scoutCardCount, 2);
+            $data[] = round($autoHatchPanels / $scoutCardCount, 2);
+            $data[] = round($autoCargoStored / $scoutCardCount, 2);
+            $data[] = round($teleopHatchPanels / $scoutCardCount, 2);
+            $data[] = round($teleopCargoStored / $scoutCardCount, 2);
+            $data[] = round($teleopRocketsComplete / $scoutCardCount, 2);
+            $data[] = (($endGameReturnedToHabitat / $scoutCardCount > 0) ? "Level " . round($endGameReturnedToHabitat / $scoutCardCount, 2) : "No");
 
 
 
