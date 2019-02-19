@@ -174,6 +174,32 @@ class PitCards
         return $response;
     }
 
+    public static function getPitCardsForEvent($eventId)
+    {
+        $database = new Database();
+        $scoutCards = $database->query(
+            "SELECT 
+                      * 
+                    FROM 
+                      " . PitCards::$TABLE_NAME . " 
+                    WHERE 
+                        EventId = " . $database->quote($eventId)
+        );
+        $database->close();
+
+        $response = array();
+
+        if($scoutCards && $scoutCards->num_rows > 0)
+        {
+            while ($row = $scoutCards->fetch_assoc())
+            {
+                $response[] = $row;
+            }
+        }
+
+        return $response;
+    }
+
 
 }
 

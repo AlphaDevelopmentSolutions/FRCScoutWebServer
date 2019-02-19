@@ -112,6 +112,48 @@ switch($action)
         echo json_encode($response);
 
         break;
+
+    case 'GetScoutCards':
+        $response = array();
+
+        $eventId = filter_var($_POST['EventId'], FILTER_SANITIZE_STRING);
+
+        if(!empty($eventId))
+        {
+            $response['Status'] = 'Success';
+            $response['Response'] = ScoutCards::getScoutCardsForEvent(filter_var($_POST['EventId'], FILTER_SANITIZE_STRING));
+        }
+        else
+        {
+            $response['Status'] =  'Error';
+            $response['Response'] = 'Invalid event id.';
+        }
+
+
+        echo json_encode($response);
+
+        break;
+
+    case 'GetPitCards':
+        $response = array();
+
+        $eventId = filter_var($_POST['EventId'], FILTER_SANITIZE_STRING);
+
+        if(!empty($eventId))
+        {
+            $response['Status'] = 'Success';
+            $response['Response'] = PitCards::getPitCardsForEvent(filter_var($_POST['EventId'], FILTER_SANITIZE_STRING));
+        }
+        else
+        {
+            $response['Status'] =  'Error';
+            $response['Response'] = 'Invalid event id.';
+        }
+
+
+        echo json_encode($response);
+
+        break;
 }
 
 
