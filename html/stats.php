@@ -171,9 +171,7 @@ $event->load($eventId);
 
             },
             'fnRowCallback': function( nRow, aData, iDisplayIndex ) {
-
-                // <div style="background-color: ' . (($maxAvg == 'MAX') ? '#64FF62' : '#9FC5E8') . '">' . $maxAvg . '</div>';
-
+                
 
                 $(nRow).each(function()
                 {
@@ -187,8 +185,11 @@ $event->load($eventId);
                                if($(this).html() === 'MAX')
                                    $(this).css('background-color', '#64FF62');
 
-                               else
+                               else if($(this).html() === 'AVG')
                                    $(this).css('background-color', '#9FC5E8');
+
+                               else
+                                   $(this).css('background-color', '#ffa74f');
 
                                break;
 

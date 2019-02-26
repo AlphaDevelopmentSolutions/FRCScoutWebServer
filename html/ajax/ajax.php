@@ -16,6 +16,14 @@ switch($_POST['action'])
             $data = array();
             $teamNumber = $team['Id'];
 
+            $autoExitHabitatMin = 0;
+            $autoHatchPanelsMin = 0;
+            $autoCargoStoredMin = 0;
+            $teleopHatchPanelsMin = 0;
+            $teleopCargoStoredMin = 0;
+            $teleopRocketsCompleteMin = 0;
+            $endGameReturnedToHabitatMin = 0;
+
             $autoExitHabitat = 0;
             $autoHatchPanels = 0;
             $autoCargoStored = 0;
@@ -38,6 +46,19 @@ switch($_POST['action'])
             foreach (ScoutCards::getScoutCardsForTeam($team['Id'], $eventId) as $scoutCard)
             {
 
+
+                $autoExitHabitatMin = (($scoutCard['AutonomousExitHabitat'] < $autoExitHabitatMin) ? $scoutCard['AutonomousExitHabitat'] : $autoExitHabitatMin);
+                $autoHatchPanelsMin = (($scoutCard['AutonomousHatchPanelsSecured'] < $autoHatchPanelsMin) ? $scoutCard['AutonomousHatchPanelsSecured'] : $autoHatchPanelsMin);
+                $autoCargoStoredMin = (($scoutCard['AutonomousCargoStored'] < $autoCargoStoredMin) ? $scoutCard['AutonomousCargoStored'] : $autoCargoStoredMin);
+                $teleopHatchPanelsMin = (($scoutCard['TeleopHatchPanelsSecured'] < $teleopHatchPanelsMin) ? $scoutCard['TeleopHatchPanelsSecured'] : $teleopHatchPanelsMin);
+                $teleopCargoStoredMin = (($scoutCard['TeleopCargoStored'] < $teleopCargoStoredMin) ? $scoutCard['TeleopCargoStored'] : $teleopCargoStoredMin);
+                $teleopRocketsCompleteMin = (($scoutCard['TeleopRocketsComplete'] < $teleopRocketsCompleteMin) ? $scoutCard['TeleopRocketsComplete'] : $teleopRocketsCompleteMin);
+                
+                if($scoutCard['EndGameReturnedToHabitat'] == "No")
+                    $endGameReturnedToHabitatMin = (0 < $endGameReturnedToHabitatMin) ? 0 : $endGameReturnedToHabitatMin;
+
+                else
+                    $endGameReturnedToHabitatMin = ((substr($scoutCard['EndGameReturnedToHabitat'], strpos($scoutCard['EndGameReturnedToHabitat'], " ")) < $endGameReturnedToHabitatMin) ? substr($scoutCard['EndGameReturnedToHabitat'], strpos($scoutCard['EndGameReturnedToHabitat'], " ")) : $endGameReturnedToHabitatMin);
 
 
                 $autoExitHabitat += $scoutCard['AutonomousExitHabitat'];
@@ -73,8 +94,23 @@ switch($_POST['action'])
 
             }
 
+            $data = array();
+            $data[] = $teamNumber;
+            $data[] = 'MIN';
+            $data[] = $autoExitHabitatMin;
+            $data[] = $autoHatchPanelsMin;
+            $data[] = $autoCargoStoredMin;
+            $data[] = $teleopHatchPanelsMin;
+            $data[] = $teleopCargoStoredMin;
+            $data[] = $teleopRocketsCompleteMin;
+            $data[] = (($endGameReturnedToHabitatMin > 0) ? "Level " . $endGameReturnedToHabitatMin : "No");
+
+            $return_array[] = $data;
+
+
             $scoutCardCount = ($i == 0) ? 1 : $i;
 
+            $data = array();
             $data[] = $teamNumber;
             $data[] = 'AVG';
             $data[] = round($autoExitHabitat / $scoutCardCount, 2);
