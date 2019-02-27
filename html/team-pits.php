@@ -86,6 +86,7 @@ $ccwms = $stats['ccwms']['frc' . $pitCard->TeamId];
     <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
       <header class="mdl-layout__header mdl-layout__header--scroll mdl-color--primary">
         <div class="mdl-layout--large-screen-only mdl-layout__header-row">
+            <?php include_once('includes/login-form.php') ?>
         </div>
         <div class="mdl-layout--large-screen-only mdl-layout__header-row">
           <h3><?php echo $team->Id . ' - ' . $team->Name ?></h3><br>

@@ -4,12 +4,39 @@ require_once("classes/ScoutCards.php");
 require_once("classes/Events.php");
 
 $scoutCardId = $_GET['scoutCardId'];
+$action = (isset($_POST['save'])) ? 'save' : ((isset($_POST['delete'])) ? 'delete' : '');
 
 $scoutCard = new ScoutCards();
 $scoutCard->load($scoutCardId);
 
 $event = new Events();
 $event->load($scoutCard->EventId);
+
+if(isPostBack() && loggedIn())
+{
+    if($action == 'save') {
+
+        $scoutCard->CompletedBy = $_POST['completedBy'];
+        $scoutCard->MatchId = $_POST['matchId'];
+        $scoutCard->BlueAllianceFinalScore = $_POST['blueAllianceScore'];
+        $scoutCard->RedAllianceFinalScore = $_POST['redAllianceScore'];
+        $scoutCard->AutonomousExitHabitat = $_POST['autonomousExitHabitat'];
+        $scoutCard->AutonomousHatchPanelsSecured = $_POST['autonomousHatchPanelsSecured'];
+        $scoutCard->AutonomousCargoStored = $_POST['autonomousCargoStored'];
+        $scoutCard->TeleopHatchPanelsSecured = $_POST['teleopHatchPanelsSecured'];
+        $scoutCard->TeleopCargoStored = $_POST['teleopCargoStored'];
+        $scoutCard->TeleopRocketsCompleted = $_POST['teleopRocketsCompleted'];
+        $scoutCard->EndGameReturnedToHabitat = $_POST['returnedToHabitat'];
+        $scoutCard->Notes = $_POST['notes'];
+
+        $actionSuccess = $scoutCard->save();
+    }
+    else if($action == 'delete')
+    {
+        if($scoutCard->delete())
+            header('Location: http://scouting.wiredcats5885.ca/team-matches.php?teamId=' . $scoutCard->TeamId . '&eventId=' . $scoutCard->EventId);
+    }
+}
 
 ?>
 
@@ -42,9 +69,11 @@ $event->load($scoutCard->EventId);
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.deep_purple-pink.min.css">
     <link rel="stylesheet" href="css/styles.css">
-      
-     
-    <style>
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+
+
+      <style>
     #view-source {
       position: fixed;
       display: block;
@@ -57,9 +86,26 @@ $event->load($scoutCard->EventId);
     </style>
   </head>
   <body class="mdl-demo mdl-color--grey-100 mdl-color-text--grey-700 mdl-base">
+  <div id="demo-toast-example" class="mdl-js-snackbar mdl-snackbar">
+      <div class="mdl-snackbar__text"></div>
+      <button class="mdl-snackbar__action" type="button"></button>
+  </div>
+  <dialog class="mdl-dialog">
+      <h4 class="mdl-dialog__title">Are you sure?</h4>
+      <div class="mdl-dialog__content">
+          <p>
+              Are you sure you want to delete this scout card?
+          </p>
+      </div>
+      <div class="mdl-dialog__actions">
+          <button type="button" class="mdl-button negative">No</button>
+          <button type="button" class="mdl-button positive">Yes</button>
+      </div>
+  </dialog>
     <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
       <header class="mdl-layout__header mdl-layout__header--scroll mdl-color--primary">
         <div class="mdl-layout--large-screen-only mdl-layout__header-row">
+            <?php include_once('includes/login-form.php') ?>
         </div>
         <div class="mdl-layout--large-screen-only mdl-layout__header-row">
           <h3>Match <?php echo $scoutCard->MatchId ?></h3>
@@ -77,84 +123,114 @@ $event->load($scoutCard->EventId);
 
           <div class="mdl-layout__tab-panel is-active" id="overview">
               <section class="section--center mdl-grid mdl-grid--no-spacing mdl-shadow--2dp">
-                  <div class="mdl-card mdl-cell mdl-cell--12-col">
-                      <strong style="padding-left: 40px; padding-top: 10px;">Pre Game</strong>
-                      <div class="mdl-card__supporting-text">
-                          <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                              <input class="mdl-textfield__input" type="text" value="<?php echo $scoutCard->TeamId ?>" >
-                              <label class="mdl-textfield__label" >Team Id</label>
+                      <div class="mdl-card mdl-cell mdl-cell--12-col">
+                          <form method="post" action="<?php echo $_SERVER['REQUEST_URI'] ?>" style="padding-top: 30px;" id="scout-card-form">
+                          <strong style="padding-left: 40px;">Pre Game</strong>
+                          <div class="mdl-card__supporting-text">
+                              <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                                  <input class="mdl-textfield__input" type="text" value="<?php echo $scoutCard->TeamId ?>" name="teamId">
+                                  <label class="mdl-textfield__label" >Team Id</label>
+                              </div>
+
+                              <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                                  <input class="mdl-textfield__input" type="text" value="<?php echo $scoutCard->CompletedBy ?>" name="completedBy">
+                                  <label class="mdl-textfield__label" >Scouter</label>
+                              </div>
+                              <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                                  <input class="mdl-textfield__input" type="text" value="<?php echo $scoutCard->MatchId ?>" name="matchId">
+                                  <label class="mdl-textfield__label" >Match Number</label>
+                              </div>
+                              <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                                  <input class="mdl-textfield__input" type="text" value="<?php echo $scoutCard->BlueAllianceFinalScore ?>" name="blueAllianceScore">
+                                  <label class="mdl-textfield__label" >Blue Alliance Score</label>
+                              </div>
+
+                              <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                                  <input class="mdl-textfield__input" type="text" value="<?php echo $scoutCard->RedAllianceFinalScore ?>" name="redAllianceScore">
+                                  <label class="mdl-textfield__label" >Red Alliance Score</label>
+                              </div>
                           </div>
 
-                          <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                              <input class="mdl-textfield__input" type="text" value="<?php echo $scoutCard->CompletedBy ?>" >
-                              <label class="mdl-textfield__label" >Scouter</label>
-                          </div>
-                          <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                              <input class="mdl-textfield__input" type="text" value="<?php echo $scoutCard->MatchId ?>" >
-                              <label class="mdl-textfield__label" >Match Number</label>
-                          </div>
-                          <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                              <input class="mdl-textfield__input" type="text" value="<?php echo $scoutCard->BlueAllianceFinalScore ?>" >
-                              <label class="mdl-textfield__label" >Blue Alliance Score</label>
+                          <strong style="padding-left: 40px; padding-top: 10px;">Autonomous</strong>
+                          <div class="mdl-card__supporting-text">
+                              <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                                  <input class="mdl-textfield__input" type="text" value="<?php echo (($scoutCard->AutonomousExitHabitat == 1) ? 'Yes' : 'No') ?>" name="autonomousExitHabitat">
+                                  <label class="mdl-textfield__label" >Exit Habitat</label>
+                              </div>
+
+                              <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                                  <input class="mdl-textfield__input" type="text" value="<?php echo $scoutCard->AutonomousHatchPanelsSecured ?>" name="autonomousHatchPanelsSecured">
+                                  <label class="mdl-textfield__label" >Hatch Panels Secured</label>
+                              </div>
+
+                              <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                                  <input class="mdl-textfield__input" type="text" value="<?php echo $scoutCard->AutonomousCargoStored ?>" name="autonomousCargoStored">
+                                  <label class="mdl-textfield__label" >Cargo Stored</label>
+                              </div>
                           </div>
 
-                          <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                              <input class="mdl-textfield__input" type="text" value="<?php echo $scoutCard->RedAllianceFinalScore ?>" >
-                              <label class="mdl-textfield__label" >Red Alliance Score</label>
+                          <strong style="padding-left: 40px; padding-top: 10px;">Teleop</strong>
+                          <div class="mdl-card__supporting-text">
+                              <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                                  <input class="mdl-textfield__input" type="text" value="<?php echo $scoutCard->TeleopHatchPanelsSecured ?>" name="teleopHatchPanelsSecured">
+                                  <label class="mdl-textfield__label" >Hatch Panels Secured</label>
+                              </div>
+
+                              <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                                  <input class="mdl-textfield__input" type="text" value="<?php echo $scoutCard->TeleopCargoStored ?>" name="teleopCargoStored">
+                                  <label class="mdl-textfield__label" >Cargo Stored</label>
+                              </div>
+
+                              <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                                  <input class="mdl-textfield__input" type="text" value="<?php echo $scoutCard->TeleopRocketsCompleted ?>" name="teleopRocketsCompleted">
+                                  <label class="mdl-textfield__label" >Rockets Completed</label>
+                              </div>
                           </div>
+
+                          <strong style="padding-left: 40px; padding-top: 10px;">End Game</strong>
+                          <div class="mdl-card__supporting-text">
+                              <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                                  <input class="mdl-textfield__input" type="text" value="<?php echo $scoutCard->EndGameReturnedToHabitat ?>" name="returnedToHabitat">
+                                  <label class="mdl-textfield__label" >Returned To Habitat</label>
+                              </div>
+
+                              <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                                  <input class="mdl-textfield__input" type="text" value="<?php echo $scoutCard->Notes ?>" name="notes">
+                                  <label class="mdl-textfield__label" >Notes</label>
+                              </div>
+                          </div>
+
+                          <?php
+
+                          if(loggedIn()) {
+                              echo
+                              '<div class="mdl-card__supporting-text" style="margin-bottom: 30px;">
+                                  <button name="save" type="submit" class="mdl-button mdl-js-button mdl-button--raised">
+                                      Save
+                                  </button>
+                              </div>';
+
+                              echo
+                              '<div class="mdl-card__supporting-text" style="margin-bottom: 30px;">
+                                      <button onclick="confirmDelete()" type="button" class="mdl-button mdl-js-button mdl-button--raised">
+                                          Delete
+                                      </button>
+                                  </div>';
+
+                              echo
+                              '<div hidden class="mdl-card__supporting-text" style="margin-bottom: 30px;">
+                                      <button id="delete" name="delete" type="submit" class="mdl-button mdl-js-button mdl-button--raised">
+                                      </button>
+                                  </div>';
+                          }
+
+                          ?>
+                          </form>
                       </div>
-
-                      <strong style="padding-left: 40px; padding-top: 10px;">Autonomous</strong>
-                      <div class="mdl-card__supporting-text">
-                          <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                              <input class="mdl-textfield__input" type="text" value="<?php echo (($scoutCard->AutonomousExitHabitat == 1) ? 'Yes' : 'No') ?>" >
-                              <label class="mdl-textfield__label" >Exit Habitat</label>
-                          </div>
-
-                          <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                              <input class="mdl-textfield__input" type="text" value="<?php echo $scoutCard->AutonomousHatchPanelsSecured ?>" >
-                              <label class="mdl-textfield__label" >Hatch Panels Secured</label>
-                          </div>
-
-                          <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                              <input class="mdl-textfield__input" type="text" value="<?php echo $scoutCard->AutonomousCargoStored ?>" >
-                              <label class="mdl-textfield__label" >Cargo Stored</label>
-                          </div>
-                      </div>
-
-                      <strong style="padding-left: 40px; padding-top: 10px;">Teleop</strong>
-                      <div class="mdl-card__supporting-text">
-                          <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                              <input class="mdl-textfield__input" type="text" value="<?php echo $scoutCard->TeleopHatchPanelsSecured ?>" >
-                              <label class="mdl-textfield__label" >Hatch Panels Secured</label>
-                          </div>
-
-                          <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                              <input class="mdl-textfield__input" type="text" value="<?php echo $scoutCard->TeleopCargoStored ?>" >
-                              <label class="mdl-textfield__label" >Cargo Stored</label>
-                          </div>
-
-                          <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                              <input class="mdl-textfield__input" type="text" value="<?php echo $scoutCard->TeleopRocketsCompleted ?>" >
-                              <label class="mdl-textfield__label" >Rockets Completed</label>
-                          </div>
-                      </div>
-
-                      <strong style="padding-left: 40px; padding-top: 10px;">End Game</strong>
-                      <div class="mdl-card__supporting-text">
-                          <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                              <input class="mdl-textfield__input" type="text" value="<?php echo $scoutCard->EndGameReturnedToHabitat ?>" >
-                              <label class="mdl-textfield__label" >Returned To Habitat</label>
-                          </div>
-
-                          <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                              <input class="mdl-textfield__input" type="text" value="<?php echo $scoutCard->Notes ?>" >
-                              <label class="mdl-textfield__label" >Notes</label>
-                          </div>
-                      </div>
-                  </div>
               </section>
           </div>
+
+
 
           
           <div class="mdl-layout__tab-panel" id="stats">
@@ -184,5 +260,63 @@ $event->load($scoutCard->EventId);
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.indigo-pink.min.css">
     <script src="https://code.getmdl.io/1.3.0/material.min.js"></script>
+
+    <?php
+
+    if(isPostBack() && loggedIn())
+    {
+        if($action == 'save')
+            if($actionSuccess)
+                $message = "Successfully Saved!";
+            else
+                $message = "Save Failed!";
+        else if($action == 'delete')
+            if($actionSuccess)
+                $message = "Deletion Successful!";
+            else
+                $message = "Deletion Failed!";
+        echo
+        "<script>
+            $(document).ready(function()
+            {
+                'use strict';
+                window['counter'] = 0;
+                var snackbarContainer = document.querySelector('#demo-toast-example');
+                var showToastButton = document.querySelector('#demo-show-toast');
+        
+                'use strict';
+                var data = {message: '" . $message . "'};
+                     snackbarContainer.MaterialSnackbar.showSnackbar(data);
+                 });
+          </script>";
+    }
+
+    if(loggedIn())
+    {
+        echo
+        "<script>
+            function confirmDelete()
+            {
+                var dialog = document.querySelector('dialog');
+                var showDialogButton = document.querySelector('#show-dialog');
+                if (! dialog.showModal) {
+                    dialogPolyfill.registerDialog(dialog);
+                }
+                dialog.showModal();
+                
+                dialog.querySelector('.negative').addEventListener('click', function() {
+                    dialog.close();
+                });
+                
+                dialog.querySelector('.positive').addEventListener('click', function() {
+                    $('#delete').click();
+                });
+            }
+            
+          </script>";
+    }
+
+    ?>
+
   </body>
 </html>

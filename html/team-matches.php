@@ -86,6 +86,8 @@ $ccwms = $stats['ccwms']['frc' . $pitCard->TeamId];
     <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
       <header class="mdl-layout__header mdl-layout__header--scroll mdl-color--primary">
         <div class="mdl-layout--large-screen-only mdl-layout__header-row">
+        <?php include_once('includes/login-form.php') ?>
+
         </div>
         <div class="mdl-layout--large-screen-only mdl-layout__header-row">
           <h3><?php echo $team->Id . ' - ' . $team->Name ?></h3><br>
@@ -187,6 +189,20 @@ $ccwms = $stats['ccwms']['frc' . $pitCard->TeamId];
           </div>
       </header>
       <main class="mdl-layout__content">
+
+          <?php if(loggedIn())
+              {
+                  echo
+                  '<button style="position: fixed; bottom: 0 !important; margin-bottom: 1em;" class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored mdl-shadow--4dp mdl-color--accent" id="add" data-upgraded=",MaterialButton,MaterialRipple">
+                      <i class="material-icons" role="presentation">add</i>
+                      <span class="visuallyhidden">Add</span>
+                      <span class="mdl-button__ripple-container">
+                            <span class="mdl-ripple is-animating" style="width: 160.392px; height: 160.392px; transform: translate(-50%, -50%) translate(37px, 28px);"></span>
+                        </span>
+                  </button>';
+              }
+
+          ?>
 
           <?php
 

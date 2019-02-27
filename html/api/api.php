@@ -3,7 +3,6 @@ require_once('../config.php');
 require_once('../classes/ScoutCards.php');
 require_once('../classes/PitCards.php');
 require_once('../classes/Teams.php');
-require_once('../classes/Users.php');
 require_once('../classes/Events.php');
 
 if($_POST['key'] != API_KEY)

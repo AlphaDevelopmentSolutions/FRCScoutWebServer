@@ -133,6 +133,22 @@ class ScoutCards
         }
     }
 
+    function delete()
+    {
+        if(empty($this->Id))
+            return false;
+
+        $database = new Database();
+        $sql = 'DELETE FROM '.self::$TABLE_NAME.' WHERE '.'id = '.$database->quote($this->Id);
+        $rs = $database->query($sql);
+
+        if($rs)
+            return true;
+
+
+        return false;
+    }
+
     public static function getScoutCardsForTeam($teamId, $eventId)
     {
         $database = new Database();
