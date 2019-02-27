@@ -4,10 +4,22 @@ require_once("classes/ScoutCards.php");
 require_once("classes/Events.php");
 
 $scoutCardId = $_GET['scoutCardId'];
+$eventId = $_GET['eventId'];
+$teamId = $_GET['teamId'];
 $action = (isset($_POST['save'])) ? 'save' : ((isset($_POST['delete'])) ? 'delete' : '');
 
 $scoutCard = new ScoutCards();
-$scoutCard->load($scoutCardId);
+
+if(!empty($scoutCardId))
+{
+    $scoutCard->load($scoutCardId);
+}
+else
+{
+    $scoutCard->TeamId = $teamId;
+    $scoutCard->EventId = $eventId;
+}
+
 
 $event = new Events();
 $event->load($scoutCard->EventId);
@@ -199,29 +211,42 @@ if(isPostBack() && loggedIn())
                                   <label class="mdl-textfield__label" >Notes</label>
                               </div>
                           </div>
-
                           <?php
 
-                          if(loggedIn()) {
+                          if(loggedIn())
+                          {
                               echo
-                              '<div class="mdl-card__supporting-text" style="margin-bottom: 30px;">
-                                  <button name="save" type="submit" class="mdl-button mdl-js-button mdl-button--raised">
-                                      Save
-                                  </button>
+                              '<div class="mdl-card__supporting-text">
+                              <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                                  <div class="mdl-card__supporting-text">
+                                      <div class="mdl-card__supporting-text" style="margin-bottom: 30px;">
+                                          <button name="save" type="submit" class="mdl-button mdl-js-button mdl-button--raised">
+                                            Save
+                                          </button>
+                                      </div>
+                                  </div>
                               </div>';
 
+                              if(!empty($scoutCard->Id))
                               echo
-                              '<div class="mdl-card__supporting-text" style="margin-bottom: 30px;">
-                                      <button onclick="confirmDelete()" type="button" class="mdl-button mdl-js-button mdl-button--raised">
-                                          Delete
-                                      </button>
-                                  </div>';
-
-                              echo
-                              '<div hidden class="mdl-card__supporting-text" style="margin-bottom: 30px;">
-                                      <button id="delete" name="delete" type="submit" class="mdl-button mdl-js-button mdl-button--raised">
-                                      </button>
-                                  </div>';
+                              '<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                                  <div class="mdl-card__supporting-text">
+                                      <div class="mdl-card__supporting-text" style="margin-bottom: 30px;">
+                                          <button onclick="confirmDelete()" type="button" class="mdl-button mdl-js-button mdl-button--raised">
+                                            Delete
+                                          </button>
+                                      </div>
+                                  </div>
+                              </div>
+                              <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                                  <div class="mdl-card__supporting-text">
+                                      <div hidden class="mdl-card__supporting-text" style="margin-bottom: 30px;">
+                                          <button id="delete" name="delete" type="submit" class="mdl-button mdl-js-button mdl-button--raised">
+                                          </button>
+                                      </div>
+                                  </div>
+                              </div>
+                          </div>';
                           }
 
                           ?>

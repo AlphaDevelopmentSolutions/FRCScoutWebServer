@@ -193,7 +193,7 @@ $ccwms = $stats['ccwms']['frc' . $pitCard->TeamId];
           <?php if(loggedIn())
               {
                   echo
-                  '<button style="position: fixed; bottom: 0 !important; margin-bottom: 1em;" class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored mdl-shadow--4dp mdl-color--accent" id="add" data-upgraded=",MaterialButton,MaterialRipple">
+                  '<button onclick="window.location = \'/scout-card.php?eventId=' . $event->BlueAllianceId . '&teamId=' . $team->Id .'\'" style="position: fixed; bottom: 0 !important; margin-bottom: 1em;" class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored mdl-shadow--4dp mdl-color--accent" id="add" data-upgraded=",MaterialButton,MaterialRipple">
                       <i class="material-icons" role="presentation">add</i>
                       <span class="visuallyhidden">Add</span>
                       <span class="mdl-button__ripple-container">
