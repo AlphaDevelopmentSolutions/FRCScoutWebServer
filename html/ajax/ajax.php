@@ -11,6 +11,10 @@ switch($_POST['action'])
 
         $eventId = $_POST['eventId'];
 
+        $removeMin = $_POST['removeMin'];
+        $removeAvg = $_POST['removeAvg'];
+        $removeMax = $_POST['removeMax'];
+
         foreach (Teams::getTeamsAtEvent($eventId) as $team)
         {
             $data = array();
@@ -94,49 +98,53 @@ switch($_POST['action'])
 
             }
 
-            $data = array();
-            $data[] = $teamNumber;
-            $data[] = 'MIN';
-            $data[] = $autoExitHabitatMin;
-            $data[] = $autoHatchPanelsMin;
-            $data[] = $autoCargoStoredMin;
-            $data[] = $teleopHatchPanelsMin;
-            $data[] = $teleopCargoStoredMin;
-            $data[] = $teleopRocketsCompleteMin;
-            $data[] = (($endGameReturnedToHabitatMin > 0) ? "Level " . $endGameReturnedToHabitatMin : "No");
+            if($removeMin == 'false') {
+                $data = array();
+                $data[] = $teamNumber;
+                $data[] = 'MIN';
+                $data[] = $autoExitHabitatMin;
+                $data[] = $autoHatchPanelsMin;
+                $data[] = $autoCargoStoredMin;
+                $data[] = $teleopHatchPanelsMin;
+                $data[] = $teleopCargoStoredMin;
+                $data[] = $teleopRocketsCompleteMin;
+                $data[] = (($endGameReturnedToHabitatMin > 0) ? "Level " . $endGameReturnedToHabitatMin : "No");
 
-            $return_array[] = $data;
-
-
-            $scoutCardCount = ($i == 0) ? 1 : $i;
-
-            $data = array();
-            $data[] = $teamNumber;
-            $data[] = 'AVG';
-            $data[] = round($autoExitHabitat / $scoutCardCount, 2);
-            $data[] = round($autoHatchPanels / $scoutCardCount, 2);
-            $data[] = round($autoCargoStored / $scoutCardCount, 2);
-            $data[] = round($teleopHatchPanels / $scoutCardCount, 2);
-            $data[] = round($teleopCargoStored / $scoutCardCount, 2);
-            $data[] = round($teleopRocketsComplete / $scoutCardCount, 2);
-            $data[] = (($endGameReturnedToHabitat / $scoutCardCount > 0) ? "Level " . round($endGameReturnedToHabitat / $scoutCardCount, 2) : "No");
+                $return_array[] = $data;
+            }
 
 
+            if($removeAvg == 'false') {
+                $scoutCardCount = ($i == 0) ? 1 : $i;
 
-            $return_array[] = $data;
+                $data = array();
+                $data[] = $teamNumber;
+                $data[] = 'AVG';
+                $data[] = round($autoExitHabitat / $scoutCardCount, 2);
+                $data[] = round($autoHatchPanels / $scoutCardCount, 2);
+                $data[] = round($autoCargoStored / $scoutCardCount, 2);
+                $data[] = round($teleopHatchPanels / $scoutCardCount, 2);
+                $data[] = round($teleopCargoStored / $scoutCardCount, 2);
+                $data[] = round($teleopRocketsComplete / $scoutCardCount, 2);
+                $data[] = (($endGameReturnedToHabitat / $scoutCardCount > 0) ? "Level " . round($endGameReturnedToHabitat / $scoutCardCount, 2) : "No");
 
-            $data = array();
-            $data[] = $teamNumber;
-            $data[] = 'MAX';
-            $data[] = $autoExitHabitatMax;
-            $data[] = $autoHatchPanelsMax;
-            $data[] = $autoCargoStoredMax;
-            $data[] = $teleopHatchPanelsMax;
-            $data[] = $teleopCargoStoredMax;
-            $data[] = $teleopRocketsCompleteMax;
-            $data[] = (($endGameReturnedToHabitatMax > 0) ? "Level " . $endGameReturnedToHabitatMax : "No");
+                $return_array[] = $data;
+            }
 
-            $return_array[] = $data;
+            if($removeMax == 'false') {
+                $data = array();
+                $data[] = $teamNumber;
+                $data[] = 'MAX';
+                $data[] = $autoExitHabitatMax;
+                $data[] = $autoHatchPanelsMax;
+                $data[] = $autoCargoStoredMax;
+                $data[] = $teleopHatchPanelsMax;
+                $data[] = $teleopCargoStoredMax;
+                $data[] = $teleopRocketsCompleteMax;
+                $data[] = (($endGameReturnedToHabitatMax > 0) ? "Level " . $endGameReturnedToHabitatMax : "No");
+
+                $return_array[] = $data;
+            }
 
         }
 

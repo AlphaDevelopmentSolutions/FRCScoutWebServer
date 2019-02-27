@@ -13,6 +13,8 @@ $event->load($eventId);
 <!doctype html>
 <html lang="en">
 <head>
+    <meta name="google" content="notranslate">
+
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="description" content="A front-end template that helps you build fast, modern mobile web apps.">
@@ -88,17 +90,63 @@ $event->load($eventId);
 
             <div class="container" style="width: 500px; margin-left: unset; padding-left: unset;">
                 <div class="row">
-                    <div class="col">
+                    <div class="col" onclick="
+                        if($(this).css('text-decoration').indexOf('line-through') >= 0)
+                            $(this).css('text-decoration', 'unset');
+                        else
+                            $(this).css('text-decoration', 'line-through');
+                        toggleAuto();">
                         <div style="width: 100px; height: 10px; background-color: #FFD966;"></div>
-                        AUTONOMOUS
+                        <p>AUTONOMOUS</p>
                     </div>
-                    <div class="col">
+                    <div class="col" onclick="
+                        if($(this).css('text-decoration').indexOf('line-through') >= 0)
+                            $(this).css('text-decoration', 'unset');
+                        else
+                            $(this).css('text-decoration', 'line-through');
+                        toggleTeleop();">
                         <div style="width: 100px; height: 10px; background-color: #00FFFF;"></div>
-                        TELEOP
+                        <p>TELEOP</p>
                     </div>
-                    <div class="col">
+                    <div class="col" onclick="
+                        if($(this).css('text-decoration').indexOf('line-through') >= 0)
+                            $(this).css('text-decoration', 'unset');
+                        else
+                            $(this).css('text-decoration', 'line-through');
+                        toggleEndGame();">
                         <div style="width: 100px; height: 10px; background-color: #9400ff;"></div>
-                        END GAME
+                        <p>END GAME</p>
+                    </div>
+                </div>
+            </div>
+            <div class="container" style="width: 500px; margin-left: unset; padding-left: unset;">
+                <div class="row">
+                    <div class="col" onclick="
+                        if($(this).css('text-decoration').indexOf('line-through') >= 0)
+                            $(this).css('text-decoration', 'unset');
+                        else
+                            $(this).css('text-decoration', 'line-through');
+                        toggleMin();">
+                        <div style="width: 100px; height: 10px; background-color: #ffa74f;"></div>
+                        <p>MIN</p>
+                    </div>
+                    <div class="col" onclick="
+                        if($(this).css('text-decoration').indexOf('line-through') >= 0)
+                            $(this).css('text-decoration', 'unset');
+                        else
+                            $(this).css('text-decoration', 'line-through');
+                        toggleAvg();">
+                        <div style="width: 100px; height: 10px; background-color: #9FC5E8;"></div>
+                        <p>AVG</p>
+                    </div>
+                    <div class="col" onclick="
+                        if($(this).css('text-decoration').indexOf('line-through') >= 0)
+                            $(this).css('text-decoration', 'unset');
+                        else
+                            $(this).css('text-decoration', 'line-through');
+                        toggleMax();">
+                        <div style="width: 100px; height: 10px; background-color: #64FF62;"></div>
+                        <p>MAX</p>
                     </div>
                 </div>
             </div>
@@ -155,21 +203,44 @@ $event->load($eventId);
 
 <script>
 
+    var statsTable;
+
+    var removeAuto = false,
+        removeTeleop = false,
+        removeEndGame = false;
+
+    var removeMin = false,
+        removeAvg = false,
+        removeMax = false;
+
+    var columnDefs = {
+        "targets": [ 2 ],
+        "visible": false,
+        "searchable": false};
+
     $(document).ready( function () {
-        $('#stats_table').DataTable({
+
+        statsTable = $('#stats_table').DataTable({
             "paging": false,
             "ajax": {
                 "url": "/ajax/ajax.php",
                 "type": "POST",
-                "data": {
-                    action: 'load_stats',
-                    eventId: '<?php echo $event->BlueAllianceId; ?>'
+                "data": function(d){
+                    d.removeMin = removeMin;
+                    d.removeAvg = removeAvg;
+                    d.removeMax = removeMax;
+                    d.action = 'load_stats';
+                    d.eventId = '<?php echo $event->BlueAllianceId; ?>';
                 },
                 "error": function (reason) {
 
                 }
 
             },
+            'columnDefs': [function(d)
+            {
+                d.columnDefs = columnDefs;
+            }],
             'fnRowCallback': function( nRow, aData, iDisplayIndex ) {
                 
 
@@ -193,7 +264,7 @@ $event->load($eventId);
 
                                break;
 
-                           case 2:
+                           case (removeAuto ? -1 : 2):
                                if($(this).html() > 0)
                                    $(this).css('background-color', '#64FF62');
 
@@ -202,7 +273,7 @@ $event->load($eventId);
 
                                break;
 
-                           case 3:
+                           case (removeAuto ? -2 : 3):
                                if($(this).html() > 0)
                                    $(this).css('background-color', '#64FF62');
 
@@ -211,7 +282,7 @@ $event->load($eventId);
 
                                break;
 
-                           case 4:
+                           case (removeAuto ? -3 : 4):
                                if($(this).html() > 0)
                                    $(this).css('background-color', '#64FF62');
 
@@ -220,7 +291,7 @@ $event->load($eventId);
 
                                break;
 
-                           case 5:
+                           case (removeTeleop ? -4 : removeAuto ? 2 : 5):
                                if($(this).html() > 0)
                                    $(this).css('background-color', '#64FF62');
 
@@ -229,7 +300,7 @@ $event->load($eventId);
 
                                break;
 
-                           case 6:
+                           case (removeTeleop ? -5 : removeAuto ? 3 : 6):
 
                                if($(this).html() > 0)
                                    $(this).css('background-color', '#64FF62');
@@ -239,16 +310,15 @@ $event->load($eventId);
 
                                break;
 
-                           case 7:
+                           case (removeTeleop ? -6 : removeAuto ? 4 : 7):
                                if($(this).html() > 0)
                                    $(this).css('background-color', '#64FF62');
 
                                else
                                    $(this).css('background-color', '#E67C73');
-
                                break;
 
-                           case 8:
+                           case (removeAuto ? (removeTeleop ? 2 : 5) : removeTeleop ? 5 : 8):
                                if($(this).html() !== "No")
                                    $(this).css('background-color', '#64FF62');
 
@@ -264,7 +334,58 @@ $event->load($eventId);
 
             },
         });
+
     });
+
+    function toggleMin()
+    {
+        removeMin = !removeMin;
+        statsTable.ajax.reload();
+    }
+
+    function toggleMax()
+    {
+        removeMax = !removeMax;
+        statsTable.ajax.reload();
+    }
+
+    function toggleAvg()
+    {
+        removeAvg = !removeAvg;
+        statsTable.ajax.reload();
+    }
+
+
+    function toggleAuto()
+    {
+        statsTable.columns(2).visible(removeAuto);
+        statsTable.columns(3).visible(removeAuto);
+        statsTable.columns(4).visible(removeAuto);
+
+        removeAuto = !removeAuto;
+
+        statsTable.ajax.reload();
+    }
+
+    function toggleTeleop()
+    {
+        statsTable.columns(5).visible(removeTeleop);
+        statsTable.columns(6).visible(removeTeleop);
+        statsTable.columns(7).visible(removeTeleop);
+
+        removeTeleop = !removeTeleop;
+
+        statsTable.ajax.reload();
+    }
+
+    function toggleEndGame()
+    {
+        statsTable.columns(8).visible(removeEndGame);
+
+        removeEndGame = !removeEndGame;
+
+        statsTable.ajax.reload();
+    }
 
 
 
