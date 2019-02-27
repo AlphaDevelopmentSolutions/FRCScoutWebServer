@@ -100,7 +100,7 @@ switch($_POST['action'])
 
             if($removeMin == 'false') {
                 $data = array();
-                $data[] = $teamNumber;
+                $data[] = '<a target="_blank" href="/team-matches.php?eventId=' . $eventId . '&teamId=' . $teamNumber .'">' . $teamNumber . '</a>';
                 $data[] = 'MIN';
                 $data[] = $autoExitHabitatMin;
                 $data[] = $autoHatchPanelsMin;
@@ -118,7 +118,7 @@ switch($_POST['action'])
                 $scoutCardCount = ($i == 0) ? 1 : $i;
 
                 $data = array();
-                $data[] = $teamNumber;
+                $data[] = '<a target="_blank" href="/team-matches.php?eventId=' . $eventId . '&teamId=' . $teamNumber .'">' . $teamNumber . '</a>';;
                 $data[] = 'AVG';
                 $data[] = round($autoExitHabitat / $scoutCardCount, 2);
                 $data[] = round($autoHatchPanels / $scoutCardCount, 2);
@@ -133,7 +133,7 @@ switch($_POST['action'])
 
             if($removeMax == 'false') {
                 $data = array();
-                $data[] = $teamNumber;
+                $data[] = '<a target="_blank" href="/team-matches.php?eventId=' . $eventId . '&teamId=' . $teamNumber .'">' . $teamNumber . '</a>';;
                 $data[] = 'MAX';
                 $data[] = $autoExitHabitatMax;
                 $data[] = $autoHatchPanelsMax;
