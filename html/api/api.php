@@ -25,13 +25,18 @@ switch($action)
         $scoutCard->CompletedBy = filter_var($_POST['CompletedBy'], FILTER_SANITIZE_STRING);
         $scoutCard->BlueAllianceFinalScore = filter_var($_POST['BlueAllianceFinalScore'], FILTER_SANITIZE_NUMBER_INT);
         $scoutCard->RedAllianceFinalScore = filter_var($_POST['RedAllianceFinalScore'], FILTER_SANITIZE_NUMBER_INT);
-        $scoutCard->AutonomousExitHabitat = filter_var($_POST['AutonomousExitHabitat'], FILTER_SANITIZE_NUMBER_INT);
+        $scoutCard->AutonomousExitHabitat = filter_var($_POST['AutonomousExitHabitat'], FILTER_SANITIZE_STRING);
         $scoutCard->AutonomousHatchPanelsSecured = filter_var($_POST['AutonomousHatchPanelsSecured'], FILTER_SANITIZE_NUMBER_INT);
+        $scoutCard->AutonomousHatchPanelsSecuredAttempts = filter_var($_POST['AutonomousHatchPanelsSecuredAttempts'], FILTER_SANITIZE_NUMBER_INT);
         $scoutCard->AutonomousCargoStored = filter_var($_POST['AutonomousCargoStored'], FILTER_SANITIZE_NUMBER_INT);
+        $scoutCard->AutonomousCargoStoredAttempts = filter_var($_POST['AutonomousCargoStoredAttempts'], FILTER_SANITIZE_NUMBER_INT);
         $scoutCard->TeleopHatchPanelsSecured = filter_var($_POST['TeleopHatchPanelsSecured'], FILTER_SANITIZE_NUMBER_INT);
+        $scoutCard->TeleopHatchPanelsSecuredAttempts = filter_var($_POST['TeleopHatchPanelsSecuredAttempts'], FILTER_SANITIZE_NUMBER_INT);
         $scoutCard->TeleopCargoStored = filter_var($_POST['TeleopCargoStored'], FILTER_SANITIZE_NUMBER_INT);
+        $scoutCard->TeleopCargoStoredAttempts = filter_var($_POST['TeleopCargoStoredAttempts'], FILTER_SANITIZE_NUMBER_INT);
         $scoutCard->TeleopRocketsCompleted = filter_var($_POST['TeleopRocketsCompleted'], FILTER_SANITIZE_NUMBER_INT);
         $scoutCard->EndGameReturnedToHabitat = filter_var($_POST['EndGameReturnedToHabitat'], FILTER_SANITIZE_STRING);
+        $scoutCard->EndGameReturnedToHabitatAttempts = filter_var($_POST['EndGameReturnedToHabitatAttempts'], FILTER_SANITIZE_STRING);
         $scoutCard->Notes = filter_var($_POST['Notes'], FILTER_SANITIZE_STRING);
         $scoutCard->CompletedDate = filter_var($_POST['CompletedDate'], FILTER_SANITIZE_STRING);
 
