@@ -244,11 +244,16 @@ $event->load($eventId);
                 <th>MAX/AVG</th>
                 <th style="background-color: #FFD966;">Exit Habitat</th>
                 <th style="background-color: #FFD966;">Hatch Panels</th>
+                <th style="background-color: #FFD966;">Hatch Panels Attempts</th>
                 <th style="background-color: #FFD966;">Cargo</th>
+                <th style="background-color: #FFD966;">Cargo Attempts</th>
                 <th style="background-color: #00FFFF;">Hatch Panels</th>
+                <th style="background-color: #00FFFF;">Hatch Panels Attempts</th>
                 <th style="background-color: #00FFFF;">Cargo</th>
+                <th style="background-color: #00FFFF;">Cargo Attempts</th>
                 <th style="background-color: #00FFFF;">Rockets Complete</th>
                 <th style="background-color: #9400ff; color: white;">Returned To Habitat</th>
+                <th style="background-color: #9400ff; color: white;">Returned To Habitat Attempts</th>
             </tr>
             </thead>
             <tbody>
@@ -306,6 +311,7 @@ $event->load($eventId);
 
         statsTable = $('#stats_table').DataTable({
             "paging": false,
+            "autoWidth": false,
             "ajax": {
                 "url": "/ajax/ajax.php",
                 "type": "POST",
@@ -355,25 +361,55 @@ $event->load($eventId);
 
                            case (removeAuto ? -3 : 4):
                                calculateRowColor($(this));
+                               generateToolTips(aData, 'autoHatchPanelsAttemptsMinMatchIds', 'autoHatchPanelsAttemptsMaxMatchIds', $(this));
+                               break;
+
+                           case (removeAuto ? -4 : 5):
+                               calculateRowColor($(this));
                                generateToolTips(aData, 'autoCargoStoredMinMatchIds', 'autoCargoStoredMaxMatchIds', $(this));
                                break;
 
-                           case (removeTeleop ? -4 : removeAuto ? 2 : 5):
+                           case (removeAuto ? -5 : 6):
+                               calculateRowColor($(this));
+                               generateToolTips(aData, 'autoCargoStoredAttemptsMinMatchIds', 'autoCargoStoredAttemptsMaxMatchIds', $(this));
+                               break;
+
+                           case (removeTeleop ? -6 : removeAuto ? 2 : 7):
                                calculateRowColor($(this));
                                generateToolTips(aData, 'teleopHatchPanelsMinMatchIds', 'teleopHatchPanelsMaxMatchIds', $(this));
                                break;
 
-                           case (removeTeleop ? -5 : removeAuto ? 3 : 6):
+                           case (removeTeleop ? -7 : removeAuto ? 3 : 8):
+                               calculateRowColor($(this));
+                               generateToolTips(aData, 'teleopHatchPanelsAttemptsMinMatchIds', 'teleopHatchPanelsAttemptsMaxMatchIds', $(this));
+                               break;
+
+                           case (removeTeleop ? -8 : removeAuto ? 4 : 9):
                                calculateRowColor($(this));
                                generateToolTips(aData, 'teleopCargoStoredMinMatchIds', 'teleopCargoStoredMaxMatchIds', $(this));
                                break;
 
-                           case (removeTeleop ? -6 : removeAuto ? 4 : 7):
+                           case (removeTeleop ? -9 : removeAuto ? 5 : 10):
+                               calculateRowColor($(this));
+                               generateToolTips(aData, 'teleopCargoStoredAttemptsMinMatchIds', 'teleopCargoStoredAttemptsMaxMatchIds', $(this));
+                               break;
+
+                           case (removeTeleop ? -10 : removeAuto ? 6 : 11):
                                calculateRowColor($(this));
                                generateToolTips(aData, 'teleopRocketsCompleteMinMatchIds', 'teleopRocketsCompleteMaxMatchIds', $(this));
                                break;
 
-                           case (removeAuto ? (removeTeleop ? 2 : 5) : removeTeleop ? 5 : 8):
+                           case (removeAuto ? (removeTeleop ? 2 : 7) : removeTeleop ? 7 : 12):
+                               if($(this).html() !== "No")
+                                   $(this).css('background-color', '#64FF62');
+
+                               else
+                                   $(this).css('background-color', '#E67C73');
+                               generateToolTips(aData, 'endGameReturnedToHabitatMinMatchIds', 'endGameReturnedToHabitatMaxMatchIds', $(this));
+
+                               break;
+
+                           case (removeAuto ? (removeTeleop ? 3 : 8) : removeTeleop ? 8 : 13):
                                if($(this).html() !== "No")
                                    $(this).css('background-color', '#64FF62');
 
@@ -425,6 +461,8 @@ $event->load($eventId);
         statsTable.columns(2).visible(removeAuto);
         statsTable.columns(3).visible(removeAuto);
         statsTable.columns(4).visible(removeAuto);
+        statsTable.columns(5).visible(removeAuto);
+        statsTable.columns(6).visible(removeAuto);
 
         removeAuto = !removeAuto;
 
@@ -435,9 +473,11 @@ $event->load($eventId);
     {
         toggleCrossOut(element);
 
-        statsTable.columns(5).visible(removeTeleop);
-        statsTable.columns(6).visible(removeTeleop);
         statsTable.columns(7).visible(removeTeleop);
+        statsTable.columns(8).visible(removeTeleop);
+        statsTable.columns(9).visible(removeTeleop);
+        statsTable.columns(10).visible(removeTeleop);
+        statsTable.columns(11).visible(removeTeleop);
 
         removeTeleop = !removeTeleop;
 
@@ -449,7 +489,8 @@ $event->load($eventId);
 
         toggleCrossOut(element);
 
-        statsTable.columns(8).visible(removeEndGame);
+        statsTable.columns(12).visible(removeEndGame);
+        statsTable.columns(13).visible(removeEndGame);
 
         removeEndGame = !removeEndGame;
 
