@@ -47,7 +47,7 @@
 
                     <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
                         <input class="mdl-textfield__input" type="text" value="<?php echo $scoutCard->AutonomousHatchPanelsSecuredAttempts ?>" name="autonomousHatchPanelsSecuredAttempts">
-                        <label class="mdl-textfield__label" >Hatch Panels Attempts</label>
+                        <label class="mdl-textfield__label" >Hatch Panels Failed  Attempts</label>
                     </div>
 
                     <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
@@ -57,7 +57,7 @@
 
                     <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
                         <input class="mdl-textfield__input" type="text" value="<?php echo $scoutCard->AutonomousCargoStoredAttempts ?>" name="autonomousCargoStoredAttempts">
-                        <label class="mdl-textfield__label" >Cargo Storage Attempts</label>
+                        <label class="mdl-textfield__label" >Cargo Storage Failed  Attempts</label>
                     </div>
                 </div>
 
@@ -70,7 +70,7 @@
 
                     <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
                         <input class="mdl-textfield__input" type="text" value="<?php echo $scoutCard->TeleopHatchPanelsSecuredAttempts ?>" name="teleopHatchPanelsSecuredAttempts">
-                        <label class="mdl-textfield__label" >Hatch Panels Attempts</label>
+                        <label class="mdl-textfield__label" >Hatch Panels Failed  Attempts</label>
                     </div>
 
                     <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
@@ -80,7 +80,7 @@
 
                     <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
                         <input class="mdl-textfield__input" type="text" value="<?php echo $scoutCard->TeleopCargoStoredAttempts ?>" name="teleopCargoStoredAttempts">
-                        <label class="mdl-textfield__label" >Cargo Storage Attempts</label>
+                        <label class="mdl-textfield__label" >Cargo Storage Failed  Attempts</label>
                     </div>
 
                     <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
@@ -98,7 +98,7 @@
 
                     <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
                         <input class="mdl-textfield__input" type="text" value="<?php echo $scoutCard->EndGameReturnedToHabitatAttempts ?>" name="returnedToHabitatAttempts">
-                        <label class="mdl-textfield__label" >Returned To Habitat Attempt</label>
+                        <label class="mdl-textfield__label" >Returned To Habitat Failed  Attempt</label>
                     </div>
 
 

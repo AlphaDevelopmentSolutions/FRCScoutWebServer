@@ -244,16 +244,16 @@ $event->load($eventId);
                 <th>MAX/AVG</th>
                 <th style="background-color: #FFD966;">Exit Habitat</th>
                 <th style="background-color: #FFD966;">Hatch Panels</th>
-                <th style="background-color: #FFD966;">Hatch Panels Attempts</th>
+                <th style="background-color: #FFD966;">Hatch Panels Failed Attempts</th>
                 <th style="background-color: #FFD966;">Cargo</th>
-                <th style="background-color: #FFD966;">Cargo Attempts</th>
+                <th style="background-color: #FFD966;">Cargo Failed  Attempts</th>
                 <th style="background-color: #00FFFF;">Hatch Panels</th>
-                <th style="background-color: #00FFFF;">Hatch Panels Attempts</th>
+                <th style="background-color: #00FFFF;">Hatch Panels Failed  Attempts</th>
                 <th style="background-color: #00FFFF;">Cargo</th>
-                <th style="background-color: #00FFFF;">Cargo Attempts</th>
+                <th style="background-color: #00FFFF;">Cargo Failed  Attempts</th>
                 <th style="background-color: #00FFFF;">Rockets Complete</th>
                 <th style="background-color: #9400ff; color: white;">Returned To Habitat</th>
-                <th style="background-color: #9400ff; color: white;">Returned To Habitat Attempts</th>
+                <th style="background-color: #9400ff; color: white;">Returned To Habitat Failed  Attempts</th>
             </tr>
             </thead>
             <tbody>
