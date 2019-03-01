@@ -60,7 +60,7 @@ class PitCards
                                       TeleopRocketsComplete,
                                       ReturnToHabitat,
                                       Notes,
-                                      CompletedBy,
+                                      CompletedBy
                                       )
                                       VALUES 
                                       (

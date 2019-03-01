@@ -75,7 +75,7 @@ switch($action)
         else
         {
             $response['Status'] = 'Error';
-            $response['Response'] = 'Failed to save scout card.';
+            $response['Response'] = 'Failed to save pit card.';
         }
 
         echo json_encode($response);
