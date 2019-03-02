@@ -64,7 +64,7 @@
                     </div>
 
                     <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                        <input class="mdl-textfield__input" type="text" value="<?php echo $pitCard->Notes ?>" name="notes">
+                        <textarea class="mdl-textfield__input" type="text" rows="3" name="notes" ><?php echo $pitCard->Notes ?></textarea>
                         <label class="mdl-textfield__label" >Notes</label>
                     </div>
                 </div>
