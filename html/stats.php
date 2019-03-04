@@ -49,6 +49,7 @@ $event->load($eventId);
     <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/fixedheader/3.1.2/css/fixedHeader.dataTables.min.css">
 
 
 
@@ -350,7 +351,11 @@ $event->load($eventId);
                                break;
 
                            case (removeAuto ? -1 : 2):
-                               calculateRowColor($(this));
+                               if($(this).html() !== "No")
+                                   $(this).css('background-color', '#64FF62');
+
+                               else
+                                   $(this).css('background-color', '#E67C73');
                                generateToolTips(aData, 'autoExitHabitatMinMatchIds', 'autoExitHabitatMaxMatchIds', $(this));
                                break;
 

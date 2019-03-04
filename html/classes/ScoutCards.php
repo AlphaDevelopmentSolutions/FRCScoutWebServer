@@ -180,7 +180,8 @@ class ScoutCards
                     WHERE 
                       TeamId = " . $database->quote($teamId) .
                     'AND
-                        EventId = ' . $database->quote($eventId)
+                        EventId = ' . $database->quote($eventId) .
+                    'ORDER BY MatchId DESC'
         );
         $database->close();
 

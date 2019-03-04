@@ -144,7 +144,8 @@ class PitCards
                     WHERE 
                       TeamId = " . $database->quote($teamId) .
                     'AND
-                        EventId = ' . $database->quote($eventId)
+                        EventId = ' . $database->quote($eventId) .
+                    'ORDER BY Id DESC'
         );
         $database->close();
 

@@ -18,7 +18,7 @@ switch($_POST['action'])
         foreach (Teams::getTeamsAtEvent($eventId) as $team)
         {
             $data = array();
-            $teamNumber = $team['Id'];
+            $teamNumber = $team['Id'] . ' - ' . $team['Name'];
 
             $autoExitHabitatMin = 0;
             $autoHatchPanelsMin = 0;
@@ -126,10 +126,10 @@ switch($_POST['action'])
                     $teleopCargoStoredMinMatchIds[] = $scoutCard['MatchId'];
                 }
                 
-                if($scoutCard['AutonomousHatchPanelsAttemptsSecured'] <= $autoHatchPanelsAttemptsMin)
+                if($scoutCard['AutonomousHatchPanelsSecuredAttempts'] <= $autoHatchPanelsAttemptsMin)
                 {
-                    $autoHatchPanelsAttemptsMinMatchIds = (($scoutCard['AutonomousHatchPanelsAttemptsSecured'] < $autoHatchPanelsAttemptsMin) ? array() : $autoHatchPanelsAttemptsMinMatchIds);
-                    $autoHatchPanelsAttemptsMin = $scoutCard['AutonomousHatchPanelsAttemptsSecured'];
+                    $autoHatchPanelsAttemptsMinMatchIds = (($scoutCard['AutonomousHatchPanelsSecuredAttempts'] < $autoHatchPanelsAttemptsMin) ? array() : $autoHatchPanelsAttemptsMinMatchIds);
+                    $autoHatchPanelsAttemptsMin = $scoutCard['AutonomousHatchPanelsSecuredAttempts'];
                     $autoHatchPanelsAttemptsMinMatchIds[] = $scoutCard['MatchId'];
                 }
 
@@ -140,10 +140,10 @@ switch($_POST['action'])
                     $autoCargoStoredAttemptsMinMatchIds[] = $scoutCard['MatchId'];
                 }
 
-                if($scoutCard['TeleopHatchPanelsAttemptsSecured'] <= $teleopHatchPanelsAttemptsMin)
+                if($scoutCard['TeleopHatchPanelsSecuredAttempts'] <= $teleopHatchPanelsAttemptsMin)
                 {
-                    $teleopHatchPanelsAttemptsMinMatchIds = (($scoutCard['TeleopHatchPanelsAttemptsSecured'] < $teleopHatchPanelsAttemptsMin) ? array() : $teleopHatchPanelsAttemptsMinMatchIds);
-                    $teleopHatchPanelsAttemptsMin = $scoutCard['TeleopHatchPanelsAttemptsSecured'];
+                    $teleopHatchPanelsAttemptsMinMatchIds = (($scoutCard['TeleopHatchPanelsSecuredAttempts'] < $teleopHatchPanelsAttemptsMin) ? array() : $teleopHatchPanelsAttemptsMinMatchIds);
+                    $teleopHatchPanelsAttemptsMin = $scoutCard['TeleopHatchPanelsSecuredAttempts'];
                     $teleopHatchPanelsAttemptsMinMatchIds[] = $scoutCard['MatchId'];
                 }
 
@@ -154,10 +154,10 @@ switch($_POST['action'])
                     $teleopCargoStoredAttemptsMinMatchIds[] = $scoutCard['MatchId'];
                 }
 
-                if($scoutCard['TeleopRocketsComplete'] <= $teleopRocketsCompleteMin)
+                if($scoutCard['TeleopRocketsCompleted'] <= $teleopRocketsCompleteMin)
                 {
-                    $teleopRocketsCompleteMinMatchIds = (($scoutCard['TeleopRocketsComplete'] < $teleopRocketsCompleteMin) ? array() : $teleopRocketsCompleteMinMatchIds);
-                    $teleopRocketsCompleteMin = $scoutCard['TeleopRocketsComplete'];
+                    $teleopRocketsCompleteMinMatchIds = (($scoutCard['TeleopRocketsCompleted'] < $teleopRocketsCompleteMin) ? array() : $teleopRocketsCompleteMinMatchIds);
+                    $teleopRocketsCompleteMin = $scoutCard['TeleopRocketsCompleted'];
                     $teleopRocketsCompleteMinMatchIds[] = $scoutCard['MatchId'];
                 }
                 
@@ -200,7 +200,7 @@ switch($_POST['action'])
                 $teleopHatchPanelsAttempts += $scoutCard['TeleopHatchPanelsSecured'];
                 $teleopCargoStored += $scoutCard['TeleopCargoStored'];
                 $teleopCargoStoredAttempts += $scoutCard['TeleopCargoStored'];
-                $teleopRocketsComplete += $scoutCard['TeleopRocketsComplete'];
+                $teleopRocketsComplete += $scoutCard['TeleopRocketsCompleted'];
                 
                 if($scoutCard['EndGameReturnedToHabitat'] == "No")
                     $endGameReturnedToHabitat += 0;
@@ -249,10 +249,10 @@ switch($_POST['action'])
                     $teleopCargoStoredMaxMatchIds[] = $scoutCard['MatchId'];
                 }
                 
-                if($scoutCard['AutonomousHatchPanelsAttemptsSecured'] >= $autoHatchPanelsAttemptsMax)
+                if($scoutCard['AutonomousHatchPanelsSecuredAttempts'] >= $autoHatchPanelsAttemptsMax)
                 {
-                    $autoHatchPanelsAttemptsMaxMatchIds = (($scoutCard['AutonomousHatchPanelsAttemptsSecured'] > $autoHatchPanelsAttemptsMax) ? array() : $autoHatchPanelsAttemptsMaxMatchIds);
-                    $autoHatchPanelsAttemptsMax = $scoutCard['AutonomousHatchPanelsAttemptsSecured'];
+                    $autoHatchPanelsAttemptsMaxMatchIds = (($scoutCard['AutonomousHatchPanelsSecuredAttempts'] > $autoHatchPanelsAttemptsMax) ? array() : $autoHatchPanelsAttemptsMaxMatchIds);
+                    $autoHatchPanelsAttemptsMax = $scoutCard['AutonomousHatchPanelsSecuredAttempts'];
                     $autoHatchPanelsAttemptsMaxMatchIds[] = $scoutCard['MatchId'];
                 }
 
@@ -263,10 +263,10 @@ switch($_POST['action'])
                     $autoCargoStoredAttemptsMaxMatchIds[] = $scoutCard['MatchId'];
                 }
 
-                if($scoutCard['TeleopHatchPanelsAttemptsSecured'] >= $teleopHatchPanelsAttemptsMax)
+                if($scoutCard['TeleopHatchPanelsSecuredAttempts'] >= $teleopHatchPanelsAttemptsMax)
                 {
-                    $teleopHatchPanelsAttemptsMaxMatchIds = (($scoutCard['TeleopHatchPanelsAttemptsSecured'] > $teleopHatchPanelsAttemptsMax) ? array() : $teleopHatchPanelsAttemptsMaxMatchIds);
-                    $teleopHatchPanelsAttemptsMax = $scoutCard['TeleopHatchPanelsAttemptsSecured'];
+                    $teleopHatchPanelsAttemptsMaxMatchIds = (($scoutCard['TeleopHatchPanelsSecuredAttempts'] > $teleopHatchPanelsAttemptsMax) ? array() : $teleopHatchPanelsAttemptsMaxMatchIds);
+                    $teleopHatchPanelsAttemptsMax = $scoutCard['TeleopHatchPanelsSecuredAttempts'];
                     $teleopHatchPanelsAttemptsMaxMatchIds[] = $scoutCard['MatchId'];
                 }
 
@@ -277,10 +277,10 @@ switch($_POST['action'])
                     $teleopCargoStoredAttemptsMaxMatchIds[] = $scoutCard['MatchId'];
                 }
 
-                if($scoutCard['TeleopRocketsComplete'] >= $teleopRocketsCompleteMax)
+                if($scoutCard['TeleopRocketsCompleted'] >= $teleopRocketsCompleteMax)
                 {
-                    $teleopRocketsCompleteMaxMatchIds = (($scoutCard['TeleopRocketsComplete'] > $teleopRocketsCompleteMax) ? array() : $teleopRocketsCompleteMaxMatchIds);
-                    $teleopRocketsCompleteMax = $scoutCard['TeleopRocketsComplete'];
+                    $teleopRocketsCompleteMaxMatchIds = (($scoutCard['TeleopRocketsCompleted'] > $teleopRocketsCompleteMax) ? array() : $teleopRocketsCompleteMaxMatchIds);
+                    $teleopRocketsCompleteMax = $scoutCard['TeleopRocketsCompleted'];
                     $teleopRocketsCompleteMaxMatchIds[] = $scoutCard['MatchId'];
                 }
 
@@ -355,7 +355,7 @@ switch($_POST['action'])
                 $data = array();
                 $data[] = '<a target="_blank" href="/team-matches.php?eventId=' . $eventId . '&teamId=' . $teamNumber .'">' . $teamNumber . '</a>';;
                 $data[] = 'AVG';
-                $data[] = round($autoExitHabitat / $scoutCardCount, 2);
+                $data[] = (round($autoExitHabitat / $scoutCardCount, 2) ? "Level " . round($autoExitHabitat / $scoutCardCount, 2) : "No");
                 $data[] = round($autoHatchPanels / $scoutCardCount, 2);
                 $data[] = round($autoHatchPanelsAttempts / $scoutCardCount, 2);
                 $data[] = round($autoCargoStored / $scoutCardCount, 2);

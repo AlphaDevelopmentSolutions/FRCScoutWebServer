@@ -18,6 +18,10 @@
                         <label class="mdl-textfield__label" >Match Number</label>
                     </div>
                     <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                        <input class="mdl-textfield__input" type="text" value="<?php echo $scoutCard->AllianceColor ?>" name="allianceColor">
+                        <label class="mdl-textfield__label" >AllianceColor</label>
+                    </div>
+                    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
                         <input class="mdl-textfield__input" type="text" value="<?php echo $scoutCard->BlueAllianceFinalScore ?>" name="blueAllianceScore">
                         <label class="mdl-textfield__label" >Blue Alliance Score</label>
                     </div>
