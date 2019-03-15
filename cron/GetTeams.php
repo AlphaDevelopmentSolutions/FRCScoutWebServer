@@ -1,9 +1,11 @@
 <?php
 require_once('../config.php');
 require_once('../classes/Teams.php');
+require_once('../classes/EventTeamList.php');
 
 $database = new Database();
 $database->query("DELETE FROM teams;");
+$database->query("DELETE FROM event_team_list;");
 $events = $database->query("SELECT BlueAllianceId FROM events");
 $database->close();
 
@@ -49,17 +51,22 @@ function getTeams($eventCode)
         foreach (json_decode($response) as $obj2)
         {
             if (strpos($obj2->type, 'facebook') !== false) {
-                $team->FacebookURL = 'https://www.facebook.com/' . $obj2->foreign_key;
+                $team->FacebookURL = $obj2->foreign_key;
             } else if (strpos($obj2->type, 'twitter') !== false) {
-                $team->TwitterURL = 'https://www.twitter.com/' . $obj2->foreign_key;
+                $team->TwitterURL = $obj2->foreign_key;
             } else if (strpos($obj2->type, 'instagram') !== false) {
-                $team->InstagramURL = 'https://www.instagram.com/' . $obj2->foreign_key;
+                $team->InstagramURL = $obj2->foreign_key;
             } else if (strpos($obj2->type, 'youtube') !== false) {
-                $team->YoutubeURL = 'https://www.youtube.com/' . $obj2->foreign_key;
+                $team->YoutubeURL = $obj2->foreign_key;
             }
         }
 
         $team->save();
+
+        $eventTeamList = new EventTeamList();
+        $eventTeamList->TeamId = $team->Id;
+        $eventTeamList->EventId = $eventCode;
+        $eventTeamList->save();
     }
 }
 
