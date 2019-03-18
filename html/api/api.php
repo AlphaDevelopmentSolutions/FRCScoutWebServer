@@ -4,6 +4,7 @@ require_once('../classes/ScoutCards.php');
 require_once('../classes/PitCards.php');
 require_once('../classes/Teams.php');
 require_once('../classes/Events.php');
+require_once('../classes/RobotMedia.php');
 
 if($_POST['key'] != API_KEY)
 {
@@ -81,6 +82,28 @@ switch($action)
         {
             $response['Status'] = 'Error';
             $response['Response'] = 'Failed to save pit card.';
+        }
+
+        echo json_encode($response);
+
+        break;
+
+    case 'SubmitRobotMedia':
+        $response = array();
+        $robotMedia = new RobotMedia();
+
+        $robotMedia->TeamId = filter_var($_POST['TeamId'], FILTER_SANITIZE_NUMBER_INT);
+        $robotMedia->Base64Image = filter_var($_POST['Base64Image'], FILTER_SANITIZE_STRING);
+
+        if($robotMedia->save())
+        {
+            $response['Status'] = 'Success';
+            $response['Response'] = 'test';
+        }
+        else
+        {
+            $response['Status'] = 'Error';
+            $response['Response'] = 'Failed to save robot image.';
         }
 
         echo json_encode($response);

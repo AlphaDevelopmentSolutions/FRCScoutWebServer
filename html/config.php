@@ -5,6 +5,8 @@ require_once('classes/Keys.php');
 require_once('classes/Database.php');
 require_once('classes/Users.php');
 
+define('ROBOT_MEDIA_DIR', __DIR__ . '/html/assets/robot-media/');
+
 if (session_status() == PHP_SESSION_NONE) {
     session_start();
 }
