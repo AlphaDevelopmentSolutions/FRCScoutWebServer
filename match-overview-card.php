@@ -72,6 +72,7 @@ $event->load($eventId);
         </div>
         <div class="mdl-layout--large-screen-only mdl-layout__header-row">
         </div>
+          <div class="version">Version <?php echo VERSION ?></div>
         <div class="mdl-layout__tab-bar mdl-js-ripple-effect mdl-color--primary-dark">
           <a href="/" class="mdl-layout__tab">Events</a>
           <a href="/teams.php?eventId=<?php echo $event->BlueAllianceId; ?>" class="mdl-layout__tab ">Teams</a>

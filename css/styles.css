@@ -300,3 +300,9 @@ html, body {
 {
   background-color: #E67C73;
 }
+
+.version
+{
+  text-align: right;
+  padding-right: 21px;
+}
