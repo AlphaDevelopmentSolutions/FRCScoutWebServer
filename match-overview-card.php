@@ -4,6 +4,10 @@ require_once("classes/ScoutCards.php");
 require_once("classes/Events.php");
 require_once("classes/Teams.php");
 require_once("classes/Matches.php");
+require_once('classes/MatchItemActions.php');
+require_once('classes/MatchState.php');
+require_once('classes/Action.php');
+require_once('classes/ItemType.php');
 
 $eventId = $_GET['eventId'];
 $matchId = $_GET['matchId'];

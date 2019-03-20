@@ -30,6 +30,21 @@
                         <input class="mdl-textfield__input" type="text" value="<?php echo $scoutCard->RedAllianceFinalScore ?>" name="redAllianceScore">
                         <label class="mdl-textfield__label" >Red Alliance Score</label>
                     </div>
+
+                    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                        <input class="mdl-textfield__input" type="text" value="<?php echo $scoutCard->PreGameStartingPosition ?>" name="redAllianceScore">
+                        <label class="mdl-textfield__label" >Starting Position</label>
+                    </div>
+
+                    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                        <input class="mdl-textfield__input" type="text" value="<?php echo ((empty($scoutCard->PreGameStartingLevel)) ? '' : 'Level ' . $scoutCard->PreGameStartingLevel) ?>" name="redAllianceScore">
+                        <label class="mdl-textfield__label" >Starting Level</label>
+                    </div>
+
+                    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                        <input class="mdl-textfield__input" type="text" value="<?php echo $scoutCard->PreGameStartingPiece ?>" name="redAllianceScore">
+                        <label class="mdl-textfield__label" >Starting Piece</label>
+                    </div>
                 </div>
 
                 <strong style="padding-left: 40px; padding-top: 10px;">Autonomous</strong>
@@ -40,61 +55,57 @@
                     </div>
 
                     <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                        <input class="mdl-textfield__input" type="text" value="<?php echo $scoutCard->AutonomousHatchPanelsSecured ?>" name="autonomousHatchPanelsSecured">
+                        <input class="mdl-textfield__input" type="text" value="<?php echo $totalAutoHatchSecured ?>" name="autonomousHatchPanelsSecured">
                         <label class="mdl-textfield__label" >Hatch Panels Secured</label>
                     </div>
                     <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                        <input class="mdl-textfield__input" type="text" value="<?php echo $scoutCard->AutonomousHatchPanelsSecuredAttempts ?>" name="autonomousHatchPanelsSecuredAttempts">
-                        <label class="mdl-textfield__label" >Hatch Panels Failed  Attempts</label>
+                        <input class="mdl-textfield__input" type="text" value="<?php echo $totalAutoHatchDropped ?>" name="autonomousHatchPanelsSecuredAttempts">
+                        <label class="mdl-textfield__label" >Hatch Panels Dropped</label>
                     </div>
 
                     <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                        <input class="mdl-textfield__input" type="text" value="<?php echo $scoutCard->AutonomousCargoStored ?>" name="autonomousCargoStored">
+                        <input class="mdl-textfield__input" type="text" value="<?php echo $totalAutoCargoSecured ?>" name="autonomousCargoStored">
                         <label class="mdl-textfield__label" >Cargo Stored</label>
                     </div>
                     <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                        <input class="mdl-textfield__input" type="text" value="<?php echo $scoutCard->AutonomousCargoStoredAttempts ?>" name="autonomousCargoStoredAttempts">
-                        <label class="mdl-textfield__label" >Cargo Storage Failed  Attempts</label>
+                        <input class="mdl-textfield__input" type="text" value="<?php echo $totalAutoCargoDropped ?>" name="autonomousCargoStoredAttempts">
+                        <label class="mdl-textfield__label" >Cargo Storage Dropped</label>
                     </div>
                 </div>
 
                 <strong style="padding-left: 40px; padding-top: 10px;">Teleop</strong>
                 <div class="mdl-card__supporting-text">
                     <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                        <input class="mdl-textfield__input" type="text" value="<?php echo $scoutCard->TeleopHatchPanelsSecured ?>" name="teleopHatchPanelsSecured">
+                        <input class="mdl-textfield__input" type="text" value="<?php echo $totalTeleopHatchSecured ?>" name="teleopHatchPanelsSecured">
                         <label class="mdl-textfield__label" >Hatch Panels Secured</label>
                     </div>
 
                     <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                        <input class="mdl-textfield__input" type="text" value="<?php echo $scoutCard->TeleopHatchPanelsSecuredAttempts ?>" name="teleopHatchPanelsSecuredAttempts">
-                        <label class="mdl-textfield__label" >Hatch Panels Failed  Attempts</label>
+                        <input class="mdl-textfield__input" type="text" value="<?php echo $totalTeleopHatchDropped ?>" name="teleopHatchPanelsSecuredAttempts">
+                        <label class="mdl-textfield__label" >Hatch Panels Dropped</label>
                     </div>
 
                     <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                        <input class="mdl-textfield__input" type="text" value="<?php echo $scoutCard->TeleopCargoStored ?>" name="teleopCargoStored">
+                        <input class="mdl-textfield__input" type="text" value="<?php echo $totalTeleopCargoSecured ?>" name="teleopCargoStored">
                         <label class="mdl-textfield__label" >Cargo Stored</label>
                     </div>
 
                     <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                        <input class="mdl-textfield__input" type="text" value="<?php echo $scoutCard->TeleopCargoStoredAttempts ?>" name="teleopCargoStoredAttempts">
-                        <label class="mdl-textfield__label" >Cargo Storage Failed  Attempts</label>
+                        <input class="mdl-textfield__input" type="text" value="<?php echo $totalTeleopCargoDropped ?>" name="teleopCargoStoredAttempts">
+                        <label class="mdl-textfield__label" >Cargo Storage Dropped</label>
                     </div>
 
-                    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                        <input class="mdl-textfield__input" type="text" value="<?php echo $scoutCard->TeleopRocketsCompleted ?>" name="teleopRocketsCompleted">
-                        <label class="mdl-textfield__label" >Rockets Completed</label>
-                    </div>
                 </div>
 
                 <strong style="padding-left: 40px; padding-top: 10px;">End Game</strong>
                 <div class="mdl-card__supporting-text">
                     <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                        <input class="mdl-textfield__input" type="text" value="<?php echo $scoutCard->EndGameReturnedToHabitat ?>" name="returnedToHabitat">
+                        <input class="mdl-textfield__input" type="text" value="<?php echo empty($scoutCard->EndGameReturnedToHabitat) ? 'No' : 'Level ' . $scoutCard->EndGameReturnedToHabitat ?>" name="returnedToHabitat">
                         <label class="mdl-textfield__label" >Returned To Habitat</label>
                     </div>
 
                     <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                        <input class="mdl-textfield__input" type="text" value="<?php echo $scoutCard->EndGameReturnedToHabitatAttempts ?>" name="returnedToHabitatAttempts">
+                        <input class="mdl-textfield__input" type="text" value="<?php echo empty($scoutCard->EndGameReturnedToHabitatAttempts) ? 'No' : 'Level ' . $scoutCard->EndGameReturnedToHabitatAttempts ?>" name="returnedToHabitatAttempts">
                         <label class="mdl-textfield__label" >Returned To Habitat Failed  Attempt</label>
                     </div>
 
@@ -107,38 +118,39 @@
 
                 if(loggedIn())
                 {
-                    echo
-                    '<div class="mdl-card__supporting-text">
-                              <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                                  <div class="mdl-card__supporting-text">
-                                      <div class="mdl-card__supporting-text" style="margin-bottom: 30px;">
-                                          <button name="save" type="submit" class="mdl-button mdl-js-button mdl-button--raised">
-                                            Save
-                                          </button>
-                                      </div>
-                                  </div>
-                              </div>';
-
-                    if(!empty($scoutCard->Id))
-                        echo
-                        '<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                                  <div class="mdl-card__supporting-text">
-                                      <div class="mdl-card__supporting-text" style="margin-bottom: 30px;">
-                                          <button onclick="confirmDelete()" type="button" class="mdl-button mdl-js-button mdl-button--raised">
-                                            Delete
-                                          </button>
-                                      </div>
-                                  </div>
-                              </div>
-                              <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                                  <div class="mdl-card__supporting-text">
-                                      <div hidden class="mdl-card__supporting-text" style="margin-bottom: 30px;">
-                                          <button id="delete" name="delete" type="submit" class="mdl-button mdl-js-button mdl-button--raised">
-                                          </button>
-                                      </div>
-                                  </div>
-                              </div>
-                          </div>';
+                    //temp disabled due to new db design
+//                    echo
+//                    '<div class="mdl-card__supporting-text">
+//                              <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+//                                  <div class="mdl-card__supporting-text">
+//                                      <div class="mdl-card__supporting-text" style="margin-bottom: 30px;">
+//                                          <button name="save" type="submit" class="mdl-button mdl-js-button mdl-button--raised">
+//                                            Save
+//                                          </button>
+//                                      </div>
+//                                  </div>
+//                              </div>';
+//
+//                    if(!empty($scoutCard->Id))
+//                        echo
+//                        '<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+//                                  <div class="mdl-card__supporting-text">
+//                                      <div class="mdl-card__supporting-text" style="margin-bottom: 30px;">
+//                                          <button onclick="confirmDelete()" type="button" class="mdl-button mdl-js-button mdl-button--raised">
+//                                            Delete
+//                                          </button>
+//                                      </div>
+//                                  </div>
+//                              </div>
+//                              <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+//                                  <div class="mdl-card__supporting-text">
+//                                      <div hidden class="mdl-card__supporting-text" style="margin-bottom: 30px;">
+//                                          <button id="delete" name="delete" type="submit" class="mdl-button mdl-js-button mdl-button--raised">
+//                                          </button>
+//                                      </div>
+//                                  </div>
+//                              </div>
+//                          </div>';
                 }
 
                 ?>

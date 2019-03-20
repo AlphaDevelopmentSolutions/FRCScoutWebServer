@@ -192,14 +192,15 @@ $ccwms = $stats['ccwms']['frc' . $pitCard->TeamId];
 
           <?php if(loggedIn())
               {
-                  echo
-                  '<button onclick="window.location = \'/scout-card.php?eventId=' . $event->BlueAllianceId . '&teamId=' . $team->Id .'\'" style="position: fixed; bottom: 0 !important; margin-bottom: 1em;" class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored mdl-shadow--4dp mdl-color--accent" id="add" data-upgraded=",MaterialButton,MaterialRipple">
-                      <i class="material-icons" role="presentation">add</i>
-                      <span class="visuallyhidden">Add</span>
-                      <span class="mdl-button__ripple-container">
-                            <span class="mdl-ripple is-animating" style="width: 160.392px; height: 160.392px; transform: translate(-50%, -50%) translate(37px, 28px);"></span>
-                        </span>
-                  </button>';
+                  //temp disabled due to new table design
+//                  echo
+//                  '<button onclick="window.location = \'/scout-card.php?eventId=' . $event->BlueAllianceId . '&teamId=' . $team->Id .'\'" style="position: fixed; bottom: 0 !important; margin-bottom: 1em;" class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored mdl-shadow--4dp mdl-color--accent" id="add" data-upgraded=",MaterialButton,MaterialRipple">
+//                      <i class="material-icons" role="presentation">add</i>
+//                      <span class="visuallyhidden">Add</span>
+//                      <span class="mdl-button__ripple-container">
+//                            <span class="mdl-ripple is-animating" style="width: 160.392px; height: 160.392px; transform: translate(-50%, -50%) translate(37px, 28px);"></span>
+//                        </span>
+//                  </button>';
               }
 
           ?>
