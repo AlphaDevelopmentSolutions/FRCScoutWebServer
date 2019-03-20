@@ -205,16 +205,20 @@ $event->load($eventId);
 
             <div class="container" style="width: 500px; margin-left: unset; padding-left: unset;">
                 <div class="row">
+<!--                    <div class="col" onclick="togglePreGame($(this));">-->
+<!--                        <div class="stats-filter pre-game"></div>-->
+<!--                        <p>PRE GAME</p>-->
+<!--                    </div>-->
                     <div class="col" onclick="toggleAuto($(this));">
-                        <div style="width: 100px; height: 10px; background-color: #FFD966;"></div>
+                        <div class="stats-filter autonomous"></div>
                         <p>AUTONOMOUS</p>
                     </div>
                     <div class="col" onclick="toggleTeleop($(this));">
-                        <div style="width: 100px; height: 10px; background-color: #00FFFF;"></div>
+                        <div class="stats-filter teleop"></div>
                         <p>TELEOP</p>
                     </div>
                     <div class="col" onclick="toggleEndGame($(this));">
-                        <div style="width: 100px; height: 10px; background-color: #9400ff;"></div>
+                        <div class="stats-filter end-game"></div>
                         <p>END GAME</p>
                     </div>
                 </div>
@@ -222,15 +226,15 @@ $event->load($eventId);
             <div class="container" style="width: 500px; margin-left: unset; padding-left: unset;">
                 <div class="row">
                     <div class="col" onclick="toggleMin($(this));">
-                        <div style="width: 100px; height: 10px; background-color: #ffa74f;"></div>
+                        <div class="stats-filter min"></div>
                         <p>MIN</p>
                     </div>
                     <div class="col" onclick="toggleAvg($(this));">
-                        <div style="width: 100px; height: 10px; background-color: #9FC5E8;"></div>
+                        <div class="stats-filter max"></div>
                         <p>AVG</p>
                     </div>
                     <div class="col" onclick="toggleMax($(this));">
-                        <div style="width: 100px; height: 10px; background-color: #64FF62;"></div>
+                        <div class="stats-filter avg"></div>
                         <p>MAX</p>
                     </div>
                 </div>
@@ -243,18 +247,23 @@ $event->load($eventId);
             <tr>
                 <th>Team Number</th>
                 <th>MAX/AVG</th>
-                <th style="background-color: #FFD966;">Exit Habitat</th>
-                <th style="background-color: #FFD966;">Hatch Panels</th>
-                <th style="background-color: #FFD966;">Hatch Panels Failed Attempts</th>
-                <th style="background-color: #FFD966;">Cargo</th>
-                <th style="background-color: #FFD966;">Cargo Failed  Attempts</th>
-                <th style="background-color: #00FFFF;">Hatch Panels</th>
-                <th style="background-color: #00FFFF;">Hatch Panels Failed  Attempts</th>
-                <th style="background-color: #00FFFF;">Cargo</th>
-                <th style="background-color: #00FFFF;">Cargo Failed  Attempts</th>
-                <th style="background-color: #00FFFF;">Rockets Complete</th>
-                <th style="background-color: #9400ff; color: white;">Returned To Habitat</th>
-                <th style="background-color: #9400ff; color: white;">Returned To Habitat Failed  Attempts</th>
+<!--                <th class="pre-game" style="color: white;">Starting Piece</th>-->
+<!--                <th class="pre-game" style="color: white;">Starting Level</th>-->
+<!--                <th class="pre-game" style="color: white;">Starting Position</th>-->
+
+                <th class="autonomous">Exit Habitat</th>
+                <th class="autonomous">Hatch Panels</th>
+                <th class="autonomous">Hatch Dropped</th>
+                <th class="autonomous">Cargo</th>
+                <th class="autonomous">Cargo Dropped</th>
+
+                <th class="teleop">Hatch Panels</th>
+                <th class="teleop">Hatch Dropped</th>
+                <th class="teleop">Cargo</th>
+                <th class="teleop">Cargo Dropped</th>
+
+                <th class="end-game" style="color: white;">Returned To Habitat</th>
+                <th class="end-game" style="color: white;">Returned To Habitat Failed  Attempts</th>
             </tr>
             </thead>
             <tbody>
@@ -295,7 +304,8 @@ $event->load($eventId);
 
     var statsTable;
 
-    var removeAuto = false,
+    var removePreGame = false,
+        removeAuto = false,
         removeTeleop = false,
         removeEndGame = false;
 
@@ -365,7 +375,7 @@ $event->load($eventId);
                                break;
 
                            case (removeAuto ? -3 : 4):
-                               calculateRowColor($(this));
+                               calculateReverseRowColor($(this));
                                generateToolTips(aData, 'autoHatchPanelsAttemptsMinMatchIds', 'autoHatchPanelsAttemptsMaxMatchIds', $(this));
                                break;
 
@@ -375,7 +385,7 @@ $event->load($eventId);
                                break;
 
                            case (removeAuto ? -5 : 6):
-                               calculateRowColor($(this));
+                               calculateReverseRowColor($(this));
                                generateToolTips(aData, 'autoCargoStoredAttemptsMinMatchIds', 'autoCargoStoredAttemptsMaxMatchIds', $(this));
                                break;
 
@@ -385,7 +395,7 @@ $event->load($eventId);
                                break;
 
                            case (removeTeleop ? -7 : removeAuto ? 3 : 8):
-                               calculateRowColor($(this));
+                               calculateReverseRowColor($(this));
                                generateToolTips(aData, 'teleopHatchPanelsAttemptsMinMatchIds', 'teleopHatchPanelsAttemptsMaxMatchIds', $(this));
                                break;
 
@@ -395,16 +405,11 @@ $event->load($eventId);
                                break;
 
                            case (removeTeleop ? -9 : removeAuto ? 5 : 10):
-                               calculateRowColor($(this));
+                               calculateReverseRowColor($(this));
                                generateToolTips(aData, 'teleopCargoStoredAttemptsMinMatchIds', 'teleopCargoStoredAttemptsMaxMatchIds', $(this));
                                break;
 
-                           case (removeTeleop ? -10 : removeAuto ? 6 : 11):
-                               calculateRowColor($(this));
-                               generateToolTips(aData, 'teleopRocketsCompleteMinMatchIds', 'teleopRocketsCompleteMaxMatchIds', $(this));
-                               break;
-
-                           case (removeAuto ? (removeTeleop ? 2 : 7) : removeTeleop ? 7 : 12):
+                           case (removeAuto ? (removeTeleop ? 2 : 6) : removeTeleop ? 7 : 11):
                                if($(this).html() !== "No")
                                    $(this).css('background-color', '#64FF62');
 
@@ -414,12 +419,12 @@ $event->load($eventId);
 
                                break;
 
-                           case (removeAuto ? (removeTeleop ? 3 : 8) : removeTeleop ? 8 : 13):
+                           case (removeAuto ? (removeTeleop ? 3 : 7) : removeTeleop ? 8 : 12):
                                if($(this).html() !== "No")
-                                   $(this).css('background-color', '#64FF62');
+                                   $(this).css('background-color', '#E67C73');
 
                                else
-                                   $(this).css('background-color', '#E67C73');
+                                   $(this).css('background-color', '#64FF62');
                                generateToolTips(aData, 'endGameReturnedToHabitatMinMatchIds', 'endGameReturnedToHabitatMaxMatchIds', $(this));
 
                                break;
@@ -482,7 +487,6 @@ $event->load($eventId);
         statsTable.columns(8).visible(removeTeleop);
         statsTable.columns(9).visible(removeTeleop);
         statsTable.columns(10).visible(removeTeleop);
-        statsTable.columns(11).visible(removeTeleop);
 
         removeTeleop = !removeTeleop;
 
@@ -494,8 +498,8 @@ $event->load($eventId);
 
         toggleCrossOut(element);
 
+        statsTable.columns(11).visible(removeEndGame);
         statsTable.columns(12).visible(removeEndGame);
-        statsTable.columns(13).visible(removeEndGame);
 
         removeEndGame = !removeEndGame;
 
@@ -526,6 +530,16 @@ $event->load($eventId);
 
         else if($(element).html() === 'MIN')
             $(element).css('background-color', '#ffa74f');
+    }
+
+    function calculateReverseRowColor(element)
+    {
+        if($(element).html() <= 0)
+            $(element).css('background-color', '#64FF62');
+
+        else
+            $(element).css('background-color', '#E67C73');
+
     }
 
     function generateToolTips(aData, minMatchIdsKey, maxMatchIdsKey, element)

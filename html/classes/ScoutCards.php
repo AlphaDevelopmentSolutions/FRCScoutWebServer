@@ -10,16 +10,10 @@ class ScoutCards
     public $CompletedBy;
     public $BlueAllianceFinalScore;
     public $RedAllianceFinalScore;
+    public $PreGameStartingPiece;
+    public $PreGameStartingPosition;
+    public $PreGameStartingLevel;
     public $AutonomousExitHabitat;
-    public $AutonomousHatchPanelsSecured;
-    public $AutonomousHatchPanelsSecuredAttempts;
-    public $AutonomousCargoStored;
-    public $AutonomousCargoStoredAttempts;
-    public $TeleopHatchPanelsSecured;
-    public $TeleopHatchPanelsSecuredAttempts;
-    public $TeleopCargoStored;
-    public $TeleopCargoStoredAttempts;
-    public $TeleopRocketsCompleted;
     public $EndGameReturnedToHabitat;
     public $EndGameReturnedToHabitatAttempts;
     public $Notes;
@@ -30,7 +24,7 @@ class ScoutCards
     function load($id)
     {
         $database = new Database();
-        $sql = 'SELECT * FROM '.$this::$TABLE_NAME.' WHERE '.'id = '.$database->quote($id);
+        $sql = 'SELECT * FROM '.self::$TABLE_NAME.' WHERE '.'id = '.$database->quote($id);
         $rs = $database->query($sql);
 
         if($rs && $rs->num_rows > 0) {
@@ -56,7 +50,7 @@ class ScoutCards
 
         if(empty($this->Id))
         {
-            $sql = 'INSERT INTO ' . ScoutCards::$TABLE_NAME . ' 
+            $sql = 'INSERT INTO ' . self::$TABLE_NAME . ' 
                                       (
                                       MatchId,
                                       TeamId,
@@ -65,16 +59,10 @@ class ScoutCards
                                       CompletedBy,
                                       BlueAllianceFinalScore,
                                       RedAllianceFinalScore,
+                                      PreGameStartingPiece,
+                                      PreGameStartingPosition,
+                                      PreGameStartingLevel,
                                       AutonomousExitHabitat,
-                                      AutonomousHatchPanelsSecured,
-                                      AutonomousHatchPanelsSecuredAttempts,
-                                      AutonomousCargoStored,
-                                      AutonomousCargoStoredAttempts,
-                                      TeleopHatchPanelsSecured,
-                                      TeleopHatchPanelsSecuredAttempts,
-                                      TeleopCargoStored,
-                                      TeleopCargoStoredAttempts,
-                                      TeleopRocketsCompleted,
                                       EndGameReturnedToHabitat,
                                       EndGameReturnedToHabitatAttempts,
                                       Notes,
@@ -87,21 +75,21 @@ class ScoutCards
                                       ' . ((empty($this->EventId)) ? 'NULL' : $database->quote($this->EventId)) .',
                                       ' . ((empty($this->AllianceColor)) ? 'NULL' : $database->quote($this->AllianceColor)) .',
                                       ' . ((empty($this->CompletedBy)) ? 'NULL' : $database->quote($this->CompletedBy)) .',
+                                      
                                       ' . ((empty($this->BlueAllianceFinalScore)) ? '0' : $database->quote($this->BlueAllianceFinalScore)) .',
                                       ' . ((empty($this->RedAllianceFinalScore)) ? '0' : $database->quote($this->RedAllianceFinalScore)) .',
+                                      
+                                      ' . ((empty($this->PreGameStartingPiece)) ? '0' : $database->quote($this->PreGameStartingPiece)) .',
+                                      ' . ((empty($this->PreGameStartingPosition)) ? '0' : $database->quote($this->PreGameStartingPosition)) .',
+                                      ' . ((empty($this->PreGameStartingLevel)) ? '0' : $database->quote($this->PreGameStartingLevel)) .',
+                                      
                                       ' . ((empty($this->AutonomousExitHabitat)) ? '0' : $database->quote($this->AutonomousExitHabitat)) .',
-                                      ' . ((empty($this->AutonomousHatchPanelsSecured)) ? '0' : $database->quote($this->AutonomousHatchPanelsSecured)) .',
-                                      ' . ((empty($this->AutonomousHatchPanelsSecuredAttempts)) ? '0' : $database->quote($this->AutonomousHatchPanelsSecuredAttempts)) .',
-                                      ' . ((empty($this->AutonomousCargoStored)) ? '0' : $database->quote($this->AutonomousCargoStored)) .',
-                                      ' . ((empty($this->AutonomousCargoStoredAttempts)) ? '0' : $database->quote($this->AutonomousCargoStoredAttempts)) .',
-                                      ' . ((empty($this->TeleopHatchPanelsSecured)) ? '0' : $database->quote($this->TeleopHatchPanelsSecured)) .',
-                                      ' . ((empty($this->TeleopHatchPanelsSecuredAttempts)) ? '0' : $database->quote($this->TeleopHatchPanelsSecuredAttempts)) .',
-                                      ' . ((empty($this->TeleopCargoStored)) ? '0' : $database->quote($this->TeleopCargoStored)) .',
-                                      ' . ((empty($this->TeleopCargoStoredAttempts)) ? '0' : $database->quote($this->TeleopCargoStoredAttempts)) .',
-                                      ' . ((empty($this->TeleopRocketsCompleted)) ? '0' : $database->quote($this->TeleopRocketsCompleted)) .',
+                                      
                                       ' . ((empty($this->EndGameReturnedToHabitat)) ? 'NULL' : $database->quote($this->EndGameReturnedToHabitat)) .',
                                       ' . ((empty($this->EndGameReturnedToHabitatAttempts)) ? 'NULL' : $database->quote($this->EndGameReturnedToHabitatAttempts)) .',
+                                      
                                       ' . ((empty($this->Notes)) ? 'NULL' : $database->quote($this->Notes)) .',
+                                      
                                       ' . ((empty($this->CompletedDate)) ? 'NULL' : $database->quote($this->CompletedDate)) .'
                                       );';
 
@@ -118,26 +106,25 @@ class ScoutCards
         }
         else
         {
-            $sql = "UPDATE " . ScoutCards::$TABLE_NAME . " SET 
+            $sql = "UPDATE " . self::$TABLE_NAME . " SET 
             MatchId = " . ((empty($this->MatchId)) ? "NULL" : $database->quote($this->MatchId)) .", 
             TeamId = " . ((empty($this->TeamId)) ? "NULL" : $database->quote($this->TeamId)) .", 
             EventId = " . ((empty($this->EventId)) ? "NULL" : $database->quote($this->EventId)) .", 
             AllianceColor = " . ((empty($this->AllianceColor)) ? "NULL" : $database->quote($this->AllianceColor)) .", 
+            
             CompletedBy = " . ((empty($this->CompletedBy)) ? "NULL" : $database->quote($this->CompletedBy)) .", 
             BlueAllianceFinalScore = " . ((empty($this->BlueAllianceFinalScore)) ? "NULL" : $database->quote($this->BlueAllianceFinalScore)) .", 
             RedAllianceFinalScore = " . ((empty($this->RedAllianceFinalScore)) ? "NULL" : $database->quote($this->RedAllianceFinalScore)) .", 
+            
+            PreGameStartingPiece = " . ((empty($this->PreGameStartingPiece)) ? "NULL" : $database->quote($this->PreGameStartingPiece)) .", 
+            PreGameStartingPosition = " . ((empty($this->PreGameStartingPosition)) ? "NULL" : $database->quote($this->PreGameStartingPosition)) .", 
+            PreGameStartingLevel = " . ((empty($this->PreGameStartingLevel)) ? "NULL" : $database->quote($this->PreGameStartingLevel)) .", 
+            
             AutonomousExitHabitat = " . ((empty($this->AutonomousExitHabitat)) ? "NULL" : $database->quote($this->AutonomousExitHabitat)) .", 
-            AutonomousHatchPanelsSecured = " . ((empty($this->AutonomousHatchPanelsSecured)) ? "NULL" : $database->quote($this->AutonomousHatchPanelsSecured)) .", 
-            AutonomousHatchPanelsSecuredAttempts = " . ((empty($this->AutonomousHatchPanelsSecuredAttempts)) ? "NULL" : $database->quote($this->AutonomousHatchPanelsSecuredAttempts)) .", 
-            AutonomousCargoStored = " . ((empty($this->AutonomousCargoStored)) ? "NULL" : $database->quote($this->AutonomousCargoStored)) .", 
-            AutonomousCargoStoredAttempts = " . ((empty($this->AutonomousCargoStoredAttempts)) ? "NULL" : $database->quote($this->AutonomousCargoStoredAttempts)) .", 
-            TeleopHatchPanelsSecured = " . ((empty($this->TeleopHatchPanelsSecured)) ? "NULL" : $database->quote($this->TeleopHatchPanelsSecured)) .", 
-            TeleopHatchPanelsSecuredAttempts = " . ((empty($this->TeleopHatchPanelsSecuredAttempts)) ? "NULL" : $database->quote($this->TeleopHatchPanelsSecuredAttempts)) .", 
-            TeleopCargoStored = " . ((empty($this->TeleopCargoStored)) ? "NULL" : $database->quote($this->TeleopCargoStored)) .", 
-            TeleopCargoStoredAttempts = " . ((empty($this->TeleopCargoStoredAttempts)) ? "NULL" : $database->quote($this->TeleopCargoStoredAttempts)) .", 
-            TeleopRocketsCompleted = " . ((empty($this->TeleopRocketsCompleted)) ? "NULL" : $database->quote($this->TeleopRocketsCompleted)) .", 
+           
             EndGameReturnedToHabitat = " . ((empty($this->EndGameReturnedToHabitat)) ? "NULL" : $database->quote($this->EndGameReturnedToHabitat)) .", 
             EndGameReturnedToHabitatAttempts = " . ((empty($this->EndGameReturnedToHabitatAttempts)) ? "NULL" : $database->quote($this->EndGameReturnedToHabitatAttempts)) .", 
+           
             Notes = " . ((empty($this->Notes)) ? "NULL" : $database->quote($this->Notes)) .", 
             CompletedDate = " . ((empty($this->CompletedDate)) ? "NULL" : $database->quote($this->CompletedDate)) ."
             WHERE (Id = " . $database->quote($this->Id) . ");";
@@ -176,7 +163,7 @@ class ScoutCards
             "SELECT 
                       * 
                     FROM 
-                      scout_cards 
+                      " . self::$TABLE_NAME ." 
                     WHERE 
                       TeamId = " . $database->quote($teamId) .
                     'AND
@@ -205,7 +192,7 @@ class ScoutCards
             "SELECT 
                       * 
                     FROM 
-                      scout_cards 
+                      " . self::$TABLE_NAME ."  
                     WHERE 
                       EventId = " . $database->quote($eventId)
         );

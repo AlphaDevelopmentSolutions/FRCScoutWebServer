@@ -7,6 +7,10 @@ switch($_POST['action'])
 
         require_once('../classes/Teams.php');
         require_once('../classes/ScoutCards.php');
+        require_once('../classes/MatchItemActions.php');
+        require_once('../classes/MatchState.php');
+        require_once('../classes/Action.php');
+        require_once('../classes/ItemType.php');
         $return_array = array();
 
         $eventId = $_POST['eventId'];
@@ -20,18 +24,17 @@ switch($_POST['action'])
             $data = array();
             $teamNumber = $team['Id'] . ' - ' . $team['Name'];
 
-            $autoExitHabitatMin = 0;
-            $autoHatchPanelsMin = 0;
-            $autoHatchPanelsAttemptsMin = 0;
-            $autoCargoStoredMin = 0;
-            $autoCargoStoredAttemptsMin = 0;
-            $teleopHatchPanelsMin = 0;
-            $teleopHatchPanelsAttemptsMin = 0;
-            $teleopCargoStoredMin = 0;
-            $teleopCargoStoredAttemptsMin = 0;
-            $teleopRocketsCompleteMin = 0;
-            $endGameReturnedToHabitatMin = 0;
-            $endGameReturnedToHabitatAttemptsMin = 0;
+            $autoExitHabitatMin = 1000;
+            $autoHatchPanelsMin = 1000;
+            $autoHatchPanelsAttemptsMin = 1000;
+            $autoCargoStoredMin = 1000;
+            $autoCargoStoredAttemptsMin = 1000;
+            $teleopHatchPanelsMin = 1000;
+            $teleopHatchPanelsAttemptsMin = 1000;
+            $teleopCargoStoredMin = 1000;
+            $teleopCargoStoredAttemptsMin = 1000;
+            $endGameReturnedToHabitatMin = 1000;
+            $endGameReturnedToHabitatAttemptsMin = 1000;
 
             $autoExitHabitatMinMatchIds = array();
             $autoHatchPanelsMinMatchIds = array();
@@ -90,6 +93,53 @@ switch($_POST['action'])
             foreach (ScoutCards::getScoutCardsForTeam($team['Id'], $eventId) as $scoutCard)
             {
 
+                $totalAutoHatchSecured = 0;
+                $totalAutoHatchDropped = 0;
+                $totalAutoCargoSecured = 0;
+                $totalAutoCargoDropped = 0;
+
+                $totalTeleopHatchSecured = 0;
+                $totalTeleopHatchDropped = 0;
+                $totalTeleopCargoSecured = 0;
+                $totalTeleopCargoDropped = 0;
+
+                //calc totals from match item actions
+                foreach(MatchItemActions::getMatchItemActionsForScoutCard($scoutCard['Id']) as $matchItemAction)
+                {
+                    //calc auto
+                    if($matchItemAction['MatchState'] == MatchState::AUTO)
+                    {
+                        //calc hatches
+                        if($matchItemAction['ItemType'] == ItemType::HATCH)
+                        {
+                            $totalAutoHatchSecured += (($matchItemAction['Action'] == Action::SECURED) ? 1 : 0);
+                            $totalAutoHatchDropped += (($matchItemAction['Action'] == Action::DROPPED) ? 1 : 0);
+                        }
+                        //calc cargo
+                        else if($matchItemAction['ItemType'] == ItemType::CARGO)
+                        {
+                            $totalAutoCargoSecured += (($matchItemAction['Action'] == Action::SECURED) ? 1 : 0);
+                            $totalAutoCargoDropped += (($matchItemAction['Action'] == Action::DROPPED) ? 1 : 0);
+                        }
+                    }
+                    //calc teleop
+                    else if($matchItemAction['MatchState'] == MatchState::TELEOP)
+                    {
+                        //calc hatches
+                        if($matchItemAction['ItemType'] == ItemType::HATCH)
+                        {
+                            $totalTeleopHatchSecured += (($matchItemAction['Action'] == Action::SECURED) ? 1 : 0);
+                            $totalTeleopHatchDropped += (($matchItemAction['Action'] == Action::DROPPED) ? 1 : 0);
+                        }
+                        //calc cargo
+                        else if($matchItemAction['ItemType'] == ItemType::CARGO)
+                        {
+                            $totalTeleopCargoSecured += (($matchItemAction['Action'] == Action::SECURED) ? 1 : 0);
+                            $totalTeleopCargoDropped += (($matchItemAction['Action'] == Action::DROPPED) ? 1 : 0);
+                        }
+                    }
+                }
+
                 //calc min
                 if($scoutCard['AutonomousExitHabitat'] <= $autoExitHabitatMin)
                 {
@@ -98,120 +148,110 @@ switch($_POST['action'])
                     $autoExitHabitatMinMatchIds[] = $scoutCard['MatchId'];
                 }
 
-                if($scoutCard['AutonomousHatchPanelsSecured'] <= $autoHatchPanelsMin)
+                if($totalAutoHatchSecured <= $autoHatchPanelsMin)
                 {
-                    $autoHatchPanelsMinMatchIds = (($scoutCard['AutonomousHatchPanelsSecured'] < $autoHatchPanelsMin) ? array() : $autoHatchPanelsMinMatchIds);
-                    $autoHatchPanelsMin = $scoutCard['AutonomousHatchPanelsSecured'];
+                    $autoHatchPanelsMinMatchIds = (($totalAutoHatchSecured < $autoHatchPanelsMin) ? array() : $autoHatchPanelsMinMatchIds);
+                    $autoHatchPanelsMin = $totalAutoHatchSecured;
                     $autoHatchPanelsMinMatchIds[] = $scoutCard['MatchId'];
                 }
 
-                if($scoutCard['AutonomousCargoStored'] <= $autoCargoStoredMin)
+                if($totalAutoCargoSecured <= $autoCargoStoredMin)
                 {
-                    $autoCargoStoredMinMatchIds = (($scoutCard['AutonomousCargoStored'] < $autoCargoStoredMin) ? array() : $autoCargoStoredMinMatchIds);
-                    $autoCargoStoredMin = $scoutCard['AutonomousCargoStored'];
+                    $autoCargoStoredMinMatchIds = (($totalAutoCargoSecured < $autoCargoStoredMin) ? array() : $autoCargoStoredMinMatchIds);
+                    $autoCargoStoredMin = $totalAutoCargoSecured;
                     $autoCargoStoredMinMatchIds[] = $scoutCard['MatchId'];
                 }
 
-                if($scoutCard['TeleopHatchPanelsSecured'] <= $teleopHatchPanelsMin)
+                if($totalTeleopHatchSecured <= $teleopHatchPanelsMin)
                 {
-                    $teleopHatchPanelsMinMatchIds = (($scoutCard['TeleopHatchPanelsSecured'] < $teleopHatchPanelsMin) ? array() : $teleopHatchPanelsMinMatchIds);
-                    $teleopHatchPanelsMin = $scoutCard['TeleopHatchPanelsSecured'];
+                    $teleopHatchPanelsMinMatchIds = (($totalTeleopHatchSecured < $teleopHatchPanelsMin) ? array() : $teleopHatchPanelsMinMatchIds);
+                    $teleopHatchPanelsMin = $totalTeleopHatchSecured;
                     $teleopHatchPanelsMinMatchIds[] = $scoutCard['MatchId'];
                 }
 
-                if($scoutCard['TeleopCargoStored'] <= $teleopCargoStoredMin)
+                if($totalTeleopCargoSecured <= $teleopCargoStoredMin)
                 {
-                    $teleopCargoStoredMinMatchIds = (($scoutCard['TeleopCargoStored'] < $teleopCargoStoredMin) ? array() : $teleopCargoStoredMinMatchIds);
-                    $teleopCargoStoredMin = $scoutCard['TeleopCargoStored'];
+                    $teleopCargoStoredMinMatchIds = (($totalTeleopCargoSecured < $teleopCargoStoredMin) ? array() : $teleopCargoStoredMinMatchIds);
+                    $teleopCargoStoredMin = $totalTeleopCargoSecured;
                     $teleopCargoStoredMinMatchIds[] = $scoutCard['MatchId'];
                 }
                 
-                if($scoutCard['AutonomousHatchPanelsSecuredAttempts'] <= $autoHatchPanelsAttemptsMin)
+                if($totalAutoHatchDropped <= $autoHatchPanelsAttemptsMin)
                 {
-                    $autoHatchPanelsAttemptsMinMatchIds = (($scoutCard['AutonomousHatchPanelsSecuredAttempts'] < $autoHatchPanelsAttemptsMin) ? array() : $autoHatchPanelsAttemptsMinMatchIds);
-                    $autoHatchPanelsAttemptsMin = $scoutCard['AutonomousHatchPanelsSecuredAttempts'];
+                    $autoHatchPanelsAttemptsMinMatchIds = (($totalAutoHatchDropped < $autoHatchPanelsAttemptsMin) ? array() : $autoHatchPanelsAttemptsMinMatchIds);
+                    $autoHatchPanelsAttemptsMin = $totalAutoHatchDropped;
                     $autoHatchPanelsAttemptsMinMatchIds[] = $scoutCard['MatchId'];
                 }
 
-                if($scoutCard['AutonomousCargoStoredAttempts'] <= $autoCargoStoredAttemptsMin)
+                if($totalAutoCargoDropped <= $autoCargoStoredAttemptsMin)
                 {
-                    $autoCargoStoredAttemptsMinMatchIds = (($scoutCard['AutonomousCargoStoredAttempts'] < $autoCargoStoredAttemptsMin) ? array() : $autoCargoStoredAttemptsMinMatchIds);
-                    $autoCargoStoredAttemptsMin = $scoutCard['AutonomousCargoStoredAttempts'];
+                    $autoCargoStoredAttemptsMinMatchIds = (($totalAutoCargoDropped < $autoCargoStoredAttemptsMin) ? array() : $autoCargoStoredAttemptsMinMatchIds);
+                    $autoCargoStoredAttemptsMin = $totalAutoCargoDropped;
                     $autoCargoStoredAttemptsMinMatchIds[] = $scoutCard['MatchId'];
                 }
 
-                if($scoutCard['TeleopHatchPanelsSecuredAttempts'] <= $teleopHatchPanelsAttemptsMin)
+                if($totalTeleopHatchDropped <= $teleopHatchPanelsAttemptsMin)
                 {
-                    $teleopHatchPanelsAttemptsMinMatchIds = (($scoutCard['TeleopHatchPanelsSecuredAttempts'] < $teleopHatchPanelsAttemptsMin) ? array() : $teleopHatchPanelsAttemptsMinMatchIds);
-                    $teleopHatchPanelsAttemptsMin = $scoutCard['TeleopHatchPanelsSecuredAttempts'];
+                    $teleopHatchPanelsAttemptsMinMatchIds = (($totalTeleopHatchDropped < $teleopHatchPanelsAttemptsMin) ? array() : $teleopHatchPanelsAttemptsMinMatchIds);
+                    $teleopHatchPanelsAttemptsMin = $totalTeleopHatchDropped;
                     $teleopHatchPanelsAttemptsMinMatchIds[] = $scoutCard['MatchId'];
                 }
 
-                if($scoutCard['TeleopCargoStoredAttempts'] <= $teleopCargoStoredAttemptsMin)
+                if($totalTeleopCargoDropped <= $teleopCargoStoredAttemptsMin)
                 {
-                    $teleopCargoStoredAttemptsMinMatchIds = (($scoutCard['TeleopCargoStoredAttempts'] < $teleopCargoStoredAttemptsMin) ? array() : $teleopCargoStoredAttemptsMinMatchIds);
-                    $teleopCargoStoredAttemptsMin = $scoutCard['TeleopCargoStoredAttempts'];
+                    $teleopCargoStoredAttemptsMinMatchIds = (($totalTeleopCargoDropped < $teleopCargoStoredAttemptsMin) ? array() : $teleopCargoStoredAttemptsMinMatchIds);
+                    $teleopCargoStoredAttemptsMin = $totalTeleopCargoDropped;
                     $teleopCargoStoredAttemptsMinMatchIds[] = $scoutCard['MatchId'];
                 }
 
-                if($scoutCard['TeleopRocketsCompleted'] <= $teleopRocketsCompleteMin)
+                if(empty($scoutCard['EndGameReturnedToHabitat']))
                 {
-                    $teleopRocketsCompleteMinMatchIds = (($scoutCard['TeleopRocketsCompleted'] < $teleopRocketsCompleteMin) ? array() : $teleopRocketsCompleteMinMatchIds);
-                    $teleopRocketsCompleteMin = $scoutCard['TeleopRocketsCompleted'];
-                    $teleopRocketsCompleteMinMatchIds[] = $scoutCard['MatchId'];
-                }
-                
-                
-                if($scoutCard['EndGameReturnedToHabitat'] == "No") {
-                    if (0 <= $endGameReturnedToHabitatMin) {
-                        $endGameReturnedToHabitatMinMatchIds = (($scoutCard['EndGameReturnedToHabitat'] < $endGameReturnedToHabitatMin) ? array() : $endGameReturnedToHabitatMinMatchIds);
+                    if (0 <= $endGameReturnedToHabitatMin)
+                    {
+                        $endGameReturnedToHabitatMinMatchIds = ((0 < $endGameReturnedToHabitatMin) ? array() : $endGameReturnedToHabitatMinMatchIds);
                         $endGameReturnedToHabitatMin = 0;
                         $endGameReturnedToHabitatMinMatchIds[] = $scoutCard['MatchId'];
                     }
                 }
-                else if(substr($scoutCard['EndGameReturnedToHabitat'], strpos($scoutCard['EndGameReturnedToHabitat'], " ")) <= $endGameReturnedToHabitatMin)
+                else if($scoutCard['EndGameReturnedToHabitat'] <= $endGameReturnedToHabitatMin)
                 {
                     $endGameReturnedToHabitatMinMatchIds = (($scoutCard['EndGameReturnedToHabitat'] < $endGameReturnedToHabitatMin) ? array() : $endGameReturnedToHabitatMinMatchIds);
-                    $endGameReturnedToHabitatMin = substr($scoutCard['EndGameReturnedToHabitat'], strpos($scoutCard['EndGameReturnedToHabitat'], " "));
+                    $endGameReturnedToHabitatMin = $scoutCard['EndGameReturnedToHabitat'];
                     $endGameReturnedToHabitatMinMatchIds[] = $scoutCard['MatchId'];
                 }
 
-                if($scoutCard['EndGameReturnedToHabitatAttempts'] == "No") {
-                    if (0 <= $endGameReturnedToHabitatAttemptsMin) {
+                if(empty($scoutCard['EndGameReturnedToHabitatAttempts']))
+                {
+                    if (0 <= $endGameReturnedToHabitatAttemptsMin)
+                    {
                         $endGameReturnedToHabitatAttemptsMinMatchIds = (($scoutCard['EndGameReturnedToHabitatAttempts'] < $endGameReturnedToHabitatAttemptsMin) ? array() : $endGameReturnedToHabitatAttemptsMinMatchIds);
                         $endGameReturnedToHabitatAttemptsMin = 0;
                         $endGameReturnedToHabitatAttemptsMinMatchIds[] = $scoutCard['MatchId'];
                     }
                 }
-                else if(substr($scoutCard['EndGameReturnedToHabitatAttempts'], strpos($scoutCard['EndGameReturnedToHabitatAttempts'], " ")) <= $endGameReturnedToHabitatAttemptsMin)
+                else if($scoutCard['EndGameReturnedToHabitatAttempts'] <= $endGameReturnedToHabitatAttemptsMin)
                 {
                     $endGameReturnedToHabitatAttemptsMinMatchIds = (($scoutCard['EndGameReturnedToHabitatAttempts'] < $endGameReturnedToHabitatAttemptsMin) ? array() : $endGameReturnedToHabitatAttemptsMinMatchIds);
-                    $endGameReturnedToHabitatAttemptsMin = substr($scoutCard['EndGameReturnedToHabitatAttempts'], strpos($scoutCard['EndGameReturnedToHabitatAttempts'], " "));
+                    $endGameReturnedToHabitatAttemptsMin = $scoutCard['EndGameReturnedToHabitatAttempts'];
                     $endGameReturnedToHabitatAttemptsMinMatchIds[] = $scoutCard['MatchId'];
                 }
 
                 //calc avg
                 $autoExitHabitat += $scoutCard['AutonomousExitHabitat'];
-                $autoHatchPanels += $scoutCard['AutonomousHatchPanelsSecured'];
-                $autoHatchPanelsAttempts += $scoutCard['AutonomousHatchPanelsSecured'];
-                $autoCargoStored += $scoutCard['AutonomousCargoStored'];
-                $autoCargoStoredAttempts += $scoutCard['AutonomousCargoStored'];
-                $teleopHatchPanels += $scoutCard['TeleopHatchPanelsSecured'];
-                $teleopHatchPanelsAttempts += $scoutCard['TeleopHatchPanelsSecured'];
-                $teleopCargoStored += $scoutCard['TeleopCargoStored'];
-                $teleopCargoStoredAttempts += $scoutCard['TeleopCargoStored'];
-                $teleopRocketsComplete += $scoutCard['TeleopRocketsCompleted'];
-                
-                if($scoutCard['EndGameReturnedToHabitat'] == "No")
-                    $endGameReturnedToHabitat += 0;
-                else
-                    $endGameReturnedToHabitat += substr($scoutCard['EndGameReturnedToHabitat'], strpos($scoutCard['EndGameReturnedToHabitat'], " "));
+                $autoHatchPanels += $totalAutoHatchSecured;
+                $autoHatchPanelsAttempts += $totalAutoHatchDropped;
+                $autoCargoStored += $totalAutoCargoSecured;
+                $autoCargoStoredAttempts += $totalAutoCargoDropped;
+                $teleopHatchPanels += $totalTeleopHatchSecured;
+                $teleopHatchPanelsAttempts += $totalTeleopHatchDropped;
+                $teleopCargoStored += $totalTeleopCargoSecured;
+                $teleopCargoStoredAttempts += $totalTeleopCargoDropped;
 
-                if($scoutCard['EndGameReturnedToHabitatAttempts'] == "No")
-                    $endGameReturnedToHabitatAttempts += 0;
-                else
-                    $endGameReturnedToHabitatAttempts += substr($scoutCard['EndGameReturnedToHabitatAttempts'], strpos($scoutCard['EndGameReturnedToHabitatAttempts'], " "));
+                if(!empty($scoutCard['EndGameReturnedToHabitat']))
+                    $endGameReturnedToHabitat += $scoutCard['EndGameReturnedToHabitat'];
 
+                if(!empty($scoutCard['EndGameReturnedToHabitatAttempts']))
+                    $endGameReturnedToHabitatAttempts += $scoutCard['EndGameReturnedToHabitatAttempts'];
 
                 //calc max
                 if($scoutCard['AutonomousExitHabitat'] >= $autoExitHabitatMax)
@@ -221,105 +261,100 @@ switch($_POST['action'])
                     $autoExitHabitatMaxMatchIds[] = $scoutCard['MatchId'];
                 }
 
-                if($scoutCard['AutonomousHatchPanelsSecured'] >= $autoHatchPanelsMax)
+                if($totalAutoHatchSecured >= $autoHatchPanelsMax)
                 {
-                    $autoHatchPanelsMaxMatchIds = (($scoutCard['AutonomousHatchPanelsSecured'] > $autoHatchPanelsMax) ? array() : $autoHatchPanelsMaxMatchIds);
-                    $autoHatchPanelsMax = $scoutCard['AutonomousHatchPanelsSecured'];
+                    $autoHatchPanelsMaxMatchIds = (($totalAutoHatchSecured > $autoHatchPanelsMax) ? array() : $autoHatchPanelsMaxMatchIds);
+                    $autoHatchPanelsMax = $totalAutoHatchSecured;
                     $autoHatchPanelsMaxMatchIds[] = $scoutCard['MatchId'];
                 }
 
-                if($scoutCard['AutonomousCargoStored'] >= $autoCargoStoredMax)
+                if($totalAutoCargoSecured >= $autoCargoStoredMax)
                 {
-                    $autoCargoStoredMaxMatchIds = (($scoutCard['AutonomousCargoStored'] > $autoCargoStoredMax) ? array() : $autoCargoStoredMaxMatchIds);
-                    $autoCargoStoredMax = $scoutCard['AutonomousCargoStored'];
+                    $autoCargoStoredMaxMatchIds = (($totalAutoCargoSecured > $autoCargoStoredMax) ? array() : $autoCargoStoredMaxMatchIds);
+                    $autoCargoStoredMax = $totalAutoCargoSecured;
                     $autoCargoStoredMaxMatchIds[] = $scoutCard['MatchId'];
                 }
 
-                if($scoutCard['TeleopHatchPanelsSecured'] >= $teleopHatchPanelsMax)
+                if($totalTeleopHatchSecured >= $teleopHatchPanelsMax)
                 {
-                    $teleopHatchPanelsMaxMatchIds = (($scoutCard['TeleopHatchPanelsSecured'] > $teleopHatchPanelsMax) ? array() : $teleopHatchPanelsMaxMatchIds);
-                    $teleopHatchPanelsMax = $scoutCard['TeleopHatchPanelsSecured'];
+                    $teleopHatchPanelsMaxMatchIds = (($totalTeleopHatchSecured > $teleopHatchPanelsMax) ? array() : $teleopHatchPanelsMaxMatchIds);
+                    $teleopHatchPanelsMax = $totalTeleopHatchSecured;
                     $teleopHatchPanelsMaxMatchIds[] = $scoutCard['MatchId'];
                 }
 
-                if($scoutCard['TeleopCargoStored'] >= $teleopCargoStoredMax)
+                if($totalTeleopCargoSecured >= $teleopCargoStoredMax)
                 {
-                    $teleopCargoStoredMaxMatchIds = (($scoutCard['TeleopCargoStored'] > $teleopCargoStoredMax) ? array() : $teleopCargoStoredMaxMatchIds);
-                    $teleopCargoStoredMax = $scoutCard['TeleopCargoStored'];
+                    $teleopCargoStoredMaxMatchIds = (($totalTeleopCargoSecured > $teleopCargoStoredMax) ? array() : $teleopCargoStoredMaxMatchIds);
+                    $teleopCargoStoredMax = $totalTeleopCargoSecured;
                     $teleopCargoStoredMaxMatchIds[] = $scoutCard['MatchId'];
                 }
                 
-                if($scoutCard['AutonomousHatchPanelsSecuredAttempts'] >= $autoHatchPanelsAttemptsMax)
+                if($totalAutoHatchDropped >= $autoHatchPanelsAttemptsMax)
                 {
-                    $autoHatchPanelsAttemptsMaxMatchIds = (($scoutCard['AutonomousHatchPanelsSecuredAttempts'] > $autoHatchPanelsAttemptsMax) ? array() : $autoHatchPanelsAttemptsMaxMatchIds);
-                    $autoHatchPanelsAttemptsMax = $scoutCard['AutonomousHatchPanelsSecuredAttempts'];
+                    $autoHatchPanelsAttemptsMaxMatchIds = (($totalAutoHatchDropped > $autoHatchPanelsAttemptsMax) ? array() : $autoHatchPanelsAttemptsMaxMatchIds);
+                    $autoHatchPanelsAttemptsMax = $totalAutoHatchDropped;
                     $autoHatchPanelsAttemptsMaxMatchIds[] = $scoutCard['MatchId'];
                 }
 
-                if($scoutCard['AutonomousCargoStoredAttempts'] >= $autoCargoStoredAttemptsMax)
+                if($totalAutoCargoDropped >= $autoCargoStoredAttemptsMax)
                 {
-                    $autoCargoStoredAttemptsMaxMatchIds = (($scoutCard['AutonomousCargoStoredAttempts'] > $autoCargoStoredAttemptsMax) ? array() : $autoCargoStoredAttemptsMaxMatchIds);
-                    $autoCargoStoredAttemptsMax = $scoutCard['AutonomousCargoStoredAttempts'];
+                    $autoCargoStoredAttemptsMaxMatchIds = (($totalAutoCargoDropped > $autoCargoStoredAttemptsMax) ? array() : $autoCargoStoredAttemptsMaxMatchIds);
+                    $autoCargoStoredAttemptsMax = $totalAutoCargoDropped;
                     $autoCargoStoredAttemptsMaxMatchIds[] = $scoutCard['MatchId'];
                 }
 
-                if($scoutCard['TeleopHatchPanelsSecuredAttempts'] >= $teleopHatchPanelsAttemptsMax)
+                if($totalTeleopHatchDropped >= $teleopHatchPanelsAttemptsMax)
                 {
-                    $teleopHatchPanelsAttemptsMaxMatchIds = (($scoutCard['TeleopHatchPanelsSecuredAttempts'] > $teleopHatchPanelsAttemptsMax) ? array() : $teleopHatchPanelsAttemptsMaxMatchIds);
-                    $teleopHatchPanelsAttemptsMax = $scoutCard['TeleopHatchPanelsSecuredAttempts'];
+                    $teleopHatchPanelsAttemptsMaxMatchIds = (($totalTeleopHatchDropped > $teleopHatchPanelsAttemptsMax) ? array() : $teleopHatchPanelsAttemptsMaxMatchIds);
+                    $teleopHatchPanelsAttemptsMax = $totalTeleopHatchDropped;
                     $teleopHatchPanelsAttemptsMaxMatchIds[] = $scoutCard['MatchId'];
                 }
 
-                if($scoutCard['TeleopCargoStoredAttempts'] >= $teleopCargoStoredAttemptsMax)
+                if($totalTeleopCargoDropped >= $teleopCargoStoredAttemptsMax)
                 {
-                    $teleopCargoStoredAttemptsMaxMatchIds = (($scoutCard['TeleopCargoStoredAttempts'] > $teleopCargoStoredAttemptsMax) ? array() : $teleopCargoStoredAttemptsMaxMatchIds);
-                    $teleopCargoStoredAttemptsMax = $scoutCard['TeleopCargoStoredAttempts'];
+                    $teleopCargoStoredAttemptsMaxMatchIds = (($totalTeleopCargoDropped > $teleopCargoStoredAttemptsMax) ? array() : $teleopCargoStoredAttemptsMaxMatchIds);
+                    $teleopCargoStoredAttemptsMax = $totalTeleopCargoDropped;
                     $teleopCargoStoredAttemptsMaxMatchIds[] = $scoutCard['MatchId'];
                 }
 
-                if($scoutCard['TeleopRocketsCompleted'] >= $teleopRocketsCompleteMax)
-                {
-                    $teleopRocketsCompleteMaxMatchIds = (($scoutCard['TeleopRocketsCompleted'] > $teleopRocketsCompleteMax) ? array() : $teleopRocketsCompleteMaxMatchIds);
-                    $teleopRocketsCompleteMax = $scoutCard['TeleopRocketsCompleted'];
-                    $teleopRocketsCompleteMaxMatchIds[] = $scoutCard['MatchId'];
-                }
 
-
-                if($scoutCard['EndGameReturnedToHabitat'] == "No") {
+                if(empty($scoutCard['EndGameReturnedToHabitat'])) {
                     if (0 >= $endGameReturnedToHabitatMax) {
                         $endGameReturnedToHabitatMaxMatchIds = (($scoutCard['EndGameReturnedToHabitat'] > $endGameReturnedToHabitatMax) ? array() : $endGameReturnedToHabitatMaxMatchIds);
                         $endGameReturnedToHabitatMax = 0;
                         $endGameReturnedToHabitatMaxMatchIds[] = $scoutCard['MatchId'];
                     }
                 }
-                else if(substr($scoutCard['EndGameReturnedToHabitat'], strpos($scoutCard['EndGameReturnedToHabitat'], " ")) >= $endGameReturnedToHabitatMax)
+                else if($scoutCard['EndGameReturnedToHabitat'] >= $endGameReturnedToHabitatMax)
                 {
                     $endGameReturnedToHabitatMaxMatchIds = (($scoutCard['EndGameReturnedToHabitat'] > $endGameReturnedToHabitatMax) ? array() : $endGameReturnedToHabitatMaxMatchIds);
-                    $endGameReturnedToHabitatMax = substr($scoutCard['EndGameReturnedToHabitat'], strpos($scoutCard['EndGameReturnedToHabitat'], " "));
+                    $endGameReturnedToHabitatMax = $scoutCard['EndGameReturnedToHabitat'];
                     $endGameReturnedToHabitatMaxMatchIds[] = $scoutCard['MatchId'];
                 }
 
-                if($scoutCard['EndGameReturnedToHabitatAttempts'] == "No") {
+                if(empty($scoutCard['EndGameReturnedToHabitatAttempts']))
+                {
                     if (0 >= $endGameReturnedToHabitatAttemptsMax) {
                         $endGameReturnedToHabitatAttemptsMaxMatchIds = (($scoutCard['EndGameReturnedToHabitatAttempts'] > $endGameReturnedToHabitatAttemptsMax) ? array() : $endGameReturnedToHabitatAttemptsMaxMatchIds);
                         $endGameReturnedToHabitatAttemptsMax = 0;
                         $endGameReturnedToHabitatAttemptsMaxMatchIds[] = $scoutCard['MatchId'];
                     }
                 }
-                else if(substr($scoutCard['EndGameReturnedToHabitatAttempts'], strpos($scoutCard['EndGameReturnedToHabitatAttempts'], " ")) >= $endGameReturnedToHabitatAttemptsMax) {
+                else if($scoutCard['EndGameReturnedToHabitatAttempts'] >= $endGameReturnedToHabitatAttemptsMax)
+                {
                     $endGameReturnedToHabitatAttemptsMaxMatchIds = (($scoutCard['EndGameReturnedToHabitatAttempts'] > $endGameReturnedToHabitatAttemptsMax) ? array() : $endGameReturnedToHabitatAttemptsMaxMatchIds);
-                    $endGameReturnedToHabitatAttemptsMax = substr($scoutCard['EndGameReturnedToHabitatAttempts'], strpos($scoutCard['EndGameReturnedToHabitatAttempts'], " "));
+                    $endGameReturnedToHabitatAttemptsMax = $scoutCard['EndGameReturnedToHabitatAttempts'];
                 }
-
                     $i++;
 
             }
 
-            if($removeMin == 'false') {
+            //min data
+            if($removeMin != 'true') {
                 $data = array();
                 $data[] = '<a target="_blank" href="/team-matches.php?eventId=' . $eventId . '&teamId=' . $teamNumber .'">' . $teamNumber . '</a>';
                 $data[] = 'MIN';
-                $data[] = $autoExitHabitatMin;
+                $data[] = $autoExitHabitatMin == 0 ? 'No' : 'Level ' . $autoExitHabitatMin;
                 $data[] = $autoHatchPanelsMin;
                 $data[] = $autoHatchPanelsAttemptsMin;
                 $data[] = $autoCargoStoredMin;
@@ -328,7 +363,6 @@ switch($_POST['action'])
                 $data[] = $teleopHatchPanelsAttemptsMin;
                 $data[] = $teleopCargoStoredMin;
                 $data[] = $teleopCargoStoredAttemptsMin;
-                $data[] = $teleopRocketsCompleteMin;
                 $data[] = (($endGameReturnedToHabitatMin > 0) ? "Level " . $endGameReturnedToHabitatMin : "No");
                 $data[] = (($endGameReturnedToHabitatAttemptsMin > 0) ? "Level " . $endGameReturnedToHabitatAttemptsMin : "No");
 
@@ -348,8 +382,8 @@ switch($_POST['action'])
                 $return_array[] = $data;
             }
 
-
-            if($removeAvg == 'false') {
+            //avg data
+            if($removeAvg != 'true') {
                 $scoutCardCount = ($i == 0) ? 1 : $i;
 
                 $data = array();
@@ -364,18 +398,18 @@ switch($_POST['action'])
                 $data[] = round($teleopHatchPanelsAttempts / $scoutCardCount, 2);
                 $data[] = round($teleopCargoStored / $scoutCardCount, 2);
                 $data[] = round($teleopCargoStoredAttempts / $scoutCardCount, 2);
-                $data[] = round($teleopRocketsComplete / $scoutCardCount, 2);
                 $data[] = (($endGameReturnedToHabitat / $scoutCardCount > 0) ? "Level " . round($endGameReturnedToHabitat / $scoutCardCount, 2) : "No");
                 $data[] = (($endGameReturnedToHabitatAttempts / $scoutCardCount > 0) ? "Level " . round($endGameReturnedToHabitatAttempts / $scoutCardCount, 2) : "No");
 
                 $return_array[] = $data;
             }
 
-            if($removeMax == 'false') {
+            //max data
+            if($removeMax != 'true') {
                 $data = array();
                 $data[] = '<a target="_blank" href="/team-matches.php?eventId=' . $eventId . '&teamId=' . $teamNumber .'">' . $teamNumber . '</a>';;
                 $data[] = 'MAX';
-                $data[] = $autoExitHabitatMax;
+                $data[] = $autoExitHabitatMax == 0 ? 'No' : 'Level ' . $autoExitHabitatMax;;
                 $data[] = $autoHatchPanelsMax;
                 $data[] = $autoHatchPanelsAttemptsMax;
                 $data[] = $autoCargoStoredMax;
@@ -384,7 +418,6 @@ switch($_POST['action'])
                 $data[] = $teleopHatchPanelsAttemptsMax;
                 $data[] = $teleopCargoStoredMax;
                 $data[] = $teleopCargoStoredAttemptsMax;
-                $data[] = $teleopRocketsCompleteMax;
                 $data[] = (($endGameReturnedToHabitatMax > 0) ? "Level " . $endGameReturnedToHabitatMax : "No");
                 $data[] = (($endGameReturnedToHabitatAttemptsMax > 0) ? "Level " . $endGameReturnedToHabitatAttemptsMax : "No");
 
