@@ -15,6 +15,7 @@ $action = $_POST['action'];
 
 switch($action)
 {
+    //region Setters
     case 'SubmitScoutCard':
         $response = array();
         $scoutCard = new ScoutCards();
@@ -124,17 +125,9 @@ switch($action)
         echo json_encode($response);
 
         break;
+    //endregion
 
-    case 'GetTeamsAtEvent':
-        $response = array();
-
-        $response['Status'] = 'Success';
-        $response['Response'] = Teams::getTeamsAtEvent(filter_var($_POST['EventId'], FILTER_SANITIZE_STRING));
-
-        echo json_encode($response);
-
-        break;
-
+    //region Getters
     case 'GetUsers':
         $response = array();
 
@@ -150,6 +143,16 @@ switch($action)
 
         $response['Status'] = 'Success';
         $response['Response'] = Events::getEvents();
+
+        echo json_encode($response);
+
+        break;
+
+    case 'GetTeamsAtEvent':
+        $response = array();
+
+        $response['Status'] = 'Success';
+        $response['Response'] = Teams::getTeamsAtEvent(filter_var($_POST['EventId'], FILTER_SANITIZE_STRING));
 
         echo json_encode($response);
 
@@ -238,6 +241,9 @@ switch($action)
         echo json_encode($response);
 
         break;
+    //endregion
+
+
 }
 
 
