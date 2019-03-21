@@ -1,4 +1,4 @@
-#FRC Scout
+# FRC Scout
 
 Combining the excitement of sport with the rigors of science and technology, FIRST Robotics Competition is the ultimate Sport for the Mind. High-school student participants call it “the hardest fun you’ll ever have.”
 
@@ -6,17 +6,17 @@ Under strict rules, limited resources, and an intense six-week time limit, teams
 
 Information is critical. FRC Scout is an application that improves upon the process of gathering information from other teams, or "scouting". Users on the mobile side are able to meet with other teams on the fly and input it all on the mobile app. Data can then be submitted to the web server where it becomes available for everyone to view.
 
-##Getting Started
+## Getting Started
 If you have no already viewed it, see the [FRCScout Android App](https://github.com/AlphaDevelopmentSolutions/FRCScout) for Android documentation.
 
-####Required Server Packages
+#### Required Server Packages
 This application requires the following server packages:
 
     mysql-client mysql-server php php-curl
 
 Along with your choice of web hosting package.
 
-####Configure MySQL Database
+#### Configure MySQL Database
 Create a new schema and write down the name of it.
 
 After selecting the version of the instance you will be installing, navigate to:
@@ -25,7 +25,7 @@ After selecting the version of the instance you will be installing, navigate to:
     
 and select the matching vX.X.X.sql file to import to MySQL.
 
-##Installation
+## Installation
 Once you have uploaded all your files to your web server and setup the database, navigate to
  
     http(s)://(SERVER_IP_OR_DNS)/install.php
@@ -51,7 +51,7 @@ After hitting save the server will generate
     
 If at any time you need to need to change server information, navigate to that file and change the values.
 
-##Cron
+## Cron
 For getting events and teams at those events, the web app runs off of scripts that can be cron tasked. Each script is located at
     
         cron/GetEvents.php
@@ -59,16 +59,7 @@ For getting events and teams at those events, the web app runs off of scripts th
         
 You can either run these manually or automate it with use of an OS cron.
 
-##Error Codes
+## Error Codes
 **5x01:** PHP tried to write a file to the server and failed. Does your server have correct permissions?
 
 **5x02:** cURL failed to function. Have you installed php-curl?
-
-
-
-
-
-
-
-
-
