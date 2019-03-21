@@ -1,7 +1,7 @@
 <?php
-//ini_set('display_errors', 1);
-//ini_set('display_startup_errors', 1);
-//error_reporting(E_ALL);
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 
 require_once('classes/Keys.php');
 require_once('classes/Database.php');
@@ -14,7 +14,7 @@ if (session_status() == PHP_SESSION_NONE) {
     session_start();
 }
 
-$user = unserialize($_SESSION['user']);
+$user = !empty($_SESSION['user']) ? unserialize($_SESSION['user']) : null;
 
 function isPostBack()
 {
@@ -23,7 +23,10 @@ function isPostBack()
 
 function loggedIn()
 {
-    return !empty(unserialize($_SESSION['user']));
+    return !empty($_SESSION['user']) && !empty(unserialize($_SESSION['user']));
 }
+
+define('FILE_WRITE_FAIL_CODE' , '5x01');
+define('CURL_FAIL_CODE' , '5x02');
 
 ?>

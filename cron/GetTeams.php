@@ -19,7 +19,7 @@ if($events && $events->num_rows > 0)
 
 function getTeams($eventCode)
 {
-    $url = "https://www.thebluealliance.com/api/v3/event/" . $eventCode . "/teams?X-TBA-Auth-Key=gGDqr1h7gbcdKAumaFgnuzPJYDox7vz6gyX1a8r9nA0VPPLYBD8q1Uj8byvUR5Lp";
+    $url = "https://www.thebluealliance.com/api/v3/event/" . $eventCode . "/teams?X-TBA-Auth-Key=" . BLUE_ALLIANCE_KEY;
 
     $ch = curl_init();
 
