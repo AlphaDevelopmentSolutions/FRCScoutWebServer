@@ -25,11 +25,30 @@ switch($action)
         $scoutCard->EventId = filter_var($_POST['EventId'], FILTER_SANITIZE_STRING);
         $scoutCard->AllianceColor = filter_var($_POST['AllianceColor'], FILTER_SANITIZE_STRING);
         $scoutCard->CompletedBy = filter_var($_POST['CompletedBy'], FILTER_SANITIZE_STRING);
+        
+        $scoutCard->AutonomousExitHabitat = filter_var($_POST['AutonomousExitHabitat'], FILTER_SANITIZE_NUMBER_INT);
+        $scoutCard->AutonomousHatchPanelsPickedUp = filter_var($_POST['AutonomousHatchPanelsPickedUp'], FILTER_SANITIZE_NUMBER_INT);
+        $scoutCard->AutonomousHatchPanelsSecuredAttempts = filter_var($_POST['AutonomousHatchPanelsSecuredAttempts'], FILTER_SANITIZE_NUMBER_INT);
+        $scoutCard->AutonomousHatchPanelsSecured = filter_var($_POST['AutonomousHatchPanelsSecured'], FILTER_SANITIZE_NUMBER_INT);
+        $scoutCard->AutonomousCargoPickedUp = filter_var($_POST['AutonomousCargoPickedUp'], FILTER_SANITIZE_NUMBER_INT);
+        $scoutCard->AutonomousCargoStoredAttempts = filter_var($_POST['AutonomousCargoStoredAttempts'], FILTER_SANITIZE_NUMBER_INT);
+        $scoutCard->AutonomousCargoStored = filter_var($_POST['AutonomousCargoStored'], FILTER_SANITIZE_NUMBER_INT);
+
+        $scoutCard->TeleopHatchPanelsPickedUp = filter_var($_POST['TeleopHatchPanelsPickedUp'], FILTER_SANITIZE_NUMBER_INT);
+        $scoutCard->TeleopHatchPanelsSecuredAttempts = filter_var($_POST['TeleopHatchPanelsSecuredAttempts'], FILTER_SANITIZE_NUMBER_INT);
+        $scoutCard->TeleopHatchPanelsSecured = filter_var($_POST['TeleopHatchPanelsSecured'], FILTER_SANITIZE_NUMBER_INT);
+        $scoutCard->TeleopCargoPickedUp = filter_var($_POST['TeleopCargoPickedUp'], FILTER_SANITIZE_NUMBER_INT);
+        $scoutCard->TeleopCargoStoredAttempts = filter_var($_POST['TeleopCargoStoredAttempts'], FILTER_SANITIZE_NUMBER_INT);
+        $scoutCard->TeleopCargoStored = filter_var($_POST['TeleopCargoStored'], FILTER_SANITIZE_NUMBER_INT);
+        
+        $scoutCard->EndGameReturnedToHabitat = filter_var($_POST['EndGameReturnedToHabitat'], FILTER_SANITIZE_NUMBER_INT);
+        $scoutCard->EndGameReturnedToHabitatAttempts = filter_var($_POST['EndGameReturnedToHabitatAttempts'], FILTER_SANITIZE_NUMBER_INT);
+
         $scoutCard->BlueAllianceFinalScore = filter_var($_POST['BlueAllianceFinalScore'], FILTER_SANITIZE_NUMBER_INT);
         $scoutCard->RedAllianceFinalScore = filter_var($_POST['RedAllianceFinalScore'], FILTER_SANITIZE_NUMBER_INT);
-        $scoutCard->AutonomousExitHabitat = filter_var($_POST['AutonomousExitHabitat'], FILTER_SANITIZE_STRING);
-        $scoutCard->EndGameReturnedToHabitat = filter_var($_POST['EndGameReturnedToHabitat'], FILTER_SANITIZE_STRING);
-        $scoutCard->EndGameReturnedToHabitatAttempts = filter_var($_POST['EndGameReturnedToHabitatAttempts'], FILTER_SANITIZE_STRING);
+        $scoutCard->DefenseRating = filter_var($_POST['DefenseRating'], FILTER_SANITIZE_NUMBER_INT);
+        $scoutCard->OffenseRating = filter_var($_POST['OffenseRating'], FILTER_SANITIZE_NUMBER_INT);
+        $scoutCard->DriveRating = filter_var($_POST['DriveRatDriveRatinging'], FILTER_SANITIZE_NUMBER_INT);
         $scoutCard->Notes = filter_var($_POST['Notes'], FILTER_SANITIZE_STRING);
         $scoutCard->CompletedDate = filter_var($_POST['CompletedDate'], FILTER_SANITIZE_STRING);
 
@@ -42,30 +61,6 @@ switch($action)
         {
             $response['Status'] = 'Error';
             $response['Response'] = 'Failed to save scout card.';
-        }
-
-        echo json_encode($response);
-
-        break;
-
-    case 'SubmitMatchItemAction':
-        $response = array();
-        $matchItemAction = new MatchItemActions();
-
-        $matchItemAction->ScoutCardId = filter_var($_POST['ScoutCardId'], FILTER_SANITIZE_NUMBER_INT);
-        $matchItemAction->MatchState = filter_var($_POST['MatchState'], FILTER_SANITIZE_STRING);
-        $matchItemAction->ItemType = filter_var($_POST['ItemType'], FILTER_SANITIZE_STRING);
-        $matchItemAction->Action = filter_var($_POST['Action'], FILTER_SANITIZE_STRING);
-
-        if($matchItemAction->save())
-        {
-            $response['Status'] = 'Success';
-            $response['Response'] = $matchItemAction->Id;
-        }
-        else
-        {
-            $response['Status'] = 'Error';
-            $response['Response'] = 'Failed to save match item action.';
         }
 
         echo json_encode($response);
@@ -172,27 +167,6 @@ switch($action)
         {
             $response['Status'] =  'Error';
             $response['Response'] = 'Invalid event id.';
-        }
-
-
-        echo json_encode($response);
-
-        break;
-
-    case 'GetMatchItemActions':
-        $response = array();
-
-        $teamId = filter_var($_POST['ScoutCardId'], FILTER_SANITIZE_NUMBER_INT);
-
-        if(!empty($teamId))
-        {
-            $response['Status'] = 'Success';
-            $response['Response'] = MatchItemActions::getMatchItemActionsForScoutCard($teamId);
-        }
-        else
-        {
-            $response['Status'] =  'Error';
-            $response['Response'] = 'Invalid scout card id.';
         }
 
 
