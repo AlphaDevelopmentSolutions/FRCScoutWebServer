@@ -16,7 +16,7 @@
                     </div>
                     <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
                         <input class="mdl-textfield__input" type="text" value="<?php echo $pitCard->DriveStyle ?>" name="driveStyle">
-                        <label class="mdl-textfield__label" >Drive Style</label>
+                        <label class="mdl-textfield__label" >Drivetrain</label>
                     </div>
                     <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
                         <input class="mdl-textfield__input" type="text" value="<?php echo $pitCard->RobotWeight ?>" name="driveStyle">
