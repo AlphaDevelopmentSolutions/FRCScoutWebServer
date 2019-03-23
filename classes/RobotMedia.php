@@ -93,19 +93,19 @@ class RobotMedia
         $uid = uniqid();
 
         //make sure the file doesn't exist
-        while(file_exists($uid . '.png'))
+        while(file_exists($uid . '.jpeg'))
             $uid = uniqid();
 
         $image = base64_decode($base64Img);
 
-        $file = fopen("../assets/robot-media/$uid.png", 'wb');
+        $file = fopen("../assets/robot-media/$uid.jpeg", 'wb');
 
         $success = fwrite($file, $image);
 
         fclose($file);
 
         if($success)
-            $this->FileURI = $uid . '.png';
+            $this->FileURI = $uid . '.jpeg';
 
         return $success;
 
