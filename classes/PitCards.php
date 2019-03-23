@@ -15,7 +15,6 @@ class PitCards
 
     public $TeleopHatch;
     public $TeleopCargo;
-    public $TeleopRocketsComplete;
 
     public $ReturnToHabitat;
     public $Notes;
@@ -67,7 +66,6 @@ class PitCards
                                       
                                       TeleopHatch,
                                       TeleopCargo,
-                                      TeleopRocketsComplete,
                                       
                                       ReturnToHabitat,
                                       

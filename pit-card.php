@@ -24,7 +24,6 @@ if(isPostBack() && loggedIn())
         $pitCard->AutoCargo = $_POST['autonomousCargoStored'];
         $pitCard->TeleopHatch = $_POST['teleopHatchPanelsSecured'];
         $pitCard->TeleopCargo = $_POST['teleopCargoStored'];
-        $pitCard->TeleopRocketsComplete = $_POST['teleopRocketsCompleted'];
         $pitCard->ReturnToHabitat = $_POST['returnedToHabitat'];
         $pitCard->Notes = $_POST['notes'];
 
