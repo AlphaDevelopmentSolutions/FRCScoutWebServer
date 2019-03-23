@@ -33,3 +33,8 @@ update scout_cards set endgamereturnedtohabitatattempts = 0 WHERE endgamereturne
 ALTER TABLE `pit_cards`
 ADD COLUMN `RobotWeight` VARCHAR(45) NULL AFTER `DriveStyle`,
 DROP COLUMN `TeleopRocketsComplete`;
+
+ALTER TABLE `robot_media`
+CHANGE COLUMN `RobotId` `TeamId` INT(11) NULL DEFAULT NULL,
+CHANGE COLUMN `Id` `Id` INT(11) NOT NULL AUTO_INCREMENT ;
+

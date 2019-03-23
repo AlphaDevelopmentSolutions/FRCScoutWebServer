@@ -35,15 +35,12 @@ class RobotMedia
     function save()
     {
 
-        ini_set('display_errors', 1);
-        ini_set('display_startup_errors', 1);
-        error_reporting(E_ALL);
-
-        if($this->saveImage($this->Base64Image))
+        if($this->saveImage($this->Base64Image) > 0)
         {
             $database = new Database();
 
-            if (empty($this->Id)) {
+            if (empty($this->Id))
+            {
                 $sql = 'INSERT INTO ' . self::$TABLE_NAME . '
                                       (
                                       TeamId,
@@ -64,7 +61,9 @@ class RobotMedia
                 $database->close();
                 return false;
 
-            } else {
+            }
+            else
+                {
                 $sql = "UPDATE " . self::$TABLE_NAME . " SET
             TeamId = " . ((empty($this->TeamId)) ? "NULL" : $database->quote($this->TeamId)) . ",
             FileName = " . ((empty($this->FileName)) ? "NULL" : $database->quote($this->FileName)) . "
@@ -79,12 +78,14 @@ class RobotMedia
                 return false;
             }
         }
+
+        return false;
     }
 
     /**
      * Saves a base64 encoded image to the server
      * @param $base64Img
-     * @return bool
+     * @return bool if error | | int of bytes written
      */
     private function saveImage($base64Img)
     {
@@ -102,6 +103,9 @@ class RobotMedia
         $success = fwrite($file, $image);
 
         fclose($file);
+
+        if($success)
+            $this->FileName = $uid . '.png';
 
         return $success;
 
