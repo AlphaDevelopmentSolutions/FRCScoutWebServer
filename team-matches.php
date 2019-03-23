@@ -163,6 +163,7 @@ $ccwms = $stats['ccwms']['frc' . $pitCard->TeamId];
           </div>
           <div id="quick-stats" style="padding-left: 40px" hidden>
               <h6 style="margin: unset"><strong>Drive Style:</strong> <?php echo $pitCard->DriveStyle ?></h6>
+              <h6 style="margin: unset"><strong>Robot Weight:</strong> <?php echo $pitCard->RobotWeight ?></h6>
               <h6 style="margin: unset"><strong>Auto Exit Habitat:</strong> <?php echo $pitCard->AutoExitHabitat ?></h6>
               <h6 style="margin: unset"><strong>Auto Hatch Panels:</strong> <?php echo $pitCard->AutoHatch ?></h6>
               <h6 style="margin: unset"><strong>Auto Cargo:</strong> <?php echo $pitCard->AutoCargo ?></h6>
