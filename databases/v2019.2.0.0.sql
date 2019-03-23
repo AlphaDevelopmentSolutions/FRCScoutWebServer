@@ -29,3 +29,7 @@ update scout_cards set endgamereturnedtohabitat = substr(endgamereturnedtohabita
 update scout_cards set endgamereturnedtohabitat = 0 WHERE endgamereturnedtohabitat = 'No';
 update scout_cards set endgamereturnedtohabitatattempts = substr(endgamereturnedtohabitatattempts, 7) WHERE endgamereturnedtohabitatattempts LIKE '%Level%';
 update scout_cards set endgamereturnedtohabitatattempts = 0 WHERE endgamereturnedtohabitatattempts = 'No';
+
+ALTER TABLE `pit_cards`
+ADD COLUMN `RobotWeight` VARCHAR(45) NULL AFTER `DriveStyle`,
+DROP COLUMN `TeleopRocketsComplete`;
