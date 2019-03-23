@@ -6,10 +6,10 @@ require_once('../classes/Teams.php');
 require_once('../classes/Events.php');
 require_once('../classes/RobotMedia.php');
 
-//if($_POST['key'] != API_KEY)
-//{
-//    die('Invalid key.');
-//}
+if($_POST['key'] != API_KEY)
+{
+    die('Invalid key.');
+}
 
 $action = $_POST['action'];
 

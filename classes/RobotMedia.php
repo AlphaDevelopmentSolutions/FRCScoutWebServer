@@ -4,7 +4,7 @@ class RobotMedia
 {
     public $Id;
     public $TeamId;
-    public $FileName;
+    public $FileURI;
     public $Base64Image;
 
     private static $TABLE_NAME = 'robot_media';
@@ -44,12 +44,12 @@ class RobotMedia
                 $sql = 'INSERT INTO ' . self::$TABLE_NAME . '
                                       (
                                       TeamId,
-                                      FileName
+                                      FileURI
                                       )
                                       VALUES
                                       (
                                       ' . ((empty($this->TeamId)) ? 'NULL' : $database->quote($this->TeamId)) . ',
-                                      ' . ((empty($this->FileName)) ? 'NULL' : $database->quote($this->FileName)) . '
+                                      ' . ((empty($this->FileURI)) ? 'NULL' : $database->quote($this->FileURI)) . '
                                       );';
 
                 if ($database->query($sql)) {
@@ -66,7 +66,7 @@ class RobotMedia
                 {
                 $sql = "UPDATE " . self::$TABLE_NAME . " SET
             TeamId = " . ((empty($this->TeamId)) ? "NULL" : $database->quote($this->TeamId)) . ",
-            FileName = " . ((empty($this->FileName)) ? "NULL" : $database->quote($this->FileName)) . "
+            FileURI = " . ((empty($this->FileURI)) ? "NULL" : $database->quote($this->FileURI)) . "
             WHERE (Id = " . $database->quote($this->Id) . ");";
 
                 if ($database->query($sql)) {
@@ -105,7 +105,7 @@ class RobotMedia
         fclose($file);
 
         if($success)
-            $this->FileName = $uid . '.png';
+            $this->FileURI = $uid . '.png';
 
         return $success;
 
@@ -151,8 +151,8 @@ class RobotMedia
         {
             while ($row = $robotMedia->fetch_assoc())
             {
-                $file = fopen("../assets/robot-media/" . $row['ImageURI'] . ".png", 'r');
-                $row['Base64Image'] = base64_encode($file);
+//                $file = fopen("../assets/robot-media/" . $row['ImageURI'] . ".png", 'r');
+//                $row['Base64Image'] = base64_encode($file);
                 $response[] = $row;
             }
         }

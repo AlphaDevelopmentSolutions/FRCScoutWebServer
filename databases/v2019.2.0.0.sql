@@ -29,6 +29,14 @@ update scout_cards set endgamereturnedtohabitat = substr(endgamereturnedtohabita
 update scout_cards set endgamereturnedtohabitat = 0 WHERE endgamereturnedtohabitat = 'No';
 update scout_cards set endgamereturnedtohabitatattempts = substr(endgamereturnedtohabitatattempts, 7) WHERE endgamereturnedtohabitatattempts LIKE '%Level%';
 update scout_cards set endgamereturnedtohabitatattempts = 0 WHERE endgamereturnedtohabitatattempts = 'No';
+update scout_cards set pregamestartinglevel = 1 where isnull(pregamestartinglevel);
+update scout_cards set autonomoushatchpanelspickedup = 0 where isnull(autonomoushatchpanelspickedup);
+update scout_cards set autonomouscargopickedup = 0 where isnull(autonomouscargopickedup);
+update scout_cards set teleophatchpanelspickedup = 0 where isnull(teleophatchpanelspickedup);
+update scout_cards set teleopcargopickedup = 0 where isnull(teleopcargopickedup);
+update scout_cards set defenserating = 0 where isnull(defenserating);
+update scout_cards set offenserating = 0 where isnull(offenserating);
+update scout_cards set driverating = 0 where isnull(driverating);
 
 ALTER TABLE `pit_cards`
 ADD COLUMN `RobotWeight` VARCHAR(45) NULL AFTER `DriveStyle`,
@@ -36,5 +44,6 @@ DROP COLUMN `TeleopRocketsComplete`;
 
 ALTER TABLE `robot_media`
 CHANGE COLUMN `RobotId` `TeamId` INT(11) NULL DEFAULT NULL,
-CHANGE COLUMN `Id` `Id` INT(11) NOT NULL AUTO_INCREMENT ;
+CHANGE COLUMN `Id` `Id` INT(11) NOT NULL AUTO_INCREMENT
+CHANGE COLUMN `FileName` `FileURI` VARCHAR(45) NULL DEFAULT NULL ;
 
