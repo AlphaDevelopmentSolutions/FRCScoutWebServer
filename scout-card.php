@@ -2,10 +2,6 @@
 require_once("config.php");
 require_once("classes/ScoutCards.php");
 require_once("classes/Events.php");
-require_once('classes/MatchItemActions.php');
-require_once('classes/MatchState.php');
-require_once('classes/Action.php');
-require_once('classes/ItemType.php');
 
 $scoutCardId = $_GET['scoutCardId'];
 $eventId = $_GET['eventId'];
@@ -23,54 +19,6 @@ else
     $scoutCard->TeamId = $teamId;
     $scoutCard->EventId = $eventId;
 }
-
-$totalAutoHatchSecured = 0;
-$totalAutoHatchDropped = 0;
-$totalAutoCargoSecured = 0;
-$totalAutoCargoDropped = 0;
-
-$totalTeleopHatchSecured = 0;
-$totalTeleopHatchDropped = 0;
-$totalTeleopCargoSecured = 0;
-$totalTeleopCargoDropped = 0;
-
-//calc totals from match item actions
-foreach(MatchItemActions::getMatchItemActionsForScoutCard($scoutCard->Id) as $matchItemAction)
-{
-    //calc auto
-    if($matchItemAction['MatchState'] == MatchState::AUTO)
-    {
-        //calc hatches
-        if($matchItemAction['ItemType'] == ItemType::HATCH)
-        {
-            $totalAutoHatchSecured += (($matchItemAction['Action'] == Action::SECURED) ? 1 : 0);
-            $totalAutoHatchDropped += (($matchItemAction['Action'] == Action::DROPPED) ? 1 : 0);
-        }
-        //calc cargo
-        else if($matchItemAction['ItemType'] == ItemType::CARGO)
-        {
-            $totalAutoCargoSecured += (($matchItemAction['Action'] == Action::SECURED) ? 1 : 0);
-            $totalAutoCargoDropped += (($matchItemAction['Action'] == Action::DROPPED) ? 1 : 0);
-        }
-    }
-    //calc teleop
-    else if($matchItemAction['MatchState'] == MatchState::TELEOP)
-    {
-        //calc hatches
-        if($matchItemAction['ItemType'] == ItemType::HATCH)
-        {
-            $totalTeleopHatchSecured += (($matchItemAction['Action'] == Action::SECURED) ? 1 : 0);
-            $totalTeleopHatchDropped += (($matchItemAction['Action'] == Action::DROPPED) ? 1 : 0);
-        }
-        //calc cargo
-        else if($matchItemAction['ItemType'] == ItemType::CARGO)
-        {
-            $totalTeleopCargoSecured += (($matchItemAction['Action'] == Action::SECURED) ? 1 : 0);
-            $totalTeleopCargoDropped += (($matchItemAction['Action'] == Action::DROPPED) ? 1 : 0);
-        }
-    }
-}
-
 
 $event = new Events();
 $event->load($scoutCard->EventId);
@@ -92,7 +40,6 @@ if(isPostBack() && loggedIn())
         $scoutCard->TeleopHatchPanelsSecuredAttempts = $_POST['teleopHatchPanelsSecuredAttempts'];
         $scoutCard->TeleopCargoStored = $_POST['teleopCargoStored'];
         $scoutCard->TeleopCargoStoredAttempts = $_POST['teleopCargoStoredAttempts'];
-        $scoutCard->TeleopRocketsCompleted = $_POST['teleopRocketsCompleted'];
         $scoutCard->EndGameReturnedToHabitat = $_POST['returnedToHabitat'];
         $scoutCard->EndGameReturnedToHabitatAttempts = $_POST['returnedToHabitatAttempts'];
         $scoutCard->Notes = $_POST['notes'];
