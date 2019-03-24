@@ -1,9 +1,9 @@
 <?php
 require_once("config.php");
 require_once("classes/Teams.php");
-require_once("classes/ScoutCards.php");
 require_once("classes/PitCards.php");
 require_once("classes/Events.php");
+
 
 $eventId = $_GET['eventId'];
 $teamId = $_GET['teamId'];
@@ -64,8 +64,9 @@ $ccwms = $stats['ccwms']['frc' . $pitCard->TeamId];
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.deep_purple-pink.min.css">
     <link rel="stylesheet" href="css/styles.css">
-  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+      <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
 
 
 
@@ -86,31 +87,31 @@ $ccwms = $stats['ccwms']['frc' . $pitCard->TeamId];
     <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
       <header class="mdl-layout__header mdl-layout__header--scroll mdl-color--primary">
         <div class="mdl-layout--large-screen-only mdl-layout__header-row">
-        <?php include_once('includes/login-form.php') ?>
-
+            <?php include_once('includes/login-form.php') ?>
         </div>
           <?php
 
-          $robotMediaUri = ROBOT_MEDIA_URL . $team->getProfileImageUri();
-          list($width, $height) = getimagesize($robotMediaUri);
+            $robotMediaUri = ROBOT_MEDIA_URL . $team->getProfileImageUri();
+            list($width, $height) = getimagesize($robotMediaUri);
 
           if(!empty($width) && !empty($height))
           {
               if ($width > $height)
                   echo
                       '<div style="height: unset" class="mdl-layout--large-screen-only mdl-layout__header-row">
-                      <div class="circle-image-landscape">
-                        <img src="' . $robotMediaUri . '">
-                      </div>
-                    </div>';
+                  <div class="circle-image-landscape">
+                    <img src="' . $robotMediaUri . '">
+                  </div>
+                </div>';
               else
                   echo
                       '<div style="height: unset" class="mdl-layout--large-screen-only mdl-layout__header-row">
-                      <div class="circle-image-portrait">
-                        <img src="' . $robotMediaUri . '">
-                      </div>
-                    </div>';
+                  <div class="circle-image-portrait">
+                    <img src="' . $robotMediaUri . '">
+                  </div>
+                </div>';
           }
+
 
           ?>
         <div class="mdl-layout--large-screen-only mdl-layout__header-row">
@@ -170,7 +171,6 @@ $ccwms = $stats['ccwms']['frc' . $pitCard->TeamId];
                     </a>
                   ';
               }
-
               ?>
 
           </div>
@@ -181,6 +181,7 @@ $ccwms = $stats['ccwms']['frc' . $pitCard->TeamId];
           <div style="height: unset" class="mdl-layout--large-screen-only mdl-layout__header-row">
               <h6 style="margin: unset"><strong>DPR:</strong> <?php echo round($dpr, 2) ?></h6>
           </div>
+
           <div id="quick-stats" style="padding-left: 40px" hidden>
               <h6 style="margin: unset"><strong>Drivetrain:</strong> <?php echo $pitCard->DriveStyle ?></h6>
               <h6 style="margin: unset"><strong>Robot Weight:</strong> <?php echo $pitCard->RobotWeight ?></h6>
@@ -203,6 +204,7 @@ $ccwms = $stats['ccwms']['frc' . $pitCard->TeamId];
           <div style="height: unset" class="mdl-layout--large-screen-only mdl-layout__header-row">
               <h6 style="margin: unset" ><a id="show-stats-btn" href="#" style="color:white" onclick="showQuickStats()">Show More</a></h6>
           </div>
+
         <div class="mdl-layout--large-screen-only mdl-layout__header-row">
         </div>
           <div class="version">Version <?php echo VERSION ?></div>
@@ -212,49 +214,36 @@ $ccwms = $stats['ccwms']['frc' . $pitCard->TeamId];
           <a href="" class="mdl-layout__tab is-active">Team <?php echo $teamId; ?></a>
         </div>
           <div class="mdl-layout__tab-bar mdl-js-ripple-effect mdl-color--primary-dark">
-              <a href="/team-matches.php?eventId=<?php echo $event->BlueAllianceId; ?>&teamId=<?php echo $team->Id; ?>" class="mdl-layout__tab is-active">Matches</a>
+              <a href="/team-matches.php?eventId=<?php echo $event->BlueAllianceId; ?>&teamId=<?php echo $team->Id; ?>" class="mdl-layout__tab ">Matches</a>
               <a href="/team-pits.php?eventId=<?php echo $event->BlueAllianceId; ?>&teamId=<?php echo $team->Id; ?>" class="mdl-layout__tab">Pits</a>
-              <a href="/team-photos.php?eventId=<?php echo $event->BlueAllianceId; ?>&teamId=<?php echo $team->Id; ?>" class="mdl-layout__tab">Photos</a>
+              <a href="/team-photos.php?eventId=<?php echo $event->BlueAllianceId; ?>&teamId=<?php echo $team->Id; ?>" class="mdl-layout__tab is-active">Photos</a>
           </div>
       </header>
       <main class="mdl-layout__content">
 
-          <?php if(loggedIn())
-              {
-                  //temp disabled due to new table design
-//                  echo
-//                  '<button onclick="window.location = \'/scout-card.php?eventId=' . $event->BlueAllianceId . '&teamId=' . $team->Id .'\'" style="position: fixed; bottom: 0 !important; margin-bottom: 1em;" class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored mdl-shadow--4dp mdl-color--accent" id="add" data-upgraded=",MaterialButton,MaterialRipple">
-//                      <i class="material-icons" role="presentation">add</i>
-//                      <span class="visuallyhidden">Add</span>
-//                      <span class="mdl-button__ripple-container">
-//                            <span class="mdl-ripple is-animating" style="width: 160.392px; height: 160.392px; transform: translate(-50%, -50%) translate(37px, 28px);"></span>
-//                        </span>
-//                  </button>';
-              }
-
-          ?>
-
           <?php
 
-          foreach(ScoutCards::getScoutCardsForTeam($teamId, $eventId) as $scoutCard)
+          foreach(Teams::getRobotPhotos($teamId) as $robotPhotoUri)
           {
-            echo
+              $robotMediaUri = ROBOT_MEDIA_URL . $robotPhotoUri;
+
+              $html =
             '
                 <div class="mdl-layout__tab-panel is-active" id="overview">
                   <section class="section--center mdl-grid mdl-grid--no-spacing mdl-shadow--2dp">
                     <div class="mdl-card mdl-cell mdl-cell--12-col">
                       <div class="mdl-card__supporting-text">
-                        <h4>Match ' . $scoutCard['MatchId'] . '</h4>
-                        Blue Alliance Score - ' . $scoutCard['BlueAllianceFinalScore'] . '<br><br>
-                        Red Alliance Score - ' . $scoutCard['RedAllianceFinalScore'] .
-                      '</div>
-                      <div class="mdl-card__actions">
-                        <a href="/scout-card.php?scoutCardId=' . $scoutCard['Id']  .'" class="mdl-button">View</a>
+                        <img class="robot-media" src="' . $robotMediaUri . '"  height="350"/>
+                      </div>
+                       <div class="mdl-card__actions">
+                        <a target="_blank" href="' . $robotMediaUri . '" class="mdl-button">View</a>
                       </div>
                     </div>
                   </section>
                 </div>
             ';
+
+            echo $html;
           }
 
           ?>
@@ -287,23 +276,24 @@ $ccwms = $stats['ccwms']['frc' . $pitCard->TeamId];
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.indigo-pink.min.css">
     <script src="https://code.getmdl.io/1.3.0/material.min.js"></script>
-    <script>
-        function showQuickStats()
-        {
 
-            if($('#quick-stats').attr('hidden'))
-            {
-                $('#show-stats-btn').html('Show Less');
-                $('#quick-stats').removeAttr('hidden');
-            }
+  <script>
+      function showQuickStats()
+      {
 
-            else
-            {
-                $('#show-stats-btn').html('Show More');
-                $('#quick-stats').attr('hidden', 'hidden');
-            }
+          if($('#quick-stats').attr('hidden'))
+          {
+              $('#show-stats-btn').html('Show Less');
+              $('#quick-stats').removeAttr('hidden');
+          }
 
-        }
-    </script>
+          else
+          {
+              $('#show-stats-btn').html('Show More');
+              $('#quick-stats').attr('hidden', 'hidden');
+          }
+
+      }
+  </script>
   </body>
 </html>

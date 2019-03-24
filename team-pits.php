@@ -216,6 +216,7 @@ $ccwms = $stats['ccwms']['frc' . $pitCard->TeamId];
           <div class="mdl-layout__tab-bar mdl-js-ripple-effect mdl-color--primary-dark">
               <a href="/team-matches.php?eventId=<?php echo $event->BlueAllianceId; ?>&teamId=<?php echo $team->Id; ?>" class="mdl-layout__tab ">Matches</a>
               <a href="/team-pits.php?eventId=<?php echo $event->BlueAllianceId; ?>&teamId=<?php echo $team->Id; ?>" class="mdl-layout__tab is-active">Pits</a>
+              <a href="/team-photos.php?eventId=<?php echo $event->BlueAllianceId; ?>&teamId=<?php echo $team->Id; ?>" class="mdl-layout__tab">Photos</a>
           </div>
       </header>
       <main class="mdl-layout__content">

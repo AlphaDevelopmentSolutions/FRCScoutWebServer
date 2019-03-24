@@ -205,6 +205,38 @@ class Teams
 
         }
     }
+
+    public static function getRobotPhotos($teamId)
+    {
+        if(!empty($teamId))
+        {
+            $response = array();
+            $database = new Database();
+            $robotMedia = $database->query(
+                "SELECT
+                      FileURI
+                    FROM
+                      robot_media
+                    WHERE
+                      TeamId = " . $teamId . "
+                    ORDER BY Id DESC"
+            );
+            $database->close();
+
+
+            if($robotMedia && $robotMedia->num_rows > 0)
+            {
+                while ($row = $robotMedia->fetch_assoc())
+                {
+                    $response[] = $row['FileURI'];
+                }
+            }
+
+            return $response;
+        }
+
+        return array();
+    }
 }
 
 ?>
