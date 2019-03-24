@@ -311,3 +311,35 @@ html, body {
   text-align: right;
   padding-right: 21px;
 }
+
+.circle-image-portrait
+{
+  position: relative;
+  width: 200px;
+  height: 200px;
+  overflow: hidden;
+  border-radius: 50%;
+}
+
+.circle-image-portrait img
+{
+  width: 100%;
+  height: auto;
+}
+
+.circle-image-landscape
+{
+  display: inline-block;
+  position: relative;
+  width: 200px;
+  height: 200px;
+  overflow: hidden;
+  border-radius: 50%;
+}
+
+.circle-image-landscape img
+{
+  width: auto;
+  height: 100%;
+  margin-left: -50px;
+}

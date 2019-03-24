@@ -20,7 +20,7 @@ class Teams
     function load($id)
     {
         $database = new Database();
-        $sql = 'SELECT * FROM '.$this::$TABLE_NAME.' WHERE '.'id = '.$database->quote($id);
+        $sql = 'SELECT * FROM '.self::$TABLE_NAME.' WHERE '.'id = '.$database->quote($id);
         $rs = $database->query($sql);
 
         if($rs && $rs->num_rows > 0) {
@@ -43,7 +43,7 @@ class Teams
     function save()
     {
         $database = new Database();
-        $sql = 'INSERT INTO ' . Teams::$TABLE_NAME . ' 
+        $sql = 'INSERT INTO ' . self::$TABLE_NAME . ' 
                                   (
                                   Id,
                                   Name,
@@ -90,7 +90,7 @@ class Teams
             "SELECT
                       *
                     FROM
-                      teams
+                      " . self::$TABLE_NAME ."
                     WHERE
                       id IN
                       (
@@ -174,6 +174,37 @@ class Teams
 
     }
 
+    /**
+     * Returns the URI of the teams profile image
+     */
+    public function getProfileImageUri()
+    {
+        if(!empty($this->Id))
+        {
+            $database = new Database();
+            $robotMedia = $database->query(
+                "SELECT
+                      FileURI
+                    FROM
+                      robot_media
+                    WHERE
+                      TeamId = " . $this->Id . "
+                    ORDER BY Id DESC LIMIT 1"
+            );
+            $database->close();
+
+
+            if($robotMedia && $robotMedia->num_rows > 0)
+            {
+                while ($row = $robotMedia->fetch_assoc())
+                {
+                    return $row['FileURI'];
+                }
+            }
+
+
+        }
+    }
 }
 
 ?>

@@ -4,6 +4,7 @@ require_once("classes/Teams.php");
 require_once("classes/PitCards.php");
 require_once("classes/Events.php");
 
+
 $eventId = $_GET['eventId'];
 $teamId = $_GET['teamId'];
 
@@ -88,6 +89,28 @@ $ccwms = $stats['ccwms']['frc' . $pitCard->TeamId];
         <div class="mdl-layout--large-screen-only mdl-layout__header-row">
             <?php include_once('includes/login-form.php') ?>
         </div>
+          <?php
+
+          $robotMediaUri = ROBOT_MEDIA_URL . $team->getProfileImageUri();
+            list($width, $height) = getimagesize($robotMediaUri);
+
+            if($width > $height)
+                echo
+                '<div style="height: unset" class="mdl-layout--large-screen-only mdl-layout__header-row">
+                  <div class="circle-image-landscape">
+                    <img src="' . $robotMediaUri . '">
+                  </div>
+                </div>';
+            else
+                echo
+                '<div style="height: unset" class="mdl-layout--large-screen-only mdl-layout__header-row">
+                  <div class="circle-image-portrait">
+                    <img src="' . $robotMediaUri . '">
+                  </div>
+                </div>';
+
+
+          ?>
         <div class="mdl-layout--large-screen-only mdl-layout__header-row">
           <h3><?php echo $team->Id . ' - ' . $team->Name ?></h3><br>
         </div>
