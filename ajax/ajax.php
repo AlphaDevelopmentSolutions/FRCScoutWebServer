@@ -33,7 +33,10 @@ switch($_POST['action'])
             $teleopCargoStoredAttemptsMin = 1000;
             $endGameReturnedToHabitatMin = 1000;
             $endGameReturnedToHabitatAttemptsMin = 1000;
-
+            $postGameDefenseRatingMin = 5;
+            $postGameOffenseRatingMin = 5;
+            $postGameDriveRatingMin = 5;
+            
             $autoExitHabitatMinMatchIds = array();
             $autoHatchPanelsMinMatchIds = array();
             $autoHatchPanelsAttemptsMinMatchIds = array();
@@ -45,6 +48,9 @@ switch($_POST['action'])
             $teleopCargoStoredAttemptsMinMatchIds = array();
             $endGameReturnedToHabitatMinMatchIds = array();
             $endGameReturnedToHabitatAttemptsMinMatchIds = array();
+            $postGameDefenseRatingMinMatchIds = array();
+            $postGameOffenseRatingMinMatchIds = array();
+            $postGameDriveRatingMinMatchIds = array();
 
             $autoExitHabitat = 0;
             $autoHatchPanels = 0;
@@ -57,6 +63,9 @@ switch($_POST['action'])
             $teleopCargoStoredAttempts = 0;
             $endGameReturnedToHabitat = 0;
             $endGameReturnedToHabitatAttempts = 0;
+            $postGameDefenseRating = 1;
+            $postGameOffenseRating = 1;
+            $postGameDriveRating = 1;
 
             $autoExitHabitatMax = 0;
             $autoHatchPanelsMax = 0;
@@ -69,6 +78,9 @@ switch($_POST['action'])
             $teleopCargoStoredAttemptsMax = 0;
             $endGameReturnedToHabitatMax = 0;
             $endGameReturnedToHabitatAttemptsMax = 0;
+            $postGameDefenseRatingMax = 1;
+            $postGameOffenseRatingMax = 1;
+            $postGameDriveRatingMax = 1;
 
             $autoExitHabitatMaxMatchIds = array();
             $autoHatchPanelsMaxMatchIds = array();
@@ -81,6 +93,9 @@ switch($_POST['action'])
             $teleopCargoStoredAttemptsMaxMatchIds = array();
             $endGameReturnedToHabitatMaxMatchIds = array();
             $endGameReturnedToHabitatAttemptsMaxMatchIds = array();
+            $postGameDefenseRatingMaxMatchIds = array();
+            $postGameOffenseRatingMaxMatchIds = array();
+            $postGameDriveRatingMaxMatchIds = array();
 
             $i = 0;
 
@@ -180,6 +195,27 @@ switch($_POST['action'])
                     $endGameReturnedToHabitatAttemptsMinMatchIds[] = $scoutCard['MatchId'];
                 }
 
+                if($scoutCard['PostGameDefenseRating'] <= $postGameDefenseRatingMin && $scoutCard['PostGameDefenseRating'] != 0)
+                {
+                    $postGameDefenseRatingMinMatchIds = (($scoutCard['PostGameDefenseRating'] < $postGameDefenseRatingMin) ? array() : $postGameDefenseRatingMinMatchIds);
+                    $postGameDefenseRatingMin = $scoutCard['PostGameDefenseRating'];
+                    $postGameDefenseRatingMinMatchIds[] = $scoutCard['MatchId'];
+                }
+
+                if($scoutCard['PostGameOffenseRating'] <= $postGameOffenseRatingMin && $scoutCard['PostGameOffenseRating'] != 0)
+                {
+                    $postGameOffenseRatingMinMatchIds = (($scoutCard['PostGameOffenseRating'] < $postGameOffenseRatingMin) ? array() : $postGameOffenseRatingMinMatchIds);
+                    $postGameOffenseRatingMin = $scoutCard['PostGameOffenseRating'];
+                    $postGameOffenseRatingMinMatchIds[] = $scoutCard['MatchId'];
+                }
+
+                if($scoutCard['PostGameDriveRating'] <= $postGameDriveRatingMin && $scoutCard['PostGameDriveRating'] != 0)
+                {
+                    $postGameDriveRatingMinMatchIds = (($scoutCard['PostGameDriveRating'] < $postGameDriveRatingMin) ? array() : $postGameDriveRatingMinMatchIds);
+                    $postGameDriveRatingMin = $scoutCard['PostGameDriveRating'];
+                    $postGameDriveRatingMinMatchIds[] = $scoutCard['MatchId'];
+                }
+
                 //calc avg
                 $autoExitHabitat += $scoutCard['AutonomousExitHabitat'];
                 $autoHatchPanels += $scoutCard['AutonomousHatchPanelsSecured'];
@@ -190,6 +226,9 @@ switch($_POST['action'])
                 $teleopHatchPanelsAttempts += $scoutCard['TeleopHatchPanelsSecuredAttempts'];
                 $teleopCargoStored += $scoutCard['TeleopCargoStored'];
                 $teleopCargoStoredAttempts += $scoutCard['TeleopCargoStoredAttempts'];
+                $postGameDefenseRating += $scoutCard['PostGameDefenseRating'];
+                $postGameOffenseRating += $scoutCard['PostGameOffenseRating'];
+                $postGameDriveRating += $scoutCard['PostGameDriveRating'];
 
                 if(!empty($scoutCard['EndGameReturnedToHabitat']))
                     $endGameReturnedToHabitat += $scoutCard['EndGameReturnedToHabitat'];
@@ -289,6 +328,27 @@ switch($_POST['action'])
                     $endGameReturnedToHabitatAttemptsMaxMatchIds[] = $scoutCard['MatchId'];
                 }
 
+                if($scoutCard['PostGameDefenseRating'] >= $postGameDefenseRatingMax && $scoutCard['PostGameDefenseRating'] != 0)
+                {
+                    $postGameDefenseRatingMaxMatchIds = (($scoutCard['PostGameDefenseRating'] < $postGameDefenseRatingMax) ? array() : $postGameDefenseRatingMaxMatchIds);
+                    $postGameDefenseRatingMax = $scoutCard['PostGameDefenseRating'];
+                    $postGameDefenseRatingMaxMatchIds[] = $scoutCard['MatchId'];
+                }
+
+                if($scoutCard['PostGameOffenseRating'] >= $postGameOffenseRatingMax && $scoutCard['PostGameOffenseRating'] != 0)
+                {
+                    $postGameOffenseRatingMaxMatchIds = (($scoutCard['PostGameOffenseRating'] < $postGameOffenseRatingMax) ? array() : $postGameOffenseRatingMaxMatchIds);
+                    $postGameOffenseRatingMax = $scoutCard['PostGameOffenseRating'];
+                    $postGameOffenseRatingMaxMatchIds[] = $scoutCard['MatchId'];
+                }
+
+                if($scoutCard['PostGameDriveRating'] >= $postGameDriveRatingMax && $scoutCard['PostGameDriveRating'] != 0)
+                {
+                    $postGameDriveRatingMaxMatchIds = (($scoutCard['PostGameDriveRating'] < $postGameDriveRatingMax) ? array() : $postGameDriveRatingMaxMatchIds);
+                    $postGameDriveRatingMax = $scoutCard['PostGameDriveRating'];
+                    $postGameDriveRatingMaxMatchIds[] = $scoutCard['MatchId'];
+                }
+
                 $i++;
 
             }
@@ -308,6 +368,9 @@ switch($_POST['action'])
                 $data[] = $teleopCargoStoredAttemptsMin;
                 $data[] = (($endGameReturnedToHabitatMin > 0) ? "Level " . $endGameReturnedToHabitatMin : "No");
                 $data[] = (($endGameReturnedToHabitatAttemptsMin > 0) ? "Level " . $endGameReturnedToHabitatAttemptsMin : "No");
+                $data[] = $postGameDefenseRatingMin;
+                $data[] = $postGameOffenseRatingMin;
+                $data[] = $postGameDriveRatingMin;
 
                 $data['autoExitHabitatMinMatchIds'] = $autoExitHabitatMinMatchIds;
                 $data['autoHatchPanelsMinMatchIds'] = $autoHatchPanelsMinMatchIds;
@@ -320,6 +383,9 @@ switch($_POST['action'])
                 $data['teleopCargoStoredAttemptsMinMatchIds'] = $teleopCargoStoredAttemptsMinMatchIds;
                 $data['endGameReturnedToHabitatMinMatchIds'] = $endGameReturnedToHabitatMinMatchIds;
                 $data['endGameReturnedToHabitatAttemptsMinMatchIds'] = $endGameReturnedToHabitatAttemptsMinMatchIds;
+                $data['postGameDefenseRatingMinMatchIds'] = $postGameDefenseRatingMinMatchIds;
+                $data['postGameOffenseRatingMinMatchIds'] = $postGameOffenseRatingMinMatchIds;
+                $data['postGameDriveRatingMinMatchIds'] = $postGameDriveRatingMinMatchIds;
 
                 $return_array[] = $data;
             }
@@ -342,7 +408,10 @@ switch($_POST['action'])
                 $data[] = round($teleopCargoStoredAttempts / $scoutCardCount, 2);
                 $data[] = (($endGameReturnedToHabitat / $scoutCardCount > 0) ? "Level " . round($endGameReturnedToHabitat / $scoutCardCount, 2) : "No");
                 $data[] = (($endGameReturnedToHabitatAttempts / $scoutCardCount > 0) ? "Level " . round($endGameReturnedToHabitatAttempts / $scoutCardCount, 2) : "No");
-
+                $data[] = round($postGameDefenseRating / $scoutCardCount, 2);;
+                $data[] = round($postGameOffenseRating / $scoutCardCount, 2);;
+                $data[] = round($postGameDriveRating / $scoutCardCount, 2);;
+                
                 $return_array[] = $data;
             }
 
@@ -361,6 +430,9 @@ switch($_POST['action'])
                 $data[] = $teleopCargoStoredAttemptsMax;
                 $data[] = (($endGameReturnedToHabitatMax > 0) ? "Level " . $endGameReturnedToHabitatMax : "No");
                 $data[] = (($endGameReturnedToHabitatAttemptsMax > 0) ? "Level " . $endGameReturnedToHabitatAttemptsMax : "No");
+                $data[] = $postGameDefenseRatingMax;
+                $data[] = $postGameOffenseRatingMax;
+                $data[] = $postGameDriveRatingMax;
 
                 $data['autoExitHabitatMaxMatchIds'] = $autoExitHabitatMaxMatchIds;
                 $data['autoHatchPanelsMaxMatchIds'] = $autoHatchPanelsMaxMatchIds;
@@ -373,6 +445,9 @@ switch($_POST['action'])
                 $data['teleopCargoStoredAttemptsMaxMatchIds'] = $teleopCargoStoredAttemptsMaxMatchIds;
                 $data['endGameReturnedToHabitatMaxMatchIds'] = $endGameReturnedToHabitatMaxMatchIds;
                 $data['endGameReturnedToHabitatAttemptsMaxMatchIds'] = $endGameReturnedToHabitatAttemptsMaxMatchIds;
+                $data['postGameDefenseRatingMaxMatchIds'] = $postGameDefenseRatingMaxMatchIds;
+                $data['postGameOffenseRatingMaxMatchIds'] = $postGameOffenseRatingMaxMatchIds;
+                $data['postGameDriveRatingMaxMatchIds'] = $postGameDriveRatingMaxMatchIds;
 
                 $return_array[] = $data;
             }
