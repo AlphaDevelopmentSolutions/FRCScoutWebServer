@@ -151,15 +151,11 @@ $ccwms = $stats['ccwms']['frc' . $pitCard->TeamId];
 
           </div>
           <div style="height: unset" class="mdl-layout--large-screen-only mdl-layout__header-row">
-              <h6 style="margin: unset"><strong>OPR:</strong> <?php echo $opr ?></h6>
+              <h6 style="margin: unset"><strong>OPR:</strong> <?php echo round($opr, 2) ?></h6>
           </div>
 
           <div style="height: unset" class="mdl-layout--large-screen-only mdl-layout__header-row">
-              <h6 style="margin: unset"><strong>DPR:</strong> <?php echo $dpr ?></h6>
-          </div>
-
-          <div style="height: unset" class="mdl-layout--large-screen-only mdl-layout__header-row">
-              <h6 style="margin: unset"><strong>CCWMS:</strong> <?php echo $ccwms ?></h6>
+              <h6 style="margin: unset"><strong>DPR:</strong> <?php echo round($dpr, 2) ?></h6>
           </div>
           <div id="quick-stats" style="padding-left: 40px" hidden>
               <h6 style="margin: unset"><strong>Drivetrain:</strong> <?php echo $pitCard->DriveStyle ?></h6>
