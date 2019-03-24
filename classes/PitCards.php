@@ -8,6 +8,9 @@ class PitCards
 
     public $DriveStyle;
     public $RobotWeight;
+    public $RobotLength;
+    public $RobotWidth;
+    public $RobotHeight;
 
     public $AutoExitHabitat;
     public $AutoHatch;
@@ -59,6 +62,9 @@ class PitCards
                                       
                                       DriveStyle,
                                       RobotWeight,
+                                      RobotLength,
+                                      RobotWidth,
+                                      RobotHeight,
                                       
                                       AutoExitHabitat,
                                       AutoHatch,
@@ -80,6 +86,9 @@ class PitCards
                                       
                                       ' . ((empty($this->DriveStyle)) ? 'NULL' : $database->quote($this->DriveStyle)) .',
                                       ' . ((empty($this->RobotWeight)) ? 'NULL' : $database->quote($this->RobotWeight)) .',
+                                      ' . ((empty($this->RobotLength)) ? 'NULL' : $database->quote($this->RobotLength)) .',
+                                      ' . ((empty($this->RobotWidth)) ? 'NULL' : $database->quote($this->RobotWidth)) .',
+                                      ' . ((empty($this->RobotHeight)) ? 'NULL' : $database->quote($this->RobotHeight)) .',
                                       
                                       ' . ((empty($this->AutoExitHabitat)) ? 'NULL' : $database->quote($this->AutoExitHabitat)) .',
                                       ' . ((empty($this->AutoHatch)) ? 'NULL' : $database->quote($this->AutoHatch)) .',
@@ -114,6 +123,9 @@ class PitCards
             
             DriveStyle = " . ((empty($this->DriveStyle)) ? "NULL" : $database->quote($this->DriveStyle)) .", 
             RobotWeight = " . ((empty($this->RobotWeight)) ? "NULL" : $database->quote($this->RobotWeight)) .", 
+            RobotLength = " . ((empty($this->RobotLength)) ? "NULL" : $database->quote($this->RobotLength)) .", 
+            RobotWidth = " . ((empty($this->RobotWidth)) ? "NULL" : $database->quote($this->RobotWidth)) .", 
+            RobotHeight = " . ((empty($this->RobotHeight)) ? "NULL" : $database->quote($this->RobotHeight)) .", 
             
             AutoExitHabitat = " . ((empty($this->AutoExitHabitat)) ? "NULL" : $database->quote($this->AutoExitHabitat)) .", 
             AutoHatch = " . ((empty($this->AutoHatch)) ? "NULL" : $database->quote($this->AutoHatch)) .", 

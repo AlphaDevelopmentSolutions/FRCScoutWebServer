@@ -76,6 +76,9 @@ switch($action)
 
         $pitCard->DriveStyle = filter_var($_POST['DriveStyle'], FILTER_SANITIZE_STRING);
         $pitCard->RobotWeight = filter_var($_POST['RobotWeight'], FILTER_SANITIZE_STRING);
+        $pitCard->RobotLength = filter_var($_POST['RobotLength'], FILTER_SANITIZE_STRING);
+        $pitCard->RobotWidth = filter_var($_POST['RobotWidth'], FILTER_SANITIZE_STRING);
+        $pitCard->RobotHeight = filter_var($_POST['RobotHeight'], FILTER_SANITIZE_STRING);
 
         $pitCard->AutoExitHabitat = filter_var($_POST['AutoExitHabitat'], FILTER_SANITIZE_STRING);
         $pitCard->AutoHatch = filter_var($_POST['AutoHatch'], FILTER_SANITIZE_STRING);

@@ -164,12 +164,19 @@ $ccwms = $stats['ccwms']['frc' . $pitCard->TeamId];
           <div id="quick-stats" style="padding-left: 40px" hidden>
               <h6 style="margin: unset"><strong>Drivetrain:</strong> <?php echo $pitCard->DriveStyle ?></h6>
               <h6 style="margin: unset"><strong>Robot Weight:</strong> <?php echo $pitCard->RobotWeight ?></h6>
+              <h6 style="margin: unset"><strong>Robot Length:</strong> <?php echo $pitCard->RobotLength ?></h6>
+              <h6 style="margin: unset"><strong>Robot Width:</strong> <?php echo $pitCard->RobotWidth ?></h6>
+              <h6 style="margin: unset"><strong>Robot Height:</strong> <?php echo $pitCard->RobotHeight ?></h6>
+
               <h6 style="margin: unset"><strong>Auto Exit Habitat:</strong> <?php echo $pitCard->AutoExitHabitat ?></h6>
               <h6 style="margin: unset"><strong>Auto Hatch Panels:</strong> <?php echo $pitCard->AutoHatch ?></h6>
               <h6 style="margin: unset"><strong>Auto Cargo:</strong> <?php echo $pitCard->AutoCargo ?></h6>
+
               <h6 style="margin: unset"><strong>Teleop Hatch:</strong> <?php echo $pitCard->TeleopHatch ?></h6>
               <h6 style="margin: unset"><strong>Teleop Cargo:</strong> <?php echo $pitCard->TeleopCargo ?></h6>
+
               <h6 style="margin: unset"><strong>Return To Habitat:</strong> <?php echo $pitCard->ReturnToHabitat ?></h6>
+
               <h6 style="margin: unset"><strong>Notes:</strong> <?php echo $pitCard->Notes ?></h6>
               <h6 style="margin: unset"><strong>Completed By:</strong> <?php echo $pitCard->CompletedBy ?></h6>
           </div>

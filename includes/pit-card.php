@@ -19,8 +19,20 @@
                         <label class="mdl-textfield__label" >Drivetrain</label>
                     </div>
                     <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                        <input class="mdl-textfield__input" type="text" value="<?php echo $pitCard->RobotWeight ?>" name="driveStyle">
+                        <input class="mdl-textfield__input" type="text" value="<?php echo $pitCard->RobotWeight ?>" name="robotWeight">
                         <label class="mdl-textfield__label" >Robot Weight</label>
+                    </div>
+                    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                        <input class="mdl-textfield__input" type="text" value="<?php echo $pitCard->RobotLength ?>" name="robotLength">
+                        <label class="mdl-textfield__label" >Robot Length</label>
+                    </div>
+                    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                        <input class="mdl-textfield__input" type="text" value="<?php echo $pitCard->RobotWidth ?>" name="robotWidth">
+                        <label class="mdl-textfield__label" >Robot Width</label>
+                    </div>
+                    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                        <input class="mdl-textfield__input" type="text" value="<?php echo $pitCard->RobotHeight ?>" name="robotHeight">
+                        <label class="mdl-textfield__label" >Robot Height</label>
                     </div>
                 </div>
 

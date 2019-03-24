@@ -40,7 +40,15 @@ update scout_cards set driverating = 0 where isnull(driverating);
 
 ALTER TABLE `pit_cards`
 ADD COLUMN `RobotWeight` VARCHAR(45) NULL AFTER `DriveStyle`,
+ADD COLUMN `RobotLength` VARCHAR(45) NULL AFTER `RobotWeight`,
+ADD COLUMN `RobotWidth` VARCHAR(45) NULL AFTER `RobotLength`,
+ADD COLUMN `RobotHeight` VARCHAR(45) NULL AFTER `RobotWidth`,
 DROP COLUMN `TeleopRocketsComplete`;
+
+update pit_cards set robotweight = 0;
+update pit_cards set robotlength = 0;
+update pit_cards set robotwidth = 0;
+update pit_cards set robotheight = 0;
 
 ALTER TABLE `robot_media`
 CHANGE COLUMN `RobotId` `TeamId` INT(11) NULL DEFAULT NULL,
