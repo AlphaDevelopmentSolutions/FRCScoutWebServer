@@ -103,10 +103,19 @@ switch($_POST['action'])
             {
 
                 //calc min
-                if($scoutCard['AutonomousExitHabitat'] <= $autoExitHabitatMin)
+                if($scoutCard['AutonomousExitHabitat'] == 1)
                 {
-                    $autoExitHabitatMinMatchIds = (($scoutCard['AutonomousExitHabitat'] < $autoExitHabitatMin) ? array() : $autoExitHabitatMinMatchIds);
-                    $autoExitHabitatMin = $scoutCard['AutonomousExitHabitat'];
+                    if($scoutCard['PreGameStartingLevel']  <= $autoExitHabitatMin)
+                    {
+                        $autoExitHabitatMinMatchIds = (($scoutCard['PreGameStartingLevel'] < $autoExitHabitatMin) ? array() : $autoExitHabitatMinMatchIds);
+                        $autoExitHabitatMin = $scoutCard['PreGameStartingLevel'];
+                        $autoExitHabitatMinMatchIds[] = $scoutCard['MatchId'];
+                    }
+                }
+                else if(0 <= $autoExitHabitatMin)
+                {
+                    $autoExitHabitatMinMatchIds = ((0 < $autoExitHabitatMin) ? array() : $autoExitHabitatMinMatchIds);
+                    $autoExitHabitatMin = $scoutCard['PreGameStartingLevel'];
                     $autoExitHabitatMinMatchIds[] = $scoutCard['MatchId'];
                 }
 
@@ -217,7 +226,9 @@ switch($_POST['action'])
                 }
 
                 //calc avg
-                $autoExitHabitat += $scoutCard['AutonomousExitHabitat'];
+                if($scoutCard['AutonomousExitHabitat'] == 1)
+                    $autoExitHabitat += $scoutCard['PreGameStartingLevel'];
+
                 $autoHatchPanels += $scoutCard['AutonomousHatchPanelsSecured'];
                 $autoHatchPanelsAttempts += $scoutCard['AutonomousHatchPanelsSecuredAttempts'];
                 $autoCargoStored += $scoutCard['AutonomousCargoStored'];
@@ -238,10 +249,19 @@ switch($_POST['action'])
 
 
                 //calc max
-                if($scoutCard['AutonomousExitHabitat'] >= $autoExitHabitatMax)
+                if($scoutCard['AutonomousExitHabitat'] == 1)
                 {
-                    $autoExitHabitatMaxMatchIds = (($scoutCard['AutonomousExitHabitat'] > $autoExitHabitatMax) ? array() : $autoExitHabitatMaxMatchIds);
-                    $autoExitHabitatMax = $scoutCard['AutonomousExitHabitat'];
+                    if($scoutCard['PreGameStartingLevel']  >= $autoExitHabitatMax)
+                    {
+                        $autoExitHabitatMaxMatchIds = (($scoutCard['PreGameStartingLevel'] > $autoExitHabitatMax) ? array() : $autoExitHabitatMaxMatchIds);
+                        $autoExitHabitatMax = $scoutCard['PreGameStartingLevel'];
+                        $autoExitHabitatMaxMatchIds[] = $scoutCard['MatchId'];
+                    }
+                }
+                else if(0 >= $autoExitHabitatMax)
+                {
+                    $autoExitHabitatMaxMatchIds = ((0 > $autoExitHabitatMax) ? array() : $autoExitHabitatMaxMatchIds);
+                    $autoExitHabitatMax = $scoutCard['PreGameStartingLevel'];
                     $autoExitHabitatMaxMatchIds[] = $scoutCard['MatchId'];
                 }
 
