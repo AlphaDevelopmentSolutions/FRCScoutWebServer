@@ -91,23 +91,26 @@ $ccwms = $stats['ccwms']['frc' . $pitCard->TeamId];
         </div>
           <?php
 
-          $robotMediaUri = ROBOT_MEDIA_URL . $team->getProfileImageUri();
+            $robotMediaUri = ROBOT_MEDIA_URL . $team->getProfileImageUri();
             list($width, $height) = getimagesize($robotMediaUri);
 
-            if($width > $height)
-                echo
-                '<div style="height: unset" class="mdl-layout--large-screen-only mdl-layout__header-row">
+          if(!empty($width) && !empty($height))
+          {
+              if ($width > $height)
+                  echo
+                      '<div style="height: unset" class="mdl-layout--large-screen-only mdl-layout__header-row">
                   <div class="circle-image-landscape">
                     <img src="' . $robotMediaUri . '">
                   </div>
                 </div>';
-            else
-                echo
-                '<div style="height: unset" class="mdl-layout--large-screen-only mdl-layout__header-row">
+              else
+                  echo
+                      '<div style="height: unset" class="mdl-layout--large-screen-only mdl-layout__header-row">
                   <div class="circle-image-portrait">
                     <img src="' . $robotMediaUri . '">
                   </div>
                 </div>';
+          }
 
 
           ?>
