@@ -78,8 +78,8 @@ class ScoutCards
                                         AllianceColor,
                                         CompletedBy,
                                     
-                                        PreGameStartingPosition,
                                         PreGameStartingLevel,
+                                        PreGameStartingPosition,
                                         PreGameStartingPiece,
                                     
                                         AutonomousExitHabitat,
@@ -116,9 +116,9 @@ class ScoutCards
                                       ' . ((empty($this->AllianceColor)) ? 'NULL' : $database->quote($this->AllianceColor)) .',
                                       ' . ((empty($this->CompletedBy)) ? 'NULL' : $database->quote($this->CompletedBy)) .',
                                     
-                                      ' . ((empty($this->PreGameStartingPiece)) ? '0' : $database->quote($this->PreGameStartingPiece)) .',
-                                      ' . ((empty($this->PreGameStartingPosition)) ? '0' : $database->quote($this->PreGameStartingPosition)) .',
                                       ' . ((empty($this->PreGameStartingLevel)) ? '0' : $database->quote($this->PreGameStartingLevel)) .',
+                                      ' . ((empty($this->PreGameStartingPosition)) ? '0' : $database->quote($this->PreGameStartingPosition)) .',
+                                      ' . ((empty($this->PreGameStartingPiece)) ? '0' : $database->quote($this->PreGameStartingPiece)) .',
                                       
                                       ' . ((empty($this->AutonomousExitHabitat)) ? '0' : $database->quote($this->AutonomousExitHabitat)) .',
                                       ' . ((empty($this->AutonomousHatchPanelsPickedUp)) ? '0' : $database->quote($this->AutonomousHatchPanelsPickedUp)) .',
@@ -168,9 +168,9 @@ class ScoutCards
             AllianceColor = " . ((empty($this->AllianceColor)) ? "NULL" : $database->quote($this->AllianceColor)) .", 
             CompletedBy = " . ((empty($this->CompletedBy)) ? "NULL" : $database->quote($this->CompletedBy)) .", 
 
-            PreGameStartingPiece = " . ((empty($this->PreGameStartingPiece)) ? "NULL" : $database->quote($this->PreGameStartingPiece)) .", 
-            PreGameStartingPosition = " . ((empty($this->PreGameStartingPosition)) ? "NULL" : $database->quote($this->PreGameStartingPosition)) .", 
             PreGameStartingLevel = " . ((empty($this->PreGameStartingLevel)) ? "NULL" : $database->quote($this->PreGameStartingLevel)) .", 
+            PreGameStartingPosition = " . ((empty($this->PreGameStartingPosition)) ? "NULL" : $database->quote($this->PreGameStartingPosition)) .", 
+            PreGameStartingPiece = " . ((empty($this->PreGameStartingPiece)) ? "NULL" : $database->quote($this->PreGameStartingPiece)) .", 
             
             AutonomousExitHabitat = " . ((empty($this->AutonomousExitHabitat)) ? "NULL" : $database->quote($this->AutonomousExitHabitat)) .", 
             AutonomousHatchPanelsPickedUp = " . ((empty($this->AutonomousHatchPanelsPickedUp)) ? "NULL" : $database->quote($this->AutonomousHatchPanelsPickedUp)) .", 
