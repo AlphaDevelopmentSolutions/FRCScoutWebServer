@@ -91,27 +91,31 @@ $ccwms = $stats['ccwms']['frc' . $pitCard->TeamId];
         </div>
           <?php
 
-            $robotMediaUri = ROBOT_MEDIA_URL . Teams::getProfileImageUri($team->Id);
-            list($width, $height) = getimagesize($robotMediaUri);
+          $robotMediaUri = Teams::getProfileImageUri($team->Id);
 
-          if(!empty($width) && !empty($height))
+          if(!empty($robotMediaUri))
           {
-              if ($width > $height)
-                  echo
-                      '<div style="height: unset" class="mdl-layout--large-screen-only mdl-layout__header-row">
+              $robotMediaUri = ROBOT_MEDIA_URL . $robotMediaUri;
+              list($width, $height) = getimagesize($robotMediaUri);
+
+              if(!empty($width) && !empty($height))
+              {
+                  if ($width > $height)
+                      echo
+                          '<div style="height: unset" class="mdl-layout--large-screen-only mdl-layout__header-row">
                   <div class="circle-image-landscape">
                     <img src="' . $robotMediaUri . '">
                   </div>
                 </div>';
-              else
-                  echo
-                      '<div style="height: unset" class="mdl-layout--large-screen-only mdl-layout__header-row">
+                  else
+                      echo
+                          '<div style="height: unset" class="mdl-layout--large-screen-only mdl-layout__header-row">
                   <div class="circle-image-portrait">
                     <img src="' . $robotMediaUri . '">
                   </div>
                 </div>';
+              }
           }
-
 
           ?>
         <div class="mdl-layout--large-screen-only mdl-layout__header-row">
