@@ -21,73 +21,26 @@
                 $team = new Teams();
                 $team->load($scoutCard->TeamId);
 
-                $totalAutoHatchSecured = 0;
-                $totalAutoHatchDropped = 0;
-                $totalAutoCargoSecured = 0;
-                $totalAutoCargoDropped = 0;
-
-                $totalTeleopHatchSecured = 0;
-                $totalTeleopHatchDropped = 0;
-                $totalTeleopCargoSecured = 0;
-                $totalTeleopCargoDropped = 0;
-
-                //calc totals from match item actions
-                foreach(MatchItemActions::getMatchItemActionsForScoutCard($scoutCard->Id) as $matchItemAction)
-                {
-                    //calc auto
-                    if($matchItemAction['MatchState'] == MatchState::AUTO)
-                    {
-                        //calc hatches
-                        if($matchItemAction['ItemType'] == ItemType::HATCH)
-                        {
-                            $totalAutoHatchSecured += (($matchItemAction['Action'] == Action::SECURED) ? 1 : 0);
-                            $totalAutoHatchDropped += (($matchItemAction['Action'] == Action::DROPPED) ? 1 : 0);
-                        }
-                        //calc cargo
-                        else if($matchItemAction['ItemType'] == ItemType::CARGO)
-                        {
-                            $totalAutoCargoSecured += (($matchItemAction['Action'] == Action::SECURED) ? 1 : 0);
-                            $totalAutoCargoDropped += (($matchItemAction['Action'] == Action::DROPPED) ? 1 : 0);
-                        }
-                    }
-                    //calc teleop
-                    else if($matchItemAction['MatchState'] == MatchState::TELEOP)
-                    {
-                        //calc hatches
-                        if($matchItemAction['ItemType'] == ItemType::HATCH)
-                        {
-                            $totalTeleopHatchSecured += (($matchItemAction['Action'] == Action::SECURED) ? 1 : 0);
-                            $totalTeleopHatchDropped += (($matchItemAction['Action'] == Action::DROPPED) ? 1 : 0);
-                        }
-                        //calc cargo
-                        else if($matchItemAction['ItemType'] == ItemType::CARGO)
-                        {
-                            $totalTeleopCargoSecured += (($matchItemAction['Action'] == Action::SECURED) ? 1 : 0);
-                            $totalTeleopCargoDropped += (($matchItemAction['Action'] == Action::DROPPED) ? 1 : 0);
-                        }
-                    }
-                }
 
                 ?>
 
 
 
                 <h4 style="padding-left: 40px; padding-top: 10px;"><?php echo $team->Id; ?></h4>
+                <strong style="padding-left: 40px;">Pre Game</strong>
                 <div class="mdl-card__supporting-text">
 
                     <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
                         <input class="mdl-textfield__input" type="text" value="<?php echo $scoutCard->CompletedBy ?>" name="completedBy">
                         <label class="mdl-textfield__label" >Scouter</label>
                     </div>
-
-                    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                        <input class="mdl-textfield__input" type="text" value="<?php echo $scoutCard->PreGameStartingPosition ?>" name="redAllianceScore">
-                        <label class="mdl-textfield__label" >Starting Position</label>
-                    </div>
-
                     <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
                         <input class="mdl-textfield__input" type="text" value="<?php echo ((empty($scoutCard->PreGameStartingLevel)) ? '' : 'Level ' . $scoutCard->PreGameStartingLevel) ?>" name="redAllianceScore">
                         <label class="mdl-textfield__label" >Starting Level</label>
+                    </div>
+                    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                        <input class="mdl-textfield__input" type="text" value="<?php echo $scoutCard->PreGameStartingPosition ?>" name="redAllianceScore">
+                        <label class="mdl-textfield__label" >Starting Position</label>
                     </div>
 
                     <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
@@ -104,44 +57,86 @@
                     </div>
 
                     <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                        <input class="mdl-textfield__input" type="text" value="<?php echo $totalAutoHatchSecured ?>" name="autonomousHatchPanelsSecured">
-                        <label class="mdl-textfield__label" >Hatch Panels Secured</label>
+                        <input class="mdl-textfield__input" type="text" value="<?php echo $scoutCard->AutonomousHatchPanelsPickedUp ?>" name="autonomousHatchPanelsPickedUp">
+                        <label class="mdl-textfield__label" >Hatch Panels Picked Up</label>
                     </div>
+
                     <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                        <input class="mdl-textfield__input" type="text" value="<?php echo $totalAutoHatchDropped ?>" name="autonomousHatchPanelsSecuredAttempts">
+                        <input class="mdl-textfield__input" type="text" value="<?php echo $scoutCard->AutonomousHatchPanelsSecuredAttempts ?>" name="autonomousHatchPanelsSecuredAttempts">
                         <label class="mdl-textfield__label" >Hatch Panels Dropped</label>
                     </div>
 
                     <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                        <input class="mdl-textfield__input" type="text" value="<?php echo $totalAutoCargoSecured ?>" name="autonomousCargoStored">
+                        <input class="mdl-textfield__input" type="text" value="<?php echo $scoutCard->AutonomousHatchPanelsSecured ?>" name="autonomousHatchPanelsSecured">
+                        <label class="mdl-textfield__label" >Hatch Panels Secured</label>
+                    </div>
+
+                    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                        <input class="mdl-textfield__input" type="text" value="<?php echo $scoutCard->AutonomousHatchPanelsPickedUp / $scoutCard->AutonomousHatchPanelsSecured ?>">
+                        <label class="mdl-textfield__label" >Hatch Pickup / Secure %</label>
+                    </div>
+
+                    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                        <input class="mdl-textfield__input" type="text" value="<?php echo $scoutCard->AutonomousCargoPickedUp ?>" name="autonomousCargoPickedUp">
+                        <label class="mdl-textfield__label" >Cargo Picked Up</label>
+                    </div>
+
+                    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                        <input class="mdl-textfield__input" type="text" value="<?php echo $scoutCard->AutonomousCargoStoredAttempts ?>" name="autonomousCargoStoredAttempts">
+                        <label class="mdl-textfield__label" >Cargo Dropped</label>
+                    </div>
+
+                    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                        <input class="mdl-textfield__input" type="text" value="<?php echo $scoutCard->AutonomousCargoStored ?>" name="autonomousCargoStored">
                         <label class="mdl-textfield__label" >Cargo Stored</label>
                     </div>
+
                     <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                        <input class="mdl-textfield__input" type="text" value="<?php echo $totalAutoCargoDropped ?>" name="autonomousCargoStoredAttempts">
-                        <label class="mdl-textfield__label" >Cargo Storage Dropped</label>
+                        <input class="mdl-textfield__input" type="text" value="<?php echo $scoutCard->AutonomousCargoPickedUp / $scoutCard->AutonomousCargoStored ?>">
+                        <label class="mdl-textfield__label" >Cargo Pickup / Stored %</label>
                     </div>
                 </div>
 
                 <strong style="padding-left: 40px; padding-top: 10px;">Teleop</strong>
                 <div class="mdl-card__supporting-text">
                     <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                        <input class="mdl-textfield__input" type="text" value="<?php echo $totalTeleopHatchSecured ?>" name="teleopHatchPanelsSecured">
-                        <label class="mdl-textfield__label" >Hatch Panels Secured</label>
+                        <input class="mdl-textfield__input" type="text" value="<?php echo $scoutCard->TeleopHatchPanelsPickedUp ?>" name="TeleopHatchPanelsPickedUp">
+                        <label class="mdl-textfield__label" >Hatch Panels Picked Up</label>
                     </div>
 
                     <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                        <input class="mdl-textfield__input" type="text" value="<?php echo $totalTeleopHatchDropped ?>" name="teleopHatchPanelsSecuredAttempts">
+                        <input class="mdl-textfield__input" type="text" value="<?php echo $scoutCard->TeleopHatchPanelsSecuredAttempts ?>" name="TeleopHatchPanelsSecuredAttempts">
                         <label class="mdl-textfield__label" >Hatch Panels Dropped</label>
                     </div>
 
                     <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                        <input class="mdl-textfield__input" type="text" value="<?php echo $totalTeleopCargoSecured ?>" name="teleopCargoStored">
+                        <input class="mdl-textfield__input" type="text" value="<?php echo $scoutCard->TeleopHatchPanelsSecured ?>" name="TeleopHatchPanelsSecured">
+                        <label class="mdl-textfield__label" >Hatch Panels Secured</label>
+                    </div>
+
+                    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                        <input class="mdl-textfield__input" type="text" value="<?php echo $scoutCard->TeleopHatchPanelsPickedUp / $scoutCard->TeleopHatchPanelsSecured ?>">
+                        <label class="mdl-textfield__label" >Hatch Pickup / Secure %</label>
+                    </div>
+
+                    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                        <input class="mdl-textfield__input" type="text" value="<?php echo $scoutCard->TeleopCargoPickedUp ?>" name="teleopCargoPickedUp">
+                        <label class="mdl-textfield__label" >Cargo Picked Up</label>
+                    </div>
+
+                    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                        <input class="mdl-textfield__input" type="text" value="<?php echo $scoutCard->TeleopCargoStoredAttempts ?>" name="teleopCargoStoreddAttempts">
+                        <label class="mdl-textfield__label" >Cargo Dropped</label>
+                    </div>
+
+                    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                        <input class="mdl-textfield__input" type="text" value="<?php echo $scoutCard->TeleopCargoStored ?>" name="teleopCargoStored">
                         <label class="mdl-textfield__label" >Cargo Stored</label>
                     </div>
 
                     <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                        <input class="mdl-textfield__input" type="text" value="<?php echo $totalTeleopCargoDropped ?>" name="teleopCargoStoredAttempts">
-                        <label class="mdl-textfield__label" >Cargo Storage Dropped</label>
+                        <input class="mdl-textfield__input" type="text" value="<?php echo $scoutCard->TeleopCargoPickedUp / $scoutCard->TeleopCargoStored ?>">
+                        <label class="mdl-textfield__label" >Cargo Pickup / Stored %</label>
                     </div>
 
                 </div>
@@ -157,11 +152,38 @@
                         <input class="mdl-textfield__input" type="text" value="<?php echo empty($scoutCard->EndGameReturnedToHabitatAttempts) ? 'No' : 'Level ' . $scoutCard->EndGameReturnedToHabitatAttempts ?>" name="returnedToHabitatAttempts">
                         <label class="mdl-textfield__label" >Returned To Habitat Failed  Attempt</label>
                     </div>
+                </div>
+
+                <strong style="padding-left: 40px; padding-top: 10px;">Post Game</strong>
+                <div class="mdl-card__supporting-text">
+                    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                        <input class="mdl-textfield__input" type="text" value="<?php echo $scoutCard->BlueAllianceFinalScore ?>" name="blueAllianceScore">
+                        <label class="mdl-textfield__label" >Blue Alliance Score</label>
+                    </div>
+
+                    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                        <input class="mdl-textfield__input" type="text" value="<?php echo $scoutCard->RedAllianceFinalScore ?>" name="redAllianceScore">
+                        <label class="mdl-textfield__label" >Red Alliance Score</label>
+                    </div>
+                    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                        <input class="mdl-textfield__input" type="text" value="<?php for($i = 0; $i < $scoutCard->DefenseRating; $i++) echo "&#9733;"?>" name="defenseRating">
+                        <label class="mdl-textfield__label" >Defense Rating</label>
+                    </div>
+                    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                        <input class="mdl-textfield__input" type="text" value="<?php for($i = 0; $i < $scoutCard->OffenseRating; $i++) echo "&#9733;"?>" name="offenseRating">
+                        <label class="mdl-textfield__label" >Offense Rating</label>
+                    </div>
+                    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                        <input class="mdl-textfield__input" type="text" value="<?php for($i = 0; $i < $scoutCard->DriveRating; $i++) echo "&#9733;"?>" name="driveRating">
+                        <label class="mdl-textfield__label" >Drive Rating</label>
+                    </div>
 
                     <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
                         <textarea class="mdl-textfield__input" type="text" rows="3" name="notes" ><?php echo $scoutCard->Notes ?></textarea>
                         <label class="mdl-textfield__label" >Notes</label>
                     </div>
+
+
                 </div>
 
             <?php } ?>

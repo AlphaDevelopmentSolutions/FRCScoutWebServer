@@ -5,15 +5,23 @@ class PitCards
     public $Id;
     public $TeamId;
     public $EventId;
+
     public $DriveStyle;
+    public $RobotWeight;
+    public $RobotLength;
+    public $RobotWidth;
+    public $RobotHeight;
+
     public $AutoExitHabitat;
     public $AutoHatch;
     public $AutoCargo;
+
     public $TeleopHatch;
     public $TeleopCargo;
-    public $TeleopRocketsComplete;
+
     public $ReturnToHabitat;
     public $Notes;
+
     public $CompletedBy;
 
     private static $TABLE_NAME = 'pit_cards';
@@ -51,30 +59,48 @@ class PitCards
                                       (
                                       TeamId,
                                       EventId,
+                                      
                                       DriveStyle,
+                                      RobotWeight,
+                                      RobotLength,
+                                      RobotWidth,
+                                      RobotHeight,
+                                      
                                       AutoExitHabitat,
                                       AutoHatch,
                                       AutoCargo,
+                                      
                                       TeleopHatch,
                                       TeleopCargo,
-                                      TeleopRocketsComplete,
+                                      
                                       ReturnToHabitat,
+                                      
                                       Notes,
+                                      
                                       CompletedBy
                                       )
                                       VALUES 
                                       (
                                       ' . ((empty($this->TeamId)) ? 'NULL' : $database->quote($this->TeamId)) .',
                                       ' . ((empty($this->EventId)) ? 'NULL' : $database->quote($this->EventId)) .',
+                                      
                                       ' . ((empty($this->DriveStyle)) ? 'NULL' : $database->quote($this->DriveStyle)) .',
+                                      ' . ((empty($this->RobotWeight)) ? 'NULL' : $database->quote($this->RobotWeight)) .',
+                                      ' . ((empty($this->RobotLength)) ? 'NULL' : $database->quote($this->RobotLength)) .',
+                                      ' . ((empty($this->RobotWidth)) ? 'NULL' : $database->quote($this->RobotWidth)) .',
+                                      ' . ((empty($this->RobotHeight)) ? 'NULL' : $database->quote($this->RobotHeight)) .',
+                                      
                                       ' . ((empty($this->AutoExitHabitat)) ? 'NULL' : $database->quote($this->AutoExitHabitat)) .',
                                       ' . ((empty($this->AutoHatch)) ? 'NULL' : $database->quote($this->AutoHatch)) .',
                                       ' . ((empty($this->AutoCargo)) ? 'NULL' : $database->quote($this->AutoCargo)) .',
+                                      
                                       ' . ((empty($this->TeleopHatch)) ? 'NULL' : $database->quote($this->TeleopHatch)) .',
                                       ' . ((empty($this->TeleopCargo)) ? 'NULL' : $database->quote($this->TeleopCargo)) .',
-                                      ' . ((empty($this->TeleopRocketsComplete)) ? 'NULL' : $database->quote($this->TeleopRocketsComplete)) .',
+                                      
                                       ' . ((empty($this->ReturnToHabitat)) ? 'NULL' : $database->quote($this->ReturnToHabitat)) .',
+                                      
                                       ' . ((empty($this->Notes)) ? 'NULL' : $database->quote($this->Notes)) .',
+                                      
                                       ' . ((empty($this->CompletedBy)) ? 'NULL' : $database->quote($this->CompletedBy)) .'
                                       );';
 
@@ -94,15 +120,24 @@ class PitCards
             $sql = "UPDATE " . PitCards::$TABLE_NAME . " SET 
             TeamId = " . ((empty($this->TeamId)) ? "NULL" : $database->quote($this->TeamId)) .", 
             EventId = " . ((empty($this->EventId)) ? "NULL" : $database->quote($this->EventId)) .", 
+            
             DriveStyle = " . ((empty($this->DriveStyle)) ? "NULL" : $database->quote($this->DriveStyle)) .", 
+            RobotWeight = " . ((empty($this->RobotWeight)) ? "NULL" : $database->quote($this->RobotWeight)) .", 
+            RobotLength = " . ((empty($this->RobotLength)) ? "NULL" : $database->quote($this->RobotLength)) .", 
+            RobotWidth = " . ((empty($this->RobotWidth)) ? "NULL" : $database->quote($this->RobotWidth)) .", 
+            RobotHeight = " . ((empty($this->RobotHeight)) ? "NULL" : $database->quote($this->RobotHeight)) .", 
+            
             AutoExitHabitat = " . ((empty($this->AutoExitHabitat)) ? "NULL" : $database->quote($this->AutoExitHabitat)) .", 
             AutoHatch = " . ((empty($this->AutoHatch)) ? "NULL" : $database->quote($this->AutoHatch)) .", 
             AutoCargo = " . ((empty($this->AutoCargo)) ? "NULL" : $database->quote($this->AutoCargo)) .", 
+            
             TeleopHatch = " . ((empty($this->TeleopHatch)) ? "NULL" : $database->quote($this->TeleopHatch)) .", 
             TeleopCargo = " . ((empty($this->TeleopCargo)) ? "NULL" : $database->quote($this->TeleopCargo)) .", 
-            TeleopRocketsComplete = " . ((empty($this->TeleopRocketsComplete)) ? "NULL" : $database->quote($this->TeleopRocketsComplete)) .", 
+            
             ReturnToHabitat = " . ((empty($this->ReturnToHabitat)) ? "NULL" : $database->quote($this->ReturnToHabitat)) .", 
+            
             Notes = " . ((empty($this->Notes)) ? "NULL" : $database->quote($this->Notes)) .", 
+            
             CompletedBy = " . ((empty($this->CompletedBy)) ? "NULL" : $database->quote($this->CompletedBy)) ."
             WHERE (Id = " . $database->quote($this->Id) . ");";
 

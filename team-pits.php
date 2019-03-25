@@ -4,6 +4,7 @@ require_once("classes/Teams.php");
 require_once("classes/PitCards.php");
 require_once("classes/Events.php");
 
+
 $eventId = $_GET['eventId'];
 $teamId = $_GET['teamId'];
 
@@ -88,6 +89,35 @@ $ccwms = $stats['ccwms']['frc' . $pitCard->TeamId];
         <div class="mdl-layout--large-screen-only mdl-layout__header-row">
             <?php include_once('includes/login-form.php') ?>
         </div>
+          <?php
+
+          $robotMediaUri = Teams::getProfileImageUri($team->Id);
+
+          if(!empty($robotMediaUri))
+          {
+              $robotMediaUri = ROBOT_MEDIA_URL . $robotMediaUri;
+              list($width, $height) = getimagesize($robotMediaUri);
+
+              if(!empty($width) && !empty($height))
+              {
+                  if ($width > $height)
+                      echo
+                          '<div style="height: unset" class="mdl-layout--large-screen-only mdl-layout__header-row">
+                  <div class="circle-image-landscape">
+                    <img src="' . $robotMediaUri . '">
+                  </div>
+                </div>';
+                  else
+                      echo
+                          '<div style="height: unset" class="mdl-layout--large-screen-only mdl-layout__header-row">
+                  <div class="circle-image-portrait">
+                    <img src="' . $robotMediaUri . '">
+                  </div>
+                </div>';
+              }
+          }
+
+          ?>
         <div class="mdl-layout--large-screen-only mdl-layout__header-row">
           <h3><?php echo $team->Id . ' - ' . $team->Name ?></h3><br>
         </div>
@@ -149,25 +179,29 @@ $ccwms = $stats['ccwms']['frc' . $pitCard->TeamId];
 
           </div>
           <div style="height: unset" class="mdl-layout--large-screen-only mdl-layout__header-row">
-              <h6 style="margin: unset"><strong>OPR:</strong> <?php echo $opr ?></h6>
+              <h6 style="margin: unset"><strong>OPR:</strong> <?php echo round($opr, 2) ?></h6>
           </div>
 
           <div style="height: unset" class="mdl-layout--large-screen-only mdl-layout__header-row">
-              <h6 style="margin: unset"><strong>DPR:</strong> <?php echo $dpr ?></h6>
+              <h6 style="margin: unset"><strong>DPR:</strong> <?php echo round($dpr, 2) ?></h6>
           </div>
 
-          <div style="height: unset" class="mdl-layout--large-screen-only mdl-layout__header-row">
-              <h6 style="margin: unset"><strong>CCWMS:</strong> <?php echo $ccwms ?></h6>
-          </div>
           <div id="quick-stats" style="padding-left: 40px" hidden>
-              <h6 style="margin: unset"><strong>Drive Style:</strong> <?php echo $pitCard->DriveStyle ?></h6>
+              <h6 style="margin: unset"><strong>Drivetrain:</strong> <?php echo $pitCard->DriveStyle ?></h6>
+              <h6 style="margin: unset"><strong>Robot Weight:</strong> <?php echo $pitCard->RobotWeight ?></h6>
+              <h6 style="margin: unset"><strong>Robot Length:</strong> <?php echo $pitCard->RobotLength ?></h6>
+              <h6 style="margin: unset"><strong>Robot Width:</strong> <?php echo $pitCard->RobotWidth ?></h6>
+              <h6 style="margin: unset"><strong>Robot Height:</strong> <?php echo $pitCard->RobotHeight ?></h6>
+
               <h6 style="margin: unset"><strong>Auto Exit Habitat:</strong> <?php echo $pitCard->AutoExitHabitat ?></h6>
               <h6 style="margin: unset"><strong>Auto Hatch Panels:</strong> <?php echo $pitCard->AutoHatch ?></h6>
               <h6 style="margin: unset"><strong>Auto Cargo:</strong> <?php echo $pitCard->AutoCargo ?></h6>
+
               <h6 style="margin: unset"><strong>Teleop Hatch:</strong> <?php echo $pitCard->TeleopHatch ?></h6>
               <h6 style="margin: unset"><strong>Teleop Cargo:</strong> <?php echo $pitCard->TeleopCargo ?></h6>
-              <h6 style="margin: unset"><strong>Teleop Rockets Complete:</strong> <?php echo $pitCard->TeleopRocketsComplete ?></h6>
+
               <h6 style="margin: unset"><strong>Return To Habitat:</strong> <?php echo $pitCard->ReturnToHabitat ?></h6>
+
               <h6 style="margin: unset"><strong>Notes:</strong> <?php echo $pitCard->Notes ?></h6>
               <h6 style="margin: unset"><strong>Completed By:</strong> <?php echo $pitCard->CompletedBy ?></h6>
           </div>
@@ -186,6 +220,7 @@ $ccwms = $stats['ccwms']['frc' . $pitCard->TeamId];
           <div class="mdl-layout__tab-bar mdl-js-ripple-effect mdl-color--primary-dark">
               <a href="/team-matches.php?eventId=<?php echo $event->BlueAllianceId; ?>&teamId=<?php echo $team->Id; ?>" class="mdl-layout__tab ">Matches</a>
               <a href="/team-pits.php?eventId=<?php echo $event->BlueAllianceId; ?>&teamId=<?php echo $team->Id; ?>" class="mdl-layout__tab is-active">Pits</a>
+              <a href="/team-photos.php?eventId=<?php echo $event->BlueAllianceId; ?>&teamId=<?php echo $team->Id; ?>" class="mdl-layout__tab">Photos</a>
           </div>
       </header>
       <main class="mdl-layout__content">

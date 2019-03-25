@@ -206,10 +206,6 @@ $event->load($eventId);
 
             <div class="container" style="width: 500px; margin-left: unset; padding-left: unset;">
                 <div class="row">
-<!--                    <div class="col" onclick="togglePreGame($(this));">-->
-<!--                        <div class="stats-filter pre-game"></div>-->
-<!--                        <p>PRE GAME</p>-->
-<!--                    </div>-->
                     <div class="col" onclick="toggleAuto($(this));">
                         <div class="stats-filter autonomous"></div>
                         <p>AUTONOMOUS</p>
@@ -221,6 +217,10 @@ $event->load($eventId);
                     <div class="col" onclick="toggleEndGame($(this));">
                         <div class="stats-filter end-game"></div>
                         <p>END GAME</p>
+                    </div>
+                    <div class="col" onclick="togglePostGame($(this));">
+                        <div class="stats-filter post-game"></div>
+                        <p>POST GAME</p>
                     </div>
                 </div>
             </div>
@@ -247,10 +247,7 @@ $event->load($eventId);
             <thead>
             <tr>
                 <th>Team Number</th>
-                <th>MAX/AVG</th>
-<!--                <th class="pre-game" style="color: white;">Starting Piece</th>-->
-<!--                <th class="pre-game" style="color: white;">Starting Level</th>-->
-<!--                <th class="pre-game" style="color: white;">Starting Position</th>-->
+                <th>MIN/MAX/AVG</th>
 
                 <th class="autonomous">Exit Habitat</th>
                 <th class="autonomous">Hatch Panels</th>
@@ -264,7 +261,11 @@ $event->load($eventId);
                 <th class="teleop">Cargo Dropped</th>
 
                 <th class="end-game" style="color: white;">Returned To Habitat</th>
-                <th class="end-game" style="color: white;">Returned To Habitat Failed  Attempts</th>
+                <th class="end-game" style="color: white;">Returned To Habitat Failed Attempts</th>
+
+                <th class="post-game" style="color: white;">Defense Rating</th>
+                <th class="post-game" style="color: white;">Offense Rating</th>
+                <th class="post-game" style="color: white;">Drive Rating</th>
             </tr>
             </thead>
             <tbody>
@@ -308,7 +309,8 @@ $event->load($eventId);
     var removePreGame = false,
         removeAuto = false,
         removeTeleop = false,
-        removeEndGame = false;
+        removeEndGame = false,
+        removePostGame = false;
 
     var removeMin = false,
         removeAvg = false,
@@ -503,6 +505,20 @@ $event->load($eventId);
         statsTable.columns(12).visible(removeEndGame);
 
         removeEndGame = !removeEndGame;
+
+        statsTable.ajax.reload();
+    }
+
+    function togglePostGame(element)
+    {
+
+        toggleCrossOut(element);
+
+        statsTable.columns(13).visible(removePostGame);
+        statsTable.columns(14).visible(removePostGame);
+        statsTable.columns(15).visible(removePostGame);
+
+        removePostGame = !removePostGame;
 
         statsTable.ajax.reload();
     }
