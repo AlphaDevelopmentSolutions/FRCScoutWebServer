@@ -91,7 +91,7 @@ $ccwms = $stats['ccwms']['frc' . $pitCard->TeamId];
         </div>
           <?php
 
-          $robotMediaUri = ROBOT_MEDIA_URL . $team->getProfileImageUri();
+          $robotMediaUri = ROBOT_MEDIA_URL . Teams::getProfileImageUri($team->Id);
           list($width, $height) = getimagesize($robotMediaUri);
 
           if(!empty($width) && !empty($height))

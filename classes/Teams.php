@@ -177,9 +177,9 @@ class Teams
     /**
      * Returns the URI of the teams profile image
      */
-    public function getProfileImageUri()
+    public static function getProfileImageUri($teamId)
     {
-        if(!empty($this->Id))
+        if(!empty($teamId))
         {
             $database = new Database();
             $robotMedia = $database->query(
@@ -188,7 +188,7 @@ class Teams
                     FROM
                       robot_media
                     WHERE
-                      TeamId = " . $this->Id . "
+                      TeamId = " . $teamId . "
                     ORDER BY Id DESC LIMIT 1"
             );
             $database->close();
@@ -201,8 +201,6 @@ class Teams
                     return $row['FileURI'];
                 }
             }
-
-
         }
     }
 
