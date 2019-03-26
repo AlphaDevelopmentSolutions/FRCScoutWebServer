@@ -7,7 +7,7 @@ require_once('classes/Keys.php');
 require_once('classes/Database.php');
 require_once('classes/Users.php');
 
-define('VERSION', '1.0.0');
+define('VERSION', 'v2019.2.0.0');
 define('ROBOT_MEDIA_DIR', __DIR__ . '/html/assets/robot-media/');
 define('ROBOT_MEDIA_URL', URL_PATH . '/assets/robot-media/');
 
