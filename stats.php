@@ -412,7 +412,7 @@ $event->load($eventId);
                                generateToolTips(aData, 'teleopCargoStoredAttemptsMinMatchIds', 'teleopCargoStoredAttemptsMaxMatchIds', $(this));
                                break;
 
-                           case (removeAuto ? (removeTeleop ? 2 : 6) : removeTeleop ? 7 : 11):
+                           case (removeEndGame ? -10 : removeAuto ? (removeTeleop ? 2 : 6) : removeTeleop ? 7 : 11):
                                if($(this).html() !== "No")
                                    $(this).css('background-color', '#64FF62');
 
@@ -422,13 +422,55 @@ $event->load($eventId);
 
                                break;
 
-                           case (removeAuto ? (removeTeleop ? 3 : 7) : removeTeleop ? 8 : 12):
+                           case (removeEndGame ? -11 : removeAuto ? (removeTeleop ? 3 : 7) : removeTeleop ? 8 : 12):
                                if($(this).html() !== "No")
                                    $(this).css('background-color', '#E67C73');
 
                                else
                                    $(this).css('background-color', '#64FF62');
                                generateToolTips(aData, 'endGameReturnedToHabitatMinMatchIds', 'endGameReturnedToHabitatMaxMatchIds', $(this));
+
+                               break;
+
+                           case (removeEndGame ? (removeAuto ? (removeTeleop ? 2 : 6) : (removeTeleop ? 7: 11)) : (removeAuto ? (removeTeleop ? 4 : 8) : (removeTeleop ? 9: 13))):
+                               if($(this).html() >= 0 && $(this).html() <= 1.6)
+                                   $(this).css('background-color', '#E67C73');
+
+                               else if($(this).html() > 1.6 && $(this).html() <= 3.2)
+                                   $(this).css('background-color', '#FFA74F');
+
+                               else
+                                   $(this).css('background-color', '#64FF62');
+
+                               generateToolTips(aData, 'postGameDefenseRatingMinMatchIds', 'postGameDefenseRatingMaxMatchIds', $(this));
+
+                               break;
+
+                           case (removeEndGame ? (removeAuto ? (removeTeleop ? 3 : 7) : (removeTeleop ? 8: 12)) : (removeAuto ? (removeTeleop ? 5 : 9) : (removeTeleop ? 10: 14))):
+                               if($(this).html() >= 0 && $(this).html() <= 1.6)
+                                   $(this).css('background-color', '#E67C73');
+
+                               else if($(this).html() > 1.6 && $(this).html() <= 3.2)
+                                   $(this).css('background-color', '#FFA74F');
+
+                               else
+                                   $(this).css('background-color', '#64FF62');
+
+                               generateToolTips(aData, 'postGameOffenseRatingMinMatchIds', 'postGameOffenseRatingMaxMatchIds', $(this));
+
+                               break;
+
+                           case (removeEndGame ? (removeAuto ? (removeTeleop ? 4 : 8) : (removeTeleop ? 9: 13)) : (removeAuto ? (removeTeleop ? 6 : 10) : (removeTeleop ? 11: 15))):
+                               if($(this).html() >= 0 && $(this).html() <= 1.6)
+                                   $(this).css('background-color', '#E67C73');
+
+                               else if($(this).html() > 1.6 && $(this).html() <= 3.2)
+                                   $(this).css('background-color', '#FFA74F');
+
+                               else
+                                   $(this).css('background-color', '#64FF62');
+
+                               generateToolTips(aData, 'postGameDriveRatingMinMatchIds', 'postGameDriveRatingMaxMatchIds', $(this));
 
                                break;
                        }
