@@ -155,7 +155,7 @@ class PitCards
     function delete()
     {
         if(empty($this->Id))
-            return false;$pitCards[$i]['Id']
+            return false;
 
         $database = new Database();
         $sql = 'DELETE FROM '.self::$TABLE_NAME.' WHERE '.'id = '.$database->quote($this->Id);
