@@ -59,8 +59,8 @@
                     </div>
 
                     <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                        <input <?php echo ((loggedIn()) ? "" : "disabled") ?> class="mdl-textfield__input" type="text" value="<?php echo $scoutCard->AutonomousHatchPanelsPickedUp / $scoutCard->AutonomousHatchPanelsSecured ?>">
-                        <label class="mdl-textfield__label" >Hatch Pickup / Secure %</label>
+                        <input <?php echo ((loggedIn()) ? "" : "disabled") ?> class="mdl-textfield__input" type="text" value="<?php echo round(($scoutCard->AutonomousHatchPanelsSecured / $scoutCard->AutonomousHatchPanelsPickedUp) * 100, 2) ?>%">
+                        <label class="mdl-textfield__label" >Hatch Stored / Pickup %</label>
                     </div>
 
                     <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
@@ -79,8 +79,8 @@
                     </div>
 
                     <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                        <input <?php echo ((loggedIn()) ? "" : "disabled") ?> class="mdl-textfield__input" type="text" value="<?php echo $scoutCard->AutonomousCargoPickedUp / $scoutCard->AutonomousCargoStored ?>">
-                        <label class="mdl-textfield__label" >Cargo Pickup / Stored %</label>
+                        <input <?php echo ((loggedIn()) ? "" : "disabled") ?> class="mdl-textfield__input" type="text" value="<?php echo round(($scoutCard->AutonomousCargoStored / $scoutCard->AutonomousCargoPickedUp) * 100, 2) ?>%">
+                        <label class="mdl-textfield__label" >Cargo Stored / Pickup %</label>
                     </div>
                 </div>
 
@@ -102,8 +102,8 @@
                     </div>
 
                     <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                        <input <?php echo ((loggedIn()) ? "" : "disabled") ?> class="mdl-textfield__input" type="text" value="<?php echo $scoutCard->TeleopHatchPanelsPickedUp / $scoutCard->TeleopHatchPanelsSecured ?>">
-                        <label class="mdl-textfield__label" >Hatch Pickup / Secure %</label>
+                        <input <?php echo ((loggedIn()) ? "" : "disabled") ?> class="mdl-textfield__input" type="text" value="<?php echo round(($scoutCard->TeleopHatchPanelsSecured / $scoutCard->TeleopHatchPanelsPickedUp) * 100, 2) ?>%">
+                        <label class="mdl-textfield__label" >Hatch Stored / Pickup %</label>
                     </div>
 
                     <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
@@ -122,8 +122,8 @@
                     </div>
 
                     <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                        <input <?php echo ((loggedIn()) ? "" : "disabled") ?> class="mdl-textfield__input" type="text" value="<?php echo $scoutCard->TeleopCargoPickedUp / $scoutCard->TeleopCargoStored ?>">
-                        <label class="mdl-textfield__label" >Cargo Pickup / Stored %</label>
+                        <input <?php echo ((loggedIn()) ? "" : "disabled") ?> class="mdl-textfield__input" type="text" value="<?php echo round(($scoutCard->TeleopCargoStored / $scoutCard->TeleopCargoPickedUp) * 100, 2) ?>%">
+                        <label class="mdl-textfield__label" >Cargo Stored / Pickup %</label>
                     </div>
 
                 </div>
