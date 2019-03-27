@@ -56,8 +56,8 @@ class Events
                                   ' . ((empty($this->City)) ? 'NULL' : $database->quote($this->City)) .',
                                   ' . ((empty($this->StateProvince)) ? 'NULL' : $database->quote($this->StateProvince)) .',
                                   ' . ((empty($this->Country)) ? 'NULL' : $database->quote($this->Country)) .',
-                                  ' . ((empty($this->StartDate)) ? 'NULL' : $database->quote($this->StartDate)) .',
-                                  ' . ((empty($this->EndDate)) ? 'NULL' : $database->quote($this->EndDate)) .'
+                                  ' . ((empty($this->StartDate)) ? '2019-01-01 00:00:00' : $database->quote($this->StartDate)) .',
+                                  ' . ((empty($this->EndDate)) ? '2019-01-01 00:00:00' : $database->quote($this->EndDate)) .'
                                   );';
         if($database->query($sql))
         {
