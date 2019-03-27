@@ -54,8 +54,8 @@ If at any time you need to need to change server information, navigate to that f
 ## Cron
 For getting events and teams at those events, the web app runs off of scripts that can be cron tasked. Each script is located at
     
-        cron/GetEvents.php
-        cron/GetTeams.php
+    cron/GetEvents.php
+    cron/GetTeams.php
         
 You can either run these manually or automate it with use of an OS cron.
 
@@ -70,7 +70,7 @@ or copy and replace all files from this repo to your server.
 
 The MySQL update scripts are located in the same directory as the installation scripts.
 
-        databases/vYYYY.M.M.P.update.sql
+    databases/vYYYY.M.M.P.update.sql
         
         
 ## Error Codes
