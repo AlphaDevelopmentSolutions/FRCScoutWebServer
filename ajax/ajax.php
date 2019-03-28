@@ -118,7 +118,7 @@ switch($_POST['action'])
                 else if(0 <= $autoExitHabitatMin)
                 {
                     $autoExitHabitatMinMatchIds = ((0 < $autoExitHabitatMin) ? array() : $autoExitHabitatMinMatchIds);
-                    $autoExitHabitatMin = $scoutCard['PreGameStartingLevel'];
+                    $autoExitHabitatMin = 0;
                     $autoExitHabitatMinMatchIds[] = $scoutCard['MatchId'];
                 }
 
@@ -221,7 +221,7 @@ switch($_POST['action'])
                     $postGameOffenseRatingMinMatchIds[] = $scoutCard['MatchId'];
                 }
 
-                if($scoutCard['DriveRating'] <= $postGameDriveRatingMin && $scoutCard['DriveRating'] != 0)
+                if($scoutCard['DriveRating'] <= $postGameDriveRatingMin)
                 {
                     $postGameDriveRatingMinMatchIds = (($scoutCard['DriveRating'] < $postGameDriveRatingMin) ? array() : $postGameDriveRatingMinMatchIds);
                     $postGameDriveRatingMin = $scoutCard['DriveRating'];
@@ -269,7 +269,7 @@ switch($_POST['action'])
                 else if(0 >= $autoExitHabitatMax)
                 {
                     $autoExitHabitatMaxMatchIds = ((0 > $autoExitHabitatMax) ? array() : $autoExitHabitatMaxMatchIds);
-                    $autoExitHabitatMax = $scoutCard['PreGameStartingLevel'];
+                    $autoExitHabitatMax = 0;
                     $autoExitHabitatMaxMatchIds[] = $scoutCard['MatchId'];
                 }
 
@@ -370,7 +370,7 @@ switch($_POST['action'])
                     $postGameOffenseRatingMaxMatchIds[] = $scoutCard['MatchId'];
                 }
 
-                if($scoutCard['DriveRating'] >= $postGameDriveRatingMax && $scoutCard['DriveRating'] != 0)
+                if($scoutCard['DriveRating'] >= $postGameDriveRatingMax)
                 {
                     $postGameDriveRatingMaxMatchIds = (($scoutCard['DriveRating'] < $postGameDriveRatingMax) ? array() : $postGameDriveRatingMaxMatchIds);
                     $postGameDriveRatingMax = $scoutCard['DriveRating'];
