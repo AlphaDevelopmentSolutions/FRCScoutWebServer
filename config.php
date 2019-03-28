@@ -3,7 +3,11 @@
 //ini_set('display_startup_errors', 1);
 //error_reporting(E_ALL);
 
-require_once('classes/Keys.php');
+if(file_exists('classes/Keys.php'))
+    require_once('classes/Keys.php');
+else if (strpos($_SERVER['REQUEST_URI'], 'install.php') < 1)
+    header('Location: ' . '/install.php');
+
 require_once('classes/Database.php');
 require_once('classes/Users.php');
 
