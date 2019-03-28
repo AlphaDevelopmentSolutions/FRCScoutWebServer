@@ -64,9 +64,9 @@ switch($_POST['action'])
             $teleopCargoStoredAttempts = 0;
             $endGameReturnedToHabitat = 0;
             $endGameReturnedToHabitatAttempts = 0;
-            $postGameDefenseRating = 1;
-            $postGameOffenseRating = 1;
-            $postGameDriveRating = 1;
+            $postGameDefenseRating = 0;
+            $postGameOffenseRating = 0;
+            $postGameDriveRating = 0;
 
             $autoExitHabitatMax = 0;
             $autoHatchPanelsMax = 0;
@@ -79,9 +79,9 @@ switch($_POST['action'])
             $teleopCargoStoredAttemptsMax = 0;
             $endGameReturnedToHabitatMax = 0;
             $endGameReturnedToHabitatAttemptsMax = 0;
-            $postGameDefenseRatingMax = 1;
-            $postGameOffenseRatingMax = 1;
-            $postGameDriveRatingMax = 1;
+            $postGameDefenseRatingMax = 0;
+            $postGameOffenseRatingMax = 0;
+            $postGameDriveRatingMax = 0;
 
             $autoExitHabitatMaxMatchIds = array();
             $autoHatchPanelsMaxMatchIds = array();
@@ -99,6 +99,8 @@ switch($_POST['action'])
             $postGameDriveRatingMaxMatchIds = array();
 
             $i = 0;
+            $nulledDefenseRatings = 0;
+            $nulledOffenseRatings = 0;
 
             foreach (ScoutCards::getScoutCardsForTeam($team['Id'], $eventId) as $scoutCard)
             {
@@ -234,13 +236,18 @@ switch($_POST['action'])
                 $autoHatchPanelsAttempts += $scoutCard['AutonomousHatchPanelsSecuredAttempts'];
                 $autoCargoStored += $scoutCard['AutonomousCargoStored'];
                 $autoCargoStoredAttempts += $scoutCard['AutonomousCargoStoredAttempts'];
+                
                 $teleopHatchPanels += $scoutCard['TeleopHatchPanelsSecured'];
                 $teleopHatchPanelsAttempts += $scoutCard['TeleopHatchPanelsSecuredAttempts'];
                 $teleopCargoStored += $scoutCard['TeleopCargoStored'];
                 $teleopCargoStoredAttempts += $scoutCard['TeleopCargoStoredAttempts'];
+                
                 $postGameDefenseRating += $scoutCard['DefenseRating'];
                 $postGameOffenseRating += $scoutCard['OffenseRating'];
                 $postGameDriveRating += $scoutCard['DriveRating'];
+                
+                $nulledDefenseRatings = $scoutCard['DefenseRating'] == 0 ? $nulledDefenseRatings + 1 : $nulledDefenseRatings;
+                $nulledOffenseRatings = $scoutCard['OffenseRating'] == 0 ? $nulledOffenseRatings + 1 : $nulledOffenseRatings;
 
                 if(!empty($scoutCard['EndGameReturnedToHabitat']))
                     $endGameReturnedToHabitat += $scoutCard['EndGameReturnedToHabitat'];
@@ -378,7 +385,7 @@ switch($_POST['action'])
                 $data = array();
                 $data[] = '<a target="_blank" href="/team-matches.php?eventId=' . $eventId . '&teamId=' . $teamNumber .'">' . $teamNumber . '</a>';
                 $data[] = 'MIN';
-                $data[] = $autoExitHabitatMin;
+                $data[] = $autoExitHabitatMin == 0 ? 'No' : 'Level ' . $autoExitHabitatMin;
                 $data[] = $autoHatchPanelsMin;
                 $data[] = $autoHatchPanelsAttemptsMin;
                 $data[] = $autoCargoStoredMin;
@@ -429,8 +436,8 @@ switch($_POST['action'])
                 $data[] = round($teleopCargoStoredAttempts / $scoutCardCount, 2);
                 $data[] = (($endGameReturnedToHabitat / $scoutCardCount > 0) ? "Level " . round($endGameReturnedToHabitat / $scoutCardCount, 2) : "No");
                 $data[] = (($endGameReturnedToHabitatAttempts / $scoutCardCount > 0) ? "Level " . round($endGameReturnedToHabitatAttempts / $scoutCardCount, 2) : "No");
-                $data[] = round($postGameDefenseRating / $scoutCardCount, 2);
-                $data[] = round($postGameOffenseRating / $scoutCardCount, 2);
+                $data[] = round($postGameDefenseRating / ($scoutCardCount - $nulledDefenseRatings), 2);
+                $data[] = round($postGameOffenseRating / ($scoutCardCount - $nulledOffenseRatings), 2);
                 $data[] = round($postGameDriveRating / $scoutCardCount, 2);
                 
                 $return_array[] = $data;
@@ -440,7 +447,7 @@ switch($_POST['action'])
                 $data = array();
                 $data[] = '<a target="_blank" href="/team-matches.php?eventId=' . $eventId . '&teamId=' . $teamNumber .'">' . $teamNumber . '</a>';;
                 $data[] = 'MAX';
-                $data[] = $autoExitHabitatMax;
+                $data[] = $autoExitHabitatMax == 0 ? 'No' : 'Level ' . $autoExitHabitatMax;
                 $data[] = $autoHatchPanelsMax;
                 $data[] = $autoHatchPanelsAttemptsMax;
                 $data[] = $autoCargoStoredMax;
