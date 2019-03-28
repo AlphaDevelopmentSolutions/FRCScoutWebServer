@@ -72,7 +72,11 @@ The MySQL update scripts are located in the same directory as the installation s
 
     databases/vYYYY.M.M.P.update.sql
         
-        
+## Contributing
+Contributions are welcomed and encouraged! 
+
+To contribute, fork this repo and create a pull request to merge into the release branch your issue is tagged under.
+
 ## Error Codes
 **5x01:** PHP tried to write a file to the server and failed. Does your server have correct permissions?
 
