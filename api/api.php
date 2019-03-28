@@ -15,6 +15,17 @@ $action = $_POST['action'];
 
 switch($action)
 {
+    //used to establish a connection with the server
+    case 'Hello':
+        $response = array();
+
+        $response['Status'] = 'Success';
+        $response['Response'] = 'Hello Good Sir!';
+
+        echo json_encode($response);
+
+        break;
+
     //region Setters
     case 'SubmitScoutCard':
         $response = array();
