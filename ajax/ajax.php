@@ -1,10 +1,7 @@
 <?php
 require_once("../config.php");
-
 switch($_POST['action'])
 {
-
-
     case 'load_stats':
 
         require_once('../classes/Teams.php');
@@ -16,6 +13,12 @@ switch($_POST['action'])
         $removeMin = $_POST['removeMin'];
         $removeAvg = $_POST['removeAvg'];
         $removeMax = $_POST['removeMax'];
+
+        $eventId = '2019onosh';
+
+        $removeMin = 'false' ;
+        $removeAvg = 'false';
+        $removeMax = 'false';
 
 
         foreach (Teams::getTeamsAtEvent($eventId) as $team)
@@ -436,8 +439,8 @@ switch($_POST['action'])
                 $data[] = round($teleopCargoStoredAttempts / $scoutCardCount, 2);
                 $data[] = (($endGameReturnedToHabitat / $scoutCardCount > 0) ? "Level " . round($endGameReturnedToHabitat / $scoutCardCount, 2) : "No");
                 $data[] = (($endGameReturnedToHabitatAttempts / $scoutCardCount > 0) ? "Level " . round($endGameReturnedToHabitatAttempts / $scoutCardCount, 2) : "No");
-                $data[] = round($postGameDefenseRating / ($scoutCardCount - $nulledDefenseRatings), 2);
-                $data[] = round($postGameOffenseRating / ($scoutCardCount - $nulledOffenseRatings), 2);
+                $data[] = ($scoutCardCount - $nulledDefenseRatings) == 0 ? 0 : round($postGameDefenseRating / ($scoutCardCount - $nulledDefenseRatings), 2);
+                $data[] = ($scoutCardCount - $nulledOffenseRatings) == 0 ? 0 : round($postGameOffenseRating / ($scoutCardCount - $nulledOffenseRatings), 2);
                 $data[] = round($postGameDriveRating / $scoutCardCount, 2);
                 
                 $return_array[] = $data;
