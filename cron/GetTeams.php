@@ -4,8 +4,6 @@ require_once('../classes/Teams.php');
 require_once('../classes/EventTeamList.php');
 
 $database = new Database();
-$database->query("DELETE FROM teams;");
-$database->query("DELETE FROM event_team_list;");
 $events = $database->query("SELECT BlueAllianceId FROM events");
 $database->close();
 
@@ -16,6 +14,11 @@ if($events && $events->num_rows > 0)
         getTeams($row['BlueAllianceId']);
     }
 }
+
+//cleanup duplicates
+$database = new Database();
+$database->query("DELETE event_team_list1 FROM event_team_list event_team_list1, event_team_list event_team_list2 WHERE event_team_list1.Id < event_team_list2.Id AND event_team_list1.EventId = event_team_list2.EventId AND event_team_list1.TeamId = event_team_list2.TeamId;");
+$database->close();
 
 function getTeams($eventCode)
 {

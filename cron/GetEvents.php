@@ -2,9 +2,7 @@
 require_once('../config.php');
 require_once('../classes/Events.php');
 
-$database = new Database();
-$database->query("DELETE FROM events;");
-$database->close();
+
 
 foreach (getEvents() as $eventJson)
 {
@@ -18,6 +16,11 @@ foreach (getEvents() as $eventJson)
     $event->EndDate = $eventJson['end_date'];
     $event->save();
 }
+
+//cleanup duplicates
+$database = new Database();
+$database->query("DELETE event1 FROM events event1, events event2 WHERE event1.Id < event2.Id AND event1.BlueAllianceId = event2.BlueAllianceId;");
+$database->close();
 
 /**
  * Queries the blue alliance API for events on a specific team

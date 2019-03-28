@@ -1,9 +1,11 @@
 <?php
-//ini_set('display_errors', 1);
-//ini_set('display_startup_errors', 1);
-//error_reporting(E_ALL);
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 
-if(file_exists('classes/Keys.php'))
+
+
+if(file_exists(__DIR__ . '/classes/Keys.php'))
     require_once('classes/Keys.php');
 else if (strpos($_SERVER['REQUEST_URI'], 'install.php') < 1)
     header('Location: ' . '/install.php');
