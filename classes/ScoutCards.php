@@ -8,6 +8,8 @@ class ScoutCards
     public $EventId;
     public $AllianceColor;
     public $CompletedBy;
+    public $MatchType;
+    public $SetNumber;
 
     public $PreGameStartingPosition;
     public $PreGameStartingLevel;
@@ -77,6 +79,8 @@ class ScoutCards
                                         EventId,
                                         AllianceColor,
                                         CompletedBy,
+                                        MatchType,
+                                        SetNumber,
                                     
                                         PreGameStartingLevel,
                                         PreGameStartingPosition,
@@ -115,6 +119,8 @@ class ScoutCards
                                       ' . ((empty($this->EventId)) ? 'NULL' : $database->quote($this->EventId)) .',
                                       ' . ((empty($this->AllianceColor)) ? 'NULL' : $database->quote($this->AllianceColor)) .',
                                       ' . ((empty($this->CompletedBy)) ? 'NULL' : $database->quote($this->CompletedBy)) .',
+                                      ' . ((empty($this->MatchType)) ? 'NULL' : $database->quote($this->CompletedBy)) .',
+                                      ' . ((empty($this->SetNumber)) ? 'NULL' : $database->quote($this->CompletedBy)) .',
                                     
                                       ' . ((empty($this->PreGameStartingLevel)) ? '0' : $database->quote($this->PreGameStartingLevel)) .',
                                       ' . ((empty($this->PreGameStartingPosition)) ? 'NULL' : $database->quote($this->PreGameStartingPosition)) .',
@@ -167,6 +173,8 @@ class ScoutCards
             EventId = " . ((empty($this->EventId)) ? "NULL" : $database->quote($this->EventId)) .", 
             AllianceColor = " . ((empty($this->AllianceColor)) ? "NULL" : $database->quote($this->AllianceColor)) .", 
             CompletedBy = " . ((empty($this->CompletedBy)) ? "NULL" : $database->quote($this->CompletedBy)) .", 
+            MatchType = " . ((empty($this->MatchType)) ? "NULL" : $database->quote($this->MatchType)) .", 
+            SetNumber = " . ((empty($this->SetNumber)) ? "0" : $database->quote($this->SetNumber)) .", 
 
             PreGameStartingLevel = " . ((empty($this->PreGameStartingLevel)) ? "0" : $database->quote($this->PreGameStartingLevel)) .", 
             PreGameStartingPosition = " . ((empty($this->PreGameStartingPosition)) ? "NULL" : $database->quote($this->PreGameStartingPosition)) .", 

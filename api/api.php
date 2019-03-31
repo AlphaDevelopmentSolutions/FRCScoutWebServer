@@ -28,6 +28,8 @@ switch($action)
         $scoutCard->EventId = filter_var($_POST['EventId'], FILTER_SANITIZE_STRING);
         $scoutCard->AllianceColor = filter_var($_POST['AllianceColor'], FILTER_SANITIZE_STRING);
         $scoutCard->CompletedBy = filter_var($_POST['CompletedBy'], FILTER_SANITIZE_STRING);
+        $scoutCard->MatchType = filter_var($_POST['MatchType'], FILTER_SANITIZE_STRING);
+        $scoutCard->SetNumber = filter_var($_POST['SetNumber'], FILTER_SANITIZE_NUMBER_INT);
 
         $scoutCard->PreGameStartingLevel = filter_var($_POST['PreGameStartingLevel'], FILTER_SANITIZE_NUMBER_INT);
         $scoutCard->PreGameStartingPosition = filter_var($_POST['PreGameStartingPosition'], FILTER_SANITIZE_STRING);
