@@ -14,13 +14,6 @@ switch($_POST['action'])
         $removeAvg = $_POST['removeAvg'];
         $removeMax = $_POST['removeMax'];
 
-        $eventId = '2019onosh';
-
-        $removeMin = 'false' ;
-        $removeAvg = 'false';
-        $removeMax = 'false';
-
-
         foreach (Teams::getTeamsAtEvent($eventId) as $team)
         {
             $data = array();
