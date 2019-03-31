@@ -243,25 +243,26 @@ $event->load($eventId);
 
 
         </div>
+
         <table id="stats_table" class="display stats-table">
             <thead>
             <tr>
                 <th>Team Number</th>
                 <th>MIN/MAX/AVG</th>
 
-                <th class="autonomous">Exit Habitat</th>
-                <th class="autonomous">Hatch Panels</th>
+                <th class="autonomous">Exit HAB</th>
+                <th class="autonomous">Hatch</th>
                 <th class="autonomous">Hatch Dropped</th>
                 <th class="autonomous">Cargo</th>
                 <th class="autonomous">Cargo Dropped</th>
 
-                <th class="teleop">Hatch Panels</th>
+                <th class="teleop">Hatch</th>
                 <th class="teleop">Hatch Dropped</th>
                 <th class="teleop">Cargo</th>
                 <th class="teleop">Cargo Dropped</th>
 
-                <th class="end-game" style="color: white;">Returned To Habitat</th>
-                <th class="end-game" style="color: white;">Returned To Habitat Failed Attempts</th>
+                <th class="end-game" style="color: white;">Return To HAB</th>
+                <th class="end-game" style="color: white;">Return To HAB Fails</th>
 
                 <th class="post-game" style="color: white;">Defense Rating</th>
                 <th class="post-game" style="color: white;">Offense Rating</th>
@@ -341,10 +342,10 @@ $event->load($eventId);
                 }
 
             },
-            'columnDefs': [function(d)
-            {
-                d.columnDefs = columnDefs;
-            }],
+            'columnDefs' : [
+                { "width": "5%", "targets": 0 }
+
+            ],
             'drawCallback': function(settings)
             {
                 $('[data-toggle="tooltip"]').tooltip();
