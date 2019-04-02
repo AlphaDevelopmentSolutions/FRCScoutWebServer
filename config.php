@@ -10,11 +10,8 @@ else if (strpos($_SERVER['REQUEST_URI'], 'install.php') < 1)
 
 require_once('classes/Database.php');
 require_once('classes/Users.php');
+require_once('interfaces/AllianceColors.php');
 
-define('VERSION', 'v2019.2.0.0');
-define('ROBOT_MEDIA_DIR', __DIR__ . '/html/assets/robot-media/');
-define('ROBOT_MEDIA_URL', URL_PATH . '/assets/robot-media/');
-define('ROOT_DIR', __DIR__);
 
 if (session_status() == PHP_SESSION_NONE) {
     session_start();
@@ -34,5 +31,9 @@ function loggedIn()
 
 define('FILE_WRITE_FAIL_CODE' , '5x01');
 define('CURL_FAIL_CODE' , '5x02');
+define('VERSION', 'v2019.2.0.0');
+define('ROBOT_MEDIA_DIR', __DIR__ . '/html/assets/robot-media/');
+define('ROBOT_MEDIA_URL', URL_PATH . '/assets/robot-media/');
+define('ROOT_DIR', __DIR__);
 
 ?>

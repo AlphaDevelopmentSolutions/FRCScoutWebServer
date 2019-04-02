@@ -49,6 +49,8 @@ function getMatches($eventCode)
             $match->RedAllianceTeamOneId = substr($obj['alliances']['red']['team_keys'][0], 3);
             $match->RedAllianceTeamTwoId = substr($obj['alliances']['red']['team_keys'][1], 3);
             $match->RedAllianceTeamThreeId = substr($obj['alliances']['red']['team_keys'][2], 3);
+            $match->BlueAllianceScore = $obj['alliances']['blue']['score'];
+            $match->RedAllianceScore = $obj['alliances']['red']['score'];
 
             $match->save();
         }

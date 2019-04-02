@@ -16,6 +16,8 @@ class Matches
     public $RedAllianceTeamOneId;
     public $RedAllianceTeamTwoId;
     public $RedAllianceTeamThreeId;
+    public $BlueAllianceScore;
+    public $RedAllianceScore;
 
     private static $TABLE_NAME = 'matches';
 
@@ -62,7 +64,9 @@ class Matches
                                     BlueAllianceTeamThreeId,
                                     RedAllianceTeamOneId,
                                     RedAllianceTeamTwoId,
-                                    RedAllianceTeamThreeId
+                                    RedAllianceTeamThreeId,
+                                    BlueAllianceScore,
+                                    RedAllianceScore
                                   )
                                   VALUES
                                   (
@@ -77,7 +81,9 @@ class Matches
                                   ' . ((empty($this->BlueAllianceTeamThreeId)) ? '0' : $database->quote($this->BlueAllianceTeamThreeId)) . ',
                                   ' . ((empty($this->RedAllianceTeamOneId)) ? '0' : $database->quote($this->RedAllianceTeamOneId)) . ',
                                   ' . ((empty($this->RedAllianceTeamTwoId)) ? '0' : $database->quote($this->RedAllianceTeamTwoId)) . ',
-                                  ' . ((empty($this->RedAllianceTeamThreeId)) ? '0' : $database->quote($this->RedAllianceTeamThreeId)) . '
+                                  ' . ((empty($this->RedAllianceTeamThreeId)) ? '0' : $database->quote($this->RedAllianceTeamThreeId)) . ',
+                                  ' . ((empty($this->BlueAllianceScore)) ? '0' : $database->quote($this->BlueAllianceScore)) . ',
+                                  ' . ((empty($this->RedAllianceScore)) ? '0' : $database->quote($this->RedAllianceScore)) . '
                                   );';
 
             if ($database->query($sql)) {
@@ -96,15 +102,17 @@ class Matches
         `Date` = " . ((empty($this->Date)) ? "0" : $database->quote($this->Date)) . ",
         EventId = " . ((empty($this->EventId)) ? "0" : $database->quote($this->EventId)) . ",
         MatchType = " . ((empty($this->MatchType)) ? "0" : $database->quote($this->MatchType)) . ",
-        `Key` = " . ((empty($this->Key)) ? "NULL" : $database->quote($this->Key)) . "
-        MatchNumber = " . ((empty($this->MatchNumber)) ? "0" : $database->quote($this->MatchNumber)) . "
-        SetNumber = " . ((empty($this->SetNumber)) ? "0" : $database->quote($this->SetNumber)) . "
-        BlueAllianceTeamOneId = " . ((empty($this->BlueAllianceTeamOneId)) ? "NULL" : $database->quote($this->BlueAllianceTeamOneId)) . "
-        BlueAllianceTeamTwoId = " . ((empty($this->BlueAllianceTeamTwoId)) ? "NULL" : $database->quote($this->BlueAllianceTeamTwoId)) . "
-        BlueAllianceTeamThreeId = " . ((empty($this->BlueAllianceTeamThreeId)) ? "NULL" : $database->quote($this->BlueAllianceTeamThreeId)) . "
-        RedAllianceTeamOneId = " . ((empty($this->RedAllianceTeamOneId)) ? "NULL" : $database->quote($this->RedAllianceTeamOneId)) . "
-        RedAllianceTeamTwoId = " . ((empty($this->RedAllianceTeamTwoId)) ? "NULL" : $database->quote($this->RedAllianceTeamTwoId)) . "
-        RedAllianceTeamThreeId = " . ((empty($this->RedAllianceTeamThreeId)) ? "NULL" : $database->quote($this->RedAllianceTeamThreeId)) . "
+        `Key` = " . ((empty($this->Key)) ? "NULL" : $database->quote($this->Key)) . ",
+        MatchNumber = " . ((empty($this->MatchNumber)) ? "0" : $database->quote($this->MatchNumber)) . ",
+        SetNumber = " . ((empty($this->SetNumber)) ? "0" : $database->quote($this->SetNumber)) . ",
+        BlueAllianceTeamOneId = " . ((empty($this->BlueAllianceTeamOneId)) ? "NULL" : $database->quote($this->BlueAllianceTeamOneId)) . ",
+        BlueAllianceTeamTwoId = " . ((empty($this->BlueAllianceTeamTwoId)) ? "NULL" : $database->quote($this->BlueAllianceTeamTwoId)) . ",
+        BlueAllianceTeamThreeId = " . ((empty($this->BlueAllianceTeamThreeId)) ? "NULL" : $database->quote($this->BlueAllianceTeamThreeId)) . ",
+        RedAllianceTeamOneId = " . ((empty($this->RedAllianceTeamOneId)) ? "NULL" : $database->quote($this->RedAllianceTeamOneId)) . ",
+        RedAllianceTeamTwoId = " . ((empty($this->RedAllianceTeamTwoId)) ? "NULL" : $database->quote($this->RedAllianceTeamTwoId)) . ",
+        RedAllianceTeamThreeId = " . ((empty($this->RedAllianceTeamThreeId)) ? "NULL" : $database->quote($this->RedAllianceTeamThreeId)) . ",
+        BlueAllianceScore = " . ((empty($this->BlueAllianceScore)) ? "0" : $database->quote($this->BlueAllianceScore)) . ",
+        RedAllianceScore = " . ((empty($this->RedAllianceScore)) ? "0" : $database->quote($this->RedAllianceScore)) . "
         WHERE (Id = " . $database->quote($this->Id) . ");";
 
             if ($database->query($sql)) {
@@ -120,18 +128,18 @@ class Matches
     }
 
 
-    public static function getMatchIds($eventId)
+    public static function getMatches($eventId)
     {
         $database = new Database();
         $matchIds = $database->query(
             "SELECT 
-                      MatchId 
+                      * 
                     FROM 
-                      scout_cards 
+                      matches 
                     WHERE
                       EventId = " . $database->quote($eventId) .
-                    "GROUP BY
-                      MatchId;"
+                    " AND MatchType = 'qm'
+                     ORDER BY MatchNumber DESC"
         );
         $database->close();
 

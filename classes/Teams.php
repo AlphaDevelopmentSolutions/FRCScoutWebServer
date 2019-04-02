@@ -116,7 +116,7 @@ class Teams
 
     }
 
-    public static function getBlueAllianceTeamsForMatch($matchId)
+    public static function getAllianceTeamsForMatch($eventId, $matchId, $allianceColor)
     {
         $database = new Database();
         $teams = $database->query(
@@ -125,38 +125,11 @@ class Teams
                     FROM
                       scout_cards
                     WHERE
+                      EventId = " . $database->quote($eventId) . "
+                    AND 
                       MatchId = " . $matchId . "
                     AND
-                        AllianceColor = 'BLUE'"
-        );
-        $database->close();
-
-        $response = array();
-
-        if($teams && $teams->num_rows > 0)
-        {
-            while ($row = $teams->fetch_assoc())
-            {
-                $response[] = $row;
-            }
-        }
-
-        return $response;
-
-    }
-
-    public static function getRedAllianceTeamsForMatch($matchId)
-    {
-        $database = new Database();
-        $teams = $database->query(
-            "SELECT
-                      TeamId
-                    FROM
-                      scout_cards
-                    WHERE
-                      MatchId = " . $matchId . "
-                    AND
-                        AllianceColor = 'RED'"
+                      AllianceColor = " . $database->quote($allianceColor)
         );
         $database->close();
 
