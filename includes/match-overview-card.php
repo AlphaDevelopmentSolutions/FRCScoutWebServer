@@ -5,12 +5,7 @@
             <?php
 
             $scoutCardIds = array();
-
-            if($allianceColor == 'BLUE')
-                $scoutCardIds = Matches::getBlueAllianceScoutCardIds($eventId, $matchId);
-
-            else
-                $scoutCardIds = Matches::getRedAllianceScoutCardIds($eventId, $matchId);
+            $scoutCardIds = $match->getMatchScoutCardIds($eventId, $allianceColor);
 
 
             foreach($scoutCardIds AS $scoutCardId)

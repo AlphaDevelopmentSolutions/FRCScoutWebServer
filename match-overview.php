@@ -173,10 +173,10 @@ $event->load($eventId);
 
         <?php
 
-        foreach (Matches::getMatches($event->BlueAllianceId) as $match) {
+        foreach (Matches::getMatches($event->BlueAllianceId) as $match)
+        {
 
-            $blueAllianceScore = $match['BlueAllianceScore'];
-            $redAllianceScore = $match['RedAllianceScore'];
+            $match = new Matches($match);
 
             $html =
                 '
@@ -184,25 +184,25 @@ $event->load($eventId);
                   <section class="section--center mdl-grid mdl-grid--no-spacing mdl-shadow--2dp">
                     <div class="mdl-card mdl-cell mdl-cell--12-col">
                       <div class="mdl-card__supporting-text">
-                        <h4>Match ' . $match['MatchNumber'] . '</h4>
+                        <h4>' . $match->getMatchTypeString() . ' ' . $match->MatchNumber . '</h4>
                         <div class="container">
                             <div class="row">
                                 <div class="col-sm" ';
 
-            $html .= (($blueAllianceScore > $redAllianceScore) ? 'style="font-weight: bold;"' : '') . '>
-                                    Blue Alliance - ' . $blueAllianceScore;
+            $html .= (($match->BlueAllianceScore > $match->RedAllianceScore) ? 'style="font-weight: bold;"' : '') . '>
+                                    Blue Alliance - ' . $match->BlueAllianceScore;
 
-            foreach (Teams::getAllianceTeamsForMatch($event->BlueAllianceId, $match['MatchNumber'], AllianceColors::BLUE) AS $team)
+            foreach (Teams::getAllianceTeamsForMatch($event->BlueAllianceId, $match, AllianceColors::BLUE) AS $team)
             {
                 $html .= '<div>' . $team['TeamId'] . '</div>';
             }
             $html .= '
                                 </div>
                                 <div class="col-sm" ';
-            $html .= (($blueAllianceScore < $redAllianceScore) ? 'style="font-weight: bold;"' : '') . '>
-                                    Red Alliance - ' . $redAllianceScore;
+            $html .= (($match->BlueAllianceScore < $match->RedAllianceScore) ? 'style="font-weight: bold;"' : '') . '>
+                                    Red Alliance - ' . $match->RedAllianceScore;
 
-            foreach (Teams::getAllianceTeamsForMatch($event->BlueAllianceId, $match['MatchNumber'], AllianceColors::RED) AS $team)
+            foreach (Teams::getAllianceTeamsForMatch($event->BlueAllianceId, $match, AllianceColors::RED) AS $team)
             {
                 $html .= '<div>' . $team['TeamId'] . '</div>';
             }
@@ -212,7 +212,7 @@ $event->load($eventId);
                         </div>
                 </div>
                       <div class="mdl-card__actions">
-                        <a href="/match-overview-card.php?eventId=' . $eventId . '&matchId=' . $match['MatchNumber'] . '&allianceColor=BLUE" class="mdl-button">View</a>
+                        <a href="/match-overview-card.php?eventId=' . $eventId . '&matchId=' . $match->Id . '&allianceColor=BLUE" class="mdl-button">View</a>
                       </div>
                     </div>
                   </section>

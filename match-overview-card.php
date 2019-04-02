@@ -13,6 +13,9 @@ $allianceColor = $_GET['allianceColor'];
 $event = new Events();
 $event->load($eventId);
 
+$match = new Matches();
+$match->load($matchId);
+
 ?>
 
 <!doctype html>
@@ -65,7 +68,7 @@ $event->load($eventId);
             <?php include_once('includes/login-form.php') ?>
         </div>
         <div class="mdl-layout--large-screen-only mdl-layout__header-row">
-          <h3>Match <?php echo $matchId ?> Overview</h3>
+          <h3><?php echo $match->getMatchTypeString() . ' ' . $match->MatchNumber ?> Overview</h3>
         </div>
         <div class="mdl-layout--large-screen-only mdl-layout__header-row">
         </div>
@@ -77,13 +80,13 @@ $event->load($eventId);
           <div class="mdl-layout__tab-bar mdl-js-ripple-effect mdl-color--primary-dark">
               <a href="/stats.php?eventId=<?php echo $event->BlueAllianceId; ?>" class="mdl-layout__tab ">Stats</a>
               <a href="/match-overview.php?eventId=<?php echo $event->BlueAllianceId; ?>" class="mdl-layout__tab">Match Overview</a>
-              <a href="/match-overview-card.php?eventId=<?php echo $event->BlueAllianceId; ?>&matchId=<?php echo $matchId ?>&allianceColor=BLUE" class="mdl-layout__tab <?php if($allianceColor == 'BLUE') echo 'is-active'?>">Match <?php echo $matchId; ?> Overview - BLUE ALLIANCE</a>
-              <a href="/match-overview-card.php?eventId=<?php echo $event->BlueAllianceId; ?>&matchId=<?php echo $matchId ?>&allianceColor=RED" class="mdl-layout__tab <?php if($allianceColor == 'RED') echo 'is-active'?>">Match <?php echo $matchId; ?> Overview - RED ALLIANCE</a>
+              <a href="/match-overview-card.php?eventId=<?php echo $event->BlueAllianceId; ?>&matchId=<?php echo $matchId ?>&allianceColor=BLUE" class="mdl-layout__tab <?php if($allianceColor == 'BLUE') echo 'is-active'?>"><?php echo $match->getMatchTypeString() . ' ' . $match->MatchNumber ?>  Overview - BLUE ALLIANCE</a>
+              <a href="/match-overview-card.php?eventId=<?php echo $event->BlueAllianceId; ?>&matchId=<?php echo $matchId ?>&allianceColor=RED" class="mdl-layout__tab <?php if($allianceColor == 'RED') echo 'is-active'?>"><?php echo $match->getMatchTypeString() . ' ' . $match->MatchNumber ?>  Overview - RED ALLIANCE</a>
           </div>
       </header>
       <main class="mdl-layout__content">
 
-          <?php require_once('includes/match-overview-card.php') ?>x
+          <?php require_once('includes/match-overview-card.php') ?>
 
           
           <div class="mdl-layout__tab-panel" id="stats">

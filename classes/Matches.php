@@ -21,6 +21,14 @@ class Matches
 
     private static $TABLE_NAME = 'matches';
 
+    function __construct(Array $properties = array())
+    {
+        foreach($properties as $key => $value)
+        {
+            $this->{$key} = $value;
+        }
+    }
+
     function load($id)
     {
         $database = new Database();
@@ -156,64 +164,7 @@ class Matches
         return $response;
     }
 
-    public static function getMatchBlueAllianceScore($eventId, $matchId)
-    {
-        $database = new Database();
-        $blueAllianceScores = $database->query(
-            "SELECT 
-                      AVG(BlueAllianceFinalScore) AS BlueAllianceScore
-                    FROM 
-                      scout_cards 
-                    WHERE
-                      EventId = " . $database->quote($eventId) .
-                    "AND 
-                      MatchId = " . $database->quote($matchId)
-        );
-        $database->close();
-
-        $response = array();
-
-        if($blueAllianceScores && $blueAllianceScores->num_rows > 0)
-        {
-            while ($row = $blueAllianceScores->fetch_assoc())
-            {
-                $response[] = $row;
-            }
-        }
-
-        return $response;
-    }
-
-    public static function getMatchRedAllianceScore($eventId, $matchId)
-    {
-        $database = new Database();
-        $redAllianceFinalScores = $database->query(
-            "SELECT 
-                      AVG(RedAllianceFinalScore) AS RedAllianceScore
-                    FROM 
-                      scout_cards 
-                    WHERE
-                      EventId = " . $database->quote($eventId) .
-                    "AND 
-                      MatchId = " . $database->quote($matchId)
-        );
-        $database->close();
-
-
-        $response = array();
-
-        if($redAllianceFinalScores && $redAllianceFinalScores->num_rows > 0)
-        {
-            while ($row = $redAllianceFinalScores->fetch_assoc())
-            {
-                $response[] = $row;
-            }
-        }
-
-        return $response;
-    }
-
-    public static function getBlueAllianceScoutCardIds($eventId, $matchId)
+    public function getMatchScoutCardIds($eventId, $allianceColor)
     {
         $database = new Database();
         $teamIds = $database->query(
@@ -224,9 +175,9 @@ class Matches
                     WHERE
                       EventId = " . $database->quote($eventId) .
                     "AND 
-                      MatchId = " . $database->quote($matchId) .
+                      MatchId = " . $database->quote($this->MatchNumber) .
                     "AND 
-                      AllianceColor = " . $database->quote('BLUE')
+                      AllianceColor = " . $database->quote($allianceColor)
         );
         $database->close();
 
@@ -273,6 +224,36 @@ class Matches
         }
 
         return $response;
+    }
+
+    public function getMatchTypeString()
+    {
+        if(!empty($this->MatchType))
+        {
+            switch($this->MatchType)
+            {
+                case 'qm':
+                    return 'Qualification';
+                    break;
+
+                case 'qf':
+                    return 'Quarter-Finals';
+                    break;
+
+                case 'sf':
+                    return 'Semi-Finals';
+                    break;
+
+                case 'f':
+                    return 'Finals';
+                    break;
+
+                default:
+                    return 'Qualification';
+                    break;
+
+            }
+        }
     }
 
 }

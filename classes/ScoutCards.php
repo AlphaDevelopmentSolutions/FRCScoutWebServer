@@ -257,31 +257,6 @@ class ScoutCards
         {
             while ($row = $scoutCards->fetch_assoc())
             {
-                switch($row['MatchType'])
-                {
-                    case 'qm':
-                        $matchType = 'Qualification';
-                        break;
-
-                    case 'qf':
-                        $matchType = 'Quarter-Finals';
-                        break;
-
-                    case 'sf':
-                        $matchType = 'Semi-Finals';
-                        break;
-
-                    case 'f':
-                        $matchType = 'Finals';
-                        break;
-
-                    default:
-                        $matchType = 'Qualification';
-                        break;
-
-                }
-
-                $row['MatchTypeString'] = $matchType;
                 $response[] = $row;
             }
         }

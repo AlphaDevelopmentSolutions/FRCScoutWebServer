@@ -116,7 +116,7 @@ class Teams
 
     }
 
-    public static function getAllianceTeamsForMatch($eventId, $matchId, $allianceColor)
+    public static function getAllianceTeamsForMatch($eventId, Matches $match, $allianceColor)
     {
         $database = new Database();
         $teams = $database->query(
@@ -127,7 +127,11 @@ class Teams
                     WHERE
                       EventId = " . $database->quote($eventId) . "
                     AND 
-                      MatchId = " . $matchId . "
+                      MatchId = " . $match->MatchNumber . "
+                    AND 
+                      MatchType = " . $database->quote($match->MatchType) . "
+                    AND 
+                      SetNumber = " . $match->SetNumber . "
                     AND
                       AllianceColor = " . $database->quote($allianceColor)
         );
