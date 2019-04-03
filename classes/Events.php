@@ -119,7 +119,8 @@ class Events
             "SELECT 
                       * 
                     FROM 
-                      " . Events::$TABLE_NAME
+                      " . self::$TABLE_NAME .
+                    " ORDER BY StartDate DESC "
         );
         $database->close();
 
