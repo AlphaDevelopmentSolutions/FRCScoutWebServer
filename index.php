@@ -80,7 +80,7 @@ require_once("classes/Events.php");
                         ' . date('F j', strtotime($event['StartDate'])) . ' to ' . date('F j', strtotime($event['EndDate'])) .
                       '</div>
                       <div class="mdl-card__actions">
-                        <a href="/teams.php?eventId=' . $event['BlueAllianceId'] . '" class="mdl-button">View</a>
+                        <a href="/match-overview.php?eventId=' . $event['BlueAllianceId'] . '" class="mdl-button">View</a>
                       </div>
                     </div>
                   </section>
