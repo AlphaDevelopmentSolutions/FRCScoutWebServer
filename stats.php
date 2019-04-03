@@ -607,7 +607,7 @@ $event = Events::withId($eventId);
         if(aData[minMatchIdsKey] !== undefined)
         {
             aData[minMatchIdsKey].forEach(function (matchId) {
-                tooltipText += 'Match ' + matchId + '<br>';
+                tooltipText += matchId + '<br>';
             });
 
             $(element).attr('data-toggle', 'tooltip').attr('data-html', 'true').attr('data-placement', 'top').attr('title', tooltipText);
@@ -615,7 +615,7 @@ $event = Events::withId($eventId);
         else if(aData[maxMatchIdsKey] !== undefined)
         {
             aData[maxMatchIdsKey].forEach(function (matchId) {
-                tooltipText += 'Match ' + matchId + '<br>';
+                tooltipText += matchId + '<br>';
             });
 
             $(element).attr('data-toggle', 'tooltip').attr('data-html', 'true').attr('data-placement', 'top').attr('title', tooltipText);
