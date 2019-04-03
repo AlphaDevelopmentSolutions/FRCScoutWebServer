@@ -4,6 +4,7 @@ require_once("classes/Teams.php");
 require_once("classes/ScoutCards.php");
 require_once("classes/PitCards.php");
 require_once("classes/Events.php");
+require_once("classes/Matches.php");
 
 $eventId = $_GET['eventId'];
 $teamId = $_GET['teamId'];
@@ -225,23 +226,25 @@ $ccwms = $stats['ccwms']['frc' . $pitCard->TeamId];
 
           foreach(ScoutCards::getScoutCardsForTeam($teamId, $eventId) as $scoutCard)
           {
-            echo
-            '
+
+              $scoutCard = ScoutCards::withProperties($scoutCard);
+              $match = Matches::withKey($scoutCard->MatchId);
+            ?>
                 <div class="mdl-layout__tab-panel is-active" id="overview">
                   <section class="section--center mdl-grid mdl-grid--no-spacing mdl-shadow--2dp">
                     <div class="mdl-card mdl-cell mdl-cell--12-col">
                       <div class="mdl-card__supporting-text">
-                        <h4>' . $scoutCard['MatchTypeString'] . ' ' . $scoutCard['MatchId'] . '</h4>
-                        Blue Alliance Score - ' . $scoutCard['BlueAllianceFinalScore'] . '<br><br>
-                        Red Alliance Score - ' . $scoutCard['RedAllianceFinalScore'] .
-                      '</div>
+                        <h4><?php echo $match->getMatchTypeString() . ' ' . $match->MatchNumber ?></h4>
+                        Blue Alliance Score - <?php echo $match->BlueAllianceScore ?><br><br>
+                        Red Alliance Score - <?php echo $match->RedAllianceScore?>
+                      </div>
                       <div class="mdl-card__actions">
-                        <a href="/scout-card.php?scoutCardId=' . $scoutCard['Id']  .'" class="mdl-button">View</a>
+                        <a href="/scout-card.php?scoutCardId=<?php echo $scoutCard->Id ?>" class="mdl-button">View</a>
                       </div>
                     </div>
                   </section>
                 </div>
-            ';
+        <?php
           }
 
           ?>

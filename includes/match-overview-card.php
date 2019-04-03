@@ -16,8 +16,6 @@
 
                 ?>
 
-
-
                 <h4 style="padding-left: 40px; padding-top: 10px;"><?php echo $team->Id; ?></h4>
                 <strong style="padding-left: 40px;">Pre Game</strong>
                 <div class="mdl-card__supporting-text">

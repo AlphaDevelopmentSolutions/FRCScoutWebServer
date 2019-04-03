@@ -12,7 +12,7 @@ class RobotMedia
     /**
      * Loads a new instance by its database id
      * @param $id
-     * @return new instance
+     * @return RobotMedia
      */
     static function withId($id)
     {
@@ -25,7 +25,7 @@ class RobotMedia
     /**
      * Loads a new instance by specified properties
      * @param array $properties
-     * @return new instance
+     * @return RobotMedia
      */
     static function withProperties(Array $properties = array())
     {
@@ -38,7 +38,7 @@ class RobotMedia
     /**
      * Loads a new instance by specified properties
      * @param array $properties
-     * @return new instance
+     * @return RobotMedia
      */
     protected function loadByProperties(Array $properties = array())
     {
@@ -50,7 +50,7 @@ class RobotMedia
     /**
      * Loads a new instance by its database id
      * @param $id
-     * @return new instance
+     * @return RobotMedia
      */
     protected function loadById($id)
     {

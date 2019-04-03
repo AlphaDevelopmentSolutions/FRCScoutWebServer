@@ -29,7 +29,7 @@ class PitCards
     /**
      * Loads a new instance by its database id
      * @param $id
-     * @return new instance
+     * @return PitCards
      */
     static function withId($id)
     {
@@ -42,7 +42,7 @@ class PitCards
     /**
      * Loads a new instance by specified properties
      * @param array $properties
-     * @return new instance
+     * @return PitCards
      */
     static function withProperties(Array $properties = array())
     {
@@ -55,7 +55,7 @@ class PitCards
     /**
      * Loads a new instance by specified properties
      * @param array $properties
-     * @return new instance
+     * @return PitCards
      */
     protected function loadByProperties(Array $properties = array())
     {
@@ -67,7 +67,7 @@ class PitCards
     /**
      * Loads a new instance by its database id
      * @param $id
-     * @return new instance
+     * @return PitCards
      */
     protected function loadById($id)
     {

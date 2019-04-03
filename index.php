@@ -69,23 +69,22 @@ require_once("classes/Events.php");
 
           foreach(Events::getEvents() as $event)
           {
-            echo
-            '
+            ?>
                 <div class="mdl-layout__tab-panel is-active" id="overview">
                   <section class="section--center mdl-grid mdl-grid--no-spacing mdl-shadow--2dp">
                     <div class="mdl-card mdl-cell mdl-cell--12-col">
                       <div class="mdl-card__supporting-text">
-                        <h4>' . $event['Name'] . '</h4>
-                        ' . $event['City'] . ', ' . $event['StateProvince'] . ', ' . $event['Country'] . '<br><br>
-                        ' . date('F j', strtotime($event['StartDate'])) . ' to ' . date('F j', strtotime($event['EndDate'])) .
-                      '</div>
+                        <h4><?php echo $event['Name'] ?></h4>
+                        <?php echo $event['City'] . ', ' . $event['StateProvince'] . ', ' . $event['Country'] ?><br><br>
+                        <?php echo date('F j', strtotime($event['StartDate'])) . ' to ' . date('F j', strtotime($event['EndDate'])) ?>
+                      </div>
                       <div class="mdl-card__actions">
-                        <a href="/match-overview.php?eventId=' . $event['BlueAllianceId'] . '" class="mdl-button">View</a>
+                        <a href="/match-overview.php?eventId=<?php echo $event['BlueAllianceId'] ?>" class="mdl-button">View</a>
                       </div>
                     </div>
                   </section>
                 </div>
-            ';
+        <?php
           }
 
           ?>

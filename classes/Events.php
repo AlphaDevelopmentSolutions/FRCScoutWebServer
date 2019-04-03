@@ -16,7 +16,7 @@ class Events
     /**
      * Loads a new instance by its database id
      * @param $id
-     * @return new instance
+     * @return Events
      */
     static function withId($id)
     {
@@ -29,7 +29,7 @@ class Events
     /**
      * Loads a new instance by specified properties
      * @param array $properties
-     * @return new instance
+     * @return Events
      */
     static function withProperties(Array $properties = array())
     {
@@ -42,7 +42,7 @@ class Events
     /**
      * Loads a new instance by specified properties
      * @param array $properties
-     * @return new instance
+     * @return Events
      */
     protected function loadByProperties(Array $properties = array())
     {
@@ -54,7 +54,7 @@ class Events
     /**
      * Loads a new instance by its database id
      * @param $id
-     * @return new instance
+     * @return Events
      */
     protected function loadById($id)
     {

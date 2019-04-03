@@ -8,8 +8,6 @@ class ScoutCards
     public $EventId;
     public $AllianceColor;
     public $CompletedBy;
-    public $MatchType;
-    public $SetNumber;
 
     public $PreGameStartingPosition;
     public $PreGameStartingLevel;
@@ -46,7 +44,7 @@ class ScoutCards
     /**
      * Loads a new instance by its database id
      * @param $id
-     * @return new instance
+     * @return ScoutCards
      */
     static function withId($id)
     {
@@ -59,7 +57,7 @@ class ScoutCards
     /**
      * Loads a new instance by specified properties
      * @param array $properties
-     * @return new instance
+     * @return ScoutCards
      */
     static function withProperties(Array $properties = array())
     {
@@ -72,7 +70,7 @@ class ScoutCards
     /**
      * Loads a new instance by specified properties
      * @param array $properties
-     * @return new instance
+     * @return ScoutCards
      */
     protected function loadByProperties(Array $properties = array())
     {
@@ -84,7 +82,7 @@ class ScoutCards
     /**
      * Loads a new instance by its database id
      * @param $id
-     * @return new instance
+     * @return ScoutCards
      */
     protected function loadById($id)
     {
@@ -122,8 +120,6 @@ class ScoutCards
                                         EventId,
                                         AllianceColor,
                                         CompletedBy,
-                                        MatchType,
-                                        SetNumber,
                                     
                                         PreGameStartingLevel,
                                         PreGameStartingPosition,
@@ -162,8 +158,6 @@ class ScoutCards
                                       ' . ((empty($this->EventId)) ? 'NULL' : $database->quote($this->EventId)) .',
                                       ' . ((empty($this->AllianceColor)) ? 'NULL' : $database->quote($this->AllianceColor)) .',
                                       ' . ((empty($this->CompletedBy)) ? 'NULL' : $database->quote($this->CompletedBy)) .',
-                                      ' . ((empty($this->MatchType)) ? 'NULL' : $database->quote($this->CompletedBy)) .',
-                                      ' . ((empty($this->SetNumber)) ? 'NULL' : $database->quote($this->CompletedBy)) .',
                                     
                                       ' . ((empty($this->PreGameStartingLevel)) ? '0' : $database->quote($this->PreGameStartingLevel)) .',
                                       ' . ((empty($this->PreGameStartingPosition)) ? 'NULL' : $database->quote($this->PreGameStartingPosition)) .',
@@ -216,8 +210,6 @@ class ScoutCards
             EventId = " . ((empty($this->EventId)) ? "NULL" : $database->quote($this->EventId)) .", 
             AllianceColor = " . ((empty($this->AllianceColor)) ? "NULL" : $database->quote($this->AllianceColor)) .", 
             CompletedBy = " . ((empty($this->CompletedBy)) ? "NULL" : $database->quote($this->CompletedBy)) .", 
-            MatchType = " . ((empty($this->MatchType)) ? "NULL" : $database->quote($this->MatchType)) .", 
-            SetNumber = " . ((empty($this->SetNumber)) ? "0" : $database->quote($this->SetNumber)) .", 
 
             PreGameStartingLevel = " . ((empty($this->PreGameStartingLevel)) ? "0" : $database->quote($this->PreGameStartingLevel)) .", 
             PreGameStartingPosition = " . ((empty($this->PreGameStartingPosition)) ? "NULL" : $database->quote($this->PreGameStartingPosition)) .", 
@@ -308,6 +300,35 @@ class ScoutCards
     }
 
     public static function getScoutCardsForEvent($eventId)
+    {
+        $database = new Database();
+        $scoutCards = $database->query(
+            "SELECT 
+                      * 
+                    FROM 
+                      " . self::$TABLE_NAME ."  
+                    WHERE 
+                      EventId = " . $database->quote($eventId)
+        );
+        $database->close();
+
+        $response = array();
+
+        if($scoutCards && $scoutCards->num_rows > 0)
+        {
+            while ($row = $scoutCards->fetch_assoc())
+            {
+                $response[] = $row;
+            }
+        }
+
+        return $response;
+    }
+
+    /**
+     * @returns Matches
+     */
+    public function getMatch()
     {
         $database = new Database();
         $scoutCards = $database->query(

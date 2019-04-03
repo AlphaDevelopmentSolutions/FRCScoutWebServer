@@ -213,23 +213,20 @@ $ccwms = $stats['ccwms']['frc' . $pitCard->TeamId];
           {
               $robotMediaUri = ROBOT_MEDIA_URL . $robotPhotoUri;
 
-              $html =
-            '
+          ?>
                 <div class="mdl-layout__tab-panel is-active" id="overview">
                   <section class="section--center mdl-grid mdl-grid--no-spacing mdl-shadow--2dp">
                     <div class="mdl-card mdl-cell mdl-cell--12-col">
-                      <div class="mdl-card__supporting-text">
-                        <img class="robot-media" src="' . $robotMediaUri . '"  height="350"/>
+                      <div class="mdl-card__supporting-text">?
+                        <img class="robot-media" src="<?php echo $robotMediaUri ?>"  height="350"/>
                       </div>
                        <div class="mdl-card__actions">
-                        <a target="_blank" href="' . $robotMediaUri . '" class="mdl-button">View</a>
+                        <a target="_blank" href="<?php $robotMediaUri ?>" class="mdl-button">View</a>
                       </div>
                     </div>
                   </section>
                 </div>
-            ';
-
-            echo $html;
+        <?php
           }
 
           ?>

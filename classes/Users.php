@@ -10,7 +10,7 @@ class Users
     /**
      * Loads a new instance by its database id
      * @param $id
-     * @return new instance
+     * @return Users
      */
     static function withId($id)
     {
@@ -23,7 +23,7 @@ class Users
     /**
      * Loads a new instance by specified properties
      * @param array $properties
-     * @return new instance
+     * @return Users
      */
     static function withProperties(Array $properties = array())
     {
@@ -36,7 +36,7 @@ class Users
     /**
      * Loads a new instance by specified properties
      * @param array $properties
-     * @return new instance
+     * @return Users
      */
     protected function loadByProperties(Array $properties = array())
     {
@@ -48,7 +48,7 @@ class Users
     /**
      * Loads a new instance by its database id
      * @param $id
-     * @return new instance
+     * @return Users
      */
     protected function loadById($id)
     {

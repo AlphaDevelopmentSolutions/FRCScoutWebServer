@@ -20,7 +20,7 @@ class Teams
     /**
      * Loads a new instance by its database id
      * @param $id
-     * @return new instance
+     * @return Teams
      */
     static function withId($id)
     {
@@ -33,7 +33,7 @@ class Teams
     /**
      * Loads a new instance by specified properties
      * @param array $properties
-     * @return new instance
+     * @return Teams
      */
     static function withProperties(Array $properties = array())
     {
@@ -46,7 +46,7 @@ class Teams
     /**
      * Loads a new instance by specified properties
      * @param array $properties
-     * @return new instance
+     * @return Teams
      */
     protected function loadByProperties(Array $properties = array())
     {
@@ -58,7 +58,7 @@ class Teams
     /**
      * Loads a new instance by its database id
      * @param $id
-     * @return new instance
+     * @return Teams
      */
     protected function loadById($id)
     {

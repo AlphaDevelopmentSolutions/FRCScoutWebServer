@@ -29,12 +29,25 @@ class Matches
     /**
      * Loads a new instance by its database id
      * @param $id
-     * @return new instance
+     * @return Matches
      */
     static function withId($id)
     {
         $instance = new self();
         $instance->loadById($id);
+        return $instance;
+
+    }
+
+    /**
+     * Loads a new instance by its database key
+     * @param $key
+     * @return Matches
+     */
+    static function withKey($key)
+    {
+        $instance = new self();
+        $instance->loadByKey($key);
         return $instance;
 
     }
@@ -55,7 +68,7 @@ class Matches
     /**
      * Loads a new instance by specified properties
      * @param array $properties
-     * @return new instance
+     * @return Matches
      */
     protected function loadByProperties(Array $properties = array())
     {
@@ -67,12 +80,40 @@ class Matches
     /**
      * Loads a new instance by its database id
      * @param $id
-     * @return new instance
+     * @return Matches
      */
     protected function loadById($id)
     {
         $database = new Database();
         $sql = 'SELECT * FROM ' . self::$TABLE_NAME . ' WHERE '.'id = '.$database->quote($id);
+        $rs = $database->query($sql);
+
+        if($rs && $rs->num_rows > 0) {
+            $row = $rs->fetch_assoc();
+
+            if(is_array($row)) {
+                foreach($row as $key => $value){
+                    if(property_exists($this, $key)){
+                        $this->$key = $value;
+                    }
+                }
+            }
+
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Loads a new instance by its database key
+     * @param $key
+     * @return Matches
+     */
+    protected function loadByKey($key)
+    {
+        $database = new Database();
+        $sql = 'SELECT * FROM ' . self::$TABLE_NAME . ' WHERE '.'`Key` = '.$database->quote($key);
         $rs = $database->query($sql);
 
         if($rs && $rs->num_rows > 0) {
@@ -187,6 +228,35 @@ class Matches
                     WHERE
                       EventId = " . $database->quote($eventId) .
                     " AND MatchType = " . $database->quote(self::$MATCH_TYPE_QUALIFICATIONS) . "
+                     ORDER BY MatchNumber DESC"
+        );
+        $database->close();
+
+        $response = array();
+
+        if($matchIds && $matchIds->num_rows > 0)
+        {
+            while ($row = $matchIds->fetch_assoc())
+            {
+                $response[] = $row;
+            }
+        }
+
+        return $response;
+    }
+
+    public static function getMatchesForTeam($eventId, $teamId)
+    {
+        $database = new Database();
+        $matchIds = $database->query(
+            "SELECT 
+                      * 
+                    FROM 
+                      matches 
+                    WHERE
+                      EventId = " . $database->quote($eventId) .
+                    " AND MatchType = " . $database->quote(self::$MATCH_TYPE_QUALIFICATIONS) .
+                    " AND TeamId = " . $database->quote($teamId) . "
                      ORDER BY MatchNumber DESC"
         );
         $database->close();
