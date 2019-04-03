@@ -21,6 +21,11 @@ class Matches
 
     private static $TABLE_NAME = 'matches';
 
+    static $MATCH_TYPE_QUALIFICATIONS = 'qm';
+    static $MATCH_TYPE_QUARTER_FINALS = 'qf';
+    static $MATCH_TYPE_SEMI_FINALS = 'sf';
+    static $MATCH_TYPE_FINALS = 'f';
+
     /**
      * Loads a new instance by its database id
      * @param $id
@@ -181,7 +186,7 @@ class Matches
                       matches 
                     WHERE
                       EventId = " . $database->quote($eventId) .
-                    " AND MatchType = 'qm'
+                    " AND MatchType = " . $database->quote(self::$MATCH_TYPE_QUALIFICATIONS) . "
                      ORDER BY MatchNumber DESC"
         );
         $database->close();
@@ -267,19 +272,19 @@ class Matches
         {
             switch($this->MatchType)
             {
-                case 'qm':
+                case self::$MATCH_TYPE_QUALIFICATIONS:
                     return 'Qualification';
                     break;
 
-                case 'qf':
+                case self::$MATCH_TYPE_QUARTER_FINALS:
                     return 'Quarter-Finals';
                     break;
 
-                case 'sf':
+                case self::$MATCH_TYPE_SEMI_FINALS:
                     return 'Semi-Finals';
                     break;
 
-                case 'f':
+                case self::$MATCH_TYPE_FINALS:
                     return 'Finals';
                     break;
 

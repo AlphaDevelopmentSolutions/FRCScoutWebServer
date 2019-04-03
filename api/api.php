@@ -5,6 +5,7 @@ require_once(ROOT_DIR . '/classes/PitCards.php');
 require_once(ROOT_DIR . '/classes/Teams.php');
 require_once(ROOT_DIR . '/classes/Events.php');
 require_once(ROOT_DIR . '/classes/RobotMedia.php');
+require_once(ROOT_DIR . '/classes/Matches.php');
 require_once(ROOT_DIR . '/classes/Api.php');
 
 $api = new Api($_POST['key']);
@@ -101,6 +102,16 @@ try {
 
             if (!empty($eventId))
                 $api->success(PitCards::getPitCardsForEvent($eventId));
+            else
+                throw new Exception('Invalid event id');
+
+            break;
+
+        case 'GetMatches':
+            $eventId = filter_var($_POST['EventId'], FILTER_SANITIZE_STRING);
+
+            if (!empty($eventId))
+                $api->success(Matches::getMatches($eventId));
             else
                 throw new Exception('Invalid event id');
 
