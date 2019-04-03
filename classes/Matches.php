@@ -42,7 +42,7 @@ class Matches
     /**
      * Loads a new instance by specified properties
      * @param array $properties
-     * @return new instance
+     * @return Matches
      */
     static function withProperties(Array $properties = array())
     {

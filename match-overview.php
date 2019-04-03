@@ -173,7 +173,6 @@ $event = Events::withId($eventId);
 
         foreach (Matches::getMatches($event->BlueAllianceId) as $match)
         {
-
             $match = Matches::withProperties($match);
 
             $html =
@@ -190,20 +189,19 @@ $event = Events::withId($eventId);
             $html .= (($match->BlueAllianceScore > $match->RedAllianceScore) ? 'style="font-weight: bold;"' : '') . '>
                                     Blue Alliance - ' . $match->BlueAllianceScore;
 
-            foreach (Teams::getAllianceTeamsForMatch($event->BlueAllianceId, $match, AllianceColors::BLUE) AS $team)
-            {
-                $html .= '<div>' . $team['TeamId'] . '</div>';
-            }
+            $html .= '<div>' . $match->RedAllianceTeamOneId . '</div>';
+            $html .= '<div>' . $match->RedAllianceTeamTwoId . '</div>';
+            $html .= '<div>' . $match->RedAllianceTeamThreeId . '</div>';
+
             $html .= '
                                 </div>
                                 <div class="col-sm" ';
             $html .= (($match->BlueAllianceScore < $match->RedAllianceScore) ? 'style="font-weight: bold;"' : '') . '>
                                     Red Alliance - ' . $match->RedAllianceScore;
 
-            foreach (Teams::getAllianceTeamsForMatch($event->BlueAllianceId, $match, AllianceColors::RED) AS $team)
-            {
-                $html .= '<div>' . $team['TeamId'] . '</div>';
-            }
+            $html .= '<div>' . $match->BlueAllianceTeamOneId . '</div>';
+            $html .= '<div>' . $match->BlueAllianceTeamTwoId . '</div>';
+            $html .= '<div>' . $match->BlueAllianceTeamThreeId . '</div>';
 
             $html .='                    </div>
                             </div>
