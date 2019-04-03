@@ -8,14 +8,9 @@ require_once("classes/Events.php");
 $eventId = $_GET['eventId'];
 $teamId = $_GET['teamId'];
 
-$team = new Teams();
-$team->load($teamId);
-
-$event = new Events();
-$event->load($eventId);
-
-$pitCard = new PitCards();
-$pitCard->load(PitCards::getNewestPitCard($team->Id, $event->BlueAllianceId)['0']['Id']);
+$team = Teams::withId($teamId);
+$event = Events::withId($eventId);
+$pitCard = PitCards::withId(PitCards::getNewestPitCard($team->Id, $event->BlueAllianceId)['0']['Id']);
 
 $url = "http://scouting.wiredcats5885.ca/ajax/GetOPRStats.php";
 

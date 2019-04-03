@@ -10,11 +10,8 @@
 
             foreach($scoutCardIds AS $scoutCardId)
             {
-                $scoutCard = new ScoutCards();
-                $scoutCard->load($scoutCardId['Id']);
-
-                $team = new Teams();
-                $team->load($scoutCard->TeamId);
+                $scoutCard = ScoutCards::withId($scoutCardId['Id']);
+                $team = Teams::withId($scoutCard->TeamId);
 
 
                 ?>

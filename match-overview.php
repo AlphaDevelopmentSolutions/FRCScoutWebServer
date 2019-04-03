@@ -6,9 +6,7 @@ require_once("classes/Matches.php");
 
 $eventId = $_GET['eventId'];
 
-$event = new Events();
-$event->load($eventId);
-
+$event = Events::withId($eventId);
 ?>
 
 <!doctype html>
@@ -176,7 +174,7 @@ $event->load($eventId);
         foreach (Matches::getMatches($event->BlueAllianceId) as $match)
         {
 
-            $match = new Matches($match);
+            $match = Matches::withProperties($match);
 
             $html =
                 '

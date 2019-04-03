@@ -21,18 +21,53 @@ class Matches
 
     private static $TABLE_NAME = 'matches';
 
-    function __construct(Array $properties = array())
+    /**
+     * Loads a new instance by its database id
+     * @param $id
+     * @return new instance
+     */
+    static function withId($id)
     {
-        foreach($properties as $key => $value)
-        {
-            $this->{$key} = $value;
-        }
+        $instance = new self();
+        $instance->loadById($id);
+        return $instance;
+
     }
 
-    function load($id)
+    /**
+     * Loads a new instance by specified properties
+     * @param array $properties
+     * @return new instance
+     */
+    static function withProperties(Array $properties = array())
+    {
+        $instance = new self();
+        $instance->loadByProperties($properties);
+        return $instance;
+
+    }
+
+    /**
+     * Loads a new instance by specified properties
+     * @param array $properties
+     * @return new instance
+     */
+    protected function loadByProperties(Array $properties = array())
+    {
+        foreach($properties as $key => $value)
+            $this->{$key} = $value;
+
+    }
+
+    /**
+     * Loads a new instance by its database id
+     * @param $id
+     * @return new instance
+     */
+    protected function loadById($id)
     {
         $database = new Database();
-        $sql = 'SELECT * FROM '. self::$TABLE_NAME . ' WHERE '.'id = '.$database->quote($id);
+        $sql = 'SELECT * FROM ' . self::$TABLE_NAME . ' WHERE '.'id = '.$database->quote($id);
         $rs = $database->query($sql);
 
         if($rs && $rs->num_rows > 0) {

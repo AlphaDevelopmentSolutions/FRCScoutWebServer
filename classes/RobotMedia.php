@@ -9,10 +9,53 @@ class RobotMedia
 
     private static $TABLE_NAME = 'robot_media';
 
-    function load($id)
+    /**
+     * Loads a new instance by its database id
+     * @param $id
+     * @return new instance
+     */
+    static function withId($id)
+    {
+        $instance = new self();
+        $instance->loadById($id);
+        return $instance;
+
+    }
+
+    /**
+     * Loads a new instance by specified properties
+     * @param array $properties
+     * @return new instance
+     */
+    static function withProperties(Array $properties = array())
+    {
+        $instance = new self();
+        $instance->loadByProperties($properties);
+        return $instance;
+
+    }
+
+    /**
+     * Loads a new instance by specified properties
+     * @param array $properties
+     * @return new instance
+     */
+    protected function loadByProperties(Array $properties = array())
+    {
+        foreach($properties as $key => $value)
+            $this->{$key} = $value;
+
+    }
+
+    /**
+     * Loads a new instance by its database id
+     * @param $id
+     * @return new instance
+     */
+    protected function loadById($id)
     {
         $database = new Database();
-        $sql = 'SELECT * FROM '.$this::$TABLE_NAME.' WHERE '.'id = '.$database->quote($id);
+        $sql = 'SELECT * FROM ' . self::$TABLE_NAME . ' WHERE '.'id = '.$database->quote($id);
         $rs = $database->query($sql);
 
         if($rs && $rs->num_rows > 0) {

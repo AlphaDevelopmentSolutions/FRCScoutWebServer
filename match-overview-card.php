@@ -10,11 +10,9 @@ $eventId = $_GET['eventId'];
 $matchId = $_GET['matchId'];
 $allianceColor = $_GET['allianceColor'];
 
-$event = new Events();
-$event->load($eventId);
+$event = Events::withId($eventId);
 
-$match = new Matches();
-$match->load($matchId);
+$match = Matches::withId($matchId);
 
 ?>
 

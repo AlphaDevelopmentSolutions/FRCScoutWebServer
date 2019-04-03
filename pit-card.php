@@ -6,11 +6,9 @@ require_once("classes/Events.php");
 $pitCardId = $_GET['pitCardId'];
 $action = (isset($_POST['save'])) ? 'save' : ((isset($_POST['delete'])) ? 'delete' : '');
 
-$pitCard = new PitCards();
-$pitCard->load($pitCardId);
+$pitCard = PitCards::withId($pitCardId);
 
-$event = new Events();
-$event->load($pitCard->EventId);
+$event = Events::withId($pitCard->EventId);
 
 
 if(isPostBack() && loggedIn())

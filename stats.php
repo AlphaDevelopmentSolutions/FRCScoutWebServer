@@ -5,9 +5,7 @@ require_once("classes/Events.php");
 
 $eventId = $_GET['eventId'];
 
-$event = new Events();
-$event->load($eventId);
-
+$event = Events::withId($eventId);
 ?>
 
 <!doctype html>

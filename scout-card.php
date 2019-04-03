@@ -8,20 +8,19 @@ $eventId = $_GET['eventId'];
 $teamId = $_GET['teamId'];
 $action = (isset($_POST['save'])) ? 'save' : ((isset($_POST['delete'])) ? 'delete' : '');
 
-$scoutCard = new ScoutCards();
 
 if(!empty($scoutCardId))
 {
-    $scoutCard->load($scoutCardId);
+    $scoutCard = ScoutCards::withId($scoutCardId);
 }
 else
 {
+    $scoutCard = new ScoutCards();
     $scoutCard->TeamId = $teamId;
     $scoutCard->EventId = $eventId;
 }
 
-$event = new Events();
-$event->load($scoutCard->EventId);
+$event = Events::withId($scoutCard->EventId);
 
 if(isPostBack() && loggedIn())
 {
