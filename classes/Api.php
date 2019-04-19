@@ -12,13 +12,12 @@ class Api
     private $STATUS_KEY = 'Status';
     private $RESPONSE_KEY = 'Response';
 
+    private $keyValid;
+
     function __construct($key)
     {
-        if($key != API_KEY)
-        {
-            $this->error('Invalid Key');
-            die();
-        }
+        $this->keyValid = $key == API_KEY;
+
 
         $this->response = array();
     }
@@ -46,8 +45,18 @@ class Api
         $this->response[$this->RESPONSE_KEY] = $message;
 
         echo json_encode($this->response);
-
     }
+
+    /**
+     * Returns if the key was valid when initializing the API
+     * @return boolean
+     */
+    public function getKeyValid()
+    {
+        return $this->keyValid;
+    }
+
+
 }
 
 ?>

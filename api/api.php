@@ -12,6 +12,18 @@ $api = new Api($_POST['key']);
 
 $action = $_POST['action'];
 
+//check if the key was valid
+if(!$api->getKeyValid())
+{
+    //only the hello api and server config api bypass the key
+    if($action != 'Hello' && $action != 'GetServerConfig')
+    {
+        $api->error('Invalid Key');
+        die();
+    }
+}
+
+
 try {
 
     switch ($action)
@@ -22,39 +34,12 @@ try {
 
             break;
 
-        //region Setters
-        case 'SubmitScoutCard':
-            $scoutCard = ScoutCards::withProperties($_POST);
-
-            if ($scoutCard->save())
-                $api->success($scoutCard->Id);
-            else
-                throw new Exception('Failed to save scout card');
-
-            break;
-
-        case 'SubmitPitCard':
-            $pitCard = PitCards::withProperties($_POST);
-
-            if ($pitCard->save())
-                $api->success($pitCard->Id);
-            else
-                throw new Exception('Failed to save pit card');
-
-            break;
-
-        case 'SubmitRobotMedia':
-            $robotMedia = RobotMedia::withProperties($_POST);
-
-            if ($robotMedia->save())
-                $api->success($robotMedia->Id);
-            else
-                throw new Exception('Failed to save robot media');
-
-            break;
-        //endregion
-
         //region Getters
+        case 'GetServerConfig':
+            $api->success(API_KEY);
+
+            break;
+
         case 'GetUsers':
             $api->success(Users::getUsers());
 
@@ -114,6 +99,38 @@ try {
                 $api->success(Matches::getMatches($eventId));
             else
                 throw new Exception('Invalid event id');
+
+            break;
+        //endregion
+
+        //region Setters
+        case 'SubmitScoutCard':
+            $scoutCard = ScoutCards::withProperties($_POST);
+
+            if ($scoutCard->save())
+                $api->success($scoutCard->Id);
+            else
+                throw new Exception('Failed to save scout card');
+
+            break;
+
+        case 'SubmitPitCard':
+            $pitCard = PitCards::withProperties($_POST);
+
+            if ($pitCard->save())
+                $api->success($pitCard->Id);
+            else
+                throw new Exception('Failed to save pit card');
+
+            break;
+
+        case 'SubmitRobotMedia':
+            $robotMedia = RobotMedia::withProperties($_POST);
+
+            if ($robotMedia->save())
+                $api->success($robotMedia->Id);
+            else
+                throw new Exception('Failed to save robot media');
 
             break;
         //endregion
