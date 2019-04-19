@@ -25,7 +25,7 @@ class Api
 
     /**
      * Echos a json encoded success response
-     * @param $message message to display
+     * @param $message String | array message to display
      */
     function success($message)
     {
@@ -38,7 +38,7 @@ class Api
 
     /**
      * Echos a json encoded success response
-     * @param $message message to display
+     * @param $message String | array message to display
      */
     function error($message)
     {
