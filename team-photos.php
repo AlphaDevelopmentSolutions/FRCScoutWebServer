@@ -191,8 +191,7 @@ $ccwms = $stats['ccwms']['frc' . $pitCard->TeamId];
               <h6 style="margin: unset" ><a id="show-stats-btn" href="#" style="color:white" onclick="showQuickStats()">Show More</a></h6>
           </div>
 
-        <div class="mdl-layout--large-screen-only mdl-layout__header-row">
-        </div>
+
           <div class="version">Version <?php echo VERSION ?></div>
           <div class="mdl-layout__tab-bar mdl-js-ripple-effect mdl-color--primary-dark">
               <a href="/" class="mdl-layout__tab">Events</a>

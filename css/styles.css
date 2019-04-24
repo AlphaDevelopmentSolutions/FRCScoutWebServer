@@ -318,6 +318,7 @@ html, body {
   height: 200px;
   background-size: cover !important;
   background: no-repeat 50% 50%;
+  margin-top: 21px;
 }
 
 .robot-media

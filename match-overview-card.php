@@ -68,8 +68,7 @@ $match = Matches::withId($matchId);
         <div class="mdl-layout--large-screen-only mdl-layout__header-row">
           <h3><?php echo $match->toString()?> Overview</h3>
         </div>
-        <div class="mdl-layout--large-screen-only mdl-layout__header-row">
-        </div>
+
           <div class="version">Version <?php echo VERSION ?></div>
         <div class="mdl-layout__tab-bar mdl-js-ripple-effect mdl-color--primary-dark">
           <a href="/" class="mdl-layout__tab">Events</a>

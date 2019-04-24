@@ -78,10 +78,8 @@ $ccwms = $stats['ccwms']['frc' . $pitCard->TeamId];
   <body class="mdl-demo mdl-color--grey-100 mdl-color-text--grey-700 mdl-base">
     <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
       <header class="mdl-layout__header mdl-layout__header--scroll mdl-color--primary">
-        <div class="mdl-layout--large-screen-only mdl-layout__header-row">
-        <?php include_once('includes/login-form.php') ?>
-
-        </div>
+        
+          <?php include_once('includes/login-form.php') ?>
           <?php
 
           $robotMediaUri = Teams::getProfileImageUri($team->Id);
@@ -188,8 +186,6 @@ $ccwms = $stats['ccwms']['frc' . $pitCard->TeamId];
           <div style="height: unset" class="mdl-layout--large-screen-only mdl-layout__header-row">
               <h6 style="margin: unset" ><a id="show-stats-btn" href="#" style="color:white" onclick="showQuickStats()">Show More</a></h6>
           </div>
-        <div class="mdl-layout--large-screen-only mdl-layout__header-row">
-        </div>
           <div class="version">Version <?php echo VERSION ?></div>
         <div class="mdl-layout__tab-bar mdl-js-ripple-effect mdl-color--primary-dark">
           <a href="/" class="mdl-layout__tab">Events</a>
