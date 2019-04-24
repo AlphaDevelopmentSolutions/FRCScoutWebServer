@@ -373,6 +373,15 @@ class Matches
     }
 
     /**
+     * Returns the final string to be displayed when referencing a match
+     * @return string
+     */
+    public function toString()
+    {
+        return $this->getMatchTypeString() . ' ' . $this->MatchNumber;
+    }
+
+    /**
      * Returns the html for displaying a match card
      * @param int $teamId selected team
      * @param int $scoutCardId used to change the view button
@@ -385,7 +394,7 @@ class Matches
             <section class="section--center mdl-grid mdl-grid--no-spacing mdl-shadow--2dp">
                 <div class="mdl-card mdl-cell mdl-cell--12-col">
                     <div class="mdl-card__supporting-text">
-                        <h4>' . $this->getMatchTypeString() . ' ' . $this->MatchNumber .'</h4>
+                        <h4>' . $this->toString() . '</h4>
                         <div class="container">
                             <div class="row">
                                 <table class="match-table">
@@ -407,7 +416,7 @@ class Matches
                     </div>
                     <div class="mdl-card__actions">' .
                         ((!is_null($scoutCardId)) ?
-                            '<a href="//scout-card.php?scoutCardId=' . $scoutCardId . '&matchId=' . $this->Id . '&allianceColor=BLUE" class="mdl-button">View Scout Card</a>'
+                            '<a href="/scout-card.php?scoutCardId=' . $scoutCardId . '" class="mdl-button">View Scout Card</a>'
                             :
                             '<a href="/match-overview-card.php?eventId=' . $this->EventId . '&matchId=' . $this->Id . '&allianceColor=BLUE" class="mdl-button">View Match Overview</a>'
                         ) .'

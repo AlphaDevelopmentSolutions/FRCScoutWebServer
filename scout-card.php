@@ -2,10 +2,12 @@
 require_once("config.php");
 require_once("classes/ScoutCards.php");
 require_once("classes/Events.php");
+require_once("classes/Matches.php");
 
 $scoutCardId = $_GET['scoutCardId'];
 $eventId = $_GET['eventId'];
 $teamId = $_GET['teamId'];
+$matchId = $_GET['matchId'];
 $action = (isset($_POST['save'])) ? 'save' : ((isset($_POST['delete'])) ? 'delete' : '');
 
 
@@ -18,8 +20,11 @@ else
     $scoutCard = new ScoutCards();
     $scoutCard->TeamId = $teamId;
     $scoutCard->EventId = $eventId;
+    $scoutCard->MatchId = $matchId;
 }
 
+
+$match = Matches::withKey($scoutCard->MatchId);
 $event = Events::withId($scoutCard->EventId);
 
 if(isPostBack() && loggedIn())
@@ -61,7 +66,7 @@ if(isPostBack() && loggedIn())
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="description" content="A front-end template that helps you build fast, modern mobile web apps.">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
-    <title>Match <?php echo $scoutCard->MatchId ?></title>
+    <title><?php echo $match->toString() ?></title>
 
     <!-- Add to homescreen for Chrome on Android -->
     <meta name="mobile-web-app-capable" content="yes">
@@ -122,7 +127,7 @@ if(isPostBack() && loggedIn())
             <?php include_once('includes/login-form.php') ?>
         </div>
         <div class="mdl-layout--large-screen-only mdl-layout__header-row">
-          <h3>Match <?php echo $scoutCard->MatchId ?></h3>
+          <h3><?php echo $match->toString() ?></h3>
         </div>
         <div class="mdl-layout--large-screen-only mdl-layout__header-row">
         </div>
@@ -131,7 +136,7 @@ if(isPostBack() && loggedIn())
           <a href="/" class="mdl-layout__tab">Events</a>
           <a href="/teams.php?eventId=<?php echo $scoutCard->EventId; ?>" class="mdl-layout__tab ">Teams</a>
           <a href="/team-matches.php?teamId=<?php echo $scoutCard->TeamId?>&eventId=<?php echo $scoutCard->EventId;?>" class="mdl-layout__tab">Team <?php echo $scoutCard->TeamId; ?></a>
-          <a href="" class="mdl-layout__tab is-active">Match <?php echo $scoutCard->MatchId; ?></a>
+          <a href="" class="mdl-layout__tab is-active"><?php echo $match->toString() ?></a>
         </div>
       </header>
       <main class="mdl-layout__content">
