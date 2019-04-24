@@ -224,29 +224,14 @@ $ccwms = $stats['ccwms']['frc' . $pitCard->TeamId];
 
           <?php
 
-          foreach(ScoutCards::getScoutCardsForTeam($teamId, $eventId) as $scoutCard)
+          foreach(Matches::getMatchesForTeam($eventId, $teamId) as $match)
           {
+              $match = Matches::withProperties($match);
 
-              $scoutCard = ScoutCards::withProperties($scoutCard);
-              $match = Matches::withKey($scoutCard->MatchId);
-            ?>
-                <div class="mdl-layout__tab-panel is-active" id="overview">
-                  <section class="section--center mdl-grid mdl-grid--no-spacing mdl-shadow--2dp">
-                    <div class="mdl-card mdl-cell mdl-cell--12-col">
-                      <div class="mdl-card__supporting-text">
-                        <h4><?php echo $match->getMatchTypeString() . ' ' . $match->MatchNumber ?></h4>
-                        Blue Alliance Score - <?php echo $match->BlueAllianceScore ?><br><br>
-                        Red Alliance Score - <?php echo $match->RedAllianceScore?>
-                      </div>
-                      <div class="mdl-card__actions">
-                        <a href="/scout-card.php?scoutCardId=<?php echo $scoutCard->Id ?>" class="mdl-button">View</a>
-                      </div>
-                    </div>
-                  </section>
-                </div>
-        <?php
+              $scoutCard = ScoutCards::forMatch($teamId, $match->Key);
+
+              echo $match->toHtml($teamId, $scoutCard->Id);
           }
-
           ?>
 
           

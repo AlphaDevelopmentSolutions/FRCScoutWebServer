@@ -248,17 +248,17 @@ class Matches
     public static function getMatchesForTeam($eventId, $teamId)
     {
         $database = new Database();
-        $matchIds = $database->query(
-            "SELECT 
+        $sql = "SELECT 
                       * 
                     FROM 
                       matches 
                     WHERE
                       EventId = " . $database->quote($eventId) .
-                    " AND MatchType = " . $database->quote(self::$MATCH_TYPE_QUALIFICATIONS) .
-                    " AND TeamId = " . $database->quote($teamId) . "
-                     ORDER BY MatchNumber DESC"
-        );
+            " AND MatchType = " . $database->quote(self::$MATCH_TYPE_QUALIFICATIONS) .
+            " AND " . $database->quote($teamId) . " IN (BlueAllianceTeamOneId, BlueAllianceTeamTwoId, BlueAllianceTeamThreeId, RedAllianceTeamOneId, RedAllianceTeamTwoId, RedAllianceTeamThreeId)
+                     ORDER BY MatchNumber DESC";
+
+        $matchIds = $database->query($sql);
         $database->close();
 
         $response = array();
@@ -336,6 +336,10 @@ class Matches
         return $response;
     }
 
+    /**
+     * Gets the match type from the object and returns it in string format
+     * @return string
+     */
     public function getMatchTypeString()
     {
         if(!empty($this->MatchType))
@@ -364,6 +368,55 @@ class Matches
 
             }
         }
+
+        return 'Qualification';
+    }
+
+    /**
+     * Returns the html for displaying a match card
+     * @param int $teamId selected team
+     * @param int $scoutCardId used to change the view button
+     * @return string html to display
+     */
+    public function toHtml($teamId = null, $scoutCardId = null)
+    {
+        $html = '
+        <div class="mdl-layout__tab-panel is-active" id="overview">
+            <section class="section--center mdl-grid mdl-grid--no-spacing mdl-shadow--2dp">
+                <div class="mdl-card mdl-cell mdl-cell--12-col">
+                    <div class="mdl-card__supporting-text">
+                        <h4>' . $this->getMatchTypeString() . ' ' . $this->MatchNumber .'</h4>
+                        <div class="container">
+                            <div class="row">
+                                <table class="match-table">
+                                    <tr class="blue-alliance-bg">
+                                        <td><span class="' . (($teamId == $this->BlueAllianceTeamOneId) ? " tr-selected-team " : "") . (($this->BlueAllianceScore > $this->RedAllianceScore) ? " tr-win " : "") . '">' . $this->BlueAllianceTeamOneId . '</span></td>
+                                        <td><span class="' . (($teamId == $this->BlueAllianceTeamTwoId) ? " tr-selected-team " : "") . (($this->BlueAllianceScore > $this->RedAllianceScore) ? " tr-win " : "") . '">' . $this->BlueAllianceTeamTwoId . '</span></td>
+                                        <td><span class="' . (($teamId == $this->BlueAllianceTeamThreeId) ? " tr-selected-team " : "") . (($this->BlueAllianceScore > $this->RedAllianceScore) ? " tr-win " : "") . '">' . $this->BlueAllianceTeamThreeId . '</span></td>
+                                        <td><span ' . (($this->BlueAllianceScore > $this->RedAllianceScore) ? 'style="font-weight: bold;"' : "") . '>' . $this->BlueAllianceScore . '</span></td>
+                                    </tr>
+                                    <tr class="red-alliance-bg">
+                                        <td><span class="' . (($teamId == $this->RedAllianceTeamOneId) ? " tr-selected-team " : "") . (($this->BlueAllianceScore < $this->RedAllianceScore) ? " tr-win " : "") . '">' . $this->RedAllianceTeamOneId . '</span></td>
+                                        <td><span class="' . (($teamId == $this->RedAllianceTeamTwoId) ? " tr-selected-team " : "") . (($this->BlueAllianceScore < $this->RedAllianceScore) ? " tr-win " : "") . '">' . $this->RedAllianceTeamTwoId . '</span></td>
+                                        <td><span class="' . (($teamId == $this->RedAllianceTeamThreeId) ? " tr-selected-team " : "") . (($this->BlueAllianceScore < $this->RedAllianceScore) ? " tr-win " : "") . '">' . $this->RedAllianceTeamThreeId . '</span></td>
+                                        <td><span ' . (($this->BlueAllianceScore < $this->RedAllianceScore) ? 'style="font-weight: bold;"' : "") . '>' . $this->RedAllianceScore . '</span></td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mdl-card__actions">' .
+                        ((!is_null($scoutCardId)) ?
+                            '<a href="//scout-card.php?scoutCardId=' . $scoutCardId . '&matchId=' . $this->Id . '&allianceColor=BLUE" class="mdl-button">View Scout Card</a>'
+                            :
+                            '<a href="/match-overview-card.php?eventId=' . $this->EventId . '&matchId=' . $this->Id . '&allianceColor=BLUE" class="mdl-button">View Match Overview</a>'
+                        ) .'
+                    </div>
+                </div>
+            </section>
+        </div>';
+
+        return $html;
     }
 
 }

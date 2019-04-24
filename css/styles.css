@@ -378,3 +378,12 @@ html, body {
   background-color: #FFEEEE;
 }
 
+.tr-win
+{
+  font-weight: bold;
+}
+
+.tr-selected-team
+{
+  text-decoration: underline;
+}

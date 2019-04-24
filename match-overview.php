@@ -175,40 +175,8 @@ $event = Events::withId($eventId);
         {
             $match = Matches::withProperties($match);
 
-        ?>
-                <div class="mdl-layout__tab-panel is-active" id="overview">
-                  <section class="section--center mdl-grid mdl-grid--no-spacing mdl-shadow--2dp">
-                    <div class="mdl-card mdl-cell mdl-cell--12-col">
-                      <div class="mdl-card__supporting-text">
-                        <h4><?php echo $match->getMatchTypeString() . ' ' . $match->MatchNumber ?></h4>
-                        <div class="container">
-                            <div class="row">
-                                    <table class="match-table">
-                                        <tr class="blue-alliance-bg">
-                                            <td><?php echo $match->BlueAllianceTeamOneId ?></td>
-                                            <td><?php echo $match->BlueAllianceTeamTwoId ?></td>
-                                            <td><?php echo $match->BlueAllianceTeamThreeId ?></td>
-                                            <td><?php echo '<span ' . (($match->BlueAllianceScore > $match->RedAllianceScore) ? 'style="font-weight: bold;"' : '') . '>' . $match->BlueAllianceScore . '</span>' ?></td>
-                                        </tr>
-                                        <tr class="red-alliance-bg">
-                                            <td><?php echo $match->RedAllianceTeamOneId ?></td>
-                                            <td><?php echo $match->RedAllianceTeamTwoId ?></td>
-                                            <td><?php echo $match->RedAllianceTeamThreeId ?></td>
-                                            <td><?php echo '<span ' . (($match->BlueAllianceScore < $match->RedAllianceScore) ? 'style="font-weight: bold;"' : '') . '>' . $match->RedAllianceScore . '</span>'?></td>
-                                        </tr>
-                                    </table>
-                            </div>
-                        </div>
-                    </div>
-                      <div class="mdl-card__actions">
-                        <a href="/match-overview-card.php?eventId=' . $eventId . '&matchId=' . $match->Id . '&allianceColor=BLUE" class="mdl-button">View</a>
-                      </div>
-                    </div>
-                  </section>
-                </div>
-        <?php
-            }
-
+            echo $match->toHtml();
+        }
         ?>
 
 
