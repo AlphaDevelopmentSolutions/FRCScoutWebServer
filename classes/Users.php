@@ -7,10 +7,53 @@ class Users
     public $LastName;
     private static $TABLE_NAME = 'users';
 
-    function load($id)
+    /**
+     * Loads a new instance by its database id
+     * @param $id
+     * @return Users
+     */
+    static function withId($id)
+    {
+        $instance = new self();
+        $instance->loadById($id);
+        return $instance;
+
+    }
+
+    /**
+     * Loads a new instance by specified properties
+     * @param array $properties
+     * @return Users
+     */
+    static function withProperties(Array $properties = array())
+    {
+        $instance = new self();
+        $instance->loadByProperties($properties);
+        return $instance;
+
+    }
+
+    /**
+     * Loads a new instance by specified properties
+     * @param array $properties
+     * @return Users
+     */
+    protected function loadByProperties(Array $properties = array())
+    {
+        foreach($properties as $key => $value)
+            $this->{$key} = $value;
+
+    }
+
+    /**
+     * Loads a new instance by its database id
+     * @param $id
+     * @return Users
+     */
+    protected function loadById($id)
     {
         $database = new Database();
-        $sql = 'SELECT * FROM '. self::$TABLE_NAME. ' WHERE '.'id = '.$database->quote($id);
+        $sql = 'SELECT * FROM ' . self::$TABLE_NAME . ' WHERE '.'id = '.$database->quote($id);
         $rs = $database->query($sql);
 
         if($rs && $rs->num_rows > 0) {
@@ -55,7 +98,7 @@ class Users
             }
         }
 
-        return $this->load($response[0]['Id']);
+        return $this->loadById($response[0]['Id']);
     }
 
     public static function getUsers()

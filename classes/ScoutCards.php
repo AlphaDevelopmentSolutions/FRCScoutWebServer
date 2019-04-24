@@ -41,27 +41,81 @@ class ScoutCards
 
     private static $TABLE_NAME = 'scout_cards';
 
-    function load($id)
+    /**
+     * Loads a new instance by its database id
+     * @param $id
+     * @return ScoutCards
+     */
+    static function withId($id)
     {
+        $instance = new self();
+
         $database = new Database();
-        $sql = 'SELECT * FROM '.self::$TABLE_NAME.' WHERE '.'id = '.$database->quote($id);
+        $sql = 'SELECT * FROM ' . self::$TABLE_NAME . ' WHERE '.'id = '.$database->quote($id);
         $rs = $database->query($sql);
 
-        if($rs && $rs->num_rows > 0) {
-            $row = $rs->fetch_assoc();
+        if($rs && $rs->num_rows > 0)
+            $instance->loadByProperties($rs->fetch_assoc());
 
-            if(is_array($row)) {
-                foreach($row as $key => $value){
-                    if(property_exists($this, $key)){
-                        $this->$key = $value;
-                    }
-                }
-            }
+        return $instance;
 
-            return true;
-        }
+    }
 
-        return false;
+    /**
+     * Loads a new instance by specified properties
+     * @param array $properties
+     * @return ScoutCards
+     */
+    static function withProperties(Array $properties = array())
+    {
+        $instance = new self();
+        $instance->loadByProperties($properties);
+        return $instance;
+
+    }
+
+    /**
+     * Loads a new instance by specified properties
+     * @param int $teamId
+     * @param string $matchKey
+     * @return ScoutCards
+     */
+    static function forMatch($teamId, $matchKey)
+    {
+        //crate a new instance
+        $instance = new self();
+
+        //gather results from database, limit to the newest scout card only
+        $database = new Database();
+        $sql = "SELECT 
+                      * 
+                    FROM 
+                      " . self::$TABLE_NAME ." 
+                    WHERE 
+                      TeamId = " . $database->quote($teamId) .
+                    ' AND
+                      MatchId = ' . $database->quote($matchKey) .
+                    ' ORDER BY Id DESC LIMIT 1';
+
+        $scoutCards = $database->query($sql);
+        $database->close();
+
+        //assign results
+        if($scoutCards && $scoutCards->num_rows > 0)
+            $instance->loadByProperties($scoutCards->fetch_assoc());
+
+        return $instance;
+
+    }
+
+    /**
+     * Loads a new instance by specified properties
+     * @param array $properties
+     */
+    protected function loadByProperties(Array $properties = array())
+    {
+        foreach($properties as $key => $value)
+            $this->{$key} = $value;
     }
 
     function save()
@@ -257,6 +311,35 @@ class ScoutCards
     }
 
     public static function getScoutCardsForEvent($eventId)
+    {
+        $database = new Database();
+        $scoutCards = $database->query(
+            "SELECT 
+                      * 
+                    FROM 
+                      " . self::$TABLE_NAME ."  
+                    WHERE 
+                      EventId = " . $database->quote($eventId)
+        );
+        $database->close();
+
+        $response = array();
+
+        if($scoutCards && $scoutCards->num_rows > 0)
+        {
+            while ($row = $scoutCards->fetch_assoc())
+            {
+                $response[] = $row;
+            }
+        }
+
+        return $response;
+    }
+
+    /**
+     * @returns Matches
+     */
+    public function getMatch()
     {
         $database = new Database();
         $scoutCards = $database->query(

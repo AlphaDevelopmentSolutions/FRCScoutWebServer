@@ -8,14 +8,9 @@ require_once("classes/Events.php");
 $eventId = $_GET['eventId'];
 $teamId = $_GET['teamId'];
 
-$team = new Teams();
-$team->load($teamId);
-
-$event = new Events();
-$event->load($eventId);
-
-$pitCard = new PitCards();
-$pitCard->load(PitCards::getNewestPitCard($team->Id, $event->BlueAllianceId)['0']['Id']);
+$team = Teams::withId($teamId);
+$event = Events::withId($eventId);
+$pitCard = PitCards::withId(PitCards::getNewestPitCard($team->Id, $event->BlueAllianceId)['0']['Id']);
 
 $url = "http://scouting.wiredcats5885.ca/ajax/GetOPRStats.php";
 
@@ -86,9 +81,7 @@ $ccwms = $stats['ccwms']['frc' . $pitCard->TeamId];
   <body class="mdl-demo mdl-color--grey-100 mdl-color-text--grey-700 mdl-base">
     <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
       <header class="mdl-layout__header mdl-layout__header--scroll mdl-color--primary">
-        <div class="mdl-layout--large-screen-only mdl-layout__header-row">
-            <?php include_once('includes/login-form.php') ?>
-        </div>
+          <?php include_once('includes/login-form.php') ?>
           <?php
 
           $robotMediaUri = Teams::getProfileImageUri($team->Id);
@@ -196,16 +189,16 @@ $ccwms = $stats['ccwms']['frc' . $pitCard->TeamId];
               <h6 style="margin: unset" ><a id="show-stats-btn" href="#" style="color:white" onclick="showQuickStats()">Show More</a></h6>
           </div>
 
-        <div class="mdl-layout--large-screen-only mdl-layout__header-row">
-        </div>
+
           <div class="version">Version <?php echo VERSION ?></div>
-        <div class="mdl-layout__tab-bar mdl-js-ripple-effect mdl-color--primary-dark">
-          <a href="/" class="mdl-layout__tab">Events</a>
-          <a href="/teams.php?eventId=<?php echo $eventId; ?>" class="mdl-layout__tab ">Teams</a>
-          <a href="" class="mdl-layout__tab is-active">Team <?php echo $teamId; ?></a>
-        </div>
           <div class="mdl-layout__tab-bar mdl-js-ripple-effect mdl-color--primary-dark">
-              <a href="/team-matches.php?eventId=<?php echo $event->BlueAllianceId; ?>&teamId=<?php echo $team->Id; ?>" class="mdl-layout__tab ">Matches</a>
+              <a href="/" class="mdl-layout__tab">Events</a>
+              <a href="/match-overview.php?eventId=<?php echo $event->BlueAllianceId; ?>" class="mdl-layout__tab ">Matches</a>
+              <a href="/teams.php?eventId=<?php echo $eventId; ?>" class="mdl-layout__tab ">Teams</a>
+              <a href="" class="mdl-layout__tab is-active">Team <?php echo $teamId; ?></a>
+          </div>
+          <div class="mdl-layout__tab-bar mdl-js-ripple-effect mdl-color--primary-dark">
+              <a href="/team-matches.php?eventId=<?php echo $event->BlueAllianceId; ?>&teamId=<?php echo $team->Id; ?>" class="mdl-layout__tab">Matches</a>
               <a href="/team-pits.php?eventId=<?php echo $event->BlueAllianceId; ?>&teamId=<?php echo $team->Id; ?>" class="mdl-layout__tab">Pits</a>
               <a href="/team-photos.php?eventId=<?php echo $event->BlueAllianceId; ?>&teamId=<?php echo $team->Id; ?>" class="mdl-layout__tab is-active">Photos</a>
           </div>
@@ -218,23 +211,20 @@ $ccwms = $stats['ccwms']['frc' . $pitCard->TeamId];
           {
               $robotMediaUri = ROBOT_MEDIA_URL . $robotPhotoUri;
 
-              $html =
-            '
+          ?>
                 <div class="mdl-layout__tab-panel is-active" id="overview">
                   <section class="section--center mdl-grid mdl-grid--no-spacing mdl-shadow--2dp">
                     <div class="mdl-card mdl-cell mdl-cell--12-col">
                       <div class="mdl-card__supporting-text">
-                        <img class="robot-media" src="' . $robotMediaUri . '"  height="350"/>
+                        <img class="robot-media" src="<?php echo $robotMediaUri ?>"  height="350"/>
                       </div>
                        <div class="mdl-card__actions">
-                        <a target="_blank" href="' . $robotMediaUri . '" class="mdl-button">View</a>
+                        <a target="_blank" href="<?php echo $robotMediaUri ?>" class="mdl-button">View</a>
                       </div>
                     </div>
                   </section>
                 </div>
-            ';
-
-            echo $html;
+        <?php
           }
 
           ?>
