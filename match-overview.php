@@ -183,23 +183,20 @@ $event = Events::withId($eventId);
                         <h4><?php echo $match->getMatchTypeString() . ' ' . $match->MatchNumber ?></h4>
                         <div class="container">
                             <div class="row">
-                                <div class="col-sm"
-
-                            <?php echo (($match->BlueAllianceScore > $match->RedAllianceScore) ? 'style="font-weight: bold;"' : '') . '>
-                                    Blue Alliance - ' . $match->BlueAllianceScore; ?>
-
-                                    <div><?php echo $match->RedAllianceTeamOneId ?></div>
-                                    <div><?php echo $match->RedAllianceTeamTwoId ?></div>
-                                    <div><?php echo $match->RedAllianceTeamThreeId ?></div>
-                                </div>
-                                <div class="col-sm"
-                            <?php echo (($match->BlueAllianceScore < $match->RedAllianceScore) ? 'style="font-weight: bold;"' : '') . '>
-                                    Red Alliance - ' . $match->RedAllianceScore; ?>
-
-                                    <div><?php echo $match->BlueAllianceTeamOneId ?></div>
-                                    <div><?php echo $match->BlueAllianceTeamTwoId ?></div>
-                                    <div><?php echo $match->BlueAllianceTeamThreeId ?></div>
-                                </div>
+                                    <table class="match-table">
+                                        <tr class="blue-alliance-bg">
+                                            <td><?php echo $match->BlueAllianceTeamOneId ?></td>
+                                            <td><?php echo $match->BlueAllianceTeamTwoId ?></td>
+                                            <td><?php echo $match->BlueAllianceTeamThreeId ?></td>
+                                            <td><?php echo '<span ' . (($match->BlueAllianceScore > $match->RedAllianceScore) ? 'style="font-weight: bold;"' : '') . '>' . $match->BlueAllianceScore . '</span>' ?></td>
+                                        </tr>
+                                        <tr class="red-alliance-bg">
+                                            <td><?php echo $match->RedAllianceTeamOneId ?></td>
+                                            <td><?php echo $match->RedAllianceTeamTwoId ?></td>
+                                            <td><?php echo $match->RedAllianceTeamThreeId ?></td>
+                                            <td><?php echo '<span ' . (($match->BlueAllianceScore < $match->RedAllianceScore) ? 'style="font-weight: bold;"' : '') . '>' . $match->RedAllianceScore . '</span>'?></td>
+                                        </tr>
+                                    </table>
                             </div>
                         </div>
                     </div>
