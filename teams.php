@@ -101,12 +101,17 @@ $event = Events::withId($eventId);
             }
 
             else
+            {
+
                 ?>
                         <div style="height: unset" >
                           <div class="team-card-image" style="background-image: url(http://scouting.wiredcats5885.ca/assets/robot-media/frc_logo.jpg)">
-                            
+
                           </div>
                         </div>
+        <?php
+            }
+            ?>
                     </header>
                     <div class="mdl-card mdl-cell mdl-cell--9-col-desktop mdl-cell--6-col-tablet mdl-cell--4-col-phone">
                         <div class="mdl-card__supporting-text">
