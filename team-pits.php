@@ -194,13 +194,14 @@ $ccwms = $stats['ccwms']['frc' . $pitCard->TeamId];
         <div class="mdl-layout--large-screen-only mdl-layout__header-row">
         </div>
           <div class="version">Version <?php echo VERSION ?></div>
-        <div class="mdl-layout__tab-bar mdl-js-ripple-effect mdl-color--primary-dark">
-          <a href="/" class="mdl-layout__tab">Events</a>
-          <a href="/teams.php?eventId=<?php echo $eventId; ?>" class="mdl-layout__tab ">Teams</a>
-          <a href="" class="mdl-layout__tab is-active">Team <?php echo $teamId; ?></a>
-        </div>
           <div class="mdl-layout__tab-bar mdl-js-ripple-effect mdl-color--primary-dark">
-              <a href="/team-matches.php?eventId=<?php echo $event->BlueAllianceId; ?>&teamId=<?php echo $team->Id; ?>" class="mdl-layout__tab ">Matches</a>
+              <a href="/" class="mdl-layout__tab">Events</a>
+              <a href="/match-overview.php?eventId=<?php echo $event->BlueAllianceId; ?>" class="mdl-layout__tab ">Matches</a>
+              <a href="/teams.php?eventId=<?php echo $eventId; ?>" class="mdl-layout__tab ">Teams</a>
+              <a href="" class="mdl-layout__tab is-active">Team <?php echo $teamId; ?></a>
+          </div>
+          <div class="mdl-layout__tab-bar mdl-js-ripple-effect mdl-color--primary-dark">
+              <a href="/team-matches.php?eventId=<?php echo $event->BlueAllianceId; ?>&teamId=<?php echo $team->Id; ?>" class="mdl-layout__tab">Matches</a>
               <a href="/team-pits.php?eventId=<?php echo $event->BlueAllianceId; ?>&teamId=<?php echo $team->Id; ?>" class="mdl-layout__tab is-active">Pits</a>
               <a href="/team-photos.php?eventId=<?php echo $event->BlueAllianceId; ?>&teamId=<?php echo $team->Id; ?>" class="mdl-layout__tab">Photos</a>
           </div>

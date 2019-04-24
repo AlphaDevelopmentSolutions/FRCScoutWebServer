@@ -194,13 +194,14 @@ $ccwms = $stats['ccwms']['frc' . $pitCard->TeamId];
         <div class="mdl-layout--large-screen-only mdl-layout__header-row">
         </div>
           <div class="version">Version <?php echo VERSION ?></div>
-        <div class="mdl-layout__tab-bar mdl-js-ripple-effect mdl-color--primary-dark">
-          <a href="/" class="mdl-layout__tab">Events</a>
-          <a href="/teams.php?eventId=<?php echo $eventId; ?>" class="mdl-layout__tab ">Teams</a>
-          <a href="" class="mdl-layout__tab is-active">Team <?php echo $teamId; ?></a>
-        </div>
           <div class="mdl-layout__tab-bar mdl-js-ripple-effect mdl-color--primary-dark">
-              <a href="/team-matches.php?eventId=<?php echo $event->BlueAllianceId; ?>&teamId=<?php echo $team->Id; ?>" class="mdl-layout__tab ">Matches</a>
+              <a href="/" class="mdl-layout__tab">Events</a>
+              <a href="/match-overview.php?eventId=<?php echo $event->BlueAllianceId; ?>" class="mdl-layout__tab ">Matches</a>
+              <a href="/teams.php?eventId=<?php echo $eventId; ?>" class="mdl-layout__tab ">Teams</a>
+              <a href="" class="mdl-layout__tab is-active">Team <?php echo $teamId; ?></a>
+          </div>
+          <div class="mdl-layout__tab-bar mdl-js-ripple-effect mdl-color--primary-dark">
+              <a href="/team-matches.php?eventId=<?php echo $event->BlueAllianceId; ?>&teamId=<?php echo $team->Id; ?>" class="mdl-layout__tab">Matches</a>
               <a href="/team-pits.php?eventId=<?php echo $event->BlueAllianceId; ?>&teamId=<?php echo $team->Id; ?>" class="mdl-layout__tab">Pits</a>
               <a href="/team-photos.php?eventId=<?php echo $event->BlueAllianceId; ?>&teamId=<?php echo $team->Id; ?>" class="mdl-layout__tab is-active">Photos</a>
           </div>
@@ -217,11 +218,11 @@ $ccwms = $stats['ccwms']['frc' . $pitCard->TeamId];
                 <div class="mdl-layout__tab-panel is-active" id="overview">
                   <section class="section--center mdl-grid mdl-grid--no-spacing mdl-shadow--2dp">
                     <div class="mdl-card mdl-cell mdl-cell--12-col">
-                      <div class="mdl-card__supporting-text">?
+                      <div class="mdl-card__supporting-text">
                         <img class="robot-media" src="<?php echo $robotMediaUri ?>"  height="350"/>
                       </div>
                        <div class="mdl-card__actions">
-                        <a target="_blank" href="<?php $robotMediaUri ?>" class="mdl-button">View</a>
+                        <a target="_blank" href="<?php echo $robotMediaUri ?>" class="mdl-button">View</a>
                       </div>
                     </div>
                   </section>
