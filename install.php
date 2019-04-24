@@ -145,13 +145,11 @@ define('API_KEY', '$customApiKey');
   ?>
     <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
       <header class="mdl-layout__header mdl-layout__header--scroll mdl-color--primary">
-        <div class="mdl-layout--large-screen-only mdl-layout__header-row">
-        </div>
+
         <div class="mdl-layout--large-screen-only mdl-layout__header-row">
           <h3>Install</h3>
         </div>
-        <div class="mdl-layout--large-screen-only mdl-layout__header-row">
-        </div>
+
           <div class="version">Version <?php echo VERSION ?></div>
       </header>
       <main class="mdl-layout__content">

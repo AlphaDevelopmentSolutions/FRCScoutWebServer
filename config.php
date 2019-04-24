@@ -29,11 +29,12 @@ function loggedIn()
     return !empty($_SESSION['user']) && !empty(unserialize($_SESSION['user']));
 }
 
-define('FILE_WRITE_FAIL_CODE' , '5x01');
-define('CURL_FAIL_CODE' , '5x02');
-define('VERSION', 'v2019.2.0.0');
+
+define('VERSION', 'v2019.2.1.0');
 define('ROBOT_MEDIA_DIR', __DIR__ . '/html/assets/robot-media/');
 define('ROBOT_MEDIA_URL', URL_PATH . '/assets/robot-media/');
 define('ROOT_DIR', __DIR__);
+define('FILE_WRITE_FAIL_CODE' , '5x01');
+define('CURL_FAIL_CODE' , '5x02');
 
 ?>
