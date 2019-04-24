@@ -111,70 +111,70 @@ switch($_POST['action'])
                     {
                         $autoExitHabitatMinMatchIds = (($scoutCard['PreGameStartingLevel'] < $autoExitHabitatMin) ? array() : $autoExitHabitatMinMatchIds);
                         $autoExitHabitatMin = $scoutCard['PreGameStartingLevel'];
-                        $autoExitHabitatMinMatchIds[] = $match->getMatchTypeString() . ' ' . $match->MatchNumber;
+                        $autoExitHabitatMinMatchIds[] = $match->toString();
                     }
                 }
                 else if(0 <= $autoExitHabitatMin)
                 {
                     $autoExitHabitatMinMatchIds = ((0 < $autoExitHabitatMin) ? array() : $autoExitHabitatMinMatchIds);
                     $autoExitHabitatMin = 0;
-                    $autoExitHabitatMinMatchIds[] = $match->getMatchTypeString() . ' ' . $match->MatchNumber;
+                    $autoExitHabitatMinMatchIds[] = $match->toString();
                 }
 
                 if($scoutCard['AutonomousHatchPanelsSecured'] <= $autoHatchPanelsMin)
                 {
                     $autoHatchPanelsMinMatchIds = (($scoutCard['AutonomousHatchPanelsSecured'] < $autoHatchPanelsMin) ? array() : $autoHatchPanelsMinMatchIds);
                     $autoHatchPanelsMin = $scoutCard['AutonomousHatchPanelsSecured'];
-                    $autoHatchPanelsMinMatchIds[] = $match->getMatchTypeString() . ' ' . $match->MatchNumber;
+                    $autoHatchPanelsMinMatchIds[] = $match->toString();
                 }
 
                 if($scoutCard['AutonomousCargoStored'] <= $autoCargoStoredMin)
                 {
                     $autoCargoStoredMinMatchIds = (($scoutCard['AutonomousCargoStored'] < $autoCargoStoredMin) ? array() : $autoCargoStoredMinMatchIds);
                     $autoCargoStoredMin = $scoutCard['AutonomousCargoStored'];
-                    $autoCargoStoredMinMatchIds[] = $match->getMatchTypeString() . ' ' . $match->MatchNumber;
+                    $autoCargoStoredMinMatchIds[] = $match->toString();
                 }
 
                 if($scoutCard['TeleopHatchPanelsSecured'] <= $teleopHatchPanelsMin)
                 {
                     $teleopHatchPanelsMinMatchIds = (($scoutCard['TeleopHatchPanelsSecured'] < $teleopHatchPanelsMin) ? array() : $teleopHatchPanelsMinMatchIds);
                     $teleopHatchPanelsMin = $scoutCard['TeleopHatchPanelsSecured'];
-                    $teleopHatchPanelsMinMatchIds[] = $match->getMatchTypeString() . ' ' . $match->MatchNumber;
+                    $teleopHatchPanelsMinMatchIds[] = $match->toString();
                 }
 
                 if($scoutCard['TeleopCargoStored'] <= $teleopCargoStoredMin)
                 {
                     $teleopCargoStoredMinMatchIds = (($scoutCard['TeleopCargoStored'] < $teleopCargoStoredMin) ? array() : $teleopCargoStoredMinMatchIds);
                     $teleopCargoStoredMin = $scoutCard['TeleopCargoStored'];
-                    $teleopCargoStoredMinMatchIds[] = $match->getMatchTypeString() . ' ' . $match->MatchNumber;
+                    $teleopCargoStoredMinMatchIds[] = $match->toString();
                 }
 
                 if($scoutCard['AutonomousHatchPanelsSecuredAttempts'] <= $autoHatchPanelsAttemptsMin)
                 {
                     $autoHatchPanelsAttemptsMinMatchIds = (($scoutCard['AutonomousHatchPanelsSecuredAttempts'] < $autoHatchPanelsAttemptsMin) ? array() : $autoHatchPanelsAttemptsMinMatchIds);
                     $autoHatchPanelsAttemptsMin = $scoutCard['AutonomousHatchPanelsSecuredAttempts'];
-                    $autoHatchPanelsAttemptsMinMatchIds[] = $match->getMatchTypeString() . ' ' . $match->MatchNumber;
+                    $autoHatchPanelsAttemptsMinMatchIds[] = $match->toString();
                 }
 
                 if($scoutCard['AutonomousCargoStoredAttempts'] <= $autoCargoStoredAttemptsMin)
                 {
                     $autoCargoStoredAttemptsMinMatchIds = (($scoutCard['AutonomousCargoStoredAttempts'] < $autoCargoStoredAttemptsMin) ? array() : $autoCargoStoredAttemptsMinMatchIds);
                     $autoCargoStoredAttemptsMin = $scoutCard['AutonomousCargoStoredAttempts'];
-                    $autoCargoStoredAttemptsMinMatchIds[] = $match->getMatchTypeString() . ' ' . $match->MatchNumber;
+                    $autoCargoStoredAttemptsMinMatchIds[] = $match->toString();
                 }
 
                 if($scoutCard['TeleopHatchPanelsSecuredAttempts'] <= $teleopHatchPanelsAttemptsMin)
                 {
                     $teleopHatchPanelsAttemptsMinMatchIds = (($scoutCard['TeleopHatchPanelsSecuredAttempts'] < $teleopHatchPanelsAttemptsMin) ? array() : $teleopHatchPanelsAttemptsMinMatchIds);
                     $teleopHatchPanelsAttemptsMin = $scoutCard['TeleopHatchPanelsSecuredAttempts'];
-                    $teleopHatchPanelsAttemptsMinMatchIds[] = $match->getMatchTypeString() . ' ' . $match->MatchNumber;
+                    $teleopHatchPanelsAttemptsMinMatchIds[] = $match->toString();
                 }
 
                 if($scoutCard['TeleopCargoStoredAttempts'] <= $teleopCargoStoredAttemptsMin)
                 {
                     $teleopCargoStoredAttemptsMinMatchIds = (($scoutCard['TeleopCargoStoredAttempts'] < $teleopCargoStoredAttemptsMin) ? array() : $teleopCargoStoredAttemptsMinMatchIds);
                     $teleopCargoStoredAttemptsMin = $scoutCard['TeleopCargoStoredAttempts'];
-                    $teleopCargoStoredAttemptsMinMatchIds[] = $match->getMatchTypeString() . ' ' . $match->MatchNumber;
+                    $teleopCargoStoredAttemptsMinMatchIds[] = $match->toString();
                 }
 
                 if(empty($scoutCard['EndGameReturnedToHabitat']))
@@ -182,49 +182,49 @@ switch($_POST['action'])
                     if (0 <= $endGameReturnedToHabitatMin) {
                         $endGameReturnedToHabitatMinMatchIds = (($scoutCard['EndGameReturnedToHabitat'] < $endGameReturnedToHabitatMin) ? array() : $endGameReturnedToHabitatMinMatchIds);
                         $endGameReturnedToHabitatMin = 0;
-                        $endGameReturnedToHabitatMinMatchIds[] = $match->getMatchTypeString() . ' ' . $match->MatchNumber;
+                        $endGameReturnedToHabitatMinMatchIds[] = $match->toString();
                     }
                 }
                 else if($scoutCard['EndGameReturnedToHabitat'] <= $endGameReturnedToHabitatMin)
                 {
                     $endGameReturnedToHabitatMinMatchIds = (($scoutCard['EndGameReturnedToHabitat'] < $endGameReturnedToHabitatMin) ? array() : $endGameReturnedToHabitatMinMatchIds);
                     $endGameReturnedToHabitatMin = $scoutCard['EndGameReturnedToHabitat'];
-                    $endGameReturnedToHabitatMinMatchIds[] = $match->getMatchTypeString() . ' ' . $match->MatchNumber;
+                    $endGameReturnedToHabitatMinMatchIds[] = $match->toString();
                 }
 
                 if(empty($scoutCard['EndGameReturnedToHabitatAttempts'])) {
                     if (0 <= $endGameReturnedToHabitatAttemptsMin) {
                         $endGameReturnedToHabitatAttemptsMinMatchIds = (($scoutCard['EndGameReturnedToHabitatAttempts'] < $endGameReturnedToHabitatAttemptsMin) ? array() : $endGameReturnedToHabitatAttemptsMinMatchIds);
                         $endGameReturnedToHabitatAttemptsMin = 0;
-                        $endGameReturnedToHabitatAttemptsMinMatchIds[] = $match->getMatchTypeString() . ' ' . $match->MatchNumber;
+                        $endGameReturnedToHabitatAttemptsMinMatchIds[] = $match->toString();
                     }
                 }
                 else if($scoutCard['EndGameReturnedToHabitatAttempts'] <= $endGameReturnedToHabitatAttemptsMin)
                 {
                     $endGameReturnedToHabitatAttemptsMinMatchIds = (($scoutCard['EndGameReturnedToHabitatAttempts'] < $endGameReturnedToHabitatAttemptsMin) ? array() : $endGameReturnedToHabitatAttemptsMinMatchIds);
                     $endGameReturnedToHabitatAttemptsMin = $scoutCard['EndGameReturnedToHabitatAttempts'];
-                    $endGameReturnedToHabitatAttemptsMinMatchIds[] = $match->getMatchTypeString() . ' ' . $match->MatchNumber;
+                    $endGameReturnedToHabitatAttemptsMinMatchIds[] = $match->toString();
                 }
 
                 if($scoutCard['DefenseRating'] <= $postGameDefenseRatingMin && $scoutCard['DefenseRating'] != 0)
                 {
                     $postGameDefenseRatingMinMatchIds = (($scoutCard['DefenseRating'] < $postGameDefenseRatingMin) ? array() : $postGameDefenseRatingMinMatchIds);
                     $postGameDefenseRatingMin = $scoutCard['DefenseRating'];
-                    $postGameDefenseRatingMinMatchIds[] = $match->getMatchTypeString() . ' ' . $match->MatchNumber;
+                    $postGameDefenseRatingMinMatchIds[] = $match->toString();
                 }
 
                 if($scoutCard['OffenseRating'] <= $postGameOffenseRatingMin && $scoutCard['OffenseRating'] != 0)
                 {
                     $postGameOffenseRatingMinMatchIds = (($scoutCard['OffenseRating'] < $postGameOffenseRatingMin) ? array() : $postGameOffenseRatingMinMatchIds);
                     $postGameOffenseRatingMin = $scoutCard['OffenseRating'];
-                    $postGameOffenseRatingMinMatchIds[] = $match->getMatchTypeString() . ' ' . $match->MatchNumber;
+                    $postGameOffenseRatingMinMatchIds[] = $match->toString();
                 }
 
                 if($scoutCard['DriveRating'] <= $postGameDriveRatingMin)
                 {
                     $postGameDriveRatingMinMatchIds = (($scoutCard['DriveRating'] < $postGameDriveRatingMin) ? array() : $postGameDriveRatingMinMatchIds);
                     $postGameDriveRatingMin = $scoutCard['DriveRating'];
-                    $postGameDriveRatingMinMatchIds[] = $match->getMatchTypeString() . ' ' . $match->MatchNumber;
+                    $postGameDriveRatingMinMatchIds[] = $match->toString();
                 }
 
                 //calc avg
@@ -262,118 +262,118 @@ switch($_POST['action'])
                     {
                         $autoExitHabitatMaxMatchIds = (($scoutCard['PreGameStartingLevel'] > $autoExitHabitatMax) ? array() : $autoExitHabitatMaxMatchIds);
                         $autoExitHabitatMax = $scoutCard['PreGameStartingLevel'];
-                        $autoExitHabitatMaxMatchIds[] = $match->getMatchTypeString() . ' ' . $match->MatchNumber;
+                        $autoExitHabitatMaxMatchIds[] = $match->toString();
                     }
                 }
                 else if(0 >= $autoExitHabitatMax)
                 {
                     $autoExitHabitatMaxMatchIds = ((0 > $autoExitHabitatMax) ? array() : $autoExitHabitatMaxMatchIds);
                     $autoExitHabitatMax = 0;
-                    $autoExitHabitatMaxMatchIds[] = $match->getMatchTypeString() . ' ' . $match->MatchNumber;
+                    $autoExitHabitatMaxMatchIds[] = $match->toString();
                 }
 
                 if($scoutCard['AutonomousHatchPanelsSecured'] >= $autoHatchPanelsMax)
                 {
                     $autoHatchPanelsMaxMatchIds = (($scoutCard['AutonomousHatchPanelsSecured'] > $autoHatchPanelsMax) ? array() : $autoHatchPanelsMaxMatchIds);
                     $autoHatchPanelsMax = $scoutCard['AutonomousHatchPanelsSecured'];
-                    $autoHatchPanelsMaxMatchIds[] = $match->getMatchTypeString() . ' ' . $match->MatchNumber;
+                    $autoHatchPanelsMaxMatchIds[] = $match->toString();
                 }
 
                 if($scoutCard['AutonomousCargoStored'] >= $autoCargoStoredMax)
                 {
                     $autoCargoStoredMaxMatchIds = (($scoutCard['AutonomousCargoStored'] > $autoCargoStoredMax) ? array() : $autoCargoStoredMaxMatchIds);
                     $autoCargoStoredMax = $scoutCard['AutonomousCargoStored'];
-                    $autoCargoStoredMaxMatchIds[] = $match->getMatchTypeString() . ' ' . $match->MatchNumber;
+                    $autoCargoStoredMaxMatchIds[] = $match->toString();
                 }
 
                 if($scoutCard['TeleopHatchPanelsSecured'] >= $teleopHatchPanelsMax)
                 {
                     $teleopHatchPanelsMaxMatchIds = (($scoutCard['TeleopHatchPanelsSecured'] > $teleopHatchPanelsMax) ? array() : $teleopHatchPanelsMaxMatchIds);
                     $teleopHatchPanelsMax = $scoutCard['TeleopHatchPanelsSecured'];
-                    $teleopHatchPanelsMaxMatchIds[] = $match->getMatchTypeString() . ' ' . $match->MatchNumber;
+                    $teleopHatchPanelsMaxMatchIds[] = $match->toString();
                 }
 
                 if($scoutCard['TeleopCargoStored'] >= $teleopCargoStoredMax)
                 {
                     $teleopCargoStoredMaxMatchIds = (($scoutCard['TeleopCargoStored'] > $teleopCargoStoredMax) ? array() : $teleopCargoStoredMaxMatchIds);
                     $teleopCargoStoredMax = $scoutCard['TeleopCargoStored'];
-                    $teleopCargoStoredMaxMatchIds[] = $match->getMatchTypeString() . ' ' . $match->MatchNumber;
+                    $teleopCargoStoredMaxMatchIds[] = $match->toString();
                 }
 
                 if($scoutCard['AutonomousHatchPanelsSecuredAttempts'] >= $autoHatchPanelsAttemptsMax)
                 {
                     $autoHatchPanelsAttemptsMaxMatchIds = (($scoutCard['AutonomousHatchPanelsSecuredAttempts'] > $autoHatchPanelsAttemptsMax) ? array() : $autoHatchPanelsAttemptsMaxMatchIds);
                     $autoHatchPanelsAttemptsMax = $scoutCard['AutonomousHatchPanelsSecuredAttempts'];
-                    $autoHatchPanelsAttemptsMaxMatchIds[] = $match->getMatchTypeString() . ' ' . $match->MatchNumber;
+                    $autoHatchPanelsAttemptsMaxMatchIds[] = $match->toString();
                 }
 
                 if($scoutCard['AutonomousCargoStoredAttempts'] >= $autoCargoStoredAttemptsMax)
                 {
                     $autoCargoStoredAttemptsMaxMatchIds = (($scoutCard['AutonomousCargoStoredAttempts'] > $autoCargoStoredAttemptsMax) ? array() : $autoCargoStoredAttemptsMaxMatchIds);
                     $autoCargoStoredAttemptsMax = $scoutCard['AutonomousCargoStoredAttempts'];
-                    $autoCargoStoredAttemptsMaxMatchIds[] = $match->getMatchTypeString() . ' ' . $match->MatchNumber;
+                    $autoCargoStoredAttemptsMaxMatchIds[] = $match->toString();
                 }
 
                 if($scoutCard['TeleopHatchPanelsSecuredAttempts'] >= $teleopHatchPanelsAttemptsMax)
                 {
                     $teleopHatchPanelsAttemptsMaxMatchIds = (($scoutCard['TeleopHatchPanelsSecuredAttempts'] > $teleopHatchPanelsAttemptsMax) ? array() : $teleopHatchPanelsAttemptsMaxMatchIds);
                     $teleopHatchPanelsAttemptsMax = $scoutCard['TeleopHatchPanelsSecuredAttempts'];
-                    $teleopHatchPanelsAttemptsMaxMatchIds[] = $match->getMatchTypeString() . ' ' . $match->MatchNumber;
+                    $teleopHatchPanelsAttemptsMaxMatchIds[] = $match->toString();
                 }
 
                 if($scoutCard['TeleopCargoStoredAttempts'] >= $teleopCargoStoredAttemptsMax)
                 {
                     $teleopCargoStoredAttemptsMaxMatchIds = (($scoutCard['TeleopCargoStoredAttempts'] > $teleopCargoStoredAttemptsMax) ? array() : $teleopCargoStoredAttemptsMaxMatchIds);
                     $teleopCargoStoredAttemptsMax = $scoutCard['TeleopCargoStoredAttempts'];
-                    $teleopCargoStoredAttemptsMaxMatchIds[] = $match->getMatchTypeString() . ' ' . $match->MatchNumber;
+                    $teleopCargoStoredAttemptsMaxMatchIds[] = $match->toString();
                 }
 
                 if(empty($scoutCard['EndGameReturnedToHabitat'])) {
                     if (0 >= $endGameReturnedToHabitatMax) {
                         $endGameReturnedToHabitatMaxMatchIds = (($scoutCard['EndGameReturnedToHabitat'] > $endGameReturnedToHabitatMax) ? array() : $endGameReturnedToHabitatMaxMatchIds);
                         $endGameReturnedToHabitatMax = 0;
-                        $endGameReturnedToHabitatMaxMatchIds[] = $match->getMatchTypeString() . ' ' . $match->MatchNumber;
+                        $endGameReturnedToHabitatMaxMatchIds[] = $match->toString();
                     }
                 }
                 else if($scoutCard['EndGameReturnedToHabitat'] >= $endGameReturnedToHabitatMax)
                 {
                     $endGameReturnedToHabitatMaxMatchIds = (($scoutCard['EndGameReturnedToHabitat'] > $endGameReturnedToHabitatMax) ? array() : $endGameReturnedToHabitatMaxMatchIds);
                     $endGameReturnedToHabitatMax = $scoutCard['EndGameReturnedToHabitat'];
-                    $endGameReturnedToHabitatMaxMatchIds[] = $match->getMatchTypeString() . ' ' . $match->MatchNumber;
+                    $endGameReturnedToHabitatMaxMatchIds[] = $match->toString();
                 }
 
                 if(empty($scoutCard['EndGameReturnedToHabitatAttempts'])) {
                     if (0 >= $endGameReturnedToHabitatAttemptsMax) {
                         $endGameReturnedToHabitatAttemptsMaxMatchIds = (($scoutCard['EndGameReturnedToHabitatAttempts'] > $endGameReturnedToHabitatAttemptsMax) ? array() : $endGameReturnedToHabitatAttemptsMaxMatchIds);
                         $endGameReturnedToHabitatAttemptsMax = 0;
-                        $endGameReturnedToHabitatAttemptsMaxMatchIds[] = $match->getMatchTypeString() . ' ' . $match->MatchNumber;
+                        $endGameReturnedToHabitatAttemptsMaxMatchIds[] = $match->toString();
                     }
                 }
                 else if($scoutCard['EndGameReturnedToHabitatAttempts'] >= $endGameReturnedToHabitatAttemptsMax) {
                     $endGameReturnedToHabitatAttemptsMaxMatchIds = (($scoutCard['EndGameReturnedToHabitatAttempts'] > $endGameReturnedToHabitatAttemptsMax) ? array() : $endGameReturnedToHabitatAttemptsMaxMatchIds);
                     $endGameReturnedToHabitatAttemptsMax = $scoutCard['EndGameReturnedToHabitatAttempts'];
-                    $endGameReturnedToHabitatAttemptsMaxMatchIds[] = $match->getMatchTypeString() . ' ' . $match->MatchNumber;
+                    $endGameReturnedToHabitatAttemptsMaxMatchIds[] = $match->toString();
                 }
 
                 if($scoutCard['DefenseRating'] >= $postGameDefenseRatingMax && $scoutCard['DefenseRating'] != 0)
                 {
                     $postGameDefenseRatingMaxMatchIds = (($scoutCard['DefenseRating'] < $postGameDefenseRatingMax) ? array() : $postGameDefenseRatingMaxMatchIds);
                     $postGameDefenseRatingMax = $scoutCard['DefenseRating'];
-                    $postGameDefenseRatingMaxMatchIds[] = $match->getMatchTypeString() . ' ' . $match->MatchNumber;
+                    $postGameDefenseRatingMaxMatchIds[] = $match->toString();
                 }
 
                 if($scoutCard['OffenseRating'] >= $postGameOffenseRatingMax && $scoutCard['OffenseRating'] != 0)
                 {
                     $postGameOffenseRatingMaxMatchIds = (($scoutCard['OffenseRating'] < $postGameOffenseRatingMax) ? array() : $postGameOffenseRatingMaxMatchIds);
                     $postGameOffenseRatingMax = $scoutCard['OffenseRating'];
-                    $postGameOffenseRatingMaxMatchIds[] = $match->getMatchTypeString() . ' ' . $match->MatchNumber;
+                    $postGameOffenseRatingMaxMatchIds[] = $match->toString();
                 }
 
                 if($scoutCard['DriveRating'] >= $postGameDriveRatingMax)
                 {
                     $postGameDriveRatingMaxMatchIds = (($scoutCard['DriveRating'] < $postGameDriveRatingMax) ? array() : $postGameDriveRatingMaxMatchIds);
                     $postGameDriveRatingMax = $scoutCard['DriveRating'];
-                    $postGameDriveRatingMaxMatchIds[] = $match->getMatchTypeString() . ' ' . $match->MatchNumber;
+                    $postGameDriveRatingMaxMatchIds[] = $match->toString();
                 }
 
                 $i++;

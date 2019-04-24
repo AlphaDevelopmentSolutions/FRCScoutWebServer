@@ -49,7 +49,14 @@ class ScoutCards
     static function withId($id)
     {
         $instance = new self();
-        $instance->loadById($id);
+
+        $database = new Database();
+        $sql = 'SELECT * FROM ' . self::$TABLE_NAME . ' WHERE '.'id = '.$database->quote($id);
+        $rs = $database->query($sql);
+
+        if($rs && $rs->num_rows > 0)
+            $instance->loadByProperties($rs->fetch_assoc());
+
         return $instance;
 
     }
@@ -69,42 +76,46 @@ class ScoutCards
 
     /**
      * Loads a new instance by specified properties
-     * @param array $properties
+     * @param int $teamId
+     * @param string $matchKey
      * @return ScoutCards
+     */
+    static function forMatch($teamId, $matchKey)
+    {
+        //crate a new instance
+        $instance = new self();
+
+        //gather results from database, limit to the newest scout card only
+        $database = new Database();
+        $sql = "SELECT 
+                      * 
+                    FROM 
+                      " . self::$TABLE_NAME ." 
+                    WHERE 
+                      TeamId = " . $database->quote($teamId) .
+                    ' AND
+                      MatchId = ' . $database->quote($matchKey) .
+                    ' ORDER BY Id DESC LIMIT 1';
+
+        $scoutCards = $database->query($sql);
+        $database->close();
+
+        //assign results
+        if($scoutCards && $scoutCards->num_rows > 0)
+            $instance->loadByProperties($scoutCards->fetch_assoc());
+
+        return $instance;
+
+    }
+
+    /**
+     * Loads a new instance by specified properties
+     * @param array $properties
      */
     protected function loadByProperties(Array $properties = array())
     {
         foreach($properties as $key => $value)
             $this->{$key} = $value;
-
-    }
-
-    /**
-     * Loads a new instance by its database id
-     * @param $id
-     * @return ScoutCards
-     */
-    protected function loadById($id)
-    {
-        $database = new Database();
-        $sql = 'SELECT * FROM ' . self::$TABLE_NAME . ' WHERE '.'id = '.$database->quote($id);
-        $rs = $database->query($sql);
-
-        if($rs && $rs->num_rows > 0) {
-            $row = $rs->fetch_assoc();
-
-            if(is_array($row)) {
-                foreach($row as $key => $value){
-                    if(property_exists($this, $key)){
-                        $this->$key = $value;
-                    }
-                }
-            }
-
-            return true;
-        }
-
-        return false;
     }
 
     function save()

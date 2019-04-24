@@ -318,6 +318,7 @@ html, body {
   height: 200px;
   background-size: cover !important;
   background: no-repeat 50% 50%;
+  margin-top: 21px;
 }
 
 .robot-media
@@ -356,3 +357,34 @@ html, body {
   color: rgb(63,81,181) !important;
 }
 
+.match-table
+{
+  border-collapse: collapse;
+  width: 100%;
+  text-align: center;
+}
+
+.match-table td
+{
+  padding: 8px;
+}
+
+.blue-alliance-bg
+{
+  background-color: #EEEEFF;
+}
+
+.red-alliance-bg
+{
+  background-color: #FFEEEE;
+}
+
+.tr-win
+{
+  font-weight: bold;
+}
+
+.tr-selected-team
+{
+  text-decoration: underline;
+}

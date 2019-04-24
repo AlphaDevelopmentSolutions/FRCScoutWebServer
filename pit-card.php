@@ -105,12 +105,12 @@ if(isPostBack() && loggedIn())
         <div class="mdl-layout--large-screen-only mdl-layout__header-row">
           <h3>Pit Card <?php echo $pitCard->Id ?></h3>
         </div>
-        <div class="mdl-layout--large-screen-only mdl-layout__header-row">
-        </div>
+
           <div class="version">Version <?php echo VERSION ?></div>
         <div class="mdl-layout__tab-bar mdl-js-ripple-effect mdl-color--primary-dark">
           <a href="/" class="mdl-layout__tab">Events</a>
-          <a href="/teams.php?eventId=<?php echo $pitCard->EventId; ?>" class="mdl-layout__tab ">Teams</a>
+            <a href="/match-overview.php?eventId=<?php echo $event->BlueAllianceId; ?>" class="mdl-layout__tab ">Matches</a>
+            <a href="/teams.php?eventId=<?php echo $pitCard->EventId; ?>" class="mdl-layout__tab ">Teams</a>
           <a href="/team-pits.php?teamId=<?php echo $pitCard->TeamId?>&eventId=<?php echo $pitCard->EventId;?>" class="mdl-layout__tab">Team <?php echo $pitCard->TeamId; ?></a>
           <a href="" class="mdl-layout__tab is-active">Pit Card <?php echo $pitCard->Id; ?></a>
         </div>
