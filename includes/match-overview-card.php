@@ -7,6 +7,8 @@
             $scoutCardIds = array();
             $scoutCardIds = $match->getMatchScoutCardIds($eventId, $allianceColor);
 
+            echo serialize($scoutCardIds);
+
 
             foreach($scoutCardIds AS $scoutCardId)
             {
