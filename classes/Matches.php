@@ -277,18 +277,19 @@ class Matches
     public function getMatchScoutCardIds($eventId, $allianceColor)
     {
         $database = new Database();
-        $teamIds = $database->query(
-            "SELECT 
+
+        $sql = "SELECT 
                       Id
                     FROM 
                       scout_cards 
                     WHERE
                       EventId = " . $database->quote($eventId) .
                     "AND 
-                      MatchId = " . $database->quote($this->MatchNumber) .
+                      MatchId = " . $database->quote($this->Key) .
                     "AND 
-                      AllianceColor = " . $database->quote($allianceColor)
-        );
+                      AllianceColor = " . $database->quote($allianceColor);
+
+        $teamIds = $database->query($sql);
         $database->close();
 
 

@@ -23,7 +23,7 @@ $match = Matches::withId($matchId);
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="description" content="A front-end template that helps you build fast, modern mobile web apps.">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
-    <title>Match <?php echo $matchId ?> Overview</title>
+    <title><?php echo $match->toString()?> Overview</title>
 
     <!-- Add to homescreen for Chrome on Android -->
     <meta name="mobile-web-app-capable" content="yes">
@@ -76,8 +76,8 @@ $match = Matches::withId($matchId);
               <a href="" class="mdl-layout__tab">Teams</a>
           </div>
           <div class="mdl-layout__tab-bar mdl-js-ripple-effect mdl-color--primary-dark">
-              <a href="/match-overview-card.php?eventId=<?php echo $event->BlueAllianceId; ?>&matchId=<?php echo $matchId ?>&allianceColor=BLUE" class="mdl-layout__tab <?php if($allianceColor == 'BLUE') echo 'is-active'?>"><?php echo $match->getMatchTypeString() . ' ' . $match->MatchNumber ?>  Overview - BLUE ALLIANCE</a>
-              <a href="/match-overview-card.php?eventId=<?php echo $event->BlueAllianceId; ?>&matchId=<?php echo $matchId ?>&allianceColor=RED" class="mdl-layout__tab <?php if($allianceColor == 'RED') echo 'is-active'?>"><?php echo $match->getMatchTypeString() . ' ' . $match->MatchNumber ?>  Overview - RED ALLIANCE</a>
+              <a href="/match-overview-card.php?eventId=<?php echo $event->BlueAllianceId; ?>&matchId=<?php echo $matchId ?>&allianceColor=BLUE" class="mdl-layout__tab <?php if($allianceColor == 'BLUE') echo 'is-active'?>">BLUE ALLIANCE</a>
+              <a href="/match-overview-card.php?eventId=<?php echo $event->BlueAllianceId; ?>&matchId=<?php echo $matchId ?>&allianceColor=RED" class="mdl-layout__tab <?php if($allianceColor == 'RED') echo 'is-active'?>">RED ALLIANCE</a>
           </div>
       </header>
       <main class="mdl-layout__content">
