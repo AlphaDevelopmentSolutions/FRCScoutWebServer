@@ -17,8 +17,6 @@ class Api
     function __construct($key)
     {
         $this->keyValid = $key == API_KEY;
-
-
         $this->response = array();
     }
 

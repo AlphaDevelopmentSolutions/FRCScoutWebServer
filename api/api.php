@@ -36,7 +36,13 @@ try {
 
         //region Getters
         case 'GetServerConfig':
-            $api->success(API_KEY);
+            $response = array();
+
+            $response['ApiKey'] = API_KEY;
+            $response['TeamNumber'] = TEAM_NUMBER;
+            $response['TeamName'] = TEAM_NAME;
+
+            $api->success($response);
 
             break;
 
