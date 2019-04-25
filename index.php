@@ -49,21 +49,12 @@ require_once("classes/Events.php");
   </head>
   <body class="mdl-demo mdl-color--grey-100 mdl-color-text--grey-700 mdl-base">
     <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
-      <header class="mdl-layout__header mdl-layout__header--scroll mdl-color--primary">
-        <div class="mdl-layout--large-screen-only mdl-layout__header-row">
-            <?php include_once('includes/login-form.php') ?>
-        </div>
-        <div class="mdl-layout--large-screen-only mdl-layout__header-row">
-          <h3><?php echo APP_NAME ?></h3>
-        </div>
+        <?php
+        $header = new Header('Events', null, null, null);
 
-          <div class="version">Version <?php echo VERSION ?></div>
-        <div class="mdl-layout__tab-bar mdl-js-ripple-effect mdl-color--primary-dark">
-          <a href="" class="mdl-layout__tab is-active">Events</a>
-        </div>
-      </header>
+        echo $header->toString();
+        ?>
       <main class="mdl-layout__content">
-
           <?php
 
           foreach(Events::getEvents() as $event)
@@ -88,7 +79,7 @@ require_once("classes/Events.php");
 
           ?>
 
-          
+
           <div class="mdl-layout__tab-panel" id="stats">
 <style>
 .demo-card-wide.mdl-card {
@@ -106,7 +97,7 @@ require_once("classes/Events.php");
   color: #fff;
 }
 </style>
-              
+
           <section class="section--footer mdl-grid">
           </section>
         </div>

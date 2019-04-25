@@ -12,6 +12,13 @@ require_once('classes/Database.php');
 require_once('classes/Users.php');
 require_once('interfaces/AllianceColors.php');
 
+require_once("classes/Header.php");
+require_once("classes/NavBar.php");
+require_once("classes/NavBarArray.php");
+require_once("classes/NavBarLink.php");
+require_once("classes/NavBarLinkArray.php");
+
+
 
 if (session_status() == PHP_SESSION_NONE) {
     session_start();

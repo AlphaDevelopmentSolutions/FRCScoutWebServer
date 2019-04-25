@@ -77,128 +77,137 @@ $ccwms = $stats['ccwms']['frc' . $pitCard->TeamId];
   </head>
   <body class="mdl-demo mdl-color--grey-100 mdl-color-text--grey-700 mdl-base">
     <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
-      <header class="mdl-layout__header mdl-layout__header--scroll mdl-color--primary">
-        
-          <?php include_once('includes/login-form.php') ?>
-          <?php
 
-          $robotMediaUri = Teams::getProfileImageUri($team->Id);
+        <?php
+        $navBarArray = new NavBarArray();
 
-          if(!empty($robotMediaUri))
-          {
-              $robotMediaUri = ROBOT_MEDIA_URL . $robotMediaUri;
-              echo
-                  '<div style="height: unset" class="mdl-layout--large-screen-only mdl-layout__header-row">
+        $navBarLinksArray = new NavBarLinkArray();
+        $navBarLinksArray[] = new NavBarLink('Teams', '/teams.php?eventId=' . $event->BlueAllianceId, false);
+        $navBarLinksArray[] = new NavBarLink('Team ' . $teamId, '', true);
+
+        $navBarArray[] = new NavBar($navBarLinksArray);
+
+        $navBarLinksArray = new NavBarLinkArray();
+        $navBarLinksArray[] = new NavBarLink('Matches', '/team-matches.php?eventId=' . $event->BlueAllianceId . '&teamId=' . $team->Id, true);
+        $navBarLinksArray[] = new NavBarLink('Pits', '/team-pits.php?eventId=' . $event->BlueAllianceId . '&teamId=' . $team->Id, false);
+        $navBarLinksArray[] = new NavBarLink('Photos', '/team-photos.php?eventId=' . $event->BlueAllianceId . '&teamId=' . $team->Id, false);
+
+        $navBarArray[] = new NavBar($navBarLinksArray);
+
+        $additionContent = '';
+
+        $robotMediaUri = Teams::getProfileImageUri($team->Id);
+
+        if(!empty($robotMediaUri))
+        {
+            $robotMediaUri = ROBOT_MEDIA_URL . $robotMediaUri;
+            $additionContent .=
+                '<div style="height: unset" class="mdl-layout--large-screen-only mdl-layout__header-row">
                   <div class="circle-image" style="background-image: url(' . $robotMediaUri . ')">
-                    
+
                   </div>
                 </div>';
-          }
-
-          ?>
+        }
+        
+        $additionContent .=
+        '
         <div class="mdl-layout--large-screen-only mdl-layout__header-row">
-          <h3><?php echo $team->Id . ' - ' . $team->Name ?></h3><br>
+            <h3>' . $team->Id . ' - ' . $team->Name . '</h3><br>
         </div>
-          <div class="mdl-layout--large-screen-only mdl-layout__header-row">
-              <h3><?php echo $team->City . ', ' . $team->StateProvince . ', ' . $team->Country ?></h3><br>
-          </div>
-          <div class="mdl-layout--large-screen-only mdl-layout__header-row">
-              <?php
-              if(!empty($team->FacebookURL))
-              {
-                  echo
-                  '
+        <div class="mdl-layout--large-screen-only mdl-layout__header-row">
+            <h3>' . $team->City . ', ' . $team->StateProvince . ', ' . $team->Country . '</h3><br>
+        </div>
+        <div class="mdl-layout--large-screen-only mdl-layout__header-row">';
+           
+        
+            if(!empty($team->FacebookURL))
+            {
+                $additionContent .=
+                    '
                     <a target="_blank" href="https://www.facebook.com/' . $team->FacebookURL . '">
                         <i class="fab fa-facebook-f header-icon"></i>
                     </a>
                   ';
-              }
+            }
 
-              if(!empty($team->TwitterURL))
-              {
-                  echo
-                      '
+            if(!empty($team->TwitterURL))
+            {
+                $additionContent .=
+                    '
                     <a target="_blank" href="https://www.twitter.com/' . $team->TwitterURL . '">
                         <i class="fab fa-twitter header-icon"></i>
                     </a>
                   ';
-              }
+            }
 
-              if(!empty($team->InstagramURL))
-              {
-                  echo
-                      '
+            if(!empty($team->InstagramURL))
+            {
+                $additionContent .=
+                    '
                     <a target="_blank" href="https://www.instagram.com/' . $team->InstagramURL . '">
                         <i class="fab fa-instagram header-icon"></i>
                     </a>
                   ';
-              }
+            }
 
-              if(!empty($team->YoutubeURL))
-              {
-                  echo
-                      '
+            if(!empty($team->YoutubeURL))
+            {
+                $additionContent .=
+                    '
                     <a target="_blank" href="https://www.youtube.com/' . $team->YoutubeURL . '">
                         <i class="fab fa-youtube header-icon"></i>
                     </a>
                   ';
-              }
+            }
 
-              if(!empty($team->WebsiteURL))
-              {
-                  echo
-                      '
+            if(!empty($team->WebsiteURL))
+            {
+                $additionContent .=
+                    '
                     <a target="_blank" href="' . $team->WebsiteURL . '">
                         <i class="fas fa-globe header-icon"></i>
                     </a>
                   ';
-              }
+            }
+            
+        $additionContent .=
+        '
+            </div>
+            <div style="height: unset" class="mdl-layout--large-screen-only mdl-layout__header-row">
+                <h6 style="margin: unset"><strong>OPR:</strong>' . round($opr, 2) . '</h6>
+            </div>
+    
+            <div style="height: unset" class="mdl-layout--large-screen-only mdl-layout__header-row">
+                <h6 style="margin: unset"><strong>DPR:</strong>' . round($dpr, 2) . '</h6>
+            </div>
+            <div id="quick-stats" style="padding-left: 40px" hidden>
+                <h6 style="margin: unset"><strong>Drivetrain:</strong>' . $pitCard->DriveStyle . '</h6>
+                <h6 style="margin: unset"><strong>Robot Weight:</strong>' . $pitCard->RobotWeight . '</h6>
+                <h6 style="margin: unset"><strong>Robot Length:</strong>' . $pitCard->RobotLength . '</h6>
+                <h6 style="margin: unset"><strong>Robot Width:</strong>' . $pitCard->RobotWidth . '</h6>
+                <h6 style="margin: unset"><strong>Robot Height:</strong>' . $pitCard->RobotHeight . '</h6>
+    
+                <h6 style="margin: unset"><strong>Auto Exit Habitat:</strong>' . $pitCard->AutoExitHabitat . '</h6>
+                <h6 style="margin: unset"><strong>Auto Hatch Panels:</strong>' . $pitCard->AutoHatch . '</h6>
+                <h6 style="margin: unset"><strong>Auto Cargo:</strong>' . $pitCard->AutoCargo . '</h6>
+    
+                <h6 style="margin: unset"><strong>Teleop Hatch:</strong>' . $pitCard->TeleopHatch . '</h6>
+                <h6 style="margin: unset"><strong>Teleop Cargo:</strong>' . $pitCard->TeleopCargo . '</h6>
+    
+                <h6 style="margin: unset"><strong>Return To Habitat:</strong>' . $pitCard->ReturnToHabitat . '</h6>
+    
+                <h6 style="margin: unset"><strong>Notes:</strong>' . $pitCard->Notes . '</h6>
+                <h6 style="margin: unset"><strong>Completed By:</strong>' . $pitCard->CompletedBy . '</h6>
+            </div>
+            <div style="height: unset" class="mdl-layout--large-screen-only mdl-layout__header-row">
+                <h6 style="margin: unset" ><a id="show-stats-btn" href="#" style="color:white" onclick="showQuickStats()">Show More</a></h6>
+            </div>';
 
-              ?>
+        $header = new Header($event->Name, $additionContent, $navBarArray, $event->BlueAllianceId);
 
-          </div>
-          <div style="height: unset" class="mdl-layout--large-screen-only mdl-layout__header-row">
-              <h6 style="margin: unset"><strong>OPR:</strong> <?php echo round($opr, 2) ?></h6>
-          </div>
+        echo $header->toString();
 
-          <div style="height: unset" class="mdl-layout--large-screen-only mdl-layout__header-row">
-              <h6 style="margin: unset"><strong>DPR:</strong> <?php echo round($dpr, 2) ?></h6>
-          </div>
-          <div id="quick-stats" style="padding-left: 40px" hidden>
-              <h6 style="margin: unset"><strong>Drivetrain:</strong> <?php echo $pitCard->DriveStyle ?></h6>
-              <h6 style="margin: unset"><strong>Robot Weight:</strong> <?php echo $pitCard->RobotWeight ?></h6>
-              <h6 style="margin: unset"><strong>Robot Length:</strong> <?php echo $pitCard->RobotLength ?></h6>
-              <h6 style="margin: unset"><strong>Robot Width:</strong> <?php echo $pitCard->RobotWidth ?></h6>
-              <h6 style="margin: unset"><strong>Robot Height:</strong> <?php echo $pitCard->RobotHeight ?></h6>
-
-              <h6 style="margin: unset"><strong>Auto Exit Habitat:</strong> <?php echo $pitCard->AutoExitHabitat ?></h6>
-              <h6 style="margin: unset"><strong>Auto Hatch Panels:</strong> <?php echo $pitCard->AutoHatch ?></h6>
-              <h6 style="margin: unset"><strong>Auto Cargo:</strong> <?php echo $pitCard->AutoCargo ?></h6>
-
-              <h6 style="margin: unset"><strong>Teleop Hatch:</strong> <?php echo $pitCard->TeleopHatch ?></h6>
-              <h6 style="margin: unset"><strong>Teleop Cargo:</strong> <?php echo $pitCard->TeleopCargo ?></h6>
-
-              <h6 style="margin: unset"><strong>Return To Habitat:</strong> <?php echo $pitCard->ReturnToHabitat ?></h6>
-
-              <h6 style="margin: unset"><strong>Notes:</strong> <?php echo $pitCard->Notes ?></h6>
-              <h6 style="margin: unset"><strong>Completed By:</strong> <?php echo $pitCard->CompletedBy ?></h6>
-          </div>
-          <div style="height: unset" class="mdl-layout--large-screen-only mdl-layout__header-row">
-              <h6 style="margin: unset" ><a id="show-stats-btn" href="#" style="color:white" onclick="showQuickStats()">Show More</a></h6>
-          </div>
-          <div class="version">Version <?php echo VERSION ?></div>
-        <div class="mdl-layout__tab-bar mdl-js-ripple-effect mdl-color--primary-dark">
-          <a href="/" class="mdl-layout__tab">Events</a>
-            <a href="/match-overview.php?eventId=<?php echo $event->BlueAllianceId; ?>" class="mdl-layout__tab ">Matches</a>
-          <a href="/teams.php?eventId=<?php echo $eventId; ?>" class="mdl-layout__tab ">Teams</a>
-          <a href="" class="mdl-layout__tab is-active">Team <?php echo $teamId; ?></a>
-        </div>
-          <div class="mdl-layout__tab-bar mdl-js-ripple-effect mdl-color--primary-dark">
-              <a href="/team-matches.php?eventId=<?php echo $event->BlueAllianceId; ?>&teamId=<?php echo $team->Id; ?>" class="mdl-layout__tab is-active">Matches</a>
-              <a href="/team-pits.php?eventId=<?php echo $event->BlueAllianceId; ?>&teamId=<?php echo $team->Id; ?>" class="mdl-layout__tab">Pits</a>
-              <a href="/team-photos.php?eventId=<?php echo $event->BlueAllianceId; ?>&teamId=<?php echo $team->Id; ?>" class="mdl-layout__tab">Photos</a>
-          </div>
-      </header>
+        ?>
       <main class="mdl-layout__content">
 
           <?php if(loggedIn())

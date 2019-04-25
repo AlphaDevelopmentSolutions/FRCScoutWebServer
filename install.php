@@ -144,14 +144,11 @@ define('API_KEY', '$customApiKey');
   }
   ?>
     <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
-      <header class="mdl-layout__header mdl-layout__header--scroll mdl-color--primary">
+        <?php
+        $header = new Header('Install', null, null, null);
 
-        <div class="mdl-layout--large-screen-only mdl-layout__header-row">
-          <h3>Install</h3>
-        </div>
-
-          <div class="version">Version <?php echo VERSION ?></div>
-      </header>
+        echo $header->toString();
+        ?>
       <main class="mdl-layout__content">
           <div class="mdl-layout__tab-panel is-active" id="overview">
               <section class="section--center mdl-grid mdl-grid--no-spacing mdl-shadow--2dp">

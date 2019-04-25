@@ -98,23 +98,19 @@ if(isPostBack() && loggedIn())
           </div>
       </dialog>
     <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
-      <header class="mdl-layout__header mdl-layout__header--scroll mdl-color--primary">
-        <div class="mdl-layout--large-screen-only mdl-layout__header-row">
-            <?php include_once('includes/login-form.php') ?>
-        </div>
-        <div class="mdl-layout--large-screen-only mdl-layout__header-row">
-          <h3>Pit Card <?php echo $pitCard->Id ?></h3>
-        </div>
+        <?php
+        $navBarLinksArray = new NavBarLinkArray();
+        $navBarLinksArray[] = new NavBarLink('Teams', '/teams.php?eventId=' . $event->BlueAllianceId, false);
+        $navBarLinksArray[] = new NavBarLink('Team ' . $pitCard->TeamId, '/team-pits.php?teamId=' . $pitCard->TeamId . '&eventId=' . $pitCard->EventId, false);
+        $navBarLinksArray[] = new NavBarLink('Pit Card' . $pitCard->Id, '', true);
 
-          <div class="version">Version <?php echo VERSION ?></div>
-        <div class="mdl-layout__tab-bar mdl-js-ripple-effect mdl-color--primary-dark">
-          <a href="/" class="mdl-layout__tab">Events</a>
-            <a href="/match-overview.php?eventId=<?php echo $event->BlueAllianceId; ?>" class="mdl-layout__tab ">Matches</a>
-            <a href="/teams.php?eventId=<?php echo $pitCard->EventId; ?>" class="mdl-layout__tab ">Teams</a>
-          <a href="/team-pits.php?teamId=<?php echo $pitCard->TeamId?>&eventId=<?php echo $pitCard->EventId;?>" class="mdl-layout__tab">Team <?php echo $pitCard->TeamId; ?></a>
-          <a href="" class="mdl-layout__tab is-active">Pit Card <?php echo $pitCard->Id; ?></a>
-        </div>
-      </header>
+
+        $navBar = new NavBar($navBarLinksArray);
+
+        $header = new Header($event->Name, null, $navBar, $event->BlueAllianceId);
+
+        echo $header->toString();
+        ?>
       <main class="mdl-layout__content">
 
           <?php require_once('includes/pit-card.php') ?>

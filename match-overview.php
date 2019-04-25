@@ -148,24 +148,16 @@ $event = Events::withId($eventId);
 </head>
 <body class="mdl-demo mdl-color--grey-100 mdl-color-text--grey-700 mdl-base">
 <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
-    <header class="mdl-layout__header mdl-layout__header--scroll mdl-color--primary">
-        <div class="mdl-layout--large-screen-only mdl-layout__header-row">
-            <?php include_once('includes/login-form.php') ?>
-        </div>
-        <div class="mdl-layout--large-screen-only mdl-layout__header-row">
-            <h3><?php echo $event->Name; ?></h3>
-        </div>
+    <?php
+    $navBarLinksArray = new NavBarLinkArray();
+    $navBarLinksArray[] = new NavBarLink('Matches', '/match-overview.php?eventId=' . $event->BlueAllianceId, true);
 
-        <div class="version">Version <?php echo VERSION ?></div>
-        <div class="mdl-layout__tab-bar mdl-js-ripple-effect mdl-color--primary-dark">
-            <a href="/" class="mdl-layout__tab">Events</a>
-            <a href="/match-overview.php?eventId=<?php echo $event->BlueAllianceId; ?>" class="mdl-layout__tab is-active">Matches</a>
-            <a href="/teams.php?eventId=<?php echo $event->BlueAllianceId; ?>" class="mdl-layout__tab">Teams</a>
-        </div>
-        <div class="mdl-layout__tab-bar mdl-js-ripple-effect mdl-color--primary-dark">
-            <a href="/stats.php?eventId=<?php echo $event->BlueAllianceId; ?>" class="mdl-layout__tab ">Stats</a>
-        </div>
-    </header>
+    $navBar = new NavBar($navBarLinksArray);
+
+    $header = new Header($event->Name, null, $navBar, $event->BlueAllianceId);
+
+    echo $header->toString();
+    ?>
     <main class="mdl-layout__content">
 
         <?php

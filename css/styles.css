@@ -388,3 +388,8 @@ html, body {
 {
   text-decoration: underline;
 }
+
+.header-title
+{
+  margin-left: 20px;
+}
