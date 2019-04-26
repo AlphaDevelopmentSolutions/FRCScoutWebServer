@@ -5,7 +5,7 @@
 <meta name="google" content="notranslate">
 
 
-<link rel="shortcut icon" href="<?php echo URL_PATH . '/assets/images/favicon.png' ?>">
+<link rel="shortcut icon" href="<?php echo URL_PATH . '/assets/images/favicon.ico' ?>">
 
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:regular,bold,italic,thin,light,bolditalic,black,medium&amp;lang=en">
 <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
@@ -19,13 +19,13 @@
 
 <!-- Add to homescreen for Chrome on Android -->
 <meta name="mobile-web-app-capable" content="yes">
-<link rel="icon" sizes="192x192" href="<?php echo URL_PATH . '/assets/images/android.png' ?>">
+<link rel="icon" sizes="192x192" href="<?php echo URL_PATH . '/assets/images/android-chrome-512x512.png' ?>">
 
 <!-- Add to homescreen for Safari on iOS -->
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black">
 <meta name="apple-mobile-web-app-title" content="Material Design Lite">
-<link rel="apple-touch-icon-precomposed" href="<?php echo URL_PATH . '/assets/images/ios.png' ?>">
+<link rel="apple-touch-icon-precomposed" href="<?php echo URL_PATH . '/assets/images/apple-touch-icon.png' ?>">
 
 <!-- Tile icon for Win8 (144x144 + tile color) -->
 <meta name="msapplication-TileImage" content="images/touch/ms-touch-icon-144x144-precomposed.png">
