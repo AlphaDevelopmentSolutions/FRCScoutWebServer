@@ -17,17 +17,11 @@
 
 <link rel="stylesheet" href="../css/styles.css">
 
-<!-- Add to homescreen for Chrome on Android -->
-<meta name="mobile-web-app-capable" content="yes">
-<link rel="icon" sizes="192x192" href="<?php echo URL_PATH . '/assets/images/android-chrome-512x512.png' ?>">
-
-<!-- Add to homescreen for Safari on iOS -->
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black">
-<meta name="apple-mobile-web-app-title" content="Material Design Lite">
-<link rel="apple-touch-icon-precomposed" href="<?php echo URL_PATH . '/assets/images/apple-touch-icon.png' ?>">
-
-<!-- Tile icon for Win8 (144x144 + tile color) -->
-<meta name="msapplication-TileImage" content="images/touch/ms-touch-icon-144x144-precomposed.png">
-<meta name="msapplication-TileColor" content="#3372DF">
+<link rel="apple-touch-icon" sizes="180x180" href="<?php echo URL_PATH . '/assets/images/apple-touch-icon.png'?>">
+<link rel="icon" type="image/png" sizes="32x32" href="<?php echo URL_PATH . '/assets/images/favicon-32x32.png'?>">
+<link rel="icon" type="image/png" sizes="16x16" href="<?php echo URL_PATH . '/assets/images/favicon-16x16.png'?>">
+<link rel="manifest" href="<?php echo URL_PATH . '/assets/images/site.webmanifest'?>">
+<link rel="mask-icon" href="<?php echo URL_PATH . '/assets/images/safari-pinned-tab.svg'?>" color="#5bbad5">
+<meta name="msapplication-TileColor" content="#da532c">
+<meta name="theme-color" content="#ffffff">
 
