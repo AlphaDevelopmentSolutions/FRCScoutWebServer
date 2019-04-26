@@ -104,8 +104,6 @@ require_once("classes/Events.php");
 
       </main>
     </div>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-    <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.indigo-pink.min.css">
-    <script src="https://code.getmdl.io/1.3.0/material.min.js"></script>
+    <?php require_once('includes/bottom-scripts.php') ?>
   </body>
 </html>
