@@ -7,3 +7,8 @@
 {
   background-color: #0495cc !important;
 }
+
+.mdl-button--accent.mdl-button--accent.mdl-button--raised
+{
+  background-color: #06a9e5 !important;
+}

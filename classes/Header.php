@@ -65,7 +65,7 @@ class Header
             $html .=
                 '
                 <div class="mdl-layout__drawer">
-                    <span class="mdl-layout-title">' . ((loggedIn()) ? 'Hello, ' . $user->FirstName : APP_NAME) . '</span>
+                    <span class="mdl-layout-title">' . ((loggedIn()) ? 'Hello, ' . getUser()->FirstName : APP_NAME) . '</span>
                     <nav class="mdl-navigation">
                         <a href="/match-overview.php?eventId=' . $this->EventId . '" class="mdl-navigation__link">Matches</a>
                         <a href="/teams.php?eventId=' . $this->EventId . '" class="mdl-navigation__link">Teams</a>

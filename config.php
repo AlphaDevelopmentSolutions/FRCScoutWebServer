@@ -26,12 +26,6 @@ require_once('classes/Database.php');
 require_once('classes/Users.php');
 require_once('interfaces/AllianceColors.php');
 
-require_once("classes/Header.php");
-require_once("classes/NavBar.php");
-require_once("classes/NavBarArray.php");
-require_once("classes/NavBarLink.php");
-require_once("classes/NavBarLinkArray.php");
-
 //if the session doe not exist, start it
 if (session_status() == PHP_SESSION_NONE) {
     session_start();
@@ -40,13 +34,36 @@ if (session_status() == PHP_SESSION_NONE) {
 //set the user var
 $user = !empty($_SESSION['user']) ? unserialize($_SESSION['user']) : null;
 
+require_once("classes/Header.php");
+require_once("classes/NavBar.php");
+require_once("classes/NavBarArray.php");
+require_once("classes/NavBarLink.php");
+require_once("classes/NavBarLinkArray.php");
+
+/**
+ * Returns if the current page was reuqested back from itself
+ * @return bool
+ */
 function isPostBack()
 {
     return $_SERVER['REQUEST_METHOD'] == 'POST';
 }
 
+/**
+ * Returns if the current user is logged in
+ * @return bool
+ */
 function loggedIn()
 {
-    return !empty($_SESSION['user']) && !empty(unserialize($_SESSION['user']));
+    return is_null(getUser());
+}
+
+/**
+ * Returns the currently logged in user, if any
+ * @return Users|null
+ */
+function getUser()
+{
+    return !empty($_SESSION['user']) ? unserialize($_SESSION['user']) : null;
 }
 ?>
