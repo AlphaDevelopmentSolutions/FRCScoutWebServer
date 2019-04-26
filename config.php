@@ -6,11 +6,6 @@
 //define all constants
 define('VERSION', 'v2019.2.2.0');
 
-//define root paths
-define('ROBOT_MEDIA_DIR', __DIR__ . '/html/assets/robot-media/');
-define('ROBOT_MEDIA_URL', URL_PATH . '/assets/robot-media/');
-define('ROOT_DIR', __DIR__);
-
 //define error codes
 define('FILE_WRITE_FAIL_CODE' , '5x01');
 define('CURL_FAIL_CODE' , '5x02');
@@ -20,6 +15,11 @@ if(file_exists(__DIR__ . '/classes/Keys.php'))
     require_once('classes/Keys.php');
 else if (strpos($_SERVER['REQUEST_URI'], 'install.php') < 1)
     header('Location: ' . '/install.php');
+
+//define root paths
+define('ROBOT_MEDIA_DIR', __DIR__ . '/html/assets/robot-media/');
+define('ROBOT_MEDIA_URL', URL_PATH . '/assets/robot-media/');
+define('ROOT_DIR', __DIR__);
 
 //require all necessary files
 require_once('classes/Database.php');
