@@ -47,7 +47,20 @@ $match = Matches::withId($matchId);
         ?>
       <main class="mdl-layout__content">
 
-          <?php require_once('includes/match-overview-card.php') ?>
+          <?php
+
+          $scoutCardIds = array();
+          $scoutCardIds = $match->getMatchScoutCardIds($eventId, $allianceColor);
+
+          foreach($scoutCardIds AS $scoutCardId)
+          {
+              $scoutCard = ScoutCards::withId($scoutCardId['Id']);
+
+              echo $scoutCard->toHtml();
+          }
+
+
+          ?>
 
           
           <div class="mdl-layout__tab-panel" id="stats">
