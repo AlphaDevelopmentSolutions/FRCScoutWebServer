@@ -255,6 +255,16 @@ class Teams
 
         return array();
     }
+
+    /**
+     * Formats the team name for string use
+     * EX: 5885 - Villanova WiredCats
+     * @return string
+     */
+    public function toString()
+    {
+        return $this->Id . ' - ' . $this->Name;
+    }
 }
 
 ?>

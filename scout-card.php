@@ -98,7 +98,9 @@ if(isPostBack() && loggedIn())
         ?>
       <main class="mdl-layout__content">
 
-          <?php require_once('includes/scout-card.php'); ?>
+          <?php
+          echo $scoutCard->toHtml();
+          ?>
 
           <div class="mdl-layout__tab-panel" id="stats">
 <style>
