@@ -55,7 +55,7 @@ function isPostBack()
  */
 function loggedIn()
 {
-    return is_null(getUser());
+    return !is_null(getUser());
 }
 
 /**

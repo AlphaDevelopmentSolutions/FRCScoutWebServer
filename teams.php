@@ -32,7 +32,6 @@ $event = Events::withId($eventId);
 
         foreach (Teams::getTeamsAtEvent($eventId) as $team)
         {
-
             ?>
                 <section class="section--center mdl-grid mdl-grid--no-spacing mdl-shadow--2dp team-card">
                     <header class="section__play-btn mdl-cell mdl-cell--3-col-desktop mdl-cell--2-col-tablet mdl-cell--4-col-phone mdl-color--white mdl-color-text--white">

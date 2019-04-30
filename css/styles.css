@@ -89,7 +89,6 @@ html, body {
   color: inherit;
 }
 .mdl-demo .mdl-card__actions a {
-  color: #00BCD4;
   margin: 0;
 }
 .mdl-demo .mdl-card__actions a:hover,
@@ -254,56 +253,6 @@ html, body {
   height: 10px;
 }
 
-.pre-game
-{
-  background-color: #0527af;
-}
-
-.autonomous
-{
-  background-color: #FFD966;
-}
-
-.teleop
-{
-  background-color: #00FFFF;
-}
-
-.end-game
-{
-  background-color: #9400ff;
-}
-
-.post-game
-{
-  background-color: #e900ff;
-}
-
-.min
-{
-  background-color: #ffa74f;
-}
-
-.max
-{
-  background-color: #9FC5E8;
-}
-
-.avg
-{
-  background-color: #64FF62;
-}
-
-.good
-{
-  background-color: #64FF62;
-}
-
-.bad
-{
-  background-color: #E67C73;
-}
-
 .version
 {
   text-align: right;
@@ -350,13 +299,6 @@ html, body {
   border-bottom-style: solid !important;
 }
 
-/*Overwrites disabled gray color*/
-.mdl-textfield > input[disabled] + .mdl-textfield__label,
-.mdl-textfield > textarea[disabled] + .mdl-textfield__label
-{
-  color: rgb(63,81,181) !important;
-}
-
 .match-table
 {
   border-collapse: collapse;
@@ -369,26 +311,28 @@ html, body {
   padding: 8px;
 }
 
-.blue-alliance-bg
-{
-  background-color: #EEEEFF;
-}
-
-.red-alliance-bg
-{
-  background-color: #FFEEEE;
-}
-
 .tr-win
 {
-  font-weight: bold;
+  font-weight: bold !important;
 }
 
 .tr-selected-team
 {
-  text-decoration: underline;
+  text-decoration: underline !important;
 }
 
 .header-title {
   margin-left: 20px;
+}
+
+.team-link
+{
+  text-decoration: none;
+  color: unset;
+  font-weight: unset;
+}
+
+.team-link:hover
+{
+  color: black;
 }

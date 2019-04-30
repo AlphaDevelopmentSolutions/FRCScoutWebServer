@@ -1,14 +1,103 @@
+/**
+Primary Colors
+ */
 .mdl-color--primary
 {
-  background-color: #06a9e5 !important;
+  background-color: #03A9F4 !important;
 }
 
 .mdl-color--primary-dark
 {
-  background-color: #0495cc !important;
+  background-color: #0288D1 !important;
 }
 
 .mdl-button--accent.mdl-button--accent.mdl-button--raised
 {
-  background-color: #06a9e5 !important;
+  background-color: #03A9F4 !important;
+}
+
+/**
+Link Colors
+ */
+.mdl-demo .mdl-card__actions a {
+  color: #03A9F4 !important;
+}
+
+/**
+Stats Colors
+ */
+.pre-game
+{
+  background-color: #0527af;
+}
+
+.autonomous
+{
+  background-color: #FFD966;
+}
+
+.teleop
+{
+  background-color: #00FFFF;
+}
+
+.end-game
+{
+  background-color: #9400ff;
+}
+
+.post-game
+{
+  background-color: #e900ff;
+}
+
+.min
+{
+  background-color: #ffa74f;
+}
+
+.max
+{
+  background-color: #9FC5E8;
+}
+
+.avg
+{
+  background-color: #64FF62;
+}
+
+
+/**
+Generic Status Colors
+ */
+.good
+{
+  background-color: #64FF62;
+}
+
+.bad
+{
+  background-color: #E67C73;
+}
+
+/**
+Overwrites disabled gray color
+  */
+.mdl-textfield > input[disabled] + .mdl-textfield__label,
+.mdl-textfield > textarea[disabled] + .mdl-textfield__label
+{
+  color: #0288D1 !important;
+}
+
+/**
+Match Alliance Background Colors
+ */
+.blue-alliance-bg
+{
+  background-color: #EEEEFF;
+}
+
+.red-alliance-bg
+{
+  background-color: #FFEEEE;
 }
