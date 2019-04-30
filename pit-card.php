@@ -43,7 +43,7 @@ if(isPostBack() && loggedIn())
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="description" content="A front-end template that helps you build fast, modern mobile web apps.">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
-    <title>Pit Card <?php echo $pitCard->Id ?></title>
+    <title><?php echo $pitCard->TeamId ?> - Pit Card</title>
 
     <!-- Add to homescreen for Chrome on Android -->
     <meta name="mobile-web-app-capable" content="yes">
@@ -102,7 +102,7 @@ if(isPostBack() && loggedIn())
         $navBarLinksArray = new NavBarLinkArray();
         $navBarLinksArray[] = new NavBarLink('Teams', '/teams.php?eventId=' . $event->BlueAllianceId, false);
         $navBarLinksArray[] = new NavBarLink('Team ' . $pitCard->TeamId, '/team-pits.php?teamId=' . $pitCard->TeamId . '&eventId=' . $pitCard->EventId, false);
-        $navBarLinksArray[] = new NavBarLink('Pit Card' . $pitCard->Id, '', true);
+        $navBarLinksArray[] = new NavBarLink($pitCard->TeamId . ' - Pit Card', '', true);
 
 
         $navBar = new NavBar($navBarLinksArray);
@@ -113,7 +113,9 @@ if(isPostBack() && loggedIn())
         ?>
       <main class="mdl-layout__content">
 
-          <?php require_once('includes/pit-card.php') ?>
+          <?php
+          echo $pitCard->toHtml();
+          ?>
 
           
           <div class="mdl-layout__tab-panel" id="stats">
