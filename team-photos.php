@@ -161,7 +161,8 @@ $ccwms = $stats['ccwms']['frc' . $pitCard->TeamId];
             </div>
             <div style="height: unset" class="mdl-layout--large-screen-only mdl-layout__header-row">
                 <h6 style="margin: unset" ><a id="show-stats-btn" href="#" style="color:white" onclick="showQuickStats()">Show More</a></h6>
-            </div>';
+            </div>
+            <div class="mdl-layout--large-screen-only mdl-layout__header-row"></div>';
 
         $header = new Header($event->Name, $additionContent, $navBarArray, $event->BlueAllianceId);
 
