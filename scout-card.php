@@ -85,7 +85,7 @@ if(isPostBack() && loggedIn())
     <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
         <?php
         $navBarLinksArray = new NavBarLinkArray();
-        $navBarLinksArray[] = new NavBarLink('Teams', '/teams.php?eventId=' . $event->BlueAllianceId, false);
+        $navBarLinksArray[] = new NavBarLink('Teams', '/team-list.php?eventId=' . $event->BlueAllianceId, false);
         $navBarLinksArray[] = new NavBarLink('Team ' . $scoutCard->TeamId, '/team-matches.php?teamId=' . $scoutCard->TeamId . '&eventId=' . $scoutCard->EventId, false);
         $navBarLinksArray[] = new NavBarLink($match->toString(), '', true);
 

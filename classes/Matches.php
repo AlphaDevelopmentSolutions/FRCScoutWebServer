@@ -419,7 +419,7 @@ class Matches
                         ((!is_null($scoutCardId)) ?
                             '<a href="/scout-card.php?scoutCardId=' . $scoutCardId . '" class="mdl-button">View Scout Card</a>'
                             :
-                            '<a href="/match-overview-card.php?eventId=' . $this->EventId . '&matchId=' . $this->Id . '&allianceColor=BLUE" class="mdl-button">View Match Overview</a>'
+                            '<a href="/match.php?eventId=' . $this->EventId . '&matchId=' . $this->Id . '&allianceColor=BLUE" class="mdl-button">View Match Overview</a>'
                         ) .'
                     </div>
                 </div>

@@ -42,7 +42,7 @@ $ccwms = $stats['ccwms']['frc' . $pitCard->TeamId];
         $navBarArray = new NavBarArray();
 
         $navBarLinksArray = new NavBarLinkArray();
-        $navBarLinksArray[] = new NavBarLink('Teams', '/teams.php?eventId=' . $event->BlueAllianceId, false);
+        $navBarLinksArray[] = new NavBarLink('Teams', '/team-list.php?eventId=' . $event->BlueAllianceId, false);
         $navBarLinksArray[] = new NavBarLink('Team ' . $teamId, '', true);
 
         $navBarArray[] = new NavBar($navBarLinksArray);

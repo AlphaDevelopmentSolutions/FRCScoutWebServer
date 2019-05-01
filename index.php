@@ -69,7 +69,7 @@ require_once("classes/Events.php");
                         <?php echo date('F j', strtotime($event['StartDate'])) . ' to ' . date('F j', strtotime($event['EndDate'])) ?>
                       </div>
                       <div class="mdl-card__actions">
-                        <a href="/match-overview.php?eventId=<?php echo $event['BlueAllianceId'] ?>" class="mdl-button">View</a>
+                        <a href="/match-list.php?eventId=<?php echo $event['BlueAllianceId'] ?>" class="mdl-button">View</a>
                       </div>
                     </div>
                   </section>

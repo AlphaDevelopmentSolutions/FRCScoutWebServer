@@ -29,14 +29,14 @@ $match = Matches::withId($matchId);
         $navBarArray = new NavBarArray();
 
         $navBarLinksArray = new NavBarLinkArray();
-        $navBarLinksArray[] = new NavBarLink('Matches', '/match-overview.php?eventId=' . $event->BlueAllianceId, false);
+        $navBarLinksArray[] = new NavBarLink('Matches', '/match-list.php?eventId=' . $event->BlueAllianceId, false);
         $navBarLinksArray[] = new NavBarLink($match->toString(), '', true);
 
         $navBarArray[] = new NavBar($navBarLinksArray);
 
         $navBarLinksArray = new NavBarLinkArray();
-        $navBarLinksArray[] = new NavBarLink('Blue Alliance', '/match-overview-card.php?eventId=' . $event->BlueAllianceId . '&matchId=' . $match->Id . '&allianceColor=BLUE', ($allianceColor == 'BLUE'));
-        $navBarLinksArray[] = new NavBarLink('Red Alliance', '/match-overview-card.php?eventId=' . $event->BlueAllianceId . '&matchId=' . $match->Id . '&allianceColor=RED', ($allianceColor == 'RED'));
+        $navBarLinksArray[] = new NavBarLink('Blue Alliance', '/match.php?eventId=' . $event->BlueAllianceId . '&matchId=' . $match->Id . '&allianceColor=BLUE', ($allianceColor == 'BLUE'));
+        $navBarLinksArray[] = new NavBarLink('Red Alliance', '/match.php?eventId=' . $event->BlueAllianceId . '&matchId=' . $match->Id . '&allianceColor=RED', ($allianceColor == 'RED'));
 
         $navBarArray[] = new NavBar($navBarLinksArray);
 

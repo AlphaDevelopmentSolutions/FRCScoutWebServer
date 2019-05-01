@@ -67,8 +67,8 @@ class Header
                 <div class="mdl-layout__drawer">
                     <span class="mdl-layout-title">' . ((loggedIn()) ? 'Hello, ' . getUser()->FirstName : APP_NAME) . '</span>
                     <nav class="mdl-navigation">
-                        <a href="/match-overview.php?eventId=' . $this->EventId . '" class="mdl-navigation__link">Matches</a>
-                        <a href="/teams.php?eventId=' . $this->EventId . '" class="mdl-navigation__link">Teams</a>
+                        <a href="/match-list.php?eventId=' . $this->EventId . '" class="mdl-navigation__link">Matches</a>
+                        <a href="/team-list.php?eventId=' . $this->EventId . '" class="mdl-navigation__link">Teams</a>
                         <a href="/stats.php?eventId=' . $this->EventId . '" class="mdl-navigation__link ">Stats</a>
                     </nav>' .
                 ((!loggedIn()) ?
