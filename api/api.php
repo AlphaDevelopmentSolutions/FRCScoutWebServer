@@ -1,5 +1,7 @@
 <?php
 require_once('../config.php');
+require_once(ROOT_DIR . '/classes/ChecklistItemResults.php');
+require_once(ROOT_DIR . '/classes/ChecklistItems.php');
 require_once(ROOT_DIR . '/classes/ScoutCards.php');
 require_once(ROOT_DIR . '/classes/PitCards.php');
 require_once(ROOT_DIR . '/classes/Teams.php');
@@ -107,6 +109,15 @@ try {
                 throw new Exception('Invalid event id');
 
             break;
+
+        case 'GetChecklistItems':
+            $api->success(ChecklistItems::getChecklistItems());
+            break;
+
+        case 'GetChecklistItemResults':
+            $api->success(ChecklistItemResults::getChecklistItemResults());
+            break;
+
         //endregion
 
         //region Setters
@@ -137,6 +148,16 @@ try {
                 $api->success($robotMedia->Id);
             else
                 throw new Exception('Failed to save robot media');
+
+            break;
+
+        case 'SubmitChecklistItemResult':
+            $checklistItemResult = ChecklistItemResults::withProperties($_POST);
+
+            if ($checklistItemResult->save())
+                $api->success($checklistItemResult->Id);
+            else
+                throw new Exception('Failed to save checklist item result');
 
             break;
         //endregion

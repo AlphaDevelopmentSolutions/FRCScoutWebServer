@@ -42,7 +42,6 @@ class Events
     /**
      * Loads a new instance by specified properties
      * @param array $properties
-     * @return Events
      */
     protected function loadByProperties(Array $properties = array())
     {
@@ -54,7 +53,7 @@ class Events
     /**
      * Loads a new instance by its database id
      * @param $id
-     * @return Events
+     * @return boolean
      */
     protected function loadById($id)
     {
@@ -82,7 +81,7 @@ class Events
     function save()
     {
         $database = new Database();
-        $sql = 'INSERT INTO ' . Events::$TABLE_NAME . ' 
+        $sql = 'INSERT INTO ' . self::$TABLE_NAME . ' 
                                   (
                                   BlueAllianceId,
                                   Name,
