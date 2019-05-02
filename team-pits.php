@@ -33,176 +33,142 @@ $ccwms = $stats['ccwms']['frc' . $pitCard->TeamId];
 <!doctype html>
 <html lang="en">
   <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="description" content="A front-end template that helps you build fast, modern mobile web apps.">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
     <title><?php echo $team->Id . ' - ' . $team->Name ?></title>
-
-    <!-- Add to homescreen for Chrome on Android -->
-    <meta name="mobile-web-app-capable" content="yes">
-    <link rel="icon" sizes="192x192" href="images/android-desktop.png">
-
-    <!-- Add to homescreen for Safari on iOS -->
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black">
-    <meta name="apple-mobile-web-app-title" content="Material Design Lite">
-    <link rel="apple-touch-icon-precomposed" href="images/ios-desktop.png">
-
-    <!-- Tile icon for Win8 (144x144 + tile color) -->
-    <meta name="msapplication-TileImage" content="images/touch/ms-touch-icon-144x144-precomposed.png">
-    <meta name="msapplication-TileColor" content="#3372DF">
-
-    <link rel="shortcut icon" href="images/favicon.png">
-
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:regular,bold,italic,thin,light,bolditalic,black,medium&amp;lang=en">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-    <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.deep_purple-pink.min.css">
-    <link rel="stylesheet" href="css/styles.css">
-      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-
-      <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
-
-
-
-
-      <style>
-    #view-source {
-      position: fixed;
-      display: block;
-      right: 0;
-      bottom: 0;
-      margin-right: 40px;
-      margin-bottom: 40px;
-      z-index: 900;
-    }
-    </style>
+    <?php require_once('includes/meta.php') ?>
   </head>
   <body class="mdl-demo mdl-color--grey-100 mdl-color-text--grey-700 mdl-base">
     <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
-      <header class="mdl-layout__header mdl-layout__header--scroll mdl-color--primary">
-          <?php include_once('includes/login-form.php') ?>
-          <?php
+        <?php
+        $navBarArray = new NavBarArray();
 
-          $robotMediaUri = Teams::getProfileImageUri($team->Id);
+        $navBarLinksArray = new NavBarLinkArray();
+        $navBarLinksArray[] = new NavBarLink('Teams', '/team-list.php?eventId=' . $event->BlueAllianceId, false);
+        $navBarLinksArray[] = new NavBarLink('Team ' . $teamId, '', true);
 
-          if(!empty($robotMediaUri))
-          {
-              $robotMediaUri = ROBOT_MEDIA_URL . $robotMediaUri;
-              echo
-                  '<div style="height: unset" class="mdl-layout--large-screen-only mdl-layout__header-row">
+        $navBarArray[] = new NavBar($navBarLinksArray);
+
+        $navBarLinksArray = new NavBarLinkArray();
+        $navBarLinksArray[] = new NavBarLink('Matches', '/team-matches.php?eventId=' . $event->BlueAllianceId . '&teamId=' . $team->Id, false);
+        $navBarLinksArray[] = new NavBarLink('Pits', '/team-pits.php?eventId=' . $event->BlueAllianceId . '&teamId=' . $team->Id, true);
+        $navBarLinksArray[] = new NavBarLink('Photos', '/team-photos.php?eventId=' . $event->BlueAllianceId . '&teamId=' . $team->Id, false);
+
+        $navBarArray[] = new NavBar($navBarLinksArray);
+
+        $additionContent = '';
+
+        $robotMediaUri = Teams::getProfileImageUri($team->Id);
+
+        if(!empty($robotMediaUri))
+        {
+            $robotMediaUri = ROBOT_MEDIA_URL . $robotMediaUri;
+            $additionContent .=
+                '<div style="height: unset" class="mdl-layout--large-screen-only mdl-layout__header-row">
                   <div class="circle-image" style="background-image: url(' . $robotMediaUri . ')">
-                    
+
                   </div>
                 </div>';
-          }
+        }
 
-          ?>
+        $additionContent .=
+            '
         <div class="mdl-layout--large-screen-only mdl-layout__header-row">
-          <h3><?php echo $team->Id . ' - ' . $team->Name ?></h3><br>
+            <h3>' . $team->Id . ' - ' . $team->Name . '</h3><br>
         </div>
-          <div class="mdl-layout--large-screen-only mdl-layout__header-row">
-              <h3><?php echo $team->City . ', ' . $team->StateProvince . ', ' . $team->Country ?></h3><br>
-          </div>
-          <div class="mdl-layout--large-screen-only mdl-layout__header-row">
-              <?php
-              if(!empty($team->FacebookURL))
-              {
-                  echo
-                  '
+        <div class="mdl-layout--large-screen-only mdl-layout__header-row">
+            <h3>' . $team->City . ', ' . $team->StateProvince . ', ' . $team->Country . '</h3><br>
+        </div>
+        <div class="mdl-layout--large-screen-only mdl-layout__header-row">';
+
+
+        if(!empty($team->FacebookURL))
+        {
+            $additionContent .=
+                '
                     <a target="_blank" href="https://www.facebook.com/' . $team->FacebookURL . '">
                         <i class="fab fa-facebook-f header-icon"></i>
                     </a>
                   ';
-              }
+        }
 
-              if(!empty($team->TwitterURL))
-              {
-                  echo
-                      '
+        if(!empty($team->TwitterURL))
+        {
+            $additionContent .=
+                '
                     <a target="_blank" href="https://www.twitter.com/' . $team->TwitterURL . '">
                         <i class="fab fa-twitter header-icon"></i>
                     </a>
                   ';
-              }
+        }
 
-              if(!empty($team->InstagramURL))
-              {
-                  echo
-                      '
+        if(!empty($team->InstagramURL))
+        {
+            $additionContent .=
+                '
                     <a target="_blank" href="https://www.instagram.com/' . $team->InstagramURL . '">
                         <i class="fab fa-instagram header-icon"></i>
                     </a>
                   ';
-              }
+        }
 
-              if(!empty($team->YoutubeURL))
-              {
-                  echo
-                      '
+        if(!empty($team->YoutubeURL))
+        {
+            $additionContent .=
+                '
                     <a target="_blank" href="https://www.youtube.com/' . $team->YoutubeURL . '">
                         <i class="fab fa-youtube header-icon"></i>
                     </a>
                   ';
-              }
+        }
 
-              if(!empty($team->WebsiteURL))
-              {
-                  echo
-                      '
+        if(!empty($team->WebsiteURL))
+        {
+            $additionContent .=
+                '
                     <a target="_blank" href="' . $team->WebsiteURL . '">
                         <i class="fas fa-globe header-icon"></i>
                     </a>
                   ';
-              }
-              ?>
+        }
 
-          </div>
-          <div style="height: unset" class="mdl-layout--large-screen-only mdl-layout__header-row">
-              <h6 style="margin: unset"><strong>OPR:</strong> <?php echo round($opr, 2) ?></h6>
-          </div>
+        $additionContent .=
+            '
+            </div>
+            <div style="height: unset" class="mdl-layout--large-screen-only mdl-layout__header-row">
+                <h6 style="margin: unset"><strong>OPR:</strong>' . round($opr, 2) . '</h6>
+            </div>
+    
+            <div style="height: unset" class="mdl-layout--large-screen-only mdl-layout__header-row">
+                <h6 style="margin: unset"><strong>DPR:</strong>' . round($dpr, 2) . '</h6>
+            </div>
+            <div id="quick-stats" style="padding-left: 40px" hidden>
+                <h6 style="margin: unset"><strong>Drivetrain:</strong>' . $pitCard->DriveStyle . '</h6>
+                <h6 style="margin: unset"><strong>Robot Weight:</strong>' . $pitCard->RobotWeight . '</h6>
+                <h6 style="margin: unset"><strong>Robot Length:</strong>' . $pitCard->RobotLength . '</h6>
+                <h6 style="margin: unset"><strong>Robot Width:</strong>' . $pitCard->RobotWidth . '</h6>
+                <h6 style="margin: unset"><strong>Robot Height:</strong>' . $pitCard->RobotHeight . '</h6>
+    
+                <h6 style="margin: unset"><strong>Auto Exit Habitat:</strong>' . $pitCard->AutoExitHabitat . '</h6>
+                <h6 style="margin: unset"><strong>Auto Hatch Panels:</strong>' . $pitCard->AutoHatch . '</h6>
+                <h6 style="margin: unset"><strong>Auto Cargo:</strong>' . $pitCard->AutoCargo . '</h6>
+    
+                <h6 style="margin: unset"><strong>Teleop Hatch:</strong>' . $pitCard->TeleopHatch . '</h6>
+                <h6 style="margin: unset"><strong>Teleop Cargo:</strong>' . $pitCard->TeleopCargo . '</h6>
+    
+                <h6 style="margin: unset"><strong>Return To Habitat:</strong>' . $pitCard->ReturnToHabitat . '</h6>
+    
+                <h6 style="margin: unset"><strong>Notes:</strong>' . $pitCard->Notes . '</h6>
+                <h6 style="margin: unset"><strong>Completed By:</strong>' . $pitCard->CompletedBy . '</h6>
+            </div>
+            <div style="height: unset" class="mdl-layout--large-screen-only mdl-layout__header-row">
+                <h6 style="margin: unset" ><a id="show-stats-btn" href="#" style="color:white" onclick="showQuickStats()">Show More</a></h6>
+            </div>
+            <div class="mdl-layout--large-screen-only mdl-layout__header-row"></div>';
 
-          <div style="height: unset" class="mdl-layout--large-screen-only mdl-layout__header-row">
-              <h6 style="margin: unset"><strong>DPR:</strong> <?php echo round($dpr, 2) ?></h6>
-          </div>
+        $header = new Header($event->Name, $additionContent, $navBarArray, $event->BlueAllianceId);
 
-          <div id="quick-stats" style="padding-left: 40px" hidden>
-              <h6 style="margin: unset"><strong>Drivetrain:</strong> <?php echo $pitCard->DriveStyle ?></h6>
-              <h6 style="margin: unset"><strong>Robot Weight:</strong> <?php echo $pitCard->RobotWeight ?></h6>
-              <h6 style="margin: unset"><strong>Robot Length:</strong> <?php echo $pitCard->RobotLength ?></h6>
-              <h6 style="margin: unset"><strong>Robot Width:</strong> <?php echo $pitCard->RobotWidth ?></h6>
-              <h6 style="margin: unset"><strong>Robot Height:</strong> <?php echo $pitCard->RobotHeight ?></h6>
+        echo $header->toString();
 
-              <h6 style="margin: unset"><strong>Auto Exit Habitat:</strong> <?php echo $pitCard->AutoExitHabitat ?></h6>
-              <h6 style="margin: unset"><strong>Auto Hatch Panels:</strong> <?php echo $pitCard->AutoHatch ?></h6>
-              <h6 style="margin: unset"><strong>Auto Cargo:</strong> <?php echo $pitCard->AutoCargo ?></h6>
-
-              <h6 style="margin: unset"><strong>Teleop Hatch:</strong> <?php echo $pitCard->TeleopHatch ?></h6>
-              <h6 style="margin: unset"><strong>Teleop Cargo:</strong> <?php echo $pitCard->TeleopCargo ?></h6>
-
-              <h6 style="margin: unset"><strong>Return To Habitat:</strong> <?php echo $pitCard->ReturnToHabitat ?></h6>
-
-              <h6 style="margin: unset"><strong>Notes:</strong> <?php echo $pitCard->Notes ?></h6>
-              <h6 style="margin: unset"><strong>Completed By:</strong> <?php echo $pitCard->CompletedBy ?></h6>
-          </div>
-          <div style="height: unset" class="mdl-layout--large-screen-only mdl-layout__header-row">
-              <h6 style="margin: unset" ><a id="show-stats-btn" href="#" style="color:white" onclick="showQuickStats()">Show More</a></h6>
-          </div>
-
-
-          <div class="version">Version <?php echo VERSION ?></div>
-          <div class="mdl-layout__tab-bar mdl-js-ripple-effect mdl-color--primary-dark">
-              <a href="/" class="mdl-layout__tab">Events</a>
-              <a href="/match-overview.php?eventId=<?php echo $event->BlueAllianceId; ?>" class="mdl-layout__tab ">Matches</a>
-              <a href="/teams.php?eventId=<?php echo $eventId; ?>" class="mdl-layout__tab ">Teams</a>
-              <a href="" class="mdl-layout__tab is-active">Team <?php echo $teamId; ?></a>
-          </div>
-          <div class="mdl-layout__tab-bar mdl-js-ripple-effect mdl-color--primary-dark">
-              <a href="/team-matches.php?eventId=<?php echo $event->BlueAllianceId; ?>&teamId=<?php echo $team->Id; ?>" class="mdl-layout__tab">Matches</a>
-              <a href="/team-pits.php?eventId=<?php echo $event->BlueAllianceId; ?>&teamId=<?php echo $team->Id; ?>" class="mdl-layout__tab is-active">Pits</a>
-              <a href="/team-photos.php?eventId=<?php echo $event->BlueAllianceId; ?>&teamId=<?php echo $team->Id; ?>" class="mdl-layout__tab">Photos</a>
-          </div>
-      </header>
+        ?>
       <main class="mdl-layout__content">
 
           <?php
@@ -256,9 +222,7 @@ $ccwms = $stats['ccwms']['frc' . $pitCard->TeamId];
 
       </main>
     </div>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-    <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.indigo-pink.min.css">
-    <script src="https://code.getmdl.io/1.3.0/material.min.js"></script>
+    <?php require_once('includes/bottom-scripts.php') ?>
 
   <script>
       function showQuickStats()
