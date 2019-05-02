@@ -217,46 +217,30 @@ class Matches
     }
 
 
-    public static function getMatches($eventId)
+    /**
+     * Gets all matches specified by the event
+     * @param Events $event event to get matches from
+     * @param Teams $team team to get matches for
+     * @return array
+     */
+    public static function getMatches($event, $team = null)
     {
         $database = new Database();
-        $matchIds = $database->query(
-            "SELECT 
-                      * 
-                    FROM 
-                      matches 
-                    WHERE
-                      EventId = " . $database->quote($eventId) .
-                    " AND MatchType = " . $database->quote(self::$MATCH_TYPE_QUALIFICATIONS) . "
-                     ORDER BY MatchNumber DESC"
-        );
-        $database->close();
 
-        $response = array();
-
-        if($matchIds && $matchIds->num_rows > 0)
-        {
-            while ($row = $matchIds->fetch_assoc())
-            {
-                $response[] = $row;
-            }
-        }
-
-        return $response;
-    }
-
-    public static function getMatchesForTeam($eventId, $teamId)
-    {
-        $database = new Database();
         $sql = "SELECT 
                       * 
                     FROM 
                       matches 
                     WHERE
-                      EventId = " . $database->quote($eventId) .
-            " AND MatchType = " . $database->quote(self::$MATCH_TYPE_QUALIFICATIONS) .
-            " AND " . $database->quote($teamId) . " IN (BlueAllianceTeamOneId, BlueAllianceTeamTwoId, BlueAllianceTeamThreeId, RedAllianceTeamOneId, RedAllianceTeamTwoId, RedAllianceTeamThreeId)
-                     ORDER BY MatchNumber DESC";
+                      EventId = " . $database->quote($event->BlueAllianceId) .
+            " AND MatchType = " . $database->quote(self::$MATCH_TYPE_QUALIFICATIONS);
+
+        //add the team query if a team was specified
+        if(!empty($team))
+            $sql .= " AND " . $database->quote($team->Id) . " IN (BlueAllianceTeamOneId, BlueAllianceTeamTwoId, BlueAllianceTeamThreeId, RedAllianceTeamOneId, RedAllianceTeamTwoId, RedAllianceTeamThreeId)";
+
+        $sql .= "ORDER BY MatchNumber DESC";
+
 
         $matchIds = $database->query($sql);
         $database->close();
@@ -384,11 +368,12 @@ class Matches
 
     /**
      * Returns the html for displaying a match card
+     * @param string $buttonHref href action when clicking the button
+     * @param string $buttonText button text to display
      * @param int $teamId selected team
-     * @param int $scoutCardId used to change the view button
      * @return string html to display
      */
-    public function toHtml($teamId = null, $scoutCardId = null)
+    public function toHtml($buttonHref, $buttonText, $teamId = null)
     {
         $html = '
         <div class="mdl-layout__tab-panel is-active" id="overview">
@@ -415,12 +400,8 @@ class Matches
                             </div>
                         </div>
                     </div>
-                    <div class="mdl-card__actions">' .
-                        ((!is_null($scoutCardId)) ?
-                            '<a href="/scout-card.php?scoutCardId=' . $scoutCardId . '" class="mdl-button">View Scout Card</a>'
-                            :
-                            '<a href="/match.php?eventId=' . $this->EventId . '&matchId=' . $this->Id . '&allianceColor=BLUE" class="mdl-button">View Match Overview</a>'
-                        ) .'
+                    <div class="mdl-card__actions">
+                        <a href="' . $buttonHref . '" class="mdl-button">' . $buttonText . '</a>
                     </div>
                 </div>
             </section>

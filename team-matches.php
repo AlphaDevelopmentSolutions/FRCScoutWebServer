@@ -191,13 +191,13 @@ $ccwms = $stats['ccwms']['frc' . $pitCard->TeamId];
 
           <?php
 
-          foreach(Matches::getMatchesForTeam($eventId, $teamId) as $match)
+          foreach(Matches::getMatches($event, $team) as $match)
           {
               $match = Matches::withProperties($match);
 
               $scoutCard = ScoutCards::forMatch($teamId, $match->Key);
 
-              echo $match->toHtml($teamId, $scoutCard->Id);
+              echo $match->toHtml('/scout-card.php?scoutCardId=' . $scoutCard->Id, 'View Scout Card', $team->Id);
           }
           ?>
 

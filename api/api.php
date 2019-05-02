@@ -103,8 +103,10 @@ try {
         case 'GetMatches':
             $eventId = filter_var($_POST['EventId'], FILTER_SANITIZE_STRING);
 
-            if (!empty($eventId))
-                $api->success(Matches::getMatches($eventId));
+            $event = Events::withId($eventId);
+
+            if (!empty($event))
+                $api->success(Matches::getMatches($event));
             else
                 throw new Exception('Invalid event id');
 

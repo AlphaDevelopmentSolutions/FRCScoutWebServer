@@ -31,11 +31,11 @@ $event = Events::withId($eventId);
 
         <?php
 
-        foreach (Matches::getMatches($event->BlueAllianceId) as $match)
+        foreach (Matches::getMatches($event) as $match)
         {
             $match = Matches::withProperties($match);
 
-            echo $match->toHtml();
+            echo $match->toHtml('/match.php?eventId=' . $match->EventId . '&matchId=' . $match->Id . '&allianceColor=BLUE', 'View Match Overview');
         }
         ?>
 

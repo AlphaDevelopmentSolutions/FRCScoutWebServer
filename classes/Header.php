@@ -69,6 +69,7 @@ class Header
                     <nav class="mdl-navigation">
                         <a href="/match-list.php?eventId=' . $this->EventId . '" class="mdl-navigation__link">Matches</a>
                         <a href="/team-list.php?eventId=' . $this->EventId . '" class="mdl-navigation__link">Teams</a>
+                        <a href="/checklist-item-list.php?eventId=' . $this->EventId . '" class="mdl-navigation__link">Checklist</a>
                         <a href="/stats.php?eventId=' . $this->EventId . '" class="mdl-navigation__link ">Stats</a>
                     </nav>' .
                 ((!loggedIn()) ?

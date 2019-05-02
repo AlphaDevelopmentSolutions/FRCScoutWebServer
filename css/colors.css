@@ -72,19 +72,20 @@ Generic Status Colors
  */
 .good
 {
-  background-color: #64FF62;
+  color: #64FF62;
 }
 
 .bad
 {
-  background-color: #E67C73;
+  color: #E67C73;
 }
 
 /**
 Overwrites disabled gray color
   */
 .mdl-textfield > input[disabled] + .mdl-textfield__label,
-.mdl-textfield > textarea[disabled] + .mdl-textfield__label
+.mdl-textfield > textarea[disabled] + .mdl-textfield__label,
+.mdl-textfield__label
 {
   color: #0288D1 !important;
 }
