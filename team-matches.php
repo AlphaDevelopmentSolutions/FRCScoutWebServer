@@ -197,8 +197,13 @@ $ccwms = $stats['ccwms']['frc' . $pitCard->TeamId];
 
               $scoutCard = ScoutCards::forMatch($teamId, $match->Key);
 
-              echo $match->toHtml('/scout-card.php?scoutCardId=' . $scoutCard->Id, 'View Scout Card', $team->Id);
+              if(!empty($scoutCard->Id))
+                  echo $match->toHtml('/scout-card.php?scoutCardId=' . $scoutCard->Id, 'View Scout Card', $team->Id);
+
+              else
+                  echo $match->toHtml('/match.php?eventId=' . $match->EventId . '&matchId=' . $match->Id . '&allianceColor=BLUE', 'View Match Overview', $team->Id);
           }
+
           ?>
 
           
