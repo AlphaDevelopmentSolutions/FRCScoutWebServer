@@ -87,6 +87,12 @@ class Database
         return '"' . $string . '"';
     }
 
+    //quotes the string
+    function quoteColumn($string)
+    {
+        return '`' . $string . '`';
+    }
+
     function sql_error()
     {
         if( empty( $error ) )

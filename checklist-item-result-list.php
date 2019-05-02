@@ -1,5 +1,6 @@
 <?php
 require_once("config.php");
+require_once("classes/Table.php");
 require_once("classes/Teams.php");
 require_once("classes/Events.php");
 require_once("classes/Matches.php");

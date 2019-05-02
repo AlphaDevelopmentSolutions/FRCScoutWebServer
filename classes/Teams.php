@@ -1,6 +1,6 @@
 <?php
 
-class Teams
+class Teams extends Table
 {
     public $Id;
     public $Name;
@@ -15,116 +15,8 @@ class Teams
     public $WebsiteURL;
     public $ImageFileURI;
 
-    private static $TABLE_NAME = 'teams';
+    protected static $TABLE_NAME = 'teams';
 
-    /**
-     * Loads a new instance by its database id
-     * @param $id
-     * @return Teams
-     */
-    static function withId($id)
-    {
-        $instance = new self();
-        $instance->loadById($id);
-        return $instance;
-
-    }
-
-    /**
-     * Loads a new instance by specified properties
-     * @param array $properties
-     * @return Teams
-     */
-    static function withProperties(Array $properties = array())
-    {
-        $instance = new self();
-        $instance->loadByProperties($properties);
-        return $instance;
-
-    }
-
-    /**
-     * Loads a new instance by specified properties
-     * @param array $properties
-     * @return Teams
-     */
-    protected function loadByProperties(Array $properties = array())
-    {
-        foreach($properties as $key => $value)
-            $this->{$key} = $value;
-
-    }
-
-    /**
-     * Loads a new instance by its database id
-     * @param $id
-     * @return Teams
-     */
-    protected function loadById($id)
-    {
-        $database = new Database();
-        $sql = 'SELECT * FROM ' . self::$TABLE_NAME . ' WHERE '.'id = '.$database->quote($id);
-        $rs = $database->query($sql);
-
-        if($rs && $rs->num_rows > 0) {
-            $row = $rs->fetch_assoc();
-
-            if(is_array($row)) {
-                foreach($row as $key => $value){
-                    if(property_exists($this, $key)){
-                        $this->$key = $value;
-                    }
-                }
-            }
-
-            return true;
-        }
-
-        return false;
-    }
-
-    function save()
-    {
-        $database = new Database();
-        $sql = 'INSERT INTO ' . self::$TABLE_NAME . ' 
-                                  (
-                                  Id,
-                                  Name,
-                                  City,
-                                  StateProvince,
-                                  Country,
-                                  RookieYear,
-                                  FacebookURL,
-                                  TwitterURL,
-                                  InstagramURL,
-                                  YoutubeURL,
-                                  WebsiteURL,
-                                  ImageFileURI
-                                  )
-                                  VALUES 
-                                  (
-                                  ' . ((empty($this->Id)) ? '0' : $database->quote($this->Id)) .',
-                                  ' . ((empty($this->Name)) ? 'NULL' : $database->quote($this->Name)) .',
-                                  ' . ((empty($this->City)) ? 'NULL' : $database->quote($this->City)) .',
-                                  ' . ((empty($this->StateProvince)) ? 'NULL' : $database->quote($this->StateProvince)) .',
-                                  ' . ((empty($this->Country)) ? 'NULL' : $database->quote($this->Country)) .',
-                                  ' . ((empty($this->RookieYear)) ? '0' : $database->quote($this->RookieYear)) .',
-                                  ' . ((empty($this->FacebookURL)) ? 'NULL' : $database->quote($this->FacebookURL)) .',
-                                  ' . ((empty($this->TwitterURL)) ? 'NULL' : $database->quote($this->TwitterURL)) .',
-                                  ' . ((empty($this->InstagramURL)) ? 'NULL' : $database->quote($this->InstagramURL)) .',
-                                  ' . ((empty($this->YoutubeURL)) ? 'NULL' : $database->quote($this->YoutubeURL)) .',
-                                  ' . ((empty($this->WebsiteURL)) ? 'NULL' : $database->quote($this->WebsiteURL)) .',
-                                  ' . ((empty($this->ImageFileURI)) ? 'NULL' : $database->quote($this->ImageFileURI)) .'
-                                  );';
-        if($database->query($sql))
-        {
-            $database->close();
-
-            return true;
-        }
-        $database->close();
-        return false;
-    }
 
     public static function getTeamsAtEvent($eventId)
     {
@@ -254,6 +146,11 @@ class Teams
         }
 
         return array();
+    }
+
+    public function toHtml()
+    {
+        // TODO: Implement toHtml() method.
     }
 
     /**

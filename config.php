@@ -23,6 +23,7 @@ define('ROOT_DIR', __DIR__);
 
 //require all necessary files
 require_once('classes/Database.php');
+require_once('classes/Table.php');
 require_once('classes/Users.php');
 require_once('interfaces/AllianceColors.php');
 

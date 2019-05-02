@@ -5,7 +5,6 @@ require_once("classes/Events.php");
 require_once("classes/Teams.php");
 require_once("classes/Matches.php");
 
-
 $eventId = $_GET['eventId'];
 $matchId = $_GET['matchId'];
 $allianceColor = $_GET['allianceColor'];
@@ -55,7 +54,6 @@ $match = Matches::withId($matchId);
           foreach($scoutCardIds AS $scoutCardId)
           {
               $scoutCard = ScoutCards::withId($scoutCardId['Id']);
-
               echo $scoutCard->toHtml();
           }
 
