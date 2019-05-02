@@ -249,12 +249,12 @@ class ScoutCards extends Table
                                 </div>
                                 
                                 <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                                    <input ' . ((loggedIn()) ? "" : "disabled") . ' class="mdl-textfield__input" type="text" value="' . round(($this->AutonomousHatchPanelsSecured / (($this->AutonomousHatchPanelsPickedUp == 0) ? 1 : $this->AutonomousHatchPanelsPickedUp)) * 100, 2) . '%">
+                                    <input ' . ((loggedIn()) ? "" : "disabled") . ' class="mdl-textfield__input" type="text" value="' . round(($this->AutonomousHatchPanelsSecured / ($this->AutonomousHatchPanelsPickedUp + 1)) * 100, 2) . '%">
                                     <label class="mdl-textfield__label" >Hatch Secure %</label>
                                 </div>
             
                                 <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                                    <input ' . ((loggedIn()) ? "" : "disabled") . ' class="mdl-textfield__input" type="text" value="' . round(($this->AutonomousCargoStored / (($this->AutonomousCargoPickedUp == 0) ? 1 : $this->AutonomousCargoPickedUp)) * 100, 2) . '%">
+                                    <input ' . ((loggedIn()) ? "" : "disabled") . ' class="mdl-textfield__input" type="text" value="' . round(($this->AutonomousCargoStored / ($this->AutonomousCargoPickedUp + 1)) * 100, 2) . '%">
                                     <label class="mdl-textfield__label" >Cargo Store %</label>
                                 </div>
                             </div>
