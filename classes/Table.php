@@ -93,14 +93,17 @@ abstract class Table
                 //dont use Id in cols or vals
                 if($key != 'Id')
                 {
+                    //only add to insert statement if value is not empty
+                    if(!empty($value))
+                    {
+                        if(!empty($columns))
+                            $columns .= ', ';
+                        $columns .= $database->quoteColumn($key);
 
-                    if(!empty($columns))
-                        $columns .= ', ';
-                    $columns .= $database->quoteColumn($key);
-
-                    if(!empty($values))
-                        $values .= ', ';
-                    $values .= ((empty($value)) ? 'NULL' : $database->quote($value));
+                        if(!empty($values))
+                            $values .= ', ';
+                        $values .=  $database->quote($value);
+                    }
                 }
             }
 
