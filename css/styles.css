@@ -329,7 +329,7 @@ html, body {
 {
   text-decoration: none;
   color: unset;
-  font-weight: unset;
+  font-weight: 300;
 }
 
 .team-link:hover
