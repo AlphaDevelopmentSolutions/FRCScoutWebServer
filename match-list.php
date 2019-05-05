@@ -25,18 +25,15 @@ $event = Events::withId($eventId);
 
     $header = new Header($event->Name, null, $navBar, $event->BlueAllianceId);
 
-    echo $header->toString();
+    echo $header->toHtml();
     ?>
     <main class="mdl-layout__content">
 
         <?php
 
-        foreach (Matches::getMatches($event) as $match)
-        {
-            $match = Matches::withProperties($match);
+        foreach ($event->getMatches() as $match)
+            echo $match->toHtml('/match.php?eventId=' . $match->EventId . '&matchId=' . $match->Key . '&allianceColor=BLUE', 'View Match Overview');
 
-            echo $match->toHtml('/match.php?eventId=' . $match->EventId . '&matchId=' . $match->Id . '&allianceColor=BLUE', 'View Match Overview');
-        }
         ?>
 
 

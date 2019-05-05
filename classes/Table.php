@@ -6,7 +6,7 @@ abstract class Table
      * Loads a new instance by its database id
      * @param string | int $id
      * @param string $columnName
-     * @return Table | mixed
+     * @return static
      */
     static function withId($id, $columnName = null)
     {
@@ -19,7 +19,7 @@ abstract class Table
     /**
      * Loads a new instance by specified properties
      * @param array $properties
-     * @return Table | mixed
+     * @return static
      */
     static function withProperties(Array $properties = array())
     {

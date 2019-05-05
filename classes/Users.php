@@ -8,6 +8,12 @@ class Users extends Table
 
     protected static $TABLE_NAME = 'users';
 
+    /**
+     * Attempts to login with the provided username and password
+     * @param $userName
+     * @param $password
+     * @return boolean
+     */
     public function login($userName, $password)
     {
         $database = new Database();
@@ -29,13 +35,21 @@ class Users extends Table
         {
             while ($row = $users->fetch_assoc())
             {
-                $response[] = $row;
+                $response[] = self::withProperties($row);
             }
         }
 
-        return $this->loadById($response[0]['Id']);
+        $this->Id = $response[0]->Id;
+        $this->FirstName = $response[0]->FirstName;
+        $this->LastName = $response[0]->LastName;
+
+        return (!empty($response));
     }
 
+    /**
+     * Gets all users in the database
+     * @return Users[]
+     */
     public static function getUsers()
     {
         $database = new Database();
@@ -67,7 +81,7 @@ class Users extends Table
 
     public function toString()
     {
-        // TODO: Implement toString() method.
+        return $this->FirstName . " " . $this->LastName;
     }
 
 }

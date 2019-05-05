@@ -26,7 +26,7 @@ class Header
      * Converts the header object to a navigable header in HTML
      * @return string
      */
-    public function toString()
+    public function toHtml()
     {
         //add the title and version number
         $html =

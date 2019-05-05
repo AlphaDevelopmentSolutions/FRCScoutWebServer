@@ -9,7 +9,7 @@ class NavBar
      * NavBar constructor.
      * @param NavBarLinkArray $navBarLinks
      */
-    public function __construct(NavBarLinkArray $navBarLinks)
+    public function __construct($navBarLinks)
     {
         $this->navBarLinks = $navBarLinks;
     }

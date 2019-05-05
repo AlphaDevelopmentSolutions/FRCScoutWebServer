@@ -12,40 +12,8 @@ class ChecklistItemResults extends Table implements Status
     protected static $TABLE_NAME = 'checklist_item_results';
 
     /**
-     * Gets all created checklist items
-     * @param Matches | null $match gather only from specified match
-     * @return array
-     */
-    public static function getChecklistItemResults($match = null)
-    {
-        $database = new Database();
-        $sql = "SELECT 
-                      * 
-                    FROM 
-                      " . self::$TABLE_NAME;
-
-        if(!is_null($match))
-                $sql .= " WHERE MatchId = " . $database->quote($match->Key);
-
-        $checklistItemResults = $database->query($sql);
-        $database->close();
-
-        $response = array();
-
-        if($checklistItemResults && $checklistItemResults->num_rows > 0)
-        {
-            while ($row = $checklistItemResults->fetch_assoc())
-            {
-                $response[] = $row;
-            }
-        }
-
-        return $response;
-    }
-
-    /**
      * Converts a completed checklist item to Html format, shown as a card
-     * @return string
+     * @return string HTML for displaying on the web page
      */
     public function toHtml()
     {

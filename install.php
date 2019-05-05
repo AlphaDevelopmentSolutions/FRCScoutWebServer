@@ -110,7 +110,7 @@ define('API_KEY', '$customApiKey');
         <?php
         $header = new Header('Install', null, null, null);
 
-        echo $header->toString();
+        echo $header->toHtml();
         ?>
       <main class="mdl-layout__content">
           <div class="mdl-layout__tab-panel is-active" id="overview">

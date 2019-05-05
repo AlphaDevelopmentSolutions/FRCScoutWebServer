@@ -10,7 +10,7 @@ $teamId = $_GET['teamId'];
 
 $team = Teams::withId($teamId);
 $event = Events::withId($eventId);
-$pitCard = PitCards::withId(PitCards::getNewestPitCard($team->Id, $event->BlueAllianceId)['0']['Id']);
+$pitCard = $team->getPitCards($event)[0];
 
 $url = "http://scouting.wiredcats5885.ca/ajax/GetOPRStats.php";
 
@@ -56,14 +56,13 @@ $ccwms = $stats['ccwms']['frc' . $pitCard->TeamId];
 
         $additionContent = '';
 
-        $robotMediaUri = Teams::getProfileImageUri($team->Id);
+        $robotMedia = $team->getProfileImage();
 
-        if(!empty($robotMediaUri))
+        if(!empty($robotMedia->FileURI))
         {
-            $robotMediaUri = ROBOT_MEDIA_URL . $robotMediaUri;
             $additionContent .=
                 '<div style="height: unset" class="mdl-layout--large-screen-only mdl-layout__header-row">
-                  <div class="circle-image" style="background-image: url(' . $robotMediaUri . ')">
+                  <div class="circle-image" style="background-image: url(' . ROBOT_MEDIA_URL . $robotMedia->FileURI . ')">
 
                   </div>
                 </div>';
@@ -166,34 +165,15 @@ $ccwms = $stats['ccwms']['frc' . $pitCard->TeamId];
 
         $header = new Header($event->Name, $additionContent, $navBarArray, $event->BlueAllianceId);
 
-        echo $header->toString();
+        echo $header->toHtml();
 
         ?>
       <main class="mdl-layout__content">
 
           <?php
 
-          $pitCards = PitCards::getPitCardsForTeam($teamId, $eventId);
-
-          for($i = 0; $i < sizeof($pitCards); $i++)
-          {
-            echo
-            '
-                <div class="mdl-layout__tab-panel is-active" id="overview">
-                  <section class="section--center mdl-grid mdl-grid--no-spacing mdl-shadow--2dp">
-                    <div class="mdl-card mdl-cell mdl-cell--12-col">
-                      <div class="mdl-card__supporting-text">
-                        <h4>Pit Card ' . (sizeof($pitCards) - $i) . '</h4>
-                        Completed By: ' . $pitCards[$i]['CompletedBy'] .
-                    '</div>
-                      <div class="mdl-card__actions">
-                        <a href="/pit-card.php?pitCardId=' . $pitCards[$i]['Id']  .'" class="mdl-button">View</a>
-                      </div>
-                    </div>
-                  </section>
-                </div>
-            ';
-          }
+          foreach($team->getPitCards($event) as $pitCard)
+              echo $pitCard->toCard();
 
           ?>
 

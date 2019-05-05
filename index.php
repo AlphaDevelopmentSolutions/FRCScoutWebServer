@@ -15,7 +15,7 @@ require_once("classes/Events.php");
         <?php
         $header = new Header('Events', null, null, null);
 
-        echo $header->toString();
+        echo $header->toHtml();
         ?>
       <main class="mdl-layout__content">
           <?php

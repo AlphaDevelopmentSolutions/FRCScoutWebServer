@@ -11,7 +11,7 @@ $teamId = $_GET['teamId'];
 
 $team = Teams::withId($teamId);
 $event = Events::withId($eventId);
-$pitCard = PitCards::withId(PitCards::getNewestPitCard($team->Id, $event->BlueAllianceId)['0']['Id']);
+$pitCard = $team->getPitCards($event)[0];
 
 $url = "http://scouting.wiredcats5885.ca/ajax/GetOPRStats.php";
 
@@ -59,19 +59,17 @@ $ccwms = $stats['ccwms']['frc' . $pitCard->TeamId];
 
         $additionContent = '';
 
-        $robotMediaUri = Teams::getProfileImageUri($team->Id);
+        $robotMedia = $team->getProfileImage();
 
-        if(!empty($robotMediaUri))
+        if(!empty($robotMedia->FileURI))
         {
-            $robotMediaUri = ROBOT_MEDIA_URL . $robotMediaUri;
             $additionContent .=
                 '<div style="height: unset" class="mdl-layout--large-screen-only mdl-layout__header-row">
-                  <div class="circle-image" style="background-image: url(' . $robotMediaUri . ')">
-
+                  <div class="circle-image" style="background-image: url(' . ROBOT_MEDIA_URL . $robotMedia->FileURI . ')">
                   </div>
                 </div>';
         }
-        
+
         $additionContent .=
         '
         <div class="mdl-layout--large-screen-only mdl-layout__header-row">
@@ -81,8 +79,8 @@ $ccwms = $stats['ccwms']['frc' . $pitCard->TeamId];
             <h3>' . $team->City . ', ' . $team->StateProvince . ', ' . $team->Country . '</h3><br>
         </div>
         <div class="mdl-layout--large-screen-only mdl-layout__header-row">';
-           
-        
+
+
             if(!empty($team->FacebookURL))
             {
                 $additionContent .=
@@ -132,7 +130,7 @@ $ccwms = $stats['ccwms']['frc' . $pitCard->TeamId];
                     </a>
                   ';
             }
-            
+
         $additionContent .=
         '
             </div>
@@ -169,7 +167,7 @@ $ccwms = $stats['ccwms']['frc' . $pitCard->TeamId];
 
         $header = new Header($event->Name, $additionContent, $navBarArray, $event->BlueAllianceId);
 
-        echo $header->toString();
+        echo $header->toHtml();
 
         ?>
       <main class="mdl-layout__content">
@@ -191,17 +189,15 @@ $ccwms = $stats['ccwms']['frc' . $pitCard->TeamId];
 
           <?php
 
-          foreach(Matches::getMatches($event, $team) as $match)
+          foreach($event->getMatches(null, $team) as $match)
           {
-              $match = Matches::withProperties($match);
+              $scoutCards = $match->getScoutCards($team);
 
-              $scoutCard = ScoutCards::forMatch($teamId, $match->Key);
-
-              if(!empty($scoutCard->Id))
-                  echo $match->toHtml('/scout-card.php?scoutCardId=' . $scoutCard->Id, 'View Scout Card', $team->Id);
+              if(!empty($scoutCards))
+                  echo $match->toHtml('/scout-card.php?eventId=' . $event->BlueAllianceId . '&matchId=' . $match->Key . '&teamId=' . $team->Id . '&scoutCardId=' . $scoutCards[0]->Id, 'View Scout Card', $team->Id);
 
               else
-                  echo $match->toHtml('/match.php?eventId=' . $match->EventId . '&matchId=' . $match->Id . '&allianceColor=BLUE', 'View Match Overview', $team->Id);
+                  echo $match->toHtml('/match.php?eventId=' . $match->EventId . '&matchId=' . $match->Key . '&allianceColor=BLUE', 'View Match Overview', $team->Id);
           }
 
           ?>

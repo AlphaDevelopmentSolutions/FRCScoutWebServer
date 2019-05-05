@@ -27,66 +27,36 @@ class Matches extends Table
     static $MATCH_TYPE_FINALS = 'f';
 
     /**
-     * Loads a new instance by its database key
-     * @param $key
+     * Overrides parent withId method and provides a custom column name to use when loading
+     * @param int|string $id
      * @return Matches
      */
-    static function withKey($key)
+    public static function withId($id)
     {
-        $instance = new self();
-        $instance->loadByKey($key);
-        return $instance;
-
+        return parent::withId($id, '`Key`');
     }
 
     /**
-     * Loads a new instance by its database key
-     * @param $key
+     * Gets scout cards for a specific match
+     * @param null | Teams $team if specified, filters by team
+     * @return ScoutCards[]
      */
-    protected function loadByKey($key)
-    {
-        $database = new Database();
-        $sql = 'SELECT * FROM ' . self::$TABLE_NAME . ' WHERE '.'`Key` = '.$database->quote($key);
-        $rs = $database->query($sql);
-
-        if($rs && $rs->num_rows > 0) {
-            $row = $rs->fetch_assoc();
-
-            if(is_array($row)) {
-                foreach($row as $key => $value){
-                    if(property_exists($this, $key)){
-                        $this->$key = $value;
-                    }
-                }
-            }
-        }
-    }
-
-
-    /**
-     * Gets all matches specified by the event
-     * @param Events $event event to get matches from
-     * @param Teams $team team to get matches for
-     * @return array
-     */
-    public static function getMatches($event, $team = null)
+    public function getScoutCards($team = null)
     {
         $database = new Database();
 
         $sql = "SELECT 
                       * 
                     FROM 
-                      matches 
+                      scout_cards 
                     WHERE
-                      EventId = " . $database->quote($event->BlueAllianceId) .
-            " AND MatchType = " . $database->quote(self::$MATCH_TYPE_QUALIFICATIONS);
+                      MatchId = " . $database->quote($this->Key);
 
         //add the team query if a team was specified
         if(!empty($team))
-            $sql .= " AND " . $database->quote($team->Id) . " IN (BlueAllianceTeamOneId, BlueAllianceTeamTwoId, BlueAllianceTeamThreeId, RedAllianceTeamOneId, RedAllianceTeamTwoId, RedAllianceTeamThreeId)";
+            $sql .= " AND " . $database->quoteColumn('TeamId') . " = " . $database->quote($team->Id);
 
-        $sql .= "ORDER BY MatchNumber DESC";
-
+        $sql .= " ORDER BY Id DESC";
 
         $matchIds = $database->query($sql);
         $database->close();
@@ -97,70 +67,7 @@ class Matches extends Table
         {
             while ($row = $matchIds->fetch_assoc())
             {
-                $response[] = $row;
-            }
-        }
-
-        return $response;
-    }
-
-    public function getMatchScoutCardIds($eventId, $allianceColor)
-    {
-        $database = new Database();
-
-        $sql = "SELECT 
-                      Id
-                    FROM 
-                      scout_cards 
-                    WHERE
-                      EventId = " . $database->quote($eventId) .
-                    "AND 
-                      MatchId = " . $database->quote($this->Key) .
-                    "AND 
-                      AllianceColor = " . $database->quote($allianceColor);
-
-        $teamIds = $database->query($sql);
-        $database->close();
-
-
-        $response = array();
-
-        if($teamIds && $teamIds->num_rows > 0)
-        {
-            while ($row = $teamIds->fetch_assoc())
-            {
-                $response[] = $row;
-            }
-        }
-
-        return $response;
-    }
-
-    public static function getRedAllianceScoutCardIds($eventId, $matchId)
-    {
-        $database = new Database();
-        $teamIds = $database->query(
-            "SELECT 
-                      Id
-                    FROM 
-                      scout_cards 
-                    WHERE
-                      EventId = " . $database->quote($eventId) .
-                    "AND 
-                      MatchId = " . $database->quote($matchId) .
-                    "AND 
-                      AllianceColor = " . $database->quote('RED')
-        );
-        $database->close();
-
-
-        $response = array();
-
-        if($teamIds && $teamIds->num_rows > 0)
-        {
-            while ($row = $teamIds->fetch_assoc())
-            {
-                $response[] = $row;
+                $response[] = ScoutCards::withProperties($row);
             }
         }
 

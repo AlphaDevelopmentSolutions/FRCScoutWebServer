@@ -34,27 +34,26 @@ $match = Matches::withId($matchId);
         $navBarArray[] = new NavBar($navBarLinksArray);
 
         $navBarLinksArray = new NavBarLinkArray();
-        $navBarLinksArray[] = new NavBarLink('Blue Alliance', '/match.php?eventId=' . $event->BlueAllianceId . '&matchId=' . $match->Id . '&allianceColor=BLUE', ($allianceColor == 'BLUE'));
-        $navBarLinksArray[] = new NavBarLink('Red Alliance', '/match.php?eventId=' . $event->BlueAllianceId . '&matchId=' . $match->Id . '&allianceColor=RED', ($allianceColor == 'RED'));
+        $navBarLinksArray[] = new NavBarLink('Blue Alliance', '/match.php?eventId=' . $event->BlueAllianceId . '&matchId=' . $match->Key . '&allianceColor=BLUE', ($allianceColor == 'BLUE'));
+        $navBarLinksArray[] = new NavBarLink('Red Alliance', '/match.php?eventId=' . $event->BlueAllianceId . '&matchId=' . $match->Key . '&allianceColor=RED', ($allianceColor == 'RED'));
 
         $navBarArray[] = new NavBar($navBarLinksArray);
 
         $header = new Header($event->Name, $additionContent, $navBarArray, $event->BlueAllianceId);
 
-        echo $header->toString();
+        echo $header->toHtml();
 
         ?>
       <main class="mdl-layout__content">
 
           <?php
 
-          $scoutCardIds = array();
-          $scoutCardIds = $match->getMatchScoutCardIds($eventId, $allianceColor);
+          $scoutCards = $match->getScoutCards();
 
-          foreach($scoutCardIds AS $scoutCardId)
+          foreach($scoutCards AS $scoutCard)
           {
-              $scoutCard = ScoutCards::withId($scoutCardId['Id']);
-              echo $scoutCard->toHtml();
+              if($allianceColor == $scoutCard->AllianceColor)
+                echo $scoutCard->toHtml();
           }
 
 

@@ -41,118 +41,20 @@ class ScoutCards extends Table
 
     protected static $TABLE_NAME = 'scout_cards';
 
-    /**
-     * Loads a new instance by specified properties
-     * @param int $teamId
-     * @param string $matchKey
-     * @return ScoutCards
-     */
-    static function forMatch($teamId, $matchKey)
-    {
-        //crate a new instance
-        $instance = new self();
-
-        //gather results from database, limit to the newest scout card only
-        $database = new Database();
-        $sql = "SELECT 
-                      * 
-                    FROM 
-                      " . self::$TABLE_NAME ." 
-                    WHERE 
-                      TeamId = " . $database->quote($teamId) .
-                    ' AND
-                      MatchId = ' . $database->quote($matchKey) .
-                    ' ORDER BY Id DESC LIMIT 1';
-
-        $scoutCards = $database->query($sql);
-        $database->close();
-
-        //assign results
-        if($scoutCards && $scoutCards->num_rows > 0)
-            $instance->loadByProperties($scoutCards->fetch_assoc());
-
-        return $instance;
-
-    }
-
     function delete()
     {
-        if(empty($this->Id))
+        if (empty($this->Id))
             return false;
 
         $database = new Database();
-        $sql = 'DELETE FROM '.self::$TABLE_NAME.' WHERE '.'id = '.$database->quote($this->Id);
+        $sql = 'DELETE FROM ' . self::$TABLE_NAME . ' WHERE ' . 'id = ' . $database->quote($this->Id);
         $rs = $database->query($sql);
 
-        if($rs)
+        if ($rs)
             return true;
 
 
         return false;
-    }
-
-    public static function getScoutCardsForTeam($teamId, $eventId)
-    {
-        $database = new Database();
-        $scoutCards = $database->query(
-            "SELECT 
-                      * 
-                    FROM 
-                      " . self::$TABLE_NAME ." 
-                    WHERE 
-                      TeamId = " . $database->quote($teamId) .
-                    'AND
-                        EventId = ' . $database->quote($eventId) .
-                    'ORDER BY MatchId DESC'
-        );
-        $database->close();
-
-        $response = array();
-
-        if($scoutCards && $scoutCards->num_rows > 0)
-        {
-            while ($row = $scoutCards->fetch_assoc())
-            {
-                $response[] = $row;
-            }
-        }
-
-        return $response;
-    }
-
-    public static function getScoutCardsForEvent($eventId)
-    {
-        $database = new Database();
-        $scoutCards = $database->query(
-            "SELECT 
-                      * 
-                    FROM 
-                      " . self::$TABLE_NAME ."  
-                    WHERE 
-                      EventId = " . $database->quote($eventId)
-        );
-        $database->close();
-
-        $response = array();
-
-        if($scoutCards && $scoutCards->num_rows > 0)
-        {
-            while ($row = $scoutCards->fetch_assoc())
-            {
-                $response[] = $row;
-            }
-        }
-
-        return $response;
-    }
-
-    /**
-     * Gets and returns the team assigned to this scout card
-     * @return Teams
-     */
-    public function getTeam()
-    {
-        return Teams::withId($this->TeamId);
     }
 
     /**
@@ -161,7 +63,6 @@ class ScoutCards extends Table
      */
     public function toHtml()
     {
-        require_once("Teams.php");
 
         //load the stars to be shown
         $defenseStars = '&nbsp';
@@ -178,7 +79,7 @@ class ScoutCards extends Table
             $driveStars .= "&#9733;";
 
         //load the team from the database
-        $team = $this->getTeam();
+        $team = Teams::withId($this->TeamId);
 
         $html = '
             <div class="mdl-layout__tab-panel is-active" id="overview">

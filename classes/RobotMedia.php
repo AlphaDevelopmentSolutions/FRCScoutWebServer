@@ -55,41 +55,26 @@ class RobotMedia extends Table
     }
 
     /**
-     * Returns the base 64 encoded image
-     * @param $teamId
-     * @return array
+     * Returns the html for displaying a robot media
+     * @return string html to display
      */
-    public static function getRobotMediaForTeam($teamId)
-    {
-        $database = new Database();
-        $robotMedia = $database->query(
-            "SELECT 
-                      * 
-                    FROM 
-                      " . self::$TABLE_NAME . "  
-                    WHERE 
-                      TeamId = " . $database->quote($teamId)
-        );
-        $database->close();
-
-        $response = array();
-
-        if($robotMedia && $robotMedia->num_rows > 0)
-        {
-            while ($row = $robotMedia->fetch_assoc())
-            {
-//                $file = fopen("../assets/robot-media/" . $row['ImageURI'] . ".png", 'r');
-//                $row['Base64Image'] = base64_encode($file);
-                $response[] = $row;
-            }
-        }
-
-        return $response;
-    }
-
     public function toHtml()
     {
-        // TODO: Implement toHtml() method.
+        $html =
+            '<div class="mdl-layout__tab-panel is-active" id="overview">
+                <section class="section--center mdl-grid mdl-grid--no-spacing mdl-shadow--2dp">
+                    <div class="mdl-card mdl-cell mdl-cell--12-col">
+                        <div class="mdl-card__supporting-text">
+                            <img class="robot-media" src="' . ROBOT_MEDIA_URL . $this->FileURI . '"  height="350"/>
+                        </div>
+                        <div class="mdl-card__actions">
+                            <a target="_blank" href="' . ROBOT_MEDIA_URL . $this->FileURI . '" class="mdl-button">View</a>
+                        </div>
+                    </div>
+                </section>
+            </div>';
+
+        return $html;
     }
 
     public function toString()

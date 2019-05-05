@@ -3,6 +3,7 @@ require_once("config.php");
 require_once("classes/ScoutCards.php");
 require_once("classes/Events.php");
 require_once("classes/Matches.php");
+require_once("classes/Teams.php");
 
 $scoutCardId = $_GET['scoutCardId'];
 $eventId = $_GET['eventId'];
@@ -24,7 +25,7 @@ else
 }
 
 
-$match = Matches::withKey($scoutCard->MatchId);
+$match = Matches::withId($scoutCard->MatchId);
 $event = Events::withId($scoutCard->EventId);
 
 if(isPostBack() && loggedIn())
@@ -94,7 +95,7 @@ if(isPostBack() && loggedIn())
 
         $header = new Header($event->Name, null, $navBar, $event->BlueAllianceId);
 
-        echo $header->toString();
+        echo $header->toHtml();
         ?>
       <main class="mdl-layout__content">
 

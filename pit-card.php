@@ -71,7 +71,7 @@ if(isPostBack() && loggedIn())
 
         $header = new Header($event->Name, null, $navBar, $event->BlueAllianceId);
 
-        echo $header->toString();
+        echo $header->toHtml();
         ?>
       <main class="mdl-layout__content">
 
