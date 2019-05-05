@@ -1,7 +1,7 @@
 <?php
 require_once("config.php");
-require_once("classes/Events.php");
-require_once("classes/ChecklistItems.php");
+require_once(ROOT_DIR . "/classes/Events.php");
+require_once(ROOT_DIR . "/classes/ChecklistItems.php");
 
 $eventId = $_GET['eventId'];
 

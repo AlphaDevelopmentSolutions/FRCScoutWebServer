@@ -6,7 +6,7 @@ class Users extends Table
     public $FirstName;
     public $LastName;
 
-    protected static $TABLE_NAME = 'users';
+    public static $TABLE_NAME = 'users';
 
     /**
      * Attempts to login with the provided username and password
@@ -37,14 +37,22 @@ class Users extends Table
         return (!empty($response));
     }
 
+    /**
+     * Returns the object once converted into HTML
+     * @return string
+     */
     public function toHtml()
     {
         // TODO: Implement toHtml() method.
     }
 
+    /**
+     * Compiles the name of the object when displayed as a string
+     * @return string
+     */
     public function toString()
     {
-        return $this->FirstName . " " . $this->LastName;
+        return $this->FirstName . ' ' . $this->LastName;
     }
 
 }

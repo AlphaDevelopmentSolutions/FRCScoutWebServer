@@ -9,35 +9,6 @@ class ChecklistItems extends Table
     protected static $TABLE_NAME = 'checklist_items';
 
     /**
-     * Gets the results for this checklist item
-     * @param Matches | null $match if specified, filters by match
-     * @return ChecklistItemResults[]
-     */
-    public function getResults($match = null)
-    {
-        //create the sql statement
-        $sql = "SELECT * FROM ! WHERE ! = ?";
-        $cols[] = 'checklist_item_results';
-        $cols[] = 'ChecklistItemId';
-        $args[] = $this->Id;
-
-        if(!empty($match))
-        {
-            $sql .= " AND ! = ? ";
-
-            $cols[] = 'MatchId';
-            $args[] = $match->Key;
-        }
-
-        $rows = self::query($sql, $cols, $args);
-
-        foreach ($rows as $row)
-            $response[] = ChecklistItemResults::withProperties($row);
-
-        return $response;
-    }
-
-    /**
      * Overrides parent::delete() method
      * Attempts to delete checklist item completion records before deleting this record
      * @return bool
@@ -58,8 +29,39 @@ class ChecklistItems extends Table
     }
 
     /**
-     * Converts a completed checklist item result to Html format, shown as a card
-     * @return string HTML for displaying on the web page
+     * Gets the results for this checklist item
+     * @param Matches | null $match if specified, filters by match
+     * @return ChecklistItemResults[]
+     */
+    public function getResults($match = null)
+    {
+        require_once(ROOT_DIR . '/classes/ChecklistItemResults.php');
+
+        //create the sql statement
+        $sql = "SELECT * FROM ! WHERE ! = ?";
+        $cols[] = ChecklistItemResults::$TABLE_NAME;
+        $cols[] = 'ChecklistItemId';
+        $args[] = $this->Id;
+
+        if(!empty($match))
+        {
+            $sql .= " AND ! = ? ";
+
+            $cols[] = 'MatchId';
+            $args[] = $match->Key;
+        }
+
+        $rows = self::query($sql, $cols, $args);
+
+        foreach ($rows as $row)
+            $response[] = ChecklistItemResults::withProperties($row);
+
+        return $response;
+    }
+
+    /**
+     * Returns the object once converted into HTML
+     * @return string
      */
     public function toHtml()
     {
@@ -78,6 +80,10 @@ class ChecklistItems extends Table
         return $html;
     }
 
+    /**
+     * Compiles the name of the object when displayed as a string
+     * @return string
+     */
     public function toString()
     {
         return $this->Title;

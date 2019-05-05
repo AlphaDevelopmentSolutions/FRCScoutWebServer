@@ -7,7 +7,7 @@ class RobotMedia extends Table
     public $FileURI;
     public $Base64Image;
 
-    protected static $TABLE_NAME = 'robot_media';
+    public static $TABLE_NAME = 'robot_media';
 
     /**
      * Overrides parent::save() method
@@ -19,6 +19,19 @@ class RobotMedia extends Table
         if(!empty($this->Id))
             if($this->saveImage())
                 return parent::save();
+
+        return false;
+    }
+
+    /**
+     * Overrides parent::delete() method
+     * Attempts to delete the image before deleting the record
+     * @return bool
+     */
+    function delete()
+    {
+        if($this->deleteImage())
+            return parent::delete();
 
         return false;
     }
@@ -72,21 +85,8 @@ class RobotMedia extends Table
     }
 
     /**
-     * Overrides parent::delete() method
-     * Attempts to delete the image before deleting the record
-     * @return bool
-     */
-    function delete()
-    {
-        if($this->deleteImage())
-            return parent::delete();
-
-        return false;
-    }
-
-    /**
-     * Returns the html for displaying a robot media
-     * @return string html to display
+     * Returns the object once converted into HTML
+     * @return string
      */
     public function toHtml()
     {
@@ -107,9 +107,13 @@ class RobotMedia extends Table
         return $html;
     }
 
+    /**
+     * Compiles the name of the object when displayed as a string
+     * @return string
+     */
     public function toString()
     {
-        // TODO: Implement toString() method.
+        return $this->TeamId . ' Robot Media';
     }
 
 

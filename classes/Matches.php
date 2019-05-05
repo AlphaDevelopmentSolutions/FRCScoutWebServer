@@ -19,7 +19,7 @@ class Matches extends Table
     public $BlueAllianceScore;
     public $RedAllianceScore;
 
-    protected static $TABLE_NAME = 'matches';
+    public static $TABLE_NAME = 'matches';
 
     static $MATCH_TYPE_QUALIFICATIONS = 'qm';
     static $MATCH_TYPE_QUARTER_FINALS = 'qf';
@@ -44,9 +44,12 @@ class Matches extends Table
      */
     public function getScoutCards($team = null, $scoutCard = null)
     {
+        require_once(ROOT_DIR . '/classes/ScoutCards.php');
+        require_once(ROOT_DIR . '/classes/Teams.php');
+
         //create the sql statement
         $sql = "SELECT * FROM ! WHERE ! = ?";
-        $cols[] = 'scout_cards';
+        $cols[] = ScoutCards::$TABLE_NAME;
         $cols[] = 'MatchId';
         $args[] = $this->Key;
 
@@ -116,7 +119,7 @@ class Matches extends Table
     }
 
     /**
-     * Returns the final string to be displayed when referencing a match
+     * Compiles the name of the object when displayed as a string
      * @return string
      */
     public function toString()
@@ -124,12 +127,13 @@ class Matches extends Table
         return $this->getMatchTypeString() . ' ' . $this->MatchNumber;
     }
 
+
     /**
-     * Returns the html for displaying a match card
+     * Returns the object once converted into HTML
      * @param string $buttonHref href action when clicking the button
      * @param string $buttonText button text to display
      * @param int | null $teamId selected team
-     * @return string html to display
+     * @return string
      */
     public function toHtml($buttonHref = null, $buttonText = null, $teamId = null)
     {

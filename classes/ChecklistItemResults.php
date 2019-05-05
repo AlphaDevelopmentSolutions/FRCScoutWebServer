@@ -9,14 +9,16 @@ class ChecklistItemResults extends Table implements Status
     public $CompletedBy;
     public $CompletedDate;
 
-    protected static $TABLE_NAME = 'checklist_item_results';
+    public static $TABLE_NAME = 'checklist_item_results';
 
     /**
-     * Converts a completed checklist item to Html format, shown as a card
-     * @return string HTML for displaying on the web page
+     * Returns the object once converted into HTML
+     * @return string
      */
     public function toHtml()
     {
+        require_once(ROOT_DIR . '/classes/ChecklistItems.php');
+
         //get the checklist item
         $checklistItem = ChecklistItems::withId($this->ChecklistItemId);
 
@@ -26,8 +28,8 @@ class ChecklistItemResults extends Table implements Status
 
         else if($this->Status == Status::INCOMPLETE)
             $statusHtml = '<span class="bad" style="font-weight: bold">' . Status::INCOMPLETE . '</span>';
-        
-        $html = 
+
+        $html =
             '<div class="mdl-layout__tab-panel is-active" id="overview">
                     <section class="section--center mdl-grid mdl-grid--no-spacing mdl-shadow--2dp">
                         <div class="mdl-card mdl-cell mdl-cell--12-col">
@@ -51,9 +53,14 @@ class ChecklistItemResults extends Table implements Status
         return $html;
     }
 
+    /**
+     * Compiles the name of the object when displayed as a string
+     * @return string
+     */
     public function toString()
     {
-        // TODO: Implement toString() method.
+        require_once(ROOT_DIR . '/classes/ChecklistItems.php');
+        return ChecklistItems::withId($this->ChecklistItemId)->Title;
     }
 
 }

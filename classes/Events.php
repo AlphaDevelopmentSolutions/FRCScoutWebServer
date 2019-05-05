@@ -11,7 +11,7 @@ class Events extends Table
     public $StartDate;
     public $EndDate;
 
-    protected static $TABLE_NAME = 'events';
+    public static $TABLE_NAME = 'events';
 
     /**
      * Overrides parent withId method and provides a custom column name to use when loading
@@ -41,12 +41,16 @@ class Events extends Table
      */
     public function getTeams($match = null, $team = null)
     {
+        require_once(ROOT_DIR . '/classes/Teams.php');
+        require_once(ROOT_DIR . '/classes/EventTeamList.php');
+        require_once(ROOT_DIR . '/classes/Matches.php');
+
         //create the sql statement
         $sql = "SELECT * FROM ! WHERE ! IN (SELECT ! FROM ! WHERE ! = ?)";
-        $cols[] = 'teams';
+        $cols[] = Teams::$TABLE_NAME;
         $cols[] = 'Id';
         $cols[] = 'TeamId';
-        $cols[] = 'event_team_list';
+        $cols[] = EventTeamList::$TABLE_NAME;
         $cols[] = 'EventId';
         $args[] = $this->BlueAllianceId;
 
@@ -63,37 +67,37 @@ class Events extends Table
 
             $cols[] = 'Id';
             $cols[] = 'BlueAllianceTeamOneId';
-            $cols[] = 'matches';
+            $cols[] = Matches::$TABLE_NAME;
             $cols[] = 'Key';
             $args[] = $match->Key;
 
             $cols[] = 'Id';
             $cols[] = 'BlueAllianceTeamTwoId';
-            $cols[] = 'matches';
+            $cols[] = Matches::$TABLE_NAME;
             $cols[] = 'Key';
             $args[] = $match->Key;
 
             $cols[] = 'Id';
             $cols[] = 'BlueAllianceTeamThreeId';
-            $cols[] = 'matches';
+            $cols[] = Matches::$TABLE_NAME;
             $cols[] = 'Key';
             $args[] = $match->Key;
 
             $cols[] = 'Id';
             $cols[] = 'RedAllianceTeamOneId';
-            $cols[] = 'matches';
+            $cols[] = Matches::$TABLE_NAME;
             $cols[] = 'Key';
             $args[] = $match->Key;
 
             $cols[] = 'Id';
             $cols[] = 'RedAllianceTeamTwoId';
-            $cols[] = 'matches';
+            $cols[] = Matches::$TABLE_NAME;
             $cols[] = 'Key';
             $args[] = $match->Key;
 
             $cols[] = 'Id';
             $cols[] = 'RedAllianceTeamThreeId';
-            $cols[] = 'matches';
+            $cols[] = Matches::$TABLE_NAME;
             $cols[] = 'Key';
             $args[] = $match->Key;
         }
@@ -119,15 +123,19 @@ class Events extends Table
     }
 
     /**
-     * @param null $match
-     * @param null $team
+     * Gets all matches from this event
+     * @param Matches | null $match if specified, filters by match
+     * @param Teams | null $team if specified, filters by team
      * @return Matches[]
      */
     public function getMatches($match = null, $team = null)
     {
+        require_once(ROOT_DIR . '/classes/Matches.php');
+        require_once(ROOT_DIR . '/classes/Teams.php');
+
         //create the sql statement
         $sql = "SELECT * FROM ! WHERE ! = ? AND ! = ?";
-        $cols[] = 'matches';
+        $cols[] = Matches::$TABLE_NAME;
         $cols[] = 'EventId';
         $cols[] = 'MatchType';
         $args[] = $this->BlueAllianceId;
@@ -168,16 +176,21 @@ class Events extends Table
     }
 
     /**
-     * @param Matches $match
-     * @param Teams $team
-     * @param ScoutCards $scoutCard
+     * Gets all scout cards from event
+     * @param Matches | null $match if specified, filters by match
+     * @param Teams | null $team if specified, filters by team
+     * @param ScoutCards | null $scoutCard if specified, filters by scoutcard
      * @return ScoutCards[]
      */
     public function getScoutCards($match = null, $team = null, $scoutCard = null)
     {
+        require_once(ROOT_DIR . '/classes/ScoutCards.php');
+        require_once(ROOT_DIR . '/classes/Teams.php');
+        require_once(ROOT_DIR . '/classes/Matches.php');
+
         //create the sql statement
         $sql = "SELECT * FROM ! WHERE ! = ?";
-        $cols[] = 'scout_cards';
+        $cols[] = ScoutCards::$TABLE_NAME;
         $cols[] = 'EventId';
         $args[] = $this->BlueAllianceId;
 
@@ -221,15 +234,19 @@ class Events extends Table
     }
 
     /**
-     * @param Teams $team
-     * @param PitCards $pitCard
+     * Gets all pitcards from this event
+     * @param Teams | null $team if specified, filters by team
+     * @param PitCards | null $pitCard if specified, filters by pit card
      * @return PitCards[]
      */
     public function getPitCards($team = null, $pitCard = null)
     {
+        require_once(ROOT_DIR . '/classes/Teams.php');
+        require_once(ROOT_DIR . '/classes/PitCards.php');
+
         //create the sql statement
         $sql = "SELECT * FROM !";
-        $cols[] = 'pit_cards';
+        $cols[] = PitCards::$TABLE_NAME;
 
         //if team specified, filter by team
         if(!empty($team))
@@ -261,7 +278,10 @@ class Events extends Table
         return $response;
     }
 
-
+    /**
+     * Returns the object once converted into HTML
+     * @return string
+     */
     public function toHtml()
     {
         $html =
@@ -283,6 +303,10 @@ class Events extends Table
         return $html;
     }
 
+    /**
+     * Compiles the name of the object when displayed as a string
+     * @return string
+     */
     public function toString()
     {
         return $this->Name;

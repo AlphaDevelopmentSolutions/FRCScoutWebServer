@@ -6,7 +6,7 @@ class EventTeamList extends Table
     public $TeamId;
     public $EventId;
 
-    protected static $TABLE_NAME = 'event_team_list';
+    public static $TABLE_NAME = 'event_team_list';
 
     public function toHtml()
     {

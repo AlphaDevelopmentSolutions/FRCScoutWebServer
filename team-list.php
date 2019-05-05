@@ -1,7 +1,6 @@
 <?php
 require_once("config.php");
-require_once("classes/Teams.php");
-require_once("classes/Events.php");
+require_once(ROOT_DIR . "/classes/Events.php");
 
 $eventId = $_GET['eventId'];
 
@@ -34,32 +33,6 @@ $event = Events::withId($eventId);
             echo $team->toHtml($event);
 
         ?>
-
-
-        <div class="mdl-layout__tab-panel" id="stats">
-            <style>
-                .demo-card-wide.mdl-card {
-                    width: 60%;
-                    /*    height: 1000px;*/
-                    margin: auto;
-                }
-
-                .demo-card-wide > .mdl-card__title {
-                    color: #fff;
-                    height: 176px;
-                    /*  background: url('../assets/demos/welcome_card.jpg') center / cover;*/
-                    background-color: red;
-                }
-
-                .demo-card-wide > .mdl-card__menu {
-                    color: #fff;
-                }
-            </style>
-
-            <section class="section--footer mdl-grid">
-            </section>
-        </div>
-
     </main>
 </div>
 <?php require_once('includes/bottom-scripts.php') ?>

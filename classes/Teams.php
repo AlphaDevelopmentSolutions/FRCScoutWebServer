@@ -15,7 +15,7 @@ class Teams extends Table
     public $WebsiteURL;
     public $ImageFileURI;
 
-    protected static $TABLE_NAME = 'teams';
+    public static $TABLE_NAME = 'teams';
 
     /**
      * Returns the URI of the teams profile image
@@ -23,9 +23,11 @@ class Teams extends Table
      */
     public function getProfileImage()
     {
+        require_once(ROOT_DIR . '/classes/RobotMedia.php');
+
         //create the sql statement
         $sql = "SELECT * FROM ! WHERE ! = ? ORDER BY ! DESC LIMIT 1";
-        $cols[] = 'robot_media';
+        $cols[] = RobotMedia::$TABLE_NAME;
         $cols[] = 'TeamId';
         $args[] = $this->Id;
         $cols[] = 'Id';
@@ -34,7 +36,7 @@ class Teams extends Table
 
         foreach ($rows as $row)
         {
-            require_once("classes/RobotMedia.php");
+            require_once(ROOT_DIR . "/classes/RobotMedia.php");
             return RobotMedia::withProperties($row);
         }
     }
@@ -46,9 +48,11 @@ class Teams extends Table
      */
     public function getPitCards($event)
     {
+        require_once(ROOT_DIR . '/classes/PitCards.php');
+
         //create the sql statement
         $sql = "SELECT * FROM ! WHERE ! = ? AND ! = ? ORDER BY ! DESC";
-        $cols[] = 'pit_cards';
+        $cols[] = PitCards::$TABLE_NAME;
         $cols[] = 'TeamId';
         $args[] = $this->Id;
         $cols[] = 'EventId';
@@ -69,9 +73,11 @@ class Teams extends Table
      */
     public function getRobotPhotos()
     {
+        require_once(ROOT_DIR . '/classes/RobotMedia.php');
+
         //create the sql statement
         $sql = "SELECT * FROM ! WHERE ! = ? ORDER BY ! DESC";
-        $cols[] = 'robot_media';
+        $cols[] = RobotMedia::$TABLE_NAME;
         $cols[] = 'TeamId';
         $args[] = $this->Id;
         $cols[] = 'Id';
@@ -85,12 +91,13 @@ class Teams extends Table
     }
 
     /**
-     * Returns the team object once converted into HTML
+     * Returns the object once converted into HTML
      * @param Events $event id of the event
      * @return string
      */
     public function toHtml($event = null)
     {
+        require_once(ROOT_DIR . '/classes/Events.php');
 
         $html =
             '<section class="section--center mdl-grid mdl-grid--no-spacing mdl-shadow--2dp team-card">
@@ -121,9 +128,9 @@ class Teams extends Table
             return $html;
     }
 
+
     /**
-     * Formats the team name for string use
-     * EX: 5885 - Villanova WiredCats
+     * Compiles the name of the object when displayed as a string
      * @return string
      */
     public function toString()

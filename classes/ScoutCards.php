@@ -39,30 +39,15 @@ class ScoutCards extends Table
     public $Notes;
     public $CompletedDate;
 
-    protected static $TABLE_NAME = 'scout_cards';
-
-    function delete()
-    {
-        if (empty($this->Id))
-            return false;
-
-        $database = new Database();
-        $sql = 'DELETE FROM ' . self::$TABLE_NAME . ' WHERE ' . 'id = ' . $database->quote($this->Id);
-        $rs = $database->query($sql);
-
-        if ($rs)
-            return true;
-
-
-        return false;
-    }
+    public static $TABLE_NAME = 'scout_cards';
 
     /**
-     * Returns the html for displaying a scout card
-     * @return string html to display
+     * Returns the object once converted into HTML
+     * @return string
      */
     public function toHtml()
     {
+        require_once(ROOT_DIR . '/classes/Teams.php');
 
         //load the stars to be shown
         $defenseStars = '&nbsp';
@@ -254,9 +239,13 @@ class ScoutCards extends Table
         return $html;
     }
 
+    /**
+     * Compiles the name of the object when displayed as a string
+     * @return string
+     */
     public function toString()
     {
-        // TODO: Implement toString() method.
+        return $this->TeamId . ' - Scout Card ';
     }
 
 

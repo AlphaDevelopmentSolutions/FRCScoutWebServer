@@ -24,31 +24,15 @@ class PitCards extends Table
 
     public $CompletedBy;
 
-    protected static $TABLE_NAME = 'pit_cards';
-
-    function delete()
-    {
-        if(empty($this->Id))
-            return false;
-
-        $database = new Database();
-        $sql = 'DELETE FROM '.self::$TABLE_NAME.' WHERE '.'id = '.$database->quote($this->Id);
-        $rs = $database->query($sql);
-
-        if($rs)
-            return true;
-
-
-        return false;
-    }
+    public static $TABLE_NAME = 'pit_cards';
 
     /**
-     * Returns the html for displaying a pit card
-     * @return string html to display
+     * Returns the object once converted into HTML
+     * @return string
      */
     public function toHtml()
     {
-        require_once("Teams.php");
+        require_once(ROOT_DIR . '/classes/Teams.php');
 
         //load the team from the database
         $team = Teams::withId($this->TeamId);
