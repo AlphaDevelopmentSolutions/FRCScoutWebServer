@@ -1,14 +1,11 @@
 <?php
 
-class Database
+class Database extends PDO
 {
-    var $classQuery;
-    var $link;
 
-    var $errno = '';
-    var $error = '';
-
-    // Connects to the database
+    /**
+     * Database constructor.
+     */
     function __construct()
     {
 
@@ -26,90 +23,102 @@ class Database
             PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC, //make the default fetch be an associative array
         ];
 
-        // Connect to the database
-        $this->link = new PDO($dsn, $user, $pass, $options);
+        parent::__construct($dsn, $user, $pass, $options);
     }
 
-    // Executes a database query
-    function query( $query )
+    /**
+     * Destroy this instance to close the database
+     */
+    function __destruct()
     {
-        $this->classQuery = $query;
-        return $this->link->query( $query );
+        unset($this);
     }
 
-    function escapeString( $query )
+    /**
+     * Quotes a param with MySQL approved quotes
+     * @param string $string to quote
+     * @param int $parameter_type
+     * @return string
+     */
+    function quote($string, $parameter_type = PDO::PARAM_STR)
     {
-        return $this->link->escape_string( $query );
+        return parent::quote($string, $parameter_type);
     }
 
-    // Get the data return int result
-    function numRows( $result )
+    /**
+     * Quotes columns with ` for MySQL approved column quotes
+     * @param string $column to quote
+     * @return string
+     */
+    function quoteColumn($column)
     {
-        return $result->num_rows;
+        return '`' . $column . '`';
     }
 
-    function lastInsertedID()
-    {
-        return $this->link->lastInsertId();
-    }
-
-    // Get query using assoc method
-    function fetchAssoc( $result )
-    {
-        return $result->fetch_assoc();
-    }
-
-    // Gets array of query results
-    function fetchArray( $result , $resultType = MYSQLI_ASSOC )
-    {
-        return $result->fetch_array( $resultType );
-    }
-
-    // Fetches all result rows as an associative array, a numeric array, or both
-    function fetchAll( $result , $resultType = MYSQLI_ASSOC )
-    {
-        return $result->fetch_all( $resultType );
-    }
-
-    // Get a result row as an enumerated array
-    function fetchRow( $result )
-    {
-        return $result->fetch_row();
-    }
-
-    // Free all MySQL result memory
-    function freeResult( $result )
-    {
-        $this->link->free_result( $result );
-    }
-
-    //Closes the database connection
+    /**
+     * Destroys the current instance of this database
+     */
     function close()
     {
-        $this->link = null;
+        $this->__destruct();
     }
 
-    //quotes the string
-    function quote($string)
+    /**
+     * Queries the database to gather rows
+     * @param string $query to run
+     * @param string[] cols columns that will replace !
+     * @param string[] | int[] $args arguments that will replace ?
+     * @return string[]
+     * ay
+     */
+    public function query($query, $cols = array(), $args = array())
     {
-        return '"' . $string . '"';
-    }
+        //replace all instances of ! with a quoted column
+        foreach($cols as $col)
+            $query = preg_replace('/!/', $this->quoteColumn($col), $query, 1);
 
-    //quotes the string
-    function quoteColumn($string)
-    {
-        return '`' . $string . '`';
-    }
-
-    function sql_error()
-    {
-        if( empty( $error ) )
+        //prepare the MySQL statement
+        if ($pdoStatement = $this->prepare($query))
         {
-            $errno = $this->link->errno;
-            $error = $this->link->error;
+            //execute and get the results
+            if($pdoStatement->execute($args))
+                $results = $pdoStatement->fetchAll();
         }
-        return $errno . ' : ' . $error;
+
+        //close the PDO statement
+        $pdoStatement = null;
+
+        return $results;
     }
+
+    /**
+     * Inserts or updates a record in the database
+     * @param string $query to run
+     * @param string[] $cols columns that will replace !
+     * @param string[] | int[] $args arguments that will replace ?
+     * @return int
+     */
+    public function insertOrUpdate($query, $cols = array(), $args = array())
+    {
+        //replace all instances of ! with a quoted column
+        foreach($cols as $col)
+            $query = preg_replace('/!/', $this->quoteColumn($col), $query, 1);
+
+        //prepare the MySQL statement
+        if ($pdoStatement = $this->prepare($query))
+        {
+            //execute and get the results
+            if($pdoStatement->execute($args))
+                $insertId = $this->lastInsertId();
+        }
+
+        //close the PDO statement
+        $pdoStatement = null;
+
+        return $insertId;
+
+    }
+
 }
 
 ?>

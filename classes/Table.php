@@ -165,58 +165,40 @@ abstract class Table
     }
 
     /**
-     * @param $query
-     * @param array $cols
-     * @param array $args
-     * @return array | int | boolean
+     * Queries the database to gather rows
+     * @param string $query to run
+     * @param string[] cols columns that will replace !
+     * @param string[] | int[] $args arguments that will replace ?
+     * @return string[]
      */
     protected static function query($query, $cols = array(), $args = array())
     {
         $database = new Database();
-        $results = array();
-
-        foreach($cols as $col)
-            $query = preg_replace('/!/', $database->quoteColumn($col), $query, 1);
-
-        if ($pdoStatement = $database->link->prepare($query))
-        {
-            if($pdoStatement->execute($args))
-                $results = $pdoStatement->fetchAll();
-        }
-
-        $pdoStatement = null;
+        $results = $database->query($query, $cols, $args);
         $database->close();
 
         return $results;
+
     }
 
     /**
-     * @param $query
-     * @param array $cols
-     * @param array $args
-     * @return string
+     * Inserts or updates a record in the database
+     * @param string $query to run
+     * @param string[] $cols columns that will replace !
+     * @param string[] | int[] $args arguments that will replace ?
+     * @return int
      */
     private static function insertOrUpdate($query, $cols = array(), $args = array())
     {
         $database = new Database();
-
-        foreach($cols as $col)
-            $query = preg_replace('/!/', $database->quoteColumn($col), $query, 1);
-
-        if ($pdoStatement = $database->link->prepare($query))
-        {
-            if($pdoStatement->execute($args))
-                $insertId = $database->lastInsertedID();
-        }
-
-        $pdoStatement = null;
+        $id = $database->insertOrUpdate($query, $cols, $args);
         $database->close();
-
-        return $insertId;
+        return $id;
     }
 
     /**
-     * @param string $orderBy
+     * Retrieves objects from the database
+     * @param string $orderBy override if the order by column needs to be changed
      * @return static[]
      */
     public static function getObjects($orderBy = 'Id')
