@@ -9,7 +9,7 @@ class Database
     var $error = '';
 
     // Connects to the database
-    function Database()
+    function __construct()
     {
 
         // Get the main settings from the array we just loaded
@@ -18,8 +18,16 @@ class Database
         $user = MYSQL_USER;
         $pass = MYSQL_PASSWORD;
 
+        $dsn = "mysql:host=$host;dbname=$name;charset=utf8mb4";
+
+        $options = [
+            PDO::ATTR_EMULATE_PREPARES   => false, // turn off emulation mode for "real" prepared statements
+            PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION, //turn on errors in the form of exceptions
+            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC, //make the default fetch be an associative array
+        ];
+
         // Connect to the database
-        $this->link = new mysqli( $host , $user , $pass , $name );
+        $this->link = new PDO($dsn, $user, $pass, $options);
     }
 
     // Executes a database query
@@ -42,7 +50,7 @@ class Database
 
     function lastInsertedID()
     {
-        return $this->link->insert_id;
+        return $this->link->lastInsertId();
     }
 
     // Get query using assoc method
@@ -78,7 +86,7 @@ class Database
     //Closes the database connection
     function close()
     {
-        $this->link->close();
+        $this->link = null;
     }
 
     //quotes the string

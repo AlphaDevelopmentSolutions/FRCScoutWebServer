@@ -23,29 +23,19 @@ class Teams extends Table
      */
     public function getProfileImage()
     {
-        if(!empty($this->Id))
+        //create the sql statement
+        $sql = "SELECT * FROM ! WHERE ! = ? ORDER BY ! DESC LIMIT 1";
+        $cols[] = 'robot_media';
+        $cols[] = 'TeamId';
+        $args[] = $this->Id;
+        $cols[] = 'Id';
+
+        $rows = self::query($sql, $cols, $args);
+
+        foreach ($rows as $row)
         {
-            $database = new Database();
-            $robotMedia = $database->query(
-                "SELECT
-                      *
-                    FROM
-                      robot_media
-                    WHERE
-                      TeamId = " . $this->Id . "
-                    ORDER BY Id DESC LIMIT 1"
-            );
-            $database->close();
-
-
-            if($robotMedia && $robotMedia->num_rows > 0)
-            {
-                while ($row = $robotMedia->fetch_assoc())
-                {
-                    require_once("classes/RobotMedia.php");
-                    return RobotMedia::withProperties($row);
-                }
-            }
+            require_once("classes/RobotMedia.php");
+            return RobotMedia::withProperties($row);
         }
     }
 
@@ -56,32 +46,19 @@ class Teams extends Table
      */
     public function getPitCards($event)
     {
-        $database = new Database();
+        //create the sql statement
+        $sql = "SELECT * FROM ! WHERE ! = ? AND ! = ? ORDER BY ! DESC";
+        $cols[] = 'pit_cards';
+        $cols[] = 'TeamId';
+        $args[] = $this->Id;
+        $cols[] = 'EventId';
+        $args[] = $event->BlueAllianceId;
+        $cols[] = 'Id';
 
-        $sql = "SELECT 
-                      * 
-                    FROM 
-                      pit_cards 
-                    WHERE
-                      TeamId = " . $database->quote($this->Id) .
-                    " AND 
-                      EventId = " . $database->quote($event->BlueAllianceId);
+        $rows = self::query($sql, $cols, $args);
 
-        $sql .= "ORDER BY Id DESC";
-
-
-        $pitCards = $database->query($sql);
-        $database->close();
-
-        $response = array();
-
-        if($pitCards && $pitCards->num_rows > 0)
-        {
-            while ($row = $pitCards->fetch_assoc())
-            {
-                $response[] = PitCards::withProperties($row);
-            }
-        }
+        foreach ($rows as $row)
+            $response[] = PitCards::withProperties($row);
 
         return $response;
     }
@@ -92,37 +69,19 @@ class Teams extends Table
      */
     public function getRobotPhotos()
     {
-        if(!empty($this->Id))
-        {
-            $response = array();
-            $database = new Database();
+        //create the sql statement
+        $sql = "SELECT * FROM ! WHERE ! = ? ORDER BY ! DESC";
+        $cols[] = 'robot_media';
+        $cols[] = 'TeamId';
+        $args[] = $this->Id;
+        $cols[] = 'Id';
 
-            $sql = "SELECT
-                      *
-                    FROM
-                      robot_media
-                    WHERE
-                      TeamId = " . $this->Id;
+        $rows = self::query($sql, $cols, $args);
 
-            $sql .= " ORDER BY Id DESC";
+        foreach ($rows as $row)
+            $response[] = RobotMedia::withProperties($row);
 
-            $robotMedia = $database->query($sql);
-            $database->close();
-
-            if($robotMedia && $robotMedia->num_rows > 0)
-            {
-                require_once("RobotMedia.php");
-
-                while ($row = $robotMedia->fetch_assoc())
-                {
-                    $response[] = RobotMedia::withProperties($row);
-                }
-            }
-
-            return $response;
-        }
-
-        return array();
+        return $response;
     }
 
     /**

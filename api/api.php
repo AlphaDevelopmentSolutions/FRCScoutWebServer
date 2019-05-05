@@ -49,12 +49,12 @@ try {
             break;
 
         case 'GetUsers':
-            $api->success(Users::getUsers());
+            $api->success(Users::getObjects());
 
             break;
 
         case 'GetEvents':
-            $api->success(Events::getEvents());
+            $api->success(Events::getObjects());
 
             break;
 
@@ -123,14 +123,14 @@ try {
             break;
 
         case 'GetChecklistItems':
-            $api->success(ChecklistItems::getChecklistItems());
+            $api->success(ChecklistItems::getObjects());
             break;
 
         case 'GetChecklistItemResults':
 
             $checklistItemResults = array();
 
-            foreach(ChecklistItems::getChecklistItems() as $checklistItem)
+            foreach(ChecklistItems::getObjects() as $checklistItem)
             {
                 $checklistItemResults[] = $checklistItem->getResults();
             }

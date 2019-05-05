@@ -9,62 +9,30 @@ class ChecklistItems extends Table
     protected static $TABLE_NAME = 'checklist_items';
 
     /**
-     * Gets all created checklist items
-     * @return ChecklistItems[]
-     */
-    public static function getChecklistItems()
-    {
-        $database = new Database();
-        $checklistItems = $database->query(
-            "SELECT 
-                      * 
-                    FROM 
-                      " . self::$TABLE_NAME);
-        $database->close();
-
-        $response = array();
-
-        if($checklistItems && $checklistItems->num_rows > 0)
-        {
-            while ($row = $checklistItems->fetch_assoc())
-            {
-                $response[] = ChecklistItems::withProperties($row);
-            }
-        }
-
-        return $response;
-    }
-
-    /**
      * Gets the results for this checklist item
      * @param Matches | null $match if specified, filters by match
      * @return ChecklistItemResults[]
      */
     public function getResults($match = null)
     {
-        $database = new Database();
-        $sql = "SELECT 
-                      * 
-                    FROM 
-                      checklist_item_results
-                    WHERE 
-                      ChecklistItemId = " . $database->quote($this->Id);
+        //create the sql statement
+        $sql = "SELECT * FROM ! WHERE ! = ?";
+        $cols[] = 'checklist_item_results';
+        $cols[] = 'ChecklistItemId';
+        $args[] = $this->Id;
 
-        if(!is_null($match))
-            $sql .= " AND MatchId = " . $database->quote($match->Key);
-
-        $checklistItemResults = $database->query($sql);
-        $database->close();
-
-        $response = array();
-
-        if($checklistItemResults && $checklistItemResults->num_rows > 0)
+        if(!empty($match))
         {
-            while ($row = $checklistItemResults->fetch_assoc())
-            {
-                $response[] = ChecklistItemResults::withProperties($row);
-            }
+            $sql .= " AND ! = ? ";
+
+            $cols[] = 'MatchId';
+            $args[] = $match->Key;
         }
+
+        $rows = self::query($sql, $cols, $args);
+
+        foreach ($rows as $row)
+            $response[] = ChecklistItemResults::withProperties($row);
 
         return $response;
     }

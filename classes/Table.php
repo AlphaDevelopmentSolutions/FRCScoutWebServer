@@ -2,13 +2,14 @@
 
 abstract class Table
 {
+
     /**
      * Loads a new instance by its database id
      * @param string | int $id
      * @param string $columnName
      * @return static
      */
-    static function withId($id, $columnName = null)
+    static function withId($id, $columnName = 'Id')
     {
         $class = get_called_class();
         $instance = new $class();
@@ -46,23 +47,24 @@ abstract class Table
      * @param string $columnName
      * @return boolean
      */
-    protected function loadById($id, $columnName = null)
+    protected function loadById($id, $columnName)
     {
-        //select item from database
-        $database = new Database();
-        $sql = 'SELECT * FROM ' . $this::$TABLE_NAME . ' WHERE ' . ((empty($columnName)) ? 'Id' : $columnName) .' = ' . $database->quote($id);
-        $rs = $database->query($sql);
+        //create the sql statement
+        $sql = "SELECT * FROM ! WHERE ! = ?";
+        $cols[] = $this::$TABLE_NAME;
 
-        if($rs && $rs->num_rows > 0) {
-            $row = $rs->fetch_assoc();
+        $cols[] = $columnName;
+        $args[] = $id;
 
-            //assign row results to object
-            if(is_array($row)) {
-                foreach($row as $key => $value){
-                    if(property_exists($this, $key)){
-                        $this->$key = $value;
-                    }
-                }
+        $rows = self::query($sql, $cols, $args);
+
+        foreach ($rows as $row)
+        {
+            foreach($row as $key => $value)
+            {
+                if(property_exists($this, $key))
+                    $this->$key = $value;
+
             }
 
             return true;
@@ -77,93 +79,158 @@ abstract class Table
      */
     function save()
     {
-        $database = new Database();
 
         if(empty($this->Id))
         {
-            //create the starting statement
-            $sql = 'INSERT INTO ' . $this::$TABLE_NAME . ' 
-                                      (';
+            //create the sql statement
+            $sql = "INSERT INTO ! (";
+            $cols[] = $this::$TABLE_NAME;
 
-            //gather all the columns and values to be used in the save statement
-            $columns = '';
-            $values = '';
-            foreach ($this as $key => $value)
-            {
-                //dont use Id in cols or vals
-                if($key != 'Id')
-                {
-                    //only add to insert statement if value is not empty
-                    if(!empty($value))
-                    {
-                        if(!empty($columns))
-                            $columns .= ', ';
-                        $columns .= $database->quoteColumn($key);
-
-                        if(!empty($values))
-                            $values .= ', ';
-                        $values .=  $database->quote($value);
-                    }
-                }
-            }
-
-            $sql .= $columns;
-
-
-
-            $sql .=')
-                                      VALUES 
-                                      (';
-
-
-            $sql .= $values;
-
-            $sql .=
-
-                                      ');';
-
-            if($database->query($sql))
-            {
-                $this->Id = $database->lastInsertedID();
-                $database->close();
-
-                return true;
-            }
-            $database->close();
-            return false;
-
-        }
-        else
-        {
-            $sql = "UPDATE " . $this::$TABLE_NAME . " SET ";
-
-            //gather all the columns and values to be used in the update statement
-            $updates = '';
+            $columnsString = '';
+            $valuesString = '';
+            //iterate through each field in the current class
             foreach ($this as $key => $value)
             {
                 //dont use Id in cols or vals
                 if($key != 'Id' && property_exists($this, $key))
                 {
-                    if(!empty($updates))
-                        $updates .= ', ';
-                    $updates .= $database->quoteColumn($key) . ' = ' . ((empty($value)) ? 'NULL' : $database->quote($value));
+                    //only add to insert statement if value is not empty
+                    if(!empty($value))
+                    {
+                        if(!empty($columnsString))
+                            $columnsString .= ', ';
 
+                        $columnsString .= '!';
+                        $cols[] = $key;
+
+                        if(!empty($valuesString))
+                            $valuesString .= ', ';
+
+                        $valuesString .=  '?';
+                        $args[] = $value;
+                    }
                 }
             }
 
-            $sql .= $updates;
+            $sql .="$columnsString) VALUES ($valuesString)";
 
-            $sql .= " WHERE (Id = " . $database->quote($this->Id) . ");";
-
-            if($database->query($sql))
+            if($insertId = self::insertOrUpdate($sql, $cols, $args) > 0)
             {
-                $database->close();
+                $this->Id = $insertId;
+
                 return true;
             }
+            return false;
 
-            $database->close();
+        }
+        else
+        {
+            //create the sql statement
+            $sql = "UPDATE ! SET ";
+            $cols[] = $this::$TABLE_NAME;
+
+            $updates = '';
+            //iterate through each field in the current class
+            foreach ($this as $key => $value)
+            {
+                //dont use Id in cols or vals
+                if($key != 'Id' && property_exists($this, $key))
+                {
+                    //only add to insert statement if value is not empty
+                    if(!empty($value))
+                    {
+                        if(!empty($updates))
+                            $updates .= ', ';
+
+                        $updates .= ' ! = ?';
+                        $cols[] = $key;
+                        $args[] = $value;
+                    }
+                }
+            }
+
+            $sql .= $updates . " WHERE ! = ?";
+            $cols[] = 'Id';
+            $args[] = $this->Id;
+
+
+            if($insertId = self::insertOrUpdate($sql, $cols, $args) > 0)
+            {
+                $this->Id = $insertId;
+
+                return true;
+            }
             return false;
         }
+    }
+
+    /**
+     * @param $query
+     * @param array $cols
+     * @param array $args
+     * @return array | int | boolean
+     */
+    protected static function query($query, $cols = array(), $args = array())
+    {
+        $database = new Database();
+        $results = array();
+
+        foreach($cols as $col)
+            $query = preg_replace('/!/', $database->quoteColumn($col), $query, 1);
+
+        if ($pdoStatement = $database->link->prepare($query))
+        {
+            if($pdoStatement->execute($args))
+                $results = $pdoStatement->fetchAll();
+        }
+
+        $pdoStatement = null;
+        $database->close();
+
+        return $results;
+    }
+
+    /**
+     * @param $query
+     * @param array $cols
+     * @param array $args
+     * @return string
+     */
+    private static function insertOrUpdate($query, $cols = array(), $args = array())
+    {
+        $database = new Database();
+
+        foreach($cols as $col)
+            $query = preg_replace('/!/', $database->quoteColumn($col), $query, 1);
+
+        if ($pdoStatement = $database->link->prepare($query))
+        {
+            if($pdoStatement->execute($args))
+                $insertId = $database->lastInsertedID();
+        }
+
+        $pdoStatement = null;
+        $database->close();
+
+        return $insertId;
+    }
+
+    /**
+     * @param string $orderBy
+     * @return static[]
+     */
+    public static function getObjects($orderBy = 'Id')
+    {
+        $sql = 'SELECT * FROM ! ORDER BY ! DESC';
+        $cols[] = static::$TABLE_NAME;
+        $cols[] = $orderBy;
+
+        $rows = self::query($sql, $cols);
+
+        foreach($rows as $row)
+            $response[] = self::withProperties($row);
+
+        return $response;
     }
 
     abstract public function toString();

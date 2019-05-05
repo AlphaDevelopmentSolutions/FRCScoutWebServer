@@ -33,43 +33,48 @@ class Matches extends Table
      */
     public static function withId($id)
     {
-        return parent::withId($id, '`Key`');
+        return parent::withId($id, 'Key');
     }
 
     /**
      * Gets scout cards for a specific match
      * @param null | Teams $team if specified, filters by team
+     * @param null | ScoutCards $scoutCard if specified, filters by scoutcard
      * @return ScoutCards[]
      */
-    public function getScoutCards($team = null)
+    public function getScoutCards($team = null, $scoutCard = null)
     {
-        $database = new Database();
+        //create the sql statement
+        $sql = "SELECT * FROM ! WHERE ! = ?";
+        $cols[] = 'scout_cards';
+        $cols[] = 'MatchId';
+        $args[] = $this->Key;
 
-        $sql = "SELECT 
-                      * 
-                    FROM 
-                      scout_cards 
-                    WHERE
-                      MatchId = " . $database->quote($this->Key);
-
-        //add the team query if a team was specified
+        //if team specified, filter by team
         if(!empty($team))
-            $sql .= " AND " . $database->quoteColumn('TeamId') . " = " . $database->quote($team->Id);
-
-        $sql .= " ORDER BY Id DESC";
-
-        $matchIds = $database->query($sql);
-        $database->close();
-
-        $response = array();
-
-        if($matchIds && $matchIds->num_rows > 0)
         {
-            while ($row = $matchIds->fetch_assoc())
-            {
-                $response[] = ScoutCards::withProperties($row);
-            }
+            $sql .= " AND ! = ? ";
+
+            $cols[] = 'TeamId';
+            $args[] = $team->Id;
         }
+
+        //if scoutcard specified, filter by scoutcard
+        if(!empty($scoutCard))
+        {
+            $sql .= " AND ! = ? ";
+
+            $cols[] = 'Id';
+            $args[] = $scoutCard->Id;
+        }
+
+        $sql .= " ORDER BY ! DESC";
+        $cols[] = 'Id';
+
+        $rows = self::query($sql, $cols, $args);
+
+        foreach ($rows as $row)
+            $response[] = ScoutCards::withProperties($row);
 
         return $response;
     }

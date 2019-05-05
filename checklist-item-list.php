@@ -31,7 +31,7 @@ $event = Events::withId($eventId);
 
         <?php
 
-        foreach(ChecklistItems::getChecklistItems() as $checklistItem)
+        foreach(ChecklistItems::getObjects() as $checklistItem)
         {
            echo $checklistItem->toHtml();
         }

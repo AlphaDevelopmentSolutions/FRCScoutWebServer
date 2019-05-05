@@ -25,84 +25,95 @@ class Events extends Table
 
 
     /**
-     * Gets all events in the database
+     * Overrides parent getObjects method and provides a custom orderby arg
      * @return Events[]
      */
-    public static function getEvents()
+    public static function getObjects()
     {
-        $database = new Database();
-        $events = $database->query(
-            "SELECT 
-                      * 
-                    FROM 
-                      " . self::$TABLE_NAME .
-                    " ORDER BY StartDate DESC "
-        );
-        $database->close();
-
-        $response = array();
-
-        if($events && $events->num_rows > 0)
-        {
-            while ($row = $events->fetch_assoc())
-            {
-                $response[] = $row;
-            }
-        }
-
-        return $response;
+        return parent::getObjects('StartDate');
     }
 
     /**
-     * @param null | Matches $match
-     * @param null | Teams $team
+     * Gets teams at event
+     * @param null | Matches $match if specified, filters by teams in match
+     * @param null | Teams $team if specified, filters by team id
      * @return Teams[]
      */
     public function getTeams($match = null, $team = null)
     {
-        $database = new Database();
+        //create the sql statement
+        $sql = "SELECT * FROM ! WHERE ! IN (SELECT ! FROM ! WHERE ! = ?)";
+        $cols[] = 'teams';
+        $cols[] = 'Id';
+        $cols[] = 'TeamId';
+        $cols[] = 'event_team_list';
+        $cols[] = 'EventId';
+        $args[] = $this->BlueAllianceId;
 
-        $sql = "SELECT
-                      *
-                    FROM
-                      teams
-                    WHERE
-                      Id IN
-                      (
-                        SELECT
-                          TeamId
-                        FROM
-                          event_team_list
-                        WHERE EventId = " . $database->quote($this->BlueAllianceId) . ")";
-
+        //if match specified, filter by match
         if(!empty($match))
-            $sql .= ' AND Id = ' . $database->quote($team->Id);
+        {
+            $sql .= " AND ( ! IN (SELECT ! FROM ! WHERE ! = ?) OR ";
+            $sql .= " ! IN (SELECT ! FROM ! WHERE ! = ?) OR ";
+            $sql .= " ! IN (SELECT ! FROM ! WHERE ! = ?) OR ";
+            
+            $sql .= " ! IN (SELECT ! FROM ! WHERE ! = ?) OR ";
+            $sql .= " ! IN (SELECT ! FROM ! WHERE ! = ?) OR ";
+            $sql .= " ! IN (SELECT ! FROM ! WHERE ! = ?))";
 
+            $cols[] = 'Id';
+            $cols[] = 'BlueAllianceTeamOneId';
+            $cols[] = 'matches';
+            $cols[] = 'Key';
+            $args[] = $match->Key;
+
+            $cols[] = 'Id';
+            $cols[] = 'BlueAllianceTeamTwoId';
+            $cols[] = 'matches';
+            $cols[] = 'Key';
+            $args[] = $match->Key;
+
+            $cols[] = 'Id';
+            $cols[] = 'BlueAllianceTeamThreeId';
+            $cols[] = 'matches';
+            $cols[] = 'Key';
+            $args[] = $match->Key;
+
+            $cols[] = 'Id';
+            $cols[] = 'RedAllianceTeamOneId';
+            $cols[] = 'matches';
+            $cols[] = 'Key';
+            $args[] = $match->Key;
+
+            $cols[] = 'Id';
+            $cols[] = 'RedAllianceTeamTwoId';
+            $cols[] = 'matches';
+            $cols[] = 'Key';
+            $args[] = $match->Key;
+
+            $cols[] = 'Id';
+            $cols[] = 'RedAllianceTeamThreeId';
+            $cols[] = 'matches';
+            $cols[] = 'Key';
+            $args[] = $match->Key;
+        }
+
+        //if team specified, filter by team
         if(!empty($team))
         {
-            $sql .= ' AND (Id IN (SELECT BlueAllianceTeamOneId FROM matches WHERE ' . $database->quoteColumn('Key') . ' = ' . $match->Key . ')';
-            $sql .= ' OR Id IN (SELECT BlueAllianceTeamTwoId FROM matches WHERE ' . $database->quoteColumn('Key') . ' = ' . $match->Key . ')';
-            $sql .= ' OR Id IN (SELECT BlueAllianceTeamThreeId FROM matches WHERE ' . $database->quoteColumn('Key') . ' = ' . $match->Key . ')';
+            $sql .= " AND ! = ? ";
 
-            $sql .= ' OR Id IN (SELECT RedAllianceTeamOneId FROM matches WHERE ' . $database->quoteColumn('Key') . ' = ' . $match->Key . ')';
-            $sql .= ' OR Id IN (SELECT RedAllianceTeamTwoId FROM matches WHERE ' . $database->quoteColumn('Key') . ' = ' . $match->Key . ')';
-            $sql .= ' OR Id IN (SELECT RedAllianceTeamThreeId FROM matches WHERE ' . $database->quoteColumn('Key') . ' = ' . $match->Key . '))';
+            $cols[] = 'Id';
+            $args[] = $team->Id;
         }
 
+        $sql .= " ORDER BY ! ASC";
+        $cols[] = 'Id';
 
+        $rows = self::query($sql, $cols, $args);
 
-        $teams = $database->query($sql);
-        $database->close();
-
-        $response = array();
-
-        if($teams && $teams->num_rows > 0)
-        {
-            while ($row = $teams->fetch_assoc())
-            {
-                $response[] = Teams::withProperties($row);
-            }
-        }
+        foreach($rows as $row)
+            $response[] = Teams::withProperties($row);
 
         return $response;
     }
@@ -114,40 +125,44 @@ class Events extends Table
      */
     public function getMatches($match = null, $team = null)
     {
-        $database = new Database();
+        //create the sql statement
+        $sql = "SELECT * FROM ! WHERE ! = ? AND ! = ?";
+        $cols[] = 'matches';
+        $cols[] = 'EventId';
+        $cols[] = 'MatchType';
+        $args[] = $this->BlueAllianceId;
+        $args[] = Matches::$MATCH_TYPE_QUALIFICATIONS;
 
-        $sql = "SELECT 
-                      * 
-                    FROM 
-                      matches 
-                    WHERE
-                      EventId = " . $database->quote($this->BlueAllianceId) .
-            " AND MatchType = " . $database->quote(Matches::$MATCH_TYPE_QUALIFICATIONS);
-
-        //add the team query if a team was specified
+        //if team specified, filter by team
         if(!empty($team))
-            $sql .= " AND " . $database->quote($team->Id) . " IN (BlueAllianceTeamOneId, BlueAllianceTeamTwoId, BlueAllianceTeamThreeId, RedAllianceTeamOneId, RedAllianceTeamTwoId, RedAllianceTeamThreeId)";
-
-        //add the team query if a team was specified
-        if(!empty($match))
-            $sql .= " AND " . $database->quoteColumn('Key') . " = " . $database->quote($match->Key);
-
-
-        $sql .= "ORDER BY MatchNumber DESC";
-
-
-        $matchIds = $database->query($sql);
-        $database->close();
-
-        $response = array();
-
-        if($matchIds && $matchIds->num_rows > 0)
         {
-            while ($row = $matchIds->fetch_assoc())
-            {
-                $response[] = Matches::withProperties($row);
-            }
+            $sql .= " AND ? IN (!, !, !, !, !, !) ";
+
+            $cols[] = 'BlueAllianceTeamOneId';
+            $cols[] = 'BlueAllianceTeamTwoId';
+            $cols[] = 'BlueAllianceTeamThreeId';
+            $cols[] = 'RedAllianceTeamOneId';
+            $cols[] = 'RedAllianceTeamTwoId';
+            $cols[] = 'RedAllianceTeamThreeId';
+            $args[] = $team->Id;
         }
+
+        //if match specified, filter by match
+        if(!empty($match))
+        {
+            $sql .= " AND ! = ? ";
+
+            $cols[] = 'Key';
+            $args[] = $match->Key;
+        }
+
+        $sql .= " ORDER BY ! DESC";
+        $cols[] = 'MatchNumber';
+
+        $rows = self::query($sql, $cols, $args);
+
+        foreach($rows as $row)
+            $response[] = Matches::withProperties($row);
 
         return $response;
     }
@@ -160,42 +175,47 @@ class Events extends Table
      */
     public function getScoutCards($match = null, $team = null, $scoutCard = null)
     {
-        $database = new Database();
+        //create the sql statement
+        $sql = "SELECT * FROM ! WHERE ! = ?";
+        $cols[] = 'scout_cards';
+        $cols[] = 'EventId';
+        $args[] = $this->BlueAllianceId;
 
-        $sql = "SELECT 
-                      * 
-                    FROM 
-                      scout_cards 
-                    WHERE
-                      EventId = " . $database->quote($this->BlueAllianceId);
-
-        //add the team query if a team was specified
+        //if team specified, filter by team
         if(!empty($team))
-            $sql .= " AND " . $database->quoteColumn('TeamId') . " = " . $database->quote($team->Id);
-
-        //add the match query if a team was specified
-        if(!empty($match))
-            $sql .= " AND " . $database->quoteColumn('Key') . " = " . $database->quote($match->Key);
-
-        //add the scout card query if a team was specified
-        if(!empty($scoutCard))
-            $sql .= " AND " . $database->quoteColumn('Id') . " = " . $database->quote($scoutCard->Id);
-
-
-        $sql .= "ORDER BY Id DESC";
-
-        $scoutCards = $database->query($sql);
-        $database->close();
-
-        $response = array();
-
-        if($scoutCards && $scoutCards->num_rows > 0)
         {
-            while ($row = $scoutCards->fetch_assoc())
-            {
-                $response[] = ScoutCards::withProperties($row);
-            }
+            $sql .= " AND ! = ? ";
+
+            $cols[] = 'TeamId';
+            $args[] = $team->Id;
         }
+
+        //if match specified, filter by match
+        if(!empty($match))
+        {
+            $sql .= " AND ! = ? ";
+
+            $cols[] = 'Key';
+            $args[] = $match->Key;
+        }
+
+        //if scoutcard specified, filter by scoutcard
+        if(!empty($scoutCard))
+        {
+            $sql .= " AND ! = ? ";
+
+            $cols[] = 'Id';
+            $args[] = $scoutCard->Id;
+        }
+
+        $sql .= " ORDER BY ! DESC";
+        $cols[] = 'Id';
+
+        $rows = self::query($sql, $cols, $args);
+
+
+        foreach ($rows as $row)
+            $response[] = ScoutCards::withProperties($row);
 
         return $response;
     }
@@ -207,47 +227,65 @@ class Events extends Table
      */
     public function getPitCards($team = null, $pitCard = null)
     {
-        $database = new Database();
+        //create the sql statement
+        $sql = "SELECT * FROM !";
+        $cols[] = 'pit_cards';
 
-        $sql = "SELECT 
-                      * 
-                    FROM 
-                      pit_cards";
+        //if team specified, filter by team
+        if(!empty($team))
+        {
+            $sql .= " AND ! = ? ";
+
+            $cols[] = 'TeamId';
+            $args[] = $team->Id;
+        }
 
         //add the team query if a team was specified
-        if(!empty($team))
-            $sql .= " AND " . $database->quoteColumn('TeamId') . " = " . $database->quote($team->Id);
-
-        //add the scout card query if a team was specified
         if(!empty($pitCard))
-            $sql .= " AND " . $database->quoteColumn('Id') . " = " . $database->quote($pitCard->Id);
-
-        $sql .= " ORDER BY Id DESC";
-
-        $scoutCards = $database->query($sql);
-        $database->close();
-
-        $response = array();
-
-        if($scoutCards && $scoutCards->num_rows > 0)
         {
-            while ($row = $scoutCards->fetch_assoc())
-            {
-                $response[] = PitCards::withProperties($row);
-            }
+            $sql .= " AND ! = ? ";
+
+            $cols[] = 'Id';
+            $args[] = $pitCard->Id;
         }
+
+        $sql .= " ORDER BY ! DESC";
+        $cols[] = 'Id';
+
+        $rows = self::query($sql, $cols, $args);
+
+        foreach($rows as $row)
+            $response[] = PitCards::withProperties($row);
+
 
         return $response;
     }
 
+
     public function toHtml()
     {
-        // TODO: Implement toHtml() method.
+        $html =
+            '<div class="mdl-layout__tab-panel is-active" id="overview">
+                <section class="section--center mdl-grid mdl-grid--no-spacing mdl-shadow--2dp">
+                    <div class="mdl-card mdl-cell mdl-cell--12-col">
+                        <div class="mdl-card__supporting-text">
+                            <h4>' . $this->toString() . '</h4>'
+                            . $this->City . ', ' . $this->StateProvince . ', ' . $this->Country . '<br><br>'
+                            .  date('F j', strtotime($this->StartDate)) . ' to ' . date('F j', strtotime($this->EndDate)) .
+                        '</div>
+                        <div class="mdl-card__actions">
+                            <a href="/match-list.php?eventId=' . $this->BlueAllianceId . '" class="mdl-button">View</a>
+                        </div>
+                    </div>
+                </section>
+            </div>';
+
+        return $html;
     }
 
     public function toString()
     {
-        // TODO: Implement toString() method.
+        return $this->Name;
     }
 
 }

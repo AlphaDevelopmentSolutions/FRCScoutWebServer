@@ -52,7 +52,7 @@ if(!empty($matchId))
         //match selected, show checklist item results for specified match
         else
         {
-            foreach(ChecklistItems::getChecklistItems() as $checklistItem)
+            foreach(ChecklistItems::getObjects() as $checklistItem)
             {
                 foreach($checklistItem->getResults($match) as $checklistItemResult)
                     echo $checklistItemResult->toHtml();
