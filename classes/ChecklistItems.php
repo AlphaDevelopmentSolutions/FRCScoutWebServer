@@ -38,6 +38,26 @@ class ChecklistItems extends Table
     }
 
     /**
+     * Overrides parent::delete() method
+     * Attempts to delete checklist item completion records before deleting this record
+     * @return bool
+     */
+    function delete()
+    {
+        $resultDeleteSuccess = true;
+
+        //delete all results before deleting master record
+        foreach($this->getResults() as $checklistItemResult)
+            $resultDeleteSuccess = $checklistItemResult->delete();
+
+
+        if($resultDeleteSuccess)
+            return parent::delete();
+
+        return false;
+    }
+
+    /**
      * Converts a completed checklist item result to Html format, shown as a card
      * @return string HTML for displaying on the web page
      */

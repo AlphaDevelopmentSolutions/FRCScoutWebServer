@@ -10,46 +10,76 @@ class RobotMedia extends Table
     protected static $TABLE_NAME = 'robot_media';
 
     /**
-     * Saves a base64 encoded image to the server
-     * @param $base64Img
-     * @return bool if error | | int of bytes written
+     * Overrides parent::save() method
+     * Attempts to save the image before saving the record
+     * @return bool
      */
-    private function saveImage($base64Img)
+    public function save()
     {
+        if(!empty($this->Id))
+            if($this->saveImage())
+                return parent::save();
 
+        return false;
+    }
+
+    /**
+     * Saves the specified robot media base64image to the file system
+     * @return boolean
+     */
+    private function saveImage()
+    {
+        //create a unique id
         $uid = uniqid();
 
-        //make sure the file doesn't exist
+        //make sure the file doesn't already exist
         while(file_exists($uid . '.jpeg'))
             $uid = uniqid();
 
-        $image = base64_decode($base64Img);
+        //decode the base64 image
+        $image = base64_decode($this->Base64Image);
 
+        //prep the file to be written to
         $file = fopen("../assets/robot-media/$uid.jpeg", 'wb');
 
+        //store if write was successful
         $success = fwrite($file, $image);
 
         fclose($file);
 
+        //if successful, store the file URI
         if($success)
             $this->FileURI = $uid . '.jpeg';
 
         return $success;
-
     }
 
+    /**
+     * Deletes the saved robot image from the file system
+     * @return boolean
+     */
+    private function deleteImage()
+    {
+        //prep the file to be deleted
+        $file = fopen("../assets/robot-media/$this->FileURI", 'wb');
+
+        //store if delete was successful
+        $success = unlink($file);
+
+        fclose($file);
+
+        return $success;
+    }
+
+    /**
+     * Overrides parent::delete() method
+     * Attempts to delete the image before deleting the record
+     * @return bool
+     */
     function delete()
     {
-        if(empty($this->Id))
-            return false;
-
-        $database = new Database();
-        $sql = 'DELETE FROM '.self::$TABLE_NAME.' WHERE '.'id = '.$database->quote($this->Id);
-        $rs = $database->query($sql);
-
-        if($rs)
-            return true;
-
+        if($this->deleteImage())
+            return parent::delete();
 
         return false;
     }

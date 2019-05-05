@@ -165,6 +165,27 @@ abstract class Table
     }
 
     /**
+     * Attempts to delete the record from the database
+     * @return bool
+     */
+    public function delete()
+    {
+        if(empty($this->Id))
+            return false;
+
+        $query = 'DELETE FROM ! WHERE ! = ?';
+        $cols[] = self::$TABLE_NAME;
+        $cols[] = 'Id';
+        $args[] = $this->Id;
+
+        $database = new Database();
+        $success = $database->delete($query, $cols, $args);
+        $database->close();
+
+        return $success;
+    }
+
+    /**
      * Queries the database to gather rows
      * @param string $query to run
      * @param string[] cols columns that will replace !

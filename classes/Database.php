@@ -69,10 +69,11 @@ class Database extends PDO
      * @param string[] cols columns that will replace !
      * @param string[] | int[] $args arguments that will replace ?
      * @return string[]
-     * ay
      */
     public function query($query, $cols = array(), $args = array())
     {
+        $results = array();
+
         //replace all instances of ! with a quoted column
         foreach($cols as $col)
             $query = preg_replace('/!/', $this->quoteColumn($col), $query, 1);
@@ -100,6 +101,8 @@ class Database extends PDO
      */
     public function insertOrUpdate($query, $cols = array(), $args = array())
     {
+        $insertId = -1;
+
         //replace all instances of ! with a quoted column
         foreach($cols as $col)
             $query = preg_replace('/!/', $this->quoteColumn($col), $query, 1);
@@ -116,6 +119,34 @@ class Database extends PDO
         $pdoStatement = null;
 
         return $insertId;
+
+    }
+
+    /**
+     * Deletes a record in the database
+     * @param string $query to run
+     * @param string[] $cols columns that will replace !
+     * @param string[] | int[] $args arguments that will replace ?
+     * @return int
+     */
+    public function delete($query, $cols = array(), $args = array())
+    {
+        $success = false;
+
+        //replace all instances of ! with a quoted column
+        foreach($cols as $col)
+            $query = preg_replace('/!/', $this->quoteColumn($col), $query, 1);
+
+        //prepare the MySQL statement
+        if ($pdoStatement = $this->prepare($query))
+            //execute and get the results
+            $success = $pdoStatement->execute($args);
+
+
+        //close the PDO statement
+        $pdoStatement = null;
+
+        return $success;
 
     }
 
