@@ -10,69 +10,52 @@ $teamId = $_GET['teamId'];
 $team = Teams::withId($teamId);
 $event = Events::withId($eventId);
 $pitCard = $team->getPitCards($event)[0];
-
-$url = "http://scouting.wiredcats5885.ca/ajax/GetOPRStats.php";
-
-$ch = curl_init();
-
-curl_setopt($ch, CURLOPT_URL, $url);
-curl_setopt($ch, CURLOPT_POST, 1);
-curl_setopt($ch, CURLOPT_POSTFIELDS,
-    "eventCode=" . $event->BlueAllianceId);
-curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
-$response = curl_exec($ch);
-$stats = json_decode($response, true);
-
-$opr = $stats['oprs']['frc' . $pitCard->TeamId];
-$dpr = $stats['dprs']['frc' . $pitCard->TeamId];
-$ccwms = $stats['ccwms']['frc' . $pitCard->TeamId];
-
 ?>
 
 <!doctype html>
 <html lang="en">
-  <head>
+<head>
     <title><?php echo $team->Id . ' - ' . $team->Name ?></title>
     <?php require_once('includes/meta.php') ?>
-      <script src="<?php echo URL_PATH ?>/js/Chart.min.js"></script>
-      <link rel="stylesheet" href="<?php echo URL_PATH ?>/css/Chart.min.css">
-      <script src="<?php echo URL_PATH ?>/js/chartjs-plugin-annotation.min.js"></script>
-  </head>
-  <body class="mdl-demo mdl-color--grey-100 mdl-color-text--grey-700 mdl-base">
-    <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
-        <?php
-        $navBarArray = new NavBarArray();
+    <script src="<?php echo URL_PATH ?>/js/Chart.min.js"></script>
+    <link rel="stylesheet" href="<?php echo URL_PATH ?>/css/Chart.min.css">
+    <script src="<?php echo URL_PATH ?>/js/chartjs-plugin-annotation.min.js"></script>
+</head>
+<body class="mdl-demo mdl-color--grey-100 mdl-color-text--grey-700 mdl-base">
+<div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
+    <?php
+    $navBarArray = new NavBarArray();
 
-        $navBarLinksArray = new NavBarLinkArray();
-        $navBarLinksArray[] = new NavBarLink('Teams', '/team-list.php?eventId=' . $event->BlueAllianceId);
-        $navBarLinksArray[] = new NavBarLink('Team ' . $teamId, '', true);
+    $navBarLinksArray = new NavBarLinkArray();
+    $navBarLinksArray[] = new NavBarLink('Teams', '/team-list.php?eventId=' . $event->BlueAllianceId);
+    $navBarLinksArray[] = new NavBarLink('Team ' . $teamId, '', true);
 
-        $navBarArray[] = new NavBar($navBarLinksArray);
+    $navBarArray[] = new NavBar($navBarLinksArray);
 
-        $navBarLinksArray = new NavBarLinkArray();
-        $navBarLinksArray[] = new NavBarLink('Matches', '/team-matches.php?eventId=' . $event->BlueAllianceId . '&teamId=' . $team->Id);
-        $navBarLinksArray[] = new NavBarLink('Pits', '/team-pits.php?eventId=' . $event->BlueAllianceId . '&teamId=' . $team->Id);
-        $navBarLinksArray[] = new NavBarLink('Photos', '/team-photos.php?eventId=' . $event->BlueAllianceId . '&teamId=' . $team->Id);
-        $navBarLinksArray[] = new NavBarLink('Stats', '/team-stats.php?eventId=' . $event->BlueAllianceId . '&teamId=' . $team->Id, true);
+    $navBarLinksArray = new NavBarLinkArray();
+    $navBarLinksArray[] = new NavBarLink('Matches', '/team-matches.php?eventId=' . $event->BlueAllianceId . '&teamId=' . $team->Id);
+    $navBarLinksArray[] = new NavBarLink('Pits', '/team-pits.php?eventId=' . $event->BlueAllianceId . '&teamId=' . $team->Id);
+    $navBarLinksArray[] = new NavBarLink('Photos', '/team-photos.php?eventId=' . $event->BlueAllianceId . '&teamId=' . $team->Id);
+    $navBarLinksArray[] = new NavBarLink('Stats', '/team-stats.php?eventId=' . $event->BlueAllianceId . '&teamId=' . $team->Id, true);
 
-        $navBarArray[] = new NavBar($navBarLinksArray);
+    $navBarArray[] = new NavBar($navBarLinksArray);
 
-        $additionContent = '';
+    $additionContent = '';
 
-        $profileMedia = $team->getProfileImage();
+    $profileMedia = $team->getProfileImage();
 
-        if(!empty($profileMedia->FileURI))
-        {
-            $additionContent .=
-                '<div style="height: unset" class="mdl-layout--large-screen-only mdl-layout__header-row">
+    if (!empty($profileMedia->FileURI))
+    {
+        $additionContent .=
+            '<div style="height: unset" class="mdl-layout--large-screen-only mdl-layout__header-row">
                   <div class="circle-image" style="background-image: url(' . ROBOT_MEDIA_URL . $profileMedia->FileURI . ')">
 
                   </div>
                 </div>';
-        }
+    }
 
-        $additionContent .=
-            '
+    $additionContent .=
+        '
         <div class="mdl-layout--large-screen-only mdl-layout__header-row">
             <h3>' . $team->Id . ' - ' . $team->Name . '</h3><br>
         </div>
@@ -82,65 +65,65 @@ $ccwms = $stats['ccwms']['frc' . $pitCard->TeamId];
         <div class="mdl-layout--large-screen-only mdl-layout__header-row">';
 
 
-        if(!empty($team->FacebookURL))
-        {
-            $additionContent .=
-                '
+    if (!empty($team->FacebookURL))
+    {
+        $additionContent .=
+            '
                     <a target="_blank" href="https://www.facebook.com/' . $team->FacebookURL . '">
                         <i class="fab fa-facebook-f header-icon"></i>
                     </a>
                   ';
-        }
+    }
 
-        if(!empty($team->TwitterURL))
-        {
-            $additionContent .=
-                '
+    if (!empty($team->TwitterURL))
+    {
+        $additionContent .=
+            '
                     <a target="_blank" href="https://www.twitter.com/' . $team->TwitterURL . '">
                         <i class="fab fa-twitter header-icon"></i>
                     </a>
                   ';
-        }
+    }
 
-        if(!empty($team->InstagramURL))
-        {
-            $additionContent .=
-                '
+    if (!empty($team->InstagramURL))
+    {
+        $additionContent .=
+            '
                     <a target="_blank" href="https://www.instagram.com/' . $team->InstagramURL . '">
                         <i class="fab fa-instagram header-icon"></i>
                     </a>
                   ';
-        }
+    }
 
-        if(!empty($team->YoutubeURL))
-        {
-            $additionContent .=
-                '
+    if (!empty($team->YoutubeURL))
+    {
+        $additionContent .=
+            '
                     <a target="_blank" href="https://www.youtube.com/' . $team->YoutubeURL . '">
                         <i class="fab fa-youtube header-icon"></i>
                     </a>
                   ';
-        }
+    }
 
-        if(!empty($team->WebsiteURL))
-        {
-            $additionContent .=
-                '
+    if (!empty($team->WebsiteURL))
+    {
+        $additionContent .=
+            '
                     <a target="_blank" href="' . $team->WebsiteURL . '">
                         <i class="fas fa-globe header-icon"></i>
                     </a>
                   ';
-        }
+    }
 
-        $additionContent .=
-            '
+    $additionContent .=
+        '
             </div>
             <div style="height: unset" class="mdl-layout--large-screen-only mdl-layout__header-row">
-                <h6 style="margin: unset"><strong>OPR:</strong>' . round($opr, 2) . '</h6>
+                <h6 style="margin: unset"><strong>OPR:</strong><span id="opr">0</span></h6>
             </div>
     
             <div style="height: unset" class="mdl-layout--large-screen-only mdl-layout__header-row">
-                <h6 style="margin: unset"><strong>DPR:</strong>' . round($dpr, 2) . '</h6>
+                <h6 style="margin: unset"><strong>DPR:</strong><span id="dpr">0</span></h6>
             </div>
             <div id="quick-stats" style="padding-left: 40px" hidden>
                 <h6 style="margin: unset"><strong>Drivetrain:</strong>' . $pitCard->DriveStyle . '</h6>
@@ -166,91 +149,72 @@ $ccwms = $stats['ccwms']['frc' . $pitCard->TeamId];
             </div>
             <div class="mdl-layout--large-screen-only mdl-layout__header-row"></div>';
 
-        $header = new Header($event->Name, $additionContent, $navBarArray, $event->BlueAllianceId);
+    $header = new Header($event->Name, $additionContent, $navBarArray, $event->BlueAllianceId);
 
-        echo $header->toHtml();
+    echo $header->toHtml();
 
-        ?>
+    ?>
 
-        <input id="eventId" hidden disabled value="<?php echo $event->BlueAllianceId ?>">
-        <input id="teamId" hidden disabled value="<?php echo $team->Id ?>">
+    <input id="eventId" hidden disabled value="<?php echo $event->BlueAllianceId ?>">
+    <input id="teamId" hidden disabled value="<?php echo $team->Id ?>">
 
-      <main class="mdl-layout__content">
+    <main class="mdl-layout__content">
 
-          <div class="content-grid mdl-grid">
+        <div class="content-grid mdl-grid">
 
-              <div class="mdl-cell stats-cell">
-                  <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                      <input hidden class="mdl-textfield__input" type="text" value="placeholder">
-                      <select class="mdl-textfield__input" id="changeAutoItem" name="changeAutoItem">
-                      </select>
-                      <label class="mdl-textfield__label" for="changeAutoItem">Item</label>
-                  </div>
-                  <div style="height: 400px;">
-                      <canvas id="autoChart"></canvas>
-                  </div>
-              </div>
+            <div class="mdl-cell stats-cell">
+                <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                    <input hidden class="mdl-textfield__input" type="text" value="placeholder">
+                    <select class="mdl-textfield__input" id="changeAutoItem" name="changeAutoItem">
+                    </select>
+                    <label class="mdl-textfield__label" for="changeAutoItem">Item</label>
+                </div>
+                <div style="height: 400px;">
+                    <canvas id="autoChart"></canvas>
+                </div>
+            </div>
 
-              <div class="mdl-cell stats-cell">
-                  <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                      <input hidden class="mdl-textfield__input" type="text" value="placeholder">
-                      <select class="mdl-textfield__input" id="changeTeleopItem" name="changeTeleopItem">
-                      </select>
-                      <label class="mdl-textfield__label" for="changeTeleopItem">Item</label>
-                  </div>
-                  <div style="height: 400px;">
-                      <canvas id="teleopChart"></canvas>
-                  </div>
-              </div>
+            <div class="mdl-cell stats-cell">
+                <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                    <input hidden class="mdl-textfield__input" type="text" value="placeholder">
+                    <select class="mdl-textfield__input" id="changeTeleopItem" name="changeTeleopItem">
+                    </select>
+                    <label class="mdl-textfield__label" for="changeTeleopItem">Item</label>
+                </div>
+                <div style="height: 400px;">
+                    <canvas id="teleopChart"></canvas>
+                </div>
+            </div>
 
-              <div class="mdl-cell stats-cell">
-                  <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                      <input hidden class="mdl-textfield__input" type="text" value="placeholder">
-                      <select class="mdl-textfield__input" id="changeEndGameItem" name="changeEndGameItem">
-                      </select>
-                      <label class="mdl-textfield__label" for="changeEndGameItem">Item</label>
-                  </div>
-                  <div style="height: 400px;">
-                      <canvas id="endGameChart"></canvas>
-                  </div>
-              </div>
+            <div class="mdl-cell stats-cell">
+                <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                    <input hidden class="mdl-textfield__input" type="text" value="placeholder">
+                    <select class="mdl-textfield__input" id="changeEndGameItem" name="changeEndGameItem">
+                    </select>
+                    <label class="mdl-textfield__label" for="changeEndGameItem">Item</label>
+                </div>
+                <div style="height: 400px;">
+                    <canvas id="endGameChart"></canvas>
+                </div>
+            </div>
 
-              <div class="mdl-cell stats-cell">
-                  <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                      <input hidden class="mdl-textfield__input" type="text" value="placeholder">
-                      <select class="mdl-textfield__input" id="changePostGameItem" name="changePostGameItem">
-                      </select>
-                      <label class="mdl-textfield__label" for="changePostGameItem">Item</label>
-                  </div>
-                  <div style="height: 400px;">
-                      <canvas id="postGameChart"></canvas>
-                  </div>
-              </div>
-          </div>
-      </main>
-    </div>
-    <?php require_once('includes/bottom-scripts.php') ?>
-
-  <script>
-      function showQuickStats()
-      {
-
-          if($('#quick-stats').attr('hidden'))
-          {
-              $('#show-stats-btn').html('Show Less');
-              $('#quick-stats').removeAttr('hidden');
-          }
-
-          else
-          {
-              $('#show-stats-btn').html('Show More');
-              $('#quick-stats').attr('hidden', 'hidden');
-          }
-
-      }
-  </script>
-
-
-    <script defer src="<?php echo URL_PATH ?>/js/stats-charts.js"></script>
-  </body>
+            <div class="mdl-cell stats-cell">
+                <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                    <input hidden class="mdl-textfield__input" type="text" value="placeholder">
+                    <select class="mdl-textfield__input" id="changePostGameItem" name="changePostGameItem">
+                    </select>
+                    <label class="mdl-textfield__label" for="changePostGameItem">Item</label>
+                </div>
+                <div style="height: 400px;">
+                    <canvas id="postGameChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+<?php require_once('includes/bottom-scripts.php') ?>
+<script defer src="<?php echo URL_PATH ?>/js/quick-stats-toggle.js"></script>
+<script defer src="<?php echo URL_PATH ?>/js/stats-charts.js"></script>
+<script defer src="<?php echo URL_PATH ?>/js/get-opr.js"></script>
+</body>
 </html>
