@@ -29,7 +29,7 @@ $event = Events::withId($eventId);
     <?php
     $navBarLinksArray = new NavBarLinkArray();
     $navBarLinksArray[] = new NavBarLink('Stats', '/stats.php?eventId=' . $event->BlueAllianceId, true);
-    $navBarLinksArray[] = new NavBarLink('Legacy Stats', '/stats-legacy.php?eventId=' . $event->BlueAllianceId, false);
+    $navBarLinksArray[] = new NavBarLink('Legacy Stats', '/stats-legacy.php?eventId=' . $event->BlueAllianceId);
 
     $navBar = new NavBar($navBarLinksArray);
 

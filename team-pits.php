@@ -41,15 +41,16 @@ $ccwms = $stats['ccwms']['frc' . $pitCard->TeamId];
         $navBarArray = new NavBarArray();
 
         $navBarLinksArray = new NavBarLinkArray();
-        $navBarLinksArray[] = new NavBarLink('Teams', '/team-list.php?eventId=' . $event->BlueAllianceId, false);
+        $navBarLinksArray[] = new NavBarLink('Teams', '/team-list.php?eventId=' . $event->BlueAllianceId);
         $navBarLinksArray[] = new NavBarLink('Team ' . $teamId, '', true);
 
         $navBarArray[] = new NavBar($navBarLinksArray);
 
         $navBarLinksArray = new NavBarLinkArray();
-        $navBarLinksArray[] = new NavBarLink('Matches', '/team-matches.php?eventId=' . $event->BlueAllianceId . '&teamId=' . $team->Id, false);
+        $navBarLinksArray[] = new NavBarLink('Matches', '/team-matches.php?eventId=' . $event->BlueAllianceId . '&teamId=' . $team->Id);
         $navBarLinksArray[] = new NavBarLink('Pits', '/team-pits.php?eventId=' . $event->BlueAllianceId . '&teamId=' . $team->Id, true);
-        $navBarLinksArray[] = new NavBarLink('Photos', '/team-photos.php?eventId=' . $event->BlueAllianceId . '&teamId=' . $team->Id, false);
+        $navBarLinksArray[] = new NavBarLink('Photos', '/team-photos.php?eventId=' . $event->BlueAllianceId . '&teamId=' . $team->Id);
+        $navBarLinksArray[] = new NavBarLink('Stats', '/team-stats.php?eventId=' . $event->BlueAllianceId . '&teamId=' . $team->Id);
 
         $navBarArray[] = new NavBar($navBarLinksArray);
 

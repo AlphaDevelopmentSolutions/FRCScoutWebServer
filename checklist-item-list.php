@@ -19,7 +19,7 @@ $event = Events::withId($eventId);
     <?php
     $navBarLinksArray = new NavBarLinkArray();
     $navBarLinksArray[] = new NavBarLink('Checklist Items', '', true);
-    $navBarLinksArray[] = new NavBarLink('Completed Checklist Items', '/checklist-item-result-list.php?eventId=' . $event->BlueAllianceId, false);
+    $navBarLinksArray[] = new NavBarLink('Completed Checklist Items', '/checklist-item-result-list.php?eventId=' . $event->BlueAllianceId);
 
     $navBar = new NavBar($navBarLinksArray);
 

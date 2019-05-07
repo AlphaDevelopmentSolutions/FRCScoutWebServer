@@ -26,7 +26,7 @@ $match = Matches::withId($matchId);
         $navBarArray = new NavBarArray();
 
         $navBarLinksArray = new NavBarLinkArray();
-        $navBarLinksArray[] = new NavBarLink('Matches', '/match-list.php?eventId=' . $event->BlueAllianceId, false);
+        $navBarLinksArray[] = new NavBarLink('Matches', '/match-list.php?eventId=' . $event->BlueAllianceId);
         $navBarLinksArray[] = new NavBarLink($match->toString(), '', true);
 
         $navBarArray[] = new NavBar($navBarLinksArray);

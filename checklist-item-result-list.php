@@ -24,7 +24,7 @@ if(!empty($matchId))
 <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
     <?php
     $navBarLinksArray = new NavBarLinkArray();
-    $navBarLinksArray[] = new NavBarLink('Checklist Items', '/checklist-item-list.php?eventId=' . $event->BlueAllianceId, false);
+    $navBarLinksArray[] = new NavBarLink('Checklist Items', '/checklist-item-list.php?eventId=' . $event->BlueAllianceId);
     $navBarLinksArray[] = new NavBarLink('Completed Checklist Items', '/checklist-item-result-list.php?eventId=' . $event->BlueAllianceId, ((empty($match)) ? true : false));
 
     if(!empty($match))

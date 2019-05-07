@@ -12,7 +12,7 @@ $event = Events::withId($eventId);
 <html lang="en">
 <head>
 
-    <title>Stats</title>
+    <title>Legacy Stats</title>
     <?php require_once('includes/meta.php') ?>
 
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.css">
@@ -155,7 +155,7 @@ $event = Events::withId($eventId);
 <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
     <?php
     $navBarLinksArray = new NavBarLinkArray();
-    $navBarLinksArray[] = new NavBarLink('Stats', '/stats.php?eventId=' . $event->BlueAllianceId, false);
+    $navBarLinksArray[] = new NavBarLink('Stats', '/stats.php?eventId=' . $event->BlueAllianceId);
     $navBarLinksArray[] = new NavBarLink('Legacy Stats', '/stats-legacy.php?eventId=' . $event->BlueAllianceId, true);
 
     $navBar = new NavBar($navBarLinksArray);
