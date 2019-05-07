@@ -201,11 +201,11 @@ switch($_POST['action'])
                                     $return_array[$teamId][$matchKey][$key] = round($return_array[$teamId][$matchKey][$key] / $return_array[$teamId][$matchKey]['CardCount'], 2);
 
                                 //if we are calculating offense rating, check for nulled ratings
-                                else if ($key == 'OffenseRating' && $return_array[$teamId][$key] != 0)
+                                else if ($key == 'OffenseRating' && $return_array[$teamId][$matchKey][$key] != 0)
                                     $return_array[$teamId][$matchKey][$key] = round($return_array[$teamId][$matchKey][$key] / ($return_array[$teamId][$matchKey]['CardCount'] - $return_array[$teamId][$matchKey]['NulledOffenseRatings']), 2);
 
                                 //if we are calculating defense rating, check for nulled ratings
-                                else if ($key == 'DefenseRating' && $return_array[$teamId][$key] != 0)
+                                else if ($key == 'DefenseRating' && $return_array[$teamId][$matchKey][$key] != 0)
                                     $return_array[$teamId][$matchKey][$key] = round($return_array[$teamId][$matchKey][$key] / ($return_array[$teamId][$matchKey]['CardCount'] - $return_array[$teamId][$matchKey]['NulledDefenseRatings']), 2);
                             }
                         }
