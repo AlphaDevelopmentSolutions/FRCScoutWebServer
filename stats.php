@@ -47,7 +47,7 @@ $event = Events::withId($eventId);
             <div class="mdl-cell stats-cell">
                 <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
                     <input hidden class="mdl-textfield__input" type="text" value="placeholder">
-                    <select class="mdl-textfield__input" id="changeAutoItem" name="changeAutoItem" onchange="generateData($(this).children('option:selected').val(), document.getElementById('autoChart'))">
+                    <select class="mdl-textfield__input" id="changeAutoItem" name="changeAutoItem" onchange="generateDataRouter($(this).children('option:selected').val(), document.getElementById('autoChart'))">
                     </select>
                     <label class="mdl-textfield__label" for="changeAutoItem">Item</label>
                 </div>
@@ -59,7 +59,7 @@ $event = Events::withId($eventId);
             <div class="mdl-cell stats-cell">
                 <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
                     <input hidden class="mdl-textfield__input" type="text" value="placeholder">
-                    <select class="mdl-textfield__input" id="changeTeleopItem" name="changeTeleopItem" onchange="generateData($(this).children('option:selected').val(), document.getElementById('teleopChart'))">
+                    <select class="mdl-textfield__input" id="changeTeleopItem" name="changeTeleopItem" onchange="generateDataRouter($(this).children('option:selected').val(), document.getElementById('teleopChart'))">
                     </select>
                     <label class="mdl-textfield__label" for="changeTeleopItem">Item</label>
                 </div>
@@ -71,7 +71,7 @@ $event = Events::withId($eventId);
             <div class="mdl-cell stats-cell">
                 <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
                     <input hidden class="mdl-textfield__input" type="text" value="placeholder">
-                    <select class="mdl-textfield__input" id="changeEndGameItem" name="changeEndGameItem" onchange="generateData($(this).children('option:selected').val(), document.getElementById('endGameChart'))">
+                    <select class="mdl-textfield__input" id="changeEndGameItem" name="changeEndGameItem" onchange="generateDataRouter($(this).children('option:selected').val(), document.getElementById('endGameChart'))">
                     </select>
                     <label class="mdl-textfield__label" for="changeEndGameItem">Item</label>
                 </div>
@@ -83,7 +83,7 @@ $event = Events::withId($eventId);
             <div class="mdl-cell stats-cell">
                 <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
                     <input hidden class="mdl-textfield__input" type="text" value="placeholder">
-                    <select class="mdl-textfield__input" id="changePostGameItem" name="changePostGameItem" onchange="generateData($(this).children('option:selected').val(), document.getElementById('postGameChart'))">
+                    <select class="mdl-textfield__input" id="changePostGameItem" name="changePostGameItem" onchange="generateDataRouter($(this).children('option:selected').val(), document.getElementById('postGameChart'))">
                     </select>
                     <label class="mdl-textfield__label" for="changePostGameItem">Item</label>
                 </div>
@@ -193,7 +193,10 @@ $event = Events::withId($eventId);
                 });
 
                 //get the ball rolling for the ajax script by generating the graphs
-                generateData(defaultVal, context);
+                if(teamList.length == 1)
+                    generateLineData(defaultVal, context);
+                else
+                    generateData(defaultVal, context);
 
                 //add options to the select boxes for the items within each graph item
                 $.each(value , function(key, value)
@@ -203,6 +206,191 @@ $event = Events::withId($eventId);
             }
         });
     }
+
+    function generateDataRouter(graphItem, context)
+    {
+        if(teamList.length == 1)
+            generateLineData(graphItem, context);
+        else
+            generateData(graphItem, context);
+    }
+
+    /**
+     * Generates the data from the ajax script and compiles it into the graph
+     * @param graphItem this is an item from any of the enums specified in the GRAPH_PERIODS
+     * @param context graph to populate
+     */
+    function generateLineData(graphItem, context)
+    {
+        //get data from the ajax script
+        $.post('<?php echo URL_PATH ?>/ajax/ajax.php',
+            {
+                action: 'load_stats',
+                eventId:'<?php echo $event->BlueAllianceId; ?>',
+                teamIds: JSON.stringify(teamList)
+            },
+            function(data)
+            {
+                //parse the response data into JSON
+                var jsonResponse = JSON.parse(data);
+
+                var labels = []; //labels AKA team numbers to show on the Y axis
+                var data = []; //data AKA item averages to show on the graph
+                var backgroundColors = []; //colors to indicate bad/warning/good stats
+                var average = jsonResponse['EventAvg'][graphItem]; //get the event average
+                var matchAveragData = []; //get the event average
+
+
+                //for each item (team) inside the graph data, calculate and store the averages
+                $.each(jsonResponse[teamList[0]], function(matchId, averages)
+                {
+                    //dont add row for event avg
+                    if(matchId !== 'EventAvg')
+                    {
+                        var val = averages[graphItem]; //store the value of the teams averages for the specified item
+
+                        labels.push('Quals ' + matchId); //add the team id to the label
+                        data.push(val); //add the item average to the data
+                    }
+                });
+
+                //for each item (team) inside the graph data, calculate and store the averages
+                $.each(jsonResponse['MatchAvgs'], function(matchId, averages)
+                {
+                    //dont add row for event avg
+                    if(matchId !== 'EventAvg')
+                    {
+                        var val = averages[graphItem]; //store the value of the teams averages for the specified item
+
+                        matchAveragData.push(val); //add the item average to the data
+                    }
+                });
+
+
+
+                //if the chart context was the auto chart, update the auto chart
+                if($(context).attr('id') === 'autoChart')
+                {
+                    if(autoChart !== undefined)
+                        autoChart.destroy();
+                    autoChart = createLineChart(context, labels, data, matchAveragData, backgroundColors, average, 'Autonomous');
+                }
+
+                //if the chart context was the teleop chart, update the teleop chart
+                else if($(context).attr('id') === 'teleopChart')
+                {
+                    if(teleopChart !== undefined)
+                        teleopChart.destroy();
+                    teleopChart = createLineChart(context, labels, data, matchAveragData, backgroundColors, average, 'Teleop');
+                }
+
+                //if the chart context was the end game chart, update the end game chart
+                else if($(context).attr('id') === 'endGameChart')
+                {
+                    if(endGameChart !== undefined)
+                        endGameChart.destroy();
+                    endGameChart = createLineChart(context, labels, data, matchAveragData, backgroundColors, average, 'End Game');
+                }
+
+                //if the chart context was the post game chart, update the post game chart
+                else if($(context).attr('id') === 'postGameChart')
+                {
+                    if(postGameChart !== undefined)
+                        postGameChart.destroy();
+                    postGameChart = createLineChart(context, labels, data, matchAveragData, backgroundColors, average, 'Post Game');
+                }
+            });
+    }
+
+    /**
+     * Creates a new Chart.js chart as a horizontal bar graph
+     * @param context context of the canvas to add the chartbar to
+     * @param labels all Y axis labels (Team Ids)
+     * @param data to display for each team (Item Averages)
+     * @param backgroundColors of the item average
+     * @param average event average
+     * @param title of the graph
+     * @returns Chart
+     */
+    function createLineChart(context, labels, data, data2, backgroundColors, average, title)
+    {
+        var maxData = Math.max.apply(null, data);
+        var minData = Math.min.apply(null, data);
+
+        var maxData2 = Math.max.apply(null, data2);
+        var minData2 = Math.min.apply(null, data2);
+
+        maxData = ((maxData > maxData2) ? maxData : maxData2);
+        minData = ((minData < minData2) ? minData : minData2);
+
+        return new Chart(context,
+            {
+                //graph type
+                type: 'line',
+                data:
+                    {
+                        //team ids
+                        labels: labels,
+                        datasets: [
+                            {
+                                label: 'Team Average',
+                                //item averages
+                                data: data,
+
+                                borderColor: ['#03A9F4']
+                            },
+                            {
+                                label: 'Match Average',
+
+                                //item averages
+                                data: data2,
+
+                                borderColor: ['#F00']
+                            }]
+                    },
+                options: {
+                    title:
+                        {
+                            //show graph title
+                            display: true,
+                            text: title
+                        },
+                    legend:
+                        {
+                            //hide legend generated by data name
+                            display: true
+                        },
+                    maintainAspectRatio: false,
+                    responsive: true,
+                    scales: {
+                        yAxes: [{
+                            ticks: {
+                                beginAtZero: true,
+                                max: maxData + 1,
+                                min: ((minData === 0) ? minData : minData - 1)
+                            }
+                        }]
+                    },
+                    annotation: {
+                        //adds the event average vertical line
+                        annotations: [{
+                            type: 'line',
+                            mode: 'horizontal',
+                            scaleID: 'y-axis-0',
+                            value: average,
+                            borderColor: '#0288D1',
+                            borderWidth: 4,
+                            label: {
+                                enabled: true,
+                                content: 'Event Average ' + Math.round(average * 100.00) / 100.00
+                            }
+                        }]
+                    }
+                }
+
+            });
+    }
+
 
     /**
      * Generates the data from the ajax script and compiles it into the graph

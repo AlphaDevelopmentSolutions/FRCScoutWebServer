@@ -342,10 +342,12 @@ $ccwms = $stats['ccwms']['frc' . $pitCard->TeamId];
                 {
                     action: 'load_stats',
                     eventId:'<?php echo $event->BlueAllianceId; ?>',
-                    teamId: '<?php echo $team->Id ?>'
+                    teamIds: JSON.stringify([<?php echo $team->Id ?>])
                 },
                 function(data)
                 {
+                    console.log(data);
+
                     //parse the response data into JSON
                     var jsonResponse = JSON.parse(data);
 
@@ -353,11 +355,11 @@ $ccwms = $stats['ccwms']['frc' . $pitCard->TeamId];
                     var data = []; //data AKA item averages to show on the graph
                     var backgroundColors = []; //colors to indicate bad/warning/good stats
                     var average = jsonResponse['EventAvg'][graphItem]; //get the event average
+                    var matchAveragData = []; //get the event average
 
-                    console.log(jsonResponse);
 
                     //for each item (team) inside the graph data, calculate and store the averages
-                    $.each(jsonResponse, function(matchId, averages)
+                    $.each(jsonResponse['<?php echo $team->Id ?>'], function(matchId, averages)
                     {
                         //dont add row for event avg
                         if(matchId !== 'EventAvg')
@@ -369,12 +371,26 @@ $ccwms = $stats['ccwms']['frc' . $pitCard->TeamId];
                         }
                     });
 
+                    //for each item (team) inside the graph data, calculate and store the averages
+                    $.each(jsonResponse['MatchAvgs'], function(matchId, averages)
+                    {
+                        //dont add row for event avg
+                        if(matchId !== 'EventAvg')
+                        {
+                            var val = averages[graphItem]; //store the value of the teams averages for the specified item
+
+                            matchAveragData.push(val); //add the item average to the data
+                        }
+                    });
+
+
+
                     //if the chart context was the auto chart, update the auto chart
                     if($(context).attr('id') === 'autoChart')
                     {
                         if(autoChart !== undefined)
                             autoChart.destroy();
-                        autoChart = createChart(context, labels, data, backgroundColors, average, 'Autonomous');
+                        autoChart = createChart(context, labels, data, matchAveragData, backgroundColors, average, 'Autonomous');
                     }
 
                     //if the chart context was the teleop chart, update the teleop chart
@@ -382,7 +398,7 @@ $ccwms = $stats['ccwms']['frc' . $pitCard->TeamId];
                     {
                         if(teleopChart !== undefined)
                             teleopChart.destroy();
-                        teleopChart = createChart(context, labels, data, backgroundColors, average, 'Teleop');
+                        teleopChart = createChart(context, labels, data, matchAveragData, backgroundColors, average, 'Teleop');
                     }
 
                     //if the chart context was the end game chart, update the end game chart
@@ -390,7 +406,7 @@ $ccwms = $stats['ccwms']['frc' . $pitCard->TeamId];
                     {
                         if(endGameChart !== undefined)
                             endGameChart.destroy();
-                        endGameChart = createChart(context, labels, data, backgroundColors, average, 'End Game');
+                        endGameChart = createChart(context, labels, data, matchAveragData, backgroundColors, average, 'End Game');
                     }
 
                     //if the chart context was the post game chart, update the post game chart
@@ -398,7 +414,7 @@ $ccwms = $stats['ccwms']['frc' . $pitCard->TeamId];
                     {
                         if(postGameChart !== undefined)
                             postGameChart.destroy();
-                        postGameChart = createChart(context, labels, data, backgroundColors, average, 'Post Game');
+                        postGameChart = createChart(context, labels, data, matchAveragData, backgroundColors, average, 'Post Game');
                     }
                 });
         }
@@ -413,10 +429,16 @@ $ccwms = $stats['ccwms']['frc' . $pitCard->TeamId];
          * @param title of the graph
          * @returns Chart
          */
-        function createChart(context, labels, data, backgroundColors, average, title)
+        function createChart(context, labels, data, data2, backgroundColors, average, title)
         {
             var maxData = Math.max.apply(null, data);
             var minData = Math.min.apply(null, data);
+
+            var maxData2 = Math.max.apply(null, data2);
+            var minData2 = Math.min.apply(null, data2);
+
+            maxData = ((maxData > maxData2) ? maxData : maxData2);
+            minData = ((minData < minData2) ? minData : minData2);
 
             return new Chart(context,
                 {
@@ -426,12 +448,22 @@ $ccwms = $stats['ccwms']['frc' . $pitCard->TeamId];
                         {
                             //team ids
                             labels: labels,
-                            datasets: [{
-                                //item averages
-                                data: data,
+                            datasets: [
+                                {
+                                    label: 'Team Average',
+                                    //item averages
+                                    data: data,
 
-                                borderColor: ['#03A9F4']
-                            }]
+                                    borderColor: ['#03A9F4']
+                                },
+                                {
+                                    label: 'Match Average',
+
+                                    //item averages
+                                    data: data2,
+
+                                    borderColor: ['#F00']
+                                }]
                         },
                     options: {
                         title:
@@ -443,7 +475,7 @@ $ccwms = $stats['ccwms']['frc' . $pitCard->TeamId];
                         legend:
                             {
                                 //hide legend generated by data name
-                                display: false
+                                display: true
                             },
                         maintainAspectRatio: false,
                         responsive: true,
@@ -467,7 +499,7 @@ $ccwms = $stats['ccwms']['frc' . $pitCard->TeamId];
                                 borderWidth: 4,
                                 label: {
                                     enabled: true,
-                                    content: 'Average ' + Math.round(average * 100.00) / 100.00
+                                    content: 'Event Average ' + Math.round(average * 100.00) / 100.00
                                 }
                             }]
                         }
