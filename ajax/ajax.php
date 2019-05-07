@@ -2,10 +2,96 @@
 require_once("../config.php");
 require_once("../classes/Events.php");
 require_once("../classes/Teams.php");
-
 switch($_POST['action'])
 {
     case 'load_stats':
+        $return_array = array();
+
+        $eventId = $_POST['eventId'];
+
+        $event = Events::withId($eventId);
+
+        //get all the scout cards from the event specified
+        foreach ($event->getScoutCards() as $scoutCard)
+        {
+            //for each scout card object returned, get the key and value from it
+            foreach($scoutCard as $key => $value)
+            {
+                //filter out the fields we do not want
+                if($key != 'Id' &&
+                    $key != 'MatchId' &&
+                    $key != 'TeamId' &&
+                    $key != 'EventId' &&
+                    $key != 'AllianceColor' &&
+                    $key != 'CompletedBy' &&
+                    $key != 'Notes' &&
+                    $key != 'CompletedDate')
+                {
+                    //at the teamid index, and key, compile whatever key it is at with the value. Essentially creating a running total
+                    $return_array[$scoutCard->TeamId][$key] = $return_array[$scoutCard->TeamId][$key] + $value;
+
+                    //check if we need to nullify any offense ratings
+                    if($key == 'OffenseRating' && $value == 0)
+                        $return_array[$scoutCard->TeamId]['NulledOffenseRatings'] = ((empty($return_array[$scoutCard->TeamId]['NulledOffenseRatings'])) ? 1 : $return_array[$scoutCard->TeamId]['NulledOffenseRatings'] + 1);
+
+                    //check if we need to nullify any defense ratings
+                    else if($key == 'DefenseRating' && $value == 0)
+                        $return_array[$scoutCard->TeamId]['NulledDefenseRatings'] = ((empty($return_array[$scoutCard->TeamId]['NulledDefenseRatings'])) ? 1 : $return_array[$scoutCard->TeamId]['NulledDefenseRatings'] + 1);
+                }
+            }
+
+            //compile a running total for how many cards a team has, to calculate an average
+            $return_array[$scoutCard->TeamId]['CardCount'] = ((empty($return_array[$scoutCard->TeamId]['CardCount'])) ? 1 : $return_array[$scoutCard->TeamId]['CardCount'] + 1);
+        }
+
+        //once the totals have been calculated iterate through to calculate averages
+        foreach($return_array as $teamId => $stats)
+        {
+            //for each stat inside each team, get the key of that stat and value
+            foreach($stats as $key => $value)
+            {
+                //don't change the values specified
+                if($key != 'CardCount' && $key != 'NulledOffenseRatings' && $key != 'NulledDefenseRatings')
+                {
+                    //if we aren't calculating the offense or defense rating, don't worry about nulled ratings
+                    //essentially get the total calculated above and divide it by the number of scout cards
+                    if($key != 'OffenseRating' && $key != 'DefenseRating')
+                        $return_array[$teamId][$key] = round($return_array[$teamId][$key] / $return_array[$teamId]['CardCount'], 2);
+
+                    //if we are calculating offense rating, check for nulled ratings
+                    else if($key == 'OffenseRating'  && $return_array[$teamId][$key] != 0)
+                        $return_array[$teamId][$key] = round($return_array[$teamId][$key] / ($return_array[$teamId]['CardCount'] - $return_array[$teamId]['NulledOffenseRatings']), 2);
+
+                    //if we are calculating defense rating, check for nulled ratings
+                    else if($key == 'DefenseRating' && $return_array[$teamId][$key] != 0)
+                        $return_array[$teamId][$key] = round($return_array[$teamId][$key] / ($return_array[$teamId]['CardCount'] - $return_array[$teamId]['NulledDefenseRatings']), 2);
+                }
+            }
+
+            //once all the averages for a team have been calculated
+            //iterate through the array and create a running total of averages into the EventAvg key
+            foreach($stats as $key => $value)
+                $return_array['EventAvg'][$key] += $return_array[$teamId][$key];
+
+            $return_array['EventAvg']['TeamCount'] = ((empty($return_array['EventAvg']['TeamCount'])) ? 1 : $return_array['EventAvg']['TeamCount'] + 1);
+        }
+
+
+        //once all the event averages have been totalled, divide each average by the number of teams at the event
+        foreach ($return_array['EventAvg'] as $key => $value)
+        {
+            if($key != 'TeamCount')
+                $return_array['EventAvg'][$key] = $return_array['EventAvg'][$key] / $return_array['EventAvg']['TeamCount'];
+        }
+
+        //sort the array by team ids
+        ksort($return_array);
+
+        echo json_encode($return_array);
+
+        break;
+
+    case 'load_stats_legacy':
 
         require_once('../classes/Teams.php');
         require_once('../classes/ScoutCards.php');

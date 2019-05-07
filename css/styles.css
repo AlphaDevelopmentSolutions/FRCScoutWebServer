@@ -336,3 +336,8 @@ html, body {
 {
   color: black;
 }
+
+.stats-cell
+{
+  text-align: center;
+}
