@@ -147,6 +147,7 @@ function generateData(graphItem, context)
         },
         function(data)
         {
+            console.log(graphItem);
             //parse the response data into JSON
             var jsonResponse = JSON.parse(data);
 
@@ -180,7 +181,7 @@ function generateData(graphItem, context)
                 {
                     var val = averages[graphItem]; //store the value of the teams averages for the specified item
 
-                    labels.push(((matchAveragData.length > 0) ? 'Quals ' : '') + key); //key to the label
+                    labels.push(key); //key to the label
                     data.push(val); //add the item average to the data
 
                     //if the average is more than double the event average, that's a good (green) stat
@@ -197,13 +198,41 @@ function generateData(graphItem, context)
                 }
             });
 
+            var xAxesTitle, yAxesTitle;
+
+
+            $.each(GRAPH_PERIODS , function(key, value)
+            {
+                $.each(value, function (key, value)
+                {
+                    if(graphItem === value)
+                    {
+                        if(matchAveragData.length > 0)
+                        {
+                            yAxesTitle = 'Average ' + key;
+                            xAxesTitle = 'Matches';
+                            return;
+                        }
+                        else
+                        {
+                            xAxesTitle = 'Average ' + key;
+                            yAxesTitle = 'Teams';
+                            return;
+                        }
+
+                    }
+                });
+            });
+
+            xAxesTitle = xAxesTitle.toUpperCase();
+            yAxesTitle = yAxesTitle.toUpperCase();
 
             //if the chart context was the auto chart, update the auto chart
             if($(context).attr('id') === 'autoChart')
             {
                 if(autoChart !== undefined)
                     autoChart.destroy();
-                autoChart = createChart(context, labels, data, matchAveragData, backgroundColors, average, 'Autonomous');
+                autoChart = createChart(context, labels, data, matchAveragData, backgroundColors, average, 'Autonomous', xAxesTitle, yAxesTitle);
             }
 
             //if the chart context was the teleop chart, update the teleop chart
@@ -211,7 +240,7 @@ function generateData(graphItem, context)
             {
                 if(teleopChart !== undefined)
                     teleopChart.destroy();
-                teleopChart = createChart(context, labels, data, matchAveragData, backgroundColors, average, 'Teleop');
+                teleopChart = createChart(context, labels, data, matchAveragData, backgroundColors, average, 'Teleop', xAxesTitle, yAxesTitle);
             }
 
             //if the chart context was the end game chart, update the end game chart
@@ -219,7 +248,7 @@ function generateData(graphItem, context)
             {
                 if(endGameChart !== undefined)
                     endGameChart.destroy();
-                endGameChart = createChart(context, labels, data, matchAveragData, backgroundColors, average, 'End Game');
+                endGameChart = createChart(context, labels, data, matchAveragData, backgroundColors, average, 'End Game', xAxesTitle, yAxesTitle);
             }
 
             //if the chart context was the post game chart, update the post game chart
@@ -227,7 +256,7 @@ function generateData(graphItem, context)
             {
                 if(postGameChart !== undefined)
                     postGameChart.destroy();
-                postGameChart = createChart(context, labels, data, matchAveragData, backgroundColors, average, 'Post Game');
+                postGameChart = createChart(context, labels, data, matchAveragData, backgroundColors, average, 'Post Game', xAxesTitle, yAxesTitle);
             }
         });
 }
@@ -241,9 +270,11 @@ function generateData(graphItem, context)
  * @param backgroundColors of the item average
  * @param average event average
  * @param title of the graph
+ * @param xAxesTitle for the x axis
+ * @param yAxesTitle for the y axis
  * @returns Chart
  */
-function createChart(context, labels, data, data2, backgroundColors, average, title)
+function createChart(context, labels, data, data2, backgroundColors, average, title, xAxesTitle, yAxesTitle)
 {
     var maxData = Math.max.apply(null, data);
     var minData = Math.min.apply(null, data);
@@ -322,23 +353,34 @@ function createChart(context, labels, data, data2, backgroundColors, average, ti
                 },
                 maintainAspectRatio: false,
                 responsive: true,
-                scales: (lineGraph) ?
+                scales:
                 {
                     yAxes: [{
-                        ticks: {
-                            beginAtZero: true,
-                            max: (maxData === 0) ? 1 : maxData * 1.1,
-                            min: ((minData >= 0) ? 0 : minData * 1.5)
+                        ticks: (lineGraph) ?
+                            {
+                                beginAtZero: true,
+                                max: (maxData === 0) ? 1 : maxData * 1.1,
+                                min: ((minData >= 0) ? 0 : minData * 1.5)
+                            }
+                            :
+                            {},
+                        scaleLabel: {
+                            display: true,
+                            labelString: yAxesTitle
                         }
-                    }]
-                }
-                :
-                {
+                    }],
                     xAxes: [{
-                        ticks: {
-                            beginAtZero: true,
-                            max: maxData * 1.05,
-                            min: ((minData >= 0) ? 0 : minData * 1.1)
+                        ticks: (lineGraph) ?
+                            {}
+                            :
+                            {
+                                beginAtZero: true,
+                                max: maxData * 1.05,
+                                min: ((minData >= 0) ? 0 : minData * 1.1)
+                            },
+                        scaleLabel: {
+                            display: true,
+                            labelString: xAxesTitle
                         }
                     }]
                 },
