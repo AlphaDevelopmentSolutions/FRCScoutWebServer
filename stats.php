@@ -16,12 +16,8 @@ $event = Events::withId($eventId);
     <?php require_once('includes/meta.php') ?>
 
     <script src="<?php echo URL_PATH ?>/js/Chart.min.js"></script>
-
     <link rel="stylesheet" href="<?php echo URL_PATH ?>/css/Chart.min.css">
     <script src="<?php echo URL_PATH ?>/js/chartjs-plugin-annotation.min.js"></script>
-
-
-
 
 </head>
 <body class="mdl-demo mdl-color--grey-100 mdl-color-text--grey-700 mdl-base">
@@ -90,11 +86,6 @@ $event = Events::withId($eventId);
                 </div>
             </div>
         </div>
-
-
-
-
-
     </main>
 
 </div>
@@ -105,8 +96,8 @@ $event = Events::withId($eventId);
 
     const AUTO_ITEMS =
         {
-            Hatches : 'AutonomousCargoStored',
-            Cargo : 'AutonomousHatchPanelsSecured'
+            Hatches : 'AutonomousHatchPanelsSecured',
+            Cargo : 'AutonomousCargoStored'
         };
 
     const TELEOP_ITEMS =

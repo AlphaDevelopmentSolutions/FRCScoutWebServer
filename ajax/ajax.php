@@ -8,12 +8,29 @@ switch($_POST['action'])
         $return_array = array();
 
         $eventId = $_POST['eventId'];
+        $teamId = $_POST['teamId'];
 
         $event = Events::withId($eventId);
+        $team = null;
+
+        if(!empty($teamId))
+            $team = Teams::withId($teamId);
 
         //get all the scout cards from the event specified
-        foreach ($event->getScoutCards() as $scoutCard)
+        foreach ($event->getScoutCards(null, $team) as $scoutCard)
         {
+            //if team specified, get matches instead of teams
+            if(!empty($team))
+            {
+                $match = Matches::withId($scoutCard->MatchId);
+                
+                $arrayKey = $match->MatchNumber;
+            }
+
+            //else go with regular stats
+            else
+                $arrayKey = $scoutCard->TeamId;
+                
             //for each scout card object returned, get the key and value from it
             foreach($scoutCard as $key => $value)
             {
@@ -28,20 +45,20 @@ switch($_POST['action'])
                     $key != 'CompletedDate')
                 {
                     //at the teamid index, and key, compile whatever key it is at with the value. Essentially creating a running total
-                    $return_array[$scoutCard->TeamId][$key] = $return_array[$scoutCard->TeamId][$key] + $value;
+                    $return_array[$arrayKey][$key] = $return_array[$arrayKey][$key] + $value;
 
                     //check if we need to nullify any offense ratings
                     if($key == 'OffenseRating' && $value == 0)
-                        $return_array[$scoutCard->TeamId]['NulledOffenseRatings'] = ((empty($return_array[$scoutCard->TeamId]['NulledOffenseRatings'])) ? 1 : $return_array[$scoutCard->TeamId]['NulledOffenseRatings'] + 1);
+                        $return_array[$arrayKey]['NulledOffenseRatings'] = ((empty($return_array[$arrayKey]['NulledOffenseRatings'])) ? 1 : $return_array[$arrayKey]['NulledOffenseRatings'] + 1);
 
                     //check if we need to nullify any defense ratings
                     else if($key == 'DefenseRating' && $value == 0)
-                        $return_array[$scoutCard->TeamId]['NulledDefenseRatings'] = ((empty($return_array[$scoutCard->TeamId]['NulledDefenseRatings'])) ? 1 : $return_array[$scoutCard->TeamId]['NulledDefenseRatings'] + 1);
+                        $return_array[$arrayKey]['NulledDefenseRatings'] = ((empty($return_array[$arrayKey]['NulledDefenseRatings'])) ? 1 : $return_array[$arrayKey]['NulledDefenseRatings'] + 1);
                 }
             }
 
             //compile a running total for how many cards a team has, to calculate an average
-            $return_array[$scoutCard->TeamId]['CardCount'] = ((empty($return_array[$scoutCard->TeamId]['CardCount'])) ? 1 : $return_array[$scoutCard->TeamId]['CardCount'] + 1);
+            $return_array[$arrayKey]['CardCount'] = ((empty($return_array[$arrayKey]['CardCount'])) ? 1 : $return_array[$arrayKey]['CardCount'] + 1);
         }
 
         //once the totals have been calculated iterate through to calculate averages

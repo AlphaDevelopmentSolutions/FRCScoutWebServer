@@ -93,7 +93,7 @@ class Matches extends Table
             switch($this->MatchType)
             {
                 case self::$MATCH_TYPE_QUALIFICATIONS:
-                    return 'Qualification';
+                    return 'Quals';
                     break;
 
                 case self::$MATCH_TYPE_QUARTER_FINALS:
@@ -115,7 +115,7 @@ class Matches extends Table
             }
         }
 
-        return 'Qualification';
+        return 'Quals';
     }
 
     /**
