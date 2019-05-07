@@ -36,7 +36,13 @@ $event = Events::withId($eventId);
 
 
     <main class="mdl-layout__content">
-        <div class="content-grid mdl-grid">
+        <div class="stats-search-wrapper">
+            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label stats-search">
+                <input id="teamSearch" class="mdl-textfield__input" type="text" placeholder="1114, 2056, 5885..." >
+                <label class="mdl-textfield__label">Search</label>
+            </div>
+        </div>
+            <div class="content-grid mdl-grid">
 
             <div class="mdl-cell stats-cell">
                 <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
@@ -45,7 +51,7 @@ $event = Events::withId($eventId);
                     </select>
                     <label class="mdl-textfield__label" for="changeAutoItem">Item</label>
                 </div>
-                <div style="height: 750px;">
+                <div class="stats-chart">
                     <canvas id="autoChart"></canvas>
                 </div>
             </div>
@@ -57,7 +63,7 @@ $event = Events::withId($eventId);
                     </select>
                     <label class="mdl-textfield__label" for="changeTeleopItem">Item</label>
                 </div>
-                <div style="height: 750px;">
+                <div class="stats-chart">
                     <canvas id="teleopChart"></canvas>
                 </div>
             </div>
@@ -69,7 +75,7 @@ $event = Events::withId($eventId);
                     </select>
                     <label class="mdl-textfield__label" for="changeEndGameItem">Item</label>
                 </div>
-                <div style="height: 750px;">
+                <div class="stats-chart">
                     <canvas id="endGameChart"></canvas>
                 </div>
             </div>
@@ -81,7 +87,7 @@ $event = Events::withId($eventId);
                     </select>
                     <label class="mdl-textfield__label" for="changePostGameItem">Item</label>
                 </div>
-                <div style="height: 750px;">
+                <div class="stats-chart">
                     <canvas id="postGameChart"></canvas>
                 </div>
             </div>
@@ -93,6 +99,8 @@ $event = Events::withId($eventId);
 <script>
 
     var autoChart, teleopChart, endGameChart, postGameChart;
+
+    var teamList = [];
 
     const AUTO_ITEMS =
         {
@@ -128,11 +136,30 @@ $event = Events::withId($eventId);
 
     $(document).ready(function ()
     {
+        updateGraphs();
+
+        $('#teamSearch').change(function()
+        {
+            //filter the string and remove empty records
+            teamList = $(this).val().replace(/[^0-9,.]/g,'').split(',').filter(function (el)
+            {
+                return el != null && el != "";
+            });
+
+            updateGraphs();
+        });
+    });
+
+    /**
+     * Updates all the graphs on the page with the default records
+     */
+    function updateGraphs()
+    {
         setItems(GRAPH_PERIODS.Autonomous, document.getElementById('autoChart'), $('#changeAutoItem'));
         setItems(GRAPH_PERIODS.Teleop, document.getElementById('teleopChart'), $('#changeTeleopItem'));
         setItems(GRAPH_PERIODS.EndGame, document.getElementById('endGameChart'), $('#changeEndGameItem'));
         setItems(GRAPH_PERIODS.PostGame, document.getElementById('postGameChart'), $('#changePostGameItem'));
-    });
+    }
 
 
     /**
@@ -143,6 +170,9 @@ $event = Events::withId($eventId);
      */
     function setItems(graphPeriod, context, selectBox)
     {
+        //empty out the contents of the select box before adding in the new contents
+        $(selectBox).empty();
+
         //for each item inside the GRAPH_PERIODS enum
         //match the specified graphperiod to the one in the enum
         $.each(GRAPH_PERIODS , function(key, value)
@@ -185,10 +215,12 @@ $event = Events::withId($eventId);
         $.post('/ajax/ajax.php',
             {
                 action: 'load_stats',
-                eventId:'<?php echo $event->BlueAllianceId; ?>'
+                eventId:'<?php echo $event->BlueAllianceId; ?>',
+                teamIds: JSON.stringify(teamList)
             },
             function(data)
             {
+                console.log(data);
                 //parse the response data into JSON
                 var jsonResponse = JSON.parse(data);
 

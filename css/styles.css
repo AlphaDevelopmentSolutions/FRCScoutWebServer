@@ -341,3 +341,32 @@ html, body {
 {
   text-align: center;
 }
+
+.stats-chart
+{
+  min-height: 550px;
+  max-height: 650px;
+  height: 85vh;
+}
+
+.stats-search-wrapper
+{
+  text-align: center;
+}
+
+.stats-search
+{
+  display: inline-block;
+}
+
+.clearfix
+{
+  overflow: auto;
+}
+
+.clearfix:after
+{
+  content: "";
+  clear: both;
+  display: table;
+}

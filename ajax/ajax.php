@@ -9,6 +9,7 @@ switch($_POST['action'])
 
         $eventId = $_POST['eventId'];
         $teamId = $_POST['teamId'];
+        $teamIds = json_decode($_POST['teamIds']);
 
         $event = Events::withId($eventId);
         $team = null;
@@ -20,45 +21,45 @@ switch($_POST['action'])
         foreach ($event->getScoutCards(null, $team) as $scoutCard)
         {
             //if team specified, get matches instead of teams
-            if(!empty($team))
+            if (!empty($team))
             {
                 $match = Matches::withId($scoutCard->MatchId);
-                
-                $arrayKey = $match->MatchNumber;
-            }
 
-            //else go with regular stats
+                $arrayKey = $match->MatchNumber;
+            } //else go with regular stats
             else
                 $arrayKey = $scoutCard->TeamId;
-                
+
             //for each scout card object returned, get the key and value from it
-            foreach($scoutCard as $key => $value)
+            foreach ($scoutCard as $key => $value)
             {
                 //filter out the fields we do not want
-                if($key != 'Id' &&
+                if ($key != 'Id' &&
                     $key != 'MatchId' &&
                     $key != 'TeamId' &&
                     $key != 'EventId' &&
                     $key != 'AllianceColor' &&
                     $key != 'CompletedBy' &&
                     $key != 'Notes' &&
-                    $key != 'CompletedDate')
+                    $key != 'CompletedDate'
+                )
                 {
                     //at the teamid index, and key, compile whatever key it is at with the value. Essentially creating a running total
                     $return_array[$arrayKey][$key] = $return_array[$arrayKey][$key] + $value;
 
                     //check if we need to nullify any offense ratings
-                    if($key == 'OffenseRating' && $value == 0)
+                    if ($key == 'OffenseRating' && $value == 0)
                         $return_array[$arrayKey]['NulledOffenseRatings'] = ((empty($return_array[$arrayKey]['NulledOffenseRatings'])) ? 1 : $return_array[$arrayKey]['NulledOffenseRatings'] + 1);
 
                     //check if we need to nullify any defense ratings
-                    else if($key == 'DefenseRating' && $value == 0)
+                    else if ($key == 'DefenseRating' && $value == 0)
                         $return_array[$arrayKey]['NulledDefenseRatings'] = ((empty($return_array[$arrayKey]['NulledDefenseRatings'])) ? 1 : $return_array[$arrayKey]['NulledDefenseRatings'] + 1);
                 }
             }
 
             //compile a running total for how many cards a team has, to calculate an average
             $return_array[$arrayKey]['CardCount'] = ((empty($return_array[$arrayKey]['CardCount'])) ? 1 : $return_array[$arrayKey]['CardCount'] + 1);
+
         }
 
         //once the totals have been calculated iterate through to calculate averages
@@ -100,6 +101,35 @@ switch($_POST['action'])
             if($key != 'TeamCount')
                 $return_array['EventAvg'][$key] = $return_array['EventAvg'][$key] / $return_array['EventAvg']['TeamCount'];
         }
+
+
+        //if the teamids array is not empty, teams were searched
+        if(!empty($teamIds))
+        {
+
+            //iterate through each searched team
+            foreach($return_array as $key => $value)
+            {
+                //skip over the eventavg key
+                if($key != 'EventAvg')
+                {
+                    $teamInTeamIds = false;
+
+                    //check if the team that was searched is the same as the current key we are on
+                    foreach ($teamIds as $searchedTeamId)
+                    {
+                        if ($key == $searchedTeamId)
+                            $teamInTeamIds = true;
+                    }
+
+                    //if the current key is not a searched team, delete it from the array
+                    if (!$teamInTeamIds)
+                        unset($return_array[$key]);
+                }
+            }
+
+        }
+
 
         //sort the array by team ids
         ksort($return_array);
