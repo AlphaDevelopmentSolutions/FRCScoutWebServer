@@ -16,7 +16,7 @@ $pitCard = $team->getPitCards($event)[0];
 <html lang="en">
 <head>
 
-    <title><?php echo $team->Id . ' - ' . $team->Name ?></title>
+    <title><?php echo $team->Id . ' - ' . $team->Name ?> - Matches</title>
     <?php require_once('includes/meta.php') ?>
 </head>
 <body class="mdl-demo mdl-color--grey-100 mdl-color-text--grey-700 mdl-base">

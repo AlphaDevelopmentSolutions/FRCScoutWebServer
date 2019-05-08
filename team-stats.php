@@ -15,7 +15,7 @@ $pitCard = $team->getPitCards($event)[0];
 <!doctype html>
 <html lang="en">
 <head>
-    <title><?php echo $team->Id . ' - ' . $team->Name ?></title>
+    <title><?php echo $team->Id . ' - ' . $team->Name ?> - Stats</title>
     <?php require_once('includes/meta.php') ?>
     <script src="<?php echo URL_PATH ?>/js/Chart.min.js"></script>
     <link rel="stylesheet" href="<?php echo URL_PATH ?>/css/Chart.min.css">

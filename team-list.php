@@ -10,7 +10,7 @@ $event = Events::withId($eventId);
 <!doctype html>
 <html lang="en">
 <head>
-    <title><?php echo $event->Name; ?></title>
+    <title>Teams</title>
     <?php require_once('includes/meta.php') ?>
 </head>
 <body class="mdl-demo mdl-color--grey-100 mdl-color-text--grey-700 mdl-base">

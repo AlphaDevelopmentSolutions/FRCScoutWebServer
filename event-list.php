@@ -11,13 +11,13 @@ $year = Years::withId($yearId);
 <!doctype html>
 <html lang="en">
   <head>
-    <title>Events</title>
+    <title><?php echo $year->toString() ?></title>
     <?php require_once('includes/meta.php') ?>
   </head>
   <body class="mdl-demo mdl-color--grey-100 mdl-color-text--grey-700 mdl-base">
     <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
         <?php
-        $header = new Header('Events', null, null, null, $year);
+        $header = new Header($year->toString(), null, null, null, $year);
 
         echo $header->toHtml();
         ?>
