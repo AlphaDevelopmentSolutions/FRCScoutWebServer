@@ -37,7 +37,7 @@ $match = Matches::withId($matchId);
 
         $navBarArray[] = new NavBar($navBarLinksArray);
 
-        $header = new Header($event->Name, $additionContent, $navBarArray, $event->BlueAllianceId);
+        $header = new Header($event->Name, $additionContent, $navBarArray, $event);
 
         echo $header->toHtml();
 

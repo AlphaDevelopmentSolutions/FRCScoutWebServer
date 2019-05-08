@@ -10,6 +10,7 @@ class Events extends Table
     public $Country;
     public $StartDate;
     public $EndDate;
+    public $YearId;
 
     public static $TABLE_NAME = 'events';
 

@@ -29,7 +29,7 @@ $event = Events::withId($eventId);
 
     $navBar = new NavBar($navBarLinksArray);
 
-    $header = new Header($event->Name, null, $navBar, $event->BlueAllianceId);
+    $header = new Header($event->Name, null, $navBar, $event);
 
     echo $header->toHtml();
     ?>

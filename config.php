@@ -19,6 +19,7 @@ else if (strpos($_SERVER['REQUEST_URI'], 'install.php') < 1)
 //define root paths
 define('ROBOT_MEDIA_DIR', __DIR__ . '/html/assets/robot-media/');
 define('ROBOT_MEDIA_URL', URL_PATH . '/assets/robot-media/');
+define('YEAR_MEDIA_URL', URL_PATH . '/assets/year-media/');
 define('ROOT_DIR', __DIR__);
 
 //require all necessary files

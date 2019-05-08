@@ -149,7 +149,7 @@ $pitCard = $team->getPitCards($event)[0];
             </div>
             <div class="mdl-layout--large-screen-only mdl-layout__header-row"></div>';
 
-    $header = new Header($event->Name, $additionContent, $navBarArray, $event->BlueAllianceId);
+    $header = new Header($event->Name, $additionContent, $navBarArray, $event);
 
     echo $header->toHtml();
 

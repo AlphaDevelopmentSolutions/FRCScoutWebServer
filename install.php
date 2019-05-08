@@ -108,7 +108,7 @@ define('API_KEY', '$customApiKey');
   ?>
     <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
         <?php
-        $header = new Header('Install', null, null, null);
+        $header = new Header('Install');
 
         echo $header->toHtml();
         ?>
