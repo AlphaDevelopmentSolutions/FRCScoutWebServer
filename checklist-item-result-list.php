@@ -18,7 +18,7 @@ if(!empty($matchId))
 <html lang="en">
 <head>
     <?php require_once('includes/meta.php') ?>
-    <title>Checklist Item Results - <?php echo $match->toString() ?></title>
+    <title>Checklist Item Results<?php echo ((!empty($match)) ? ' - ' . $match->toString() : '') ?></title>
 </head>
 <body class="mdl-demo mdl-color--grey-100 mdl-color-text--grey-700 mdl-base">
 <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
