@@ -468,7 +468,7 @@ function createChart(context, jsonResponse, graphItem, title)
                         borderDash: [7],
                         label: {
                             enabled: true,
-                            content: 'Match Average ' + Math.round(average * 100.00) / 100.00
+                            content: (matchId === '' ? 'Event  ' : 'Match ') + 'Average ' + Math.round(average * 100.00) / 100.00
                         }
                     }]
                 }
