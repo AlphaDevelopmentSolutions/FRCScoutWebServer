@@ -1,5 +1,5 @@
 
-var autoChart, teleopChart, endGameChart, postGameChart;
+var autoChart, teleopChart, endGameChart, postGameChart, dodBreakdownChart;
 
 var teamList = ($('#teamId').length === 0) ? [] : [$('#teamId').val()];
 
@@ -86,6 +86,9 @@ function updateGraphs()
     setItems(GRAPH_PERIODS.Teleop, document.getElementById('teleopChart'), $('#changeTeleopItem'));
     setItems(GRAPH_PERIODS.EndGame, document.getElementById('endGameChart'), $('#changeEndGameItem'));
     setItems(GRAPH_PERIODS.PostGame, document.getElementById('postGameChart'), $('#changePostGameItem'));
+
+    if(teamList.length === 1)
+        setItems(GRAPH_PERIODS.EndGame, document.getElementById('dodBreakdownChart'), null);
 }
 
 
@@ -97,8 +100,9 @@ function updateGraphs()
  */
 function setItems(graphPeriod, context, selectBox)
 {
-    //empty out the contents of the select box before adding in the new contents
-    $(selectBox).empty();
+    if(selectBox !== null)
+        //empty out the contents of the select box before adding in the new contents
+        $(selectBox).empty();
 
     //for each item inside the GRAPH_PERIODS enum
     //match the specified graphperiod to the one in the enum
@@ -122,11 +126,12 @@ function setItems(graphPeriod, context, selectBox)
 
                 generateData(defaultVal, context);
 
-            //add options to the select boxes for the items within each graph item
-            $.each(value , function(key, value)
-            {
-                selectBox.append('<option value="' + value + '">' + key + '</option>');
-            });
+            if(selectBox !== null)
+                //add options to the select boxes for the items within each graph item
+                $.each(value , function(key, value)
+                {
+                    selectBox.append('<option value="' + value + '">' + key + '</option>');
+                });
         }
     });
 }
@@ -138,21 +143,35 @@ function setItems(graphPeriod, context, selectBox)
  */
 function generateData(graphItem, context)
 {
+    var matchData = (teamList.length === 1) && ($(context).attr('id') !== 'dodBreakdownChart');
+
     //get data from the ajax script
     $.post('/ajax/ajax.php',
         {
             action: 'load_stats',
             eventId: $('#eventId').val(),
-            teamIds: JSON.stringify(teamList)
+            teamIds: JSON.stringify(teamList),
+            matchData: matchData
         },
         function(data)
         {
-            console.log(graphItem);
+            //only 1 team specified, change the size of the graphs and hide the team breakdown
+            if((teamList.length === 1))
+            {
+                $($(context).parent()[0]).removeClass('stats-chart').addClass('team-stats-chart');
+                $('#dodBreakdownChart').show();
+            }
+            else
+            {
+                $('#dodBreakdownChart').hide();
+                $($(context).parent()[0]).removeClass('team-stats-chart').addClass('stats-chart');
+            }
+
             //parse the response data into JSON
             var jsonResponse = JSON.parse(data);
 
             var labels = []; //labels AKA team numbers to show on the Y axis
-            var data = []; //data AKA item averages to show on the graph
+            var graphData = []; //data AKA item averages to show on the graph
             var backgroundColors = []; //colors to indicate bad/warning/good stats
             var average = jsonResponse['EventAvg'][graphItem]; //get the event average
             var matchAveragData = []; //get the event average
@@ -181,8 +200,8 @@ function generateData(graphItem, context)
                 {
                     var val = averages[graphItem]; //store the value of the teams averages for the specified item
 
-                    labels.push(key); //key to the label
-                    data.push(val); //add the item average to the data
+                    labels.push(matchAveragData.length > 0 ? 'Quals ' + key : key); //key to the label
+                    graphData.push(val); //add the item average to the data
 
                     //if the average is more than double the event average, that's a good (green) stat
                     if(val > average * 1.45)
@@ -200,7 +219,7 @@ function generateData(graphItem, context)
 
             var xAxesTitle, yAxesTitle;
 
-
+            //set the titles of the axes
             $.each(GRAPH_PERIODS , function(key, value)
             {
                 $.each(value, function (key, value)
@@ -209,7 +228,7 @@ function generateData(graphItem, context)
                     {
                         if(matchAveragData.length > 0)
                         {
-                            yAxesTitle = 'Average ' + key;
+                            yAxesTitle = key;
                             xAxesTitle = 'Matches';
                             return;
                         }
@@ -232,7 +251,7 @@ function generateData(graphItem, context)
             {
                 if(autoChart !== undefined)
                     autoChart.destroy();
-                autoChart = createChart(context, labels, data, matchAveragData, backgroundColors, average, 'Autonomous', xAxesTitle, yAxesTitle);
+                autoChart = createChart(context, labels, graphData, matchAveragData, backgroundColors, average, 'Autonomous', xAxesTitle, yAxesTitle);
             }
 
             //if the chart context was the teleop chart, update the teleop chart
@@ -240,7 +259,7 @@ function generateData(graphItem, context)
             {
                 if(teleopChart !== undefined)
                     teleopChart.destroy();
-                teleopChart = createChart(context, labels, data, matchAveragData, backgroundColors, average, 'Teleop', xAxesTitle, yAxesTitle);
+                teleopChart = createChart(context, labels, graphData, matchAveragData, backgroundColors, average, 'Teleop', xAxesTitle, yAxesTitle);
             }
 
             //if the chart context was the end game chart, update the end game chart
@@ -248,7 +267,7 @@ function generateData(graphItem, context)
             {
                 if(endGameChart !== undefined)
                     endGameChart.destroy();
-                endGameChart = createChart(context, labels, data, matchAveragData, backgroundColors, average, 'End Game', xAxesTitle, yAxesTitle);
+                endGameChart = createChart(context, labels, graphData, matchAveragData, backgroundColors, average, 'End Game', xAxesTitle, yAxesTitle);
             }
 
             //if the chart context was the post game chart, update the post game chart
@@ -256,7 +275,38 @@ function generateData(graphItem, context)
             {
                 if(postGameChart !== undefined)
                     postGameChart.destroy();
-                postGameChart = createChart(context, labels, data, matchAveragData, backgroundColors, average, 'Post Game', xAxesTitle, yAxesTitle);
+                postGameChart = createChart(context, labels, graphData, matchAveragData, backgroundColors, average, 'Post Game', xAxesTitle, yAxesTitle);
+            }
+
+            //if the chart context was the dod breakdown chart, update the dod breakdown chart
+            if($(context).attr('id') === 'dodBreakdownChart')
+            {
+                //create new arrays to hold the radar data and labels
+                var radarLabels = [];
+                var radarData = [];
+                var eventAverageRadarData = [];
+
+                //iterate through each stat inside the team specified and store the defense, offense and drive rating
+                $.each(jsonResponse[teamList[0]], function (statKey, value)
+                {
+                    if(statKey.endsWith('Rating'))
+                    {
+                        radarLabels.push(statKey);
+                        radarData.push(jsonResponse[teamList[0]][statKey]);
+                    }
+                });
+
+                //iterate through each stat inside the event average and store the defense, offense and drive rating
+                $.each(jsonResponse['EventAvg'], function (statKey, value)
+                {
+                    if(statKey.endsWith('Rating'))
+                        eventAverageRadarData.push(jsonResponse['EventAvg'][statKey]);
+                });
+
+
+                if(dodBreakdownChart !== undefined)
+                    dodBreakdownChart.destroy();
+                dodBreakdownChart = createRadarChart(context, radarLabels, radarData, eventAverageRadarData, backgroundColors, 'DOD Ratings');
             }
         });
 }
@@ -302,7 +352,7 @@ function createChart(context, labels, data, data2, backgroundColors, average, ti
 
                                 //item averages
                                 data: data,
-
+                                backgroundColor: 'rgba(3, 169, 244, 0.2)',
                                 borderColor: ['#03A9F4']
                             },
                             {
@@ -310,7 +360,7 @@ function createChart(context, labels, data, data2, backgroundColors, average, ti
 
                                 //item averages
                                 data: data2,
-
+                                backgroundColor: 'rgba(255, 0, 0, 0.2)',
                                 borderColor: ['#F00']
                             }
                         ]
@@ -392,13 +442,89 @@ function createChart(context, labels, data, data2, backgroundColors, average, ti
                         scaleID: (lineGraph) ? 'y-axis-0' : 'x-axis-0',
                         value: average,
                         borderColor: '#0288D1',
-                        borderWidth: 4,
+                        borderWidth: 2,
+                        borderDash: [7],
                         label: {
                             enabled: true,
                             content: 'Event Average ' + Math.round(average * 100.00) / 100.00
                         }
                     }]
                 }
+            }
+
+        });
+}
+
+/**
+ * Creates a new Chart.js chart as a radar graph to display defense and offense stats
+ * @param context context of the canvas to add the chartbar to
+ * @param labels all Y axis labels (Team Ids)
+ * @param data to display for each team (Item Averages)
+ * @param data2 to display for event averages
+ * @param backgroundColors of the item average
+ * @param title of the graph
+ * @returns Chart
+ */
+function createRadarChart(context, labels, data, data2, backgroundColors, title)
+{
+
+    return new Chart(context,
+        {
+            //graph type
+            type: 'radar',
+            data:
+                {
+                    //team ids
+                    labels: labels,
+                    datasets:
+                        [
+                            {
+                                //item averages
+                                label: 'Team Average',
+                                data: data,
+
+                                //stat colors
+                                backgroundColor: 'rgba(3, 169, 244, 0.2)',
+                                borderColor: ['#03A9F4']
+                            },
+                            {
+                                label: 'Event Average',
+
+                                //Event averages
+                                data: data2,
+
+                                //stat colors
+                                backgroundColor: 'rgba(255, 0, 0, 0.2)',
+                                borderColor: ['#F00']
+                            }
+                        ]
+                },
+            options: {
+                tooltips: {
+                    callbacks: {
+                        label: function(tooltipItem)
+                        {
+                            //tooltip title
+                            return tooltipItem.yLabel;
+                        }
+                    }
+                },
+                title:
+                    {
+                        //show graph title
+                        display: true,
+                        text: title
+                    },
+                scale:
+                    {
+                    ticks:
+                        {
+                            beginAtZero: true,
+                            max: 5
+                        }
+                    },
+                maintainAspectRatio: false,
+                responsive: true,
             }
 
         });

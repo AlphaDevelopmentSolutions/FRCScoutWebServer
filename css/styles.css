@@ -349,6 +349,11 @@ html, body {
   height: 85vh;
 }
 
+.team-stats-chart
+{
+  height: 400px;
+}
+
 .stats-search-wrapper
 {
   text-align: center;

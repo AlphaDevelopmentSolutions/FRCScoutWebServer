@@ -93,6 +93,17 @@ $event = Events::withId($eventId);
                     <canvas id="postGameChart"></canvas>
                 </div>
             </div>
+
+                <div class="mdl-cell stats-cell">
+                    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label" style="visibility: hidden">
+                        <input hidden class="mdl-textfield__input" type="text" value="placeholder">
+                        <select class="mdl-textfield__input">
+                        </select>
+                    </div>
+                    <div class="stats-chart">
+                        <canvas id="dodBreakdownChart"></canvas>
+                    </div>
+                </div>
         </div>
     </main>
 

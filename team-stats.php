@@ -169,7 +169,7 @@ $pitCard = $team->getPitCards($event)[0];
                     </select>
                     <label class="mdl-textfield__label" for="changeAutoItem">Item</label>
                 </div>
-                <div style="height: 400px;">
+                <div class="team-stats-chart">
                     <canvas id="autoChart"></canvas>
                 </div>
             </div>
@@ -181,7 +181,7 @@ $pitCard = $team->getPitCards($event)[0];
                     </select>
                     <label class="mdl-textfield__label" for="changeTeleopItem">Item</label>
                 </div>
-                <div style="height: 400px;">
+                <div class="team-stats-chart">
                     <canvas id="teleopChart"></canvas>
                 </div>
             </div>
@@ -193,7 +193,7 @@ $pitCard = $team->getPitCards($event)[0];
                     </select>
                     <label class="mdl-textfield__label" for="changeEndGameItem">Item</label>
                 </div>
-                <div style="height: 400px;">
+                <div class="team-stats-chart">
                     <canvas id="endGameChart"></canvas>
                 </div>
             </div>
@@ -205,8 +205,19 @@ $pitCard = $team->getPitCards($event)[0];
                     </select>
                     <label class="mdl-textfield__label" for="changePostGameItem">Item</label>
                 </div>
-                <div style="height: 400px;">
+                <div class="team-stats-chart">
                     <canvas id="postGameChart"></canvas>
+                </div>
+            </div>
+
+            <div class="mdl-cell stats-cell">
+                <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label" style="visibility: hidden">
+                    <input hidden class="mdl-textfield__input" type="text" value="placeholder">
+                    <select class="mdl-textfield__input">
+                    </select>
+                </div>
+                <div class="team-stats-chart">
+                    <canvas id="dodBreakdownChart"></canvas>
                 </div>
             </div>
         </div>
