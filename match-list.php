@@ -30,7 +30,7 @@ $event = Events::withId($eventId);
         <?php
 
         foreach ($event->getMatches() as $match)
-            echo $match->toHtml('/match.php?eventId=' . $match->EventId . '&matchId=' . $match->Key . '&allianceColor=BLUE', 'View Match Overview');
+            echo $match->toHtml('/match-stats.php?eventId=' . $match->EventId . '&matchId=' . $match->Key, 'View Match Overview');
 
         ?>
     </main>

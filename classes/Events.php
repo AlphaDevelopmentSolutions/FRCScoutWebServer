@@ -209,7 +209,7 @@ class Events extends Table
         {
             $sql .= " AND ! = ? ";
 
-            $cols[] = 'Key';
+            $cols[] = 'MatchId';
             $args[] = $match->Key;
         }
 

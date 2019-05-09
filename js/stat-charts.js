@@ -1,7 +1,16 @@
 
 var autoChart, teleopChart, endGameChart, postGameChart, dodBreakdownChart;
 
-var teamList = ($('#teamId').length === 0) ? [] : [$('#teamId').val()];
+var teamList =
+    ($('#teamId').length === 0) ?
+        []
+    :
+        $('#teamId').val().replace(/[^0-9,.]/g,'').split(',').filter(function (el)
+        {
+            return el != null && el != "";
+        });
+
+var matchId = ($('#matchId').length === 0) ? '' : $('#matchId').val();
 
 const AUTO_ITEMS =
     {
@@ -87,7 +96,7 @@ function updateGraphs()
     setItems(GRAPH_PERIODS.EndGame, document.getElementById('endGameChart'), $('#changeEndGameItem'));
     setItems(GRAPH_PERIODS.PostGame, document.getElementById('postGameChart'), $('#changePostGameItem'));
 
-    if(teamList.length === 1)
+    if(teamList.length === 1 || matchId !== '')
         setItems(GRAPH_PERIODS.EndGame, document.getElementById('dodBreakdownChart'), null);
 }
 
@@ -151,12 +160,13 @@ function generateData(graphItem, context)
             action: 'load_stats',
             eventId: $('#eventId').val(),
             teamIds: JSON.stringify(teamList),
+            matchId: matchId,
             matchData: matchData
         },
         function(data)
         {
             //only 1 team specified, change the size of the graphs and hide the team breakdown
-            if((teamList.length === 1))
+            if((teamList.length === 1) || matchId !== '')
             {
                 $($(context).parent()[0]).removeClass('stats-chart').addClass('team-stats-chart');
                 $('#dodBreakdownChart').show();
@@ -170,88 +180,12 @@ function generateData(graphItem, context)
             //parse the response data into JSON
             var jsonResponse = JSON.parse(data);
 
-            var labels = []; //labels AKA team numbers to show on the Y axis
-            var graphData = []; //data AKA item averages to show on the graph
-            var backgroundColors = []; //colors to indicate bad/warning/good stats
-            var average = jsonResponse['EventAvg'][graphItem]; //get the event average
-            var matchAveragData = []; //get the event average
-
-            //match data specified
-            if(jsonResponse['MatchAvgs'] !== undefined)
-            {
-                //for each item (team) inside the graph data, calculate and store the averages
-                $.each(jsonResponse['MatchAvgs'], function(matchId, averages)
-                {
-                    //dont add row for event avg
-                    if(matchId !== 'EventAvg')
-                    {
-                        var val = averages[graphItem]; //store the value of the teams averages for the specified item
-
-                        matchAveragData.push(val); //add the item average to the data
-                    }
-                });
-            }
-
-            //for each item (team) inside the graph data, calculate and store the averages
-            $.each(((matchAveragData.length > 0) ? jsonResponse[teamList[0]] : jsonResponse), function(key, averages)
-            {
-                //dont add row for event avg
-                if(key !== 'EventAvg' && key !== 'MatchAvgs')
-                {
-                    var val = averages[graphItem]; //store the value of the teams averages for the specified item
-
-                    labels.push(matchAveragData.length > 0 ? 'Quals ' + key : key); //key to the label
-                    graphData.push(val); //add the item average to the data
-
-                    //if the average is more than double the event average, that's a good (green) stat
-                    if(val > average * 1.45)
-                        backgroundColors.push('#64FF62');
-
-                    //if the average is less than double but still greater to or equal to the event average, that's a warning (yellow) stat
-                    else if (val >= average)
-                        backgroundColors.push('#FFD966');
-
-                    //if the average is less than the event average, that's a bad (red) stat
-                    else
-                        backgroundColors.push('#E67C73');
-                }
-            });
-
-            var xAxesTitle, yAxesTitle;
-
-            //set the titles of the axes
-            $.each(GRAPH_PERIODS , function(key, value)
-            {
-                $.each(value, function (key, value)
-                {
-                    if(graphItem === value)
-                    {
-                        if(matchAveragData.length > 0)
-                        {
-                            yAxesTitle = key;
-                            xAxesTitle = 'Matches';
-                            return;
-                        }
-                        else
-                        {
-                            xAxesTitle = 'Average ' + key;
-                            yAxesTitle = 'Teams';
-                            return;
-                        }
-
-                    }
-                });
-            });
-
-            xAxesTitle = xAxesTitle.toUpperCase();
-            yAxesTitle = yAxesTitle.toUpperCase();
-
             //if the chart context was the auto chart, update the auto chart
             if($(context).attr('id') === 'autoChart')
             {
                 if(autoChart !== undefined)
                     autoChart.destroy();
-                autoChart = createChart(context, labels, graphData, matchAveragData, backgroundColors, average, 'Autonomous', xAxesTitle, yAxesTitle);
+                autoChart = createChart(context, jsonResponse, graphItem, 'Autonomous');
             }
 
             //if the chart context was the teleop chart, update the teleop chart
@@ -259,7 +193,7 @@ function generateData(graphItem, context)
             {
                 if(teleopChart !== undefined)
                     teleopChart.destroy();
-                teleopChart = createChart(context, labels, graphData, matchAveragData, backgroundColors, average, 'Teleop', xAxesTitle, yAxesTitle);
+                teleopChart = createChart(context, jsonResponse, graphItem, 'Teleop');
             }
 
             //if the chart context was the end game chart, update the end game chart
@@ -267,7 +201,7 @@ function generateData(graphItem, context)
             {
                 if(endGameChart !== undefined)
                     endGameChart.destroy();
-                endGameChart = createChart(context, labels, graphData, matchAveragData, backgroundColors, average, 'End Game', xAxesTitle, yAxesTitle);
+                endGameChart = createChart(context, jsonResponse, graphItem, 'End Game');
             }
 
             //if the chart context was the post game chart, update the post game chart
@@ -275,7 +209,7 @@ function generateData(graphItem, context)
             {
                 if(postGameChart !== undefined)
                     postGameChart.destroy();
-                postGameChart = createChart(context, labels, graphData, matchAveragData, backgroundColors, average, 'Post Game', xAxesTitle, yAxesTitle);
+                postGameChart = createChart(context, jsonResponse, graphItem, 'Post Game');
             }
 
             //if the chart context was the dod breakdown chart, update the dod breakdown chart
@@ -287,26 +221,32 @@ function generateData(graphItem, context)
                 var eventAverageRadarData = [];
 
                 //iterate through each stat inside the team specified and store the defense, offense and drive rating
-                $.each(jsonResponse[teamList[0]], function (statKey, value)
+                $.each(jsonResponse, function (key, value)
                 {
-                    if(statKey.endsWith('Rating'))
+                    if(key !== 'EventAvg')
                     {
-                        radarLabels.push(statKey);
-                        radarData.push(jsonResponse[teamList[0]][statKey]);
+                        $.each(value, function (statKey, statValue)
+                        {
+                            if (statKey.endsWith('Rating'))
+                            {
+                                radarLabels.push(statKey);
+                                radarData.push(jsonResponse[teamList[0]][statKey]);
+                            }
+                        });
+                    }
+                    else if(key === 'EventAvg')
+                    {
+                        $.each(value, function (statKey, statValue)
+                        {
+                            if (statKey.endsWith('Rating'))
+                                eventAverageRadarData.push(jsonResponse['EventAvg'][statKey]);
+                        });
                     }
                 });
 
-                //iterate through each stat inside the event average and store the defense, offense and drive rating
-                $.each(jsonResponse['EventAvg'], function (statKey, value)
-                {
-                    if(statKey.endsWith('Rating'))
-                        eventAverageRadarData.push(jsonResponse['EventAvg'][statKey]);
-                });
-
-
                 if(dodBreakdownChart !== undefined)
                     dodBreakdownChart.destroy();
-                dodBreakdownChart = createRadarChart(context, radarLabels, radarData, eventAverageRadarData, backgroundColors, 'DOD Ratings');
+                dodBreakdownChart = createRadarChart(context, radarLabels, radarData, eventAverageRadarData, 'DOD Ratings');
             }
         });
 }
@@ -314,28 +254,108 @@ function generateData(graphItem, context)
 /**
  * Creates a new Chart.js chart as a horizontal bar graph
  * @param context context of the canvas to add the chartbar to
- * @param labels all Y axis labels (Team Ids)
- * @param data to display for each team (Item Averages)
- * @param data2 to display for each match (Match Averages)
- * @param backgroundColors of the item average
- * @param average event average
+ * @param jsonResponse to display for each team (Item Averages)
+ * @param graphItem to display for each team (Item Averages)
  * @param title of the graph
- * @param xAxesTitle for the x axis
- * @param yAxesTitle for the y axis
  * @returns Chart
  */
-function createChart(context, labels, data, data2, backgroundColors, average, title, xAxesTitle, yAxesTitle)
+function createChart(context, jsonResponse, graphItem, title)
 {
-    var maxData = Math.max.apply(null, data);
-    var minData = Math.min.apply(null, data);
+    var labels = []; //labels AKA team numbers to show on the Y axis
+    var graphData = []; //data AKA item averages to show on the graph
+    var backgroundColors = []; //colors to indicate bad/warning/good stats
+    var average = jsonResponse['EventAvg'][graphItem]; //get the event average
+    var matchAveragData = []; //get the event average
 
-    var maxData2 = Math.max.apply(null, data2);
-    var minData2 = Math.min.apply(null, data2);
+    //match data specified
+    if(jsonResponse['MatchAvgs'] !== undefined)
+    {
+        //for each item (team) inside the graph data, calculate and store the averages
+        $.each(jsonResponse['MatchAvgs'], function(matchId, averages)
+        {
+            //dont add row for event avg
+            if(matchId !== 'EventAvg')
+            {
+                var val = averages[graphItem]; //store the value of the teams averages for the specified item
+
+                matchAveragData.push(val); //add the item average to the data
+            }
+        });
+    }
+
+    //for each item (team) inside the graph data, calculate and store the averages
+    $.each(((matchAveragData.length > 0) ? jsonResponse[teamList[0]] : jsonResponse), function(key, averages)
+    {
+        //dont add row for event avg
+        if(key !== 'EventAvg' && key !== 'MatchAvgs')
+        {
+            var val = averages[graphItem]; //store the value of the teams averages for the specified item
+
+            labels.push(matchAveragData.length > 0 ? 'Quals ' + key : key); //key to the label
+            graphData.push(val); //add the item average to the data
+
+            //match not specified, assign colors based on score
+            if(matchId === '')
+            {
+                //if the average is more than double the event average, that's a good (green) stat
+                if (val > average * 1.45)
+                    backgroundColors.push('#64FF62');
+
+                //if the average is less than double but still greater to or equal to the event average, that's a warning (yellow) stat
+                else if (val >= average)
+                    backgroundColors.push('#FFD966');
+
+                //if the average is less than the event average, that's a bad (red) stat
+                else
+                    backgroundColors.push('#E67C73');
+            }
+
+            //match specified, assign colors based on alliance
+            else
+                backgroundColors.push(averages['AllianceColor'] === 'RED' ? 'rgba(255, 0, 0, 0.5)' : 'rgba(0, 100, 255, 0.5)');
+
+        }
+    });
+
+    var xAxesTitle, yAxesTitle;
+
+    //set the titles of the axes
+    $.each(GRAPH_PERIODS , function(key, value)
+    {
+        $.each(value, function (key, value)
+        {
+            if(graphItem === value)
+            {
+                if(matchAveragData.length > 0)
+                {
+                    yAxesTitle = key;
+                    xAxesTitle = 'Matches';
+                    return;
+                }
+                else
+                {
+                    xAxesTitle = (matchId === '' ? 'Average ' : '') + key;
+                    yAxesTitle = 'Teams';
+                    return;
+                }
+
+            }
+        });
+    });
+
+    xAxesTitle = xAxesTitle.toUpperCase();
+    yAxesTitle = yAxesTitle.toUpperCase();
+
+    var maxData = Math.max.apply(null, graphData);
+    var minData = Math.min.apply(null, graphData);
+
+    var maxData2 = Math.max.apply(null, matchAveragData);
+    var minData2 = Math.min.apply(null, matchAveragData);
 
     maxData = ((maxData > maxData2) ? maxData : maxData2);
     minData = ((minData < minData2) ? minData : minData2);
 
-    var lineGraph = data2.length > 0;
+    var lineGraph = matchAveragData.length > 0;
 
     return new Chart(context,
         {
@@ -351,7 +371,8 @@ function createChart(context, labels, data, data2, backgroundColors, average, ti
                                 label: 'Team Average',
 
                                 //item averages
-                                data: data,
+                                data: graphData,
+                                cubicInterpolationMode: 'monotone',
                                 backgroundColor: 'rgba(3, 169, 244, 0.2)',
                                 borderColor: ['#03A9F4']
                             },
@@ -359,7 +380,8 @@ function createChart(context, labels, data, data2, backgroundColors, average, ti
                                 label: 'Match Average',
 
                                 //item averages
-                                data: data2,
+                                data: matchAveragData,
+                                cubicInterpolationMode: 'monotone',
                                 backgroundColor: 'rgba(255, 0, 0, 0.2)',
                                 borderColor: ['#F00']
                             }
@@ -373,7 +395,7 @@ function createChart(context, labels, data, data2, backgroundColors, average, ti
                         [
                             {
                                 //item averages
-                                data: data,
+                                data: graphData,
 
                                 //stat colors
                                 backgroundColor: backgroundColors
@@ -397,7 +419,7 @@ function createChart(context, labels, data, data2, backgroundColors, average, ti
                         label: function(tooltipItem)
                         {
                             //tooltip title
-                            return (lineGraph) ? tooltipItem.yLabel : 'Average ' + tooltipItem.xLabel;
+                            return (lineGraph) ? ' ' + tooltipItem.yLabel : (matchId === '' ? 'Average ' : ' ') + tooltipItem.xLabel;
                         }
                     }
                 },
@@ -425,7 +447,7 @@ function createChart(context, labels, data, data2, backgroundColors, average, ti
                             :
                             {
                                 beginAtZero: true,
-                                max: maxData * 1.05,
+                                max: ((!graphItem.endsWith('Rating')) ? maxData * 1.05 : 5),
                                 min: ((minData >= 0) ? 0 : minData * 1.1)
                             },
                         scaleLabel: {
@@ -446,7 +468,7 @@ function createChart(context, labels, data, data2, backgroundColors, average, ti
                         borderDash: [7],
                         label: {
                             enabled: true,
-                            content: 'Event Average ' + Math.round(average * 100.00) / 100.00
+                            content: 'Match Average ' + Math.round(average * 100.00) / 100.00
                         }
                     }]
                 }
@@ -461,11 +483,10 @@ function createChart(context, labels, data, data2, backgroundColors, average, ti
  * @param labels all Y axis labels (Team Ids)
  * @param data to display for each team (Item Averages)
  * @param data2 to display for event averages
- * @param backgroundColors of the item average
  * @param title of the graph
  * @returns Chart
  */
-function createRadarChart(context, labels, data, data2, backgroundColors, title)
+function createRadarChart(context, labels, data, data2, title)
 {
 
     return new Chart(context,
@@ -517,11 +538,11 @@ function createRadarChart(context, labels, data, data2, backgroundColors, title)
                     },
                 scale:
                     {
-                    ticks:
-                        {
-                            beginAtZero: true,
-                            max: 5
-                        }
+                        ticks:
+                            {
+                                beginAtZero: true,
+                                max: 5
+                            }
                     },
                 maintainAspectRatio: false,
                 responsive: true,

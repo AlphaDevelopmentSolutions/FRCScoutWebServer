@@ -225,7 +225,7 @@ $pitCard = $team->getPitCards($event)[0];
 </div>
 <?php require_once('includes/bottom-scripts.php') ?>
 <script defer src="<?php echo URL_PATH ?>/js/quick-stats-toggle.js"></script>
-<script defer src="<?php echo URL_PATH ?>/js/stats-charts.js"></script>
+<script defer src="<?php echo URL_PATH ?>/js/stat-charts.js"></script>
 <script defer src="<?php echo URL_PATH ?>/js/get-opr.js"></script>
 </body>
 </html>

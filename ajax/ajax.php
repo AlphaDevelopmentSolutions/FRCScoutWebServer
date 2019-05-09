@@ -2,6 +2,7 @@
 require_once("../config.php");
 require_once("../classes/Events.php");
 require_once("../classes/Teams.php");
+require_once("../classes/Matches.php");
 switch($_POST['action'])
 {
     case 'load_stats':
@@ -9,17 +10,22 @@ switch($_POST['action'])
 
         $eventId = $_POST['eventId'];
         $teamIds = json_decode($_POST['teamIds']);
+        $matchId = $_POST['matchId'];
         $matchData = $_POST['matchData'];
 
         $event = Events::withId($eventId);
         $teams = null;
+        $match = null;
 
         if(!empty($teamIds))
             foreach($teamIds as $teamId)
                 $teams[] = Teams::withId($teamId);
 
+        if(!empty($matchId))
+            $match = Matches::withId($matchId);
+
         //get all the scout cards from the event specified
-        foreach ($event->getScoutCards(null, $team) as $scoutCard)
+        foreach ($event->getScoutCards($match, $team) as $scoutCard)
         {
             $arrayKey = $scoutCard->TeamId;
 
@@ -31,14 +37,14 @@ switch($_POST['action'])
                     $key != 'MatchId' &&
                     $key != 'TeamId' &&
                     $key != 'EventId' &&
-                    $key != 'AllianceColor' &&
                     $key != 'CompletedBy' &&
                     $key != 'Notes' &&
                     $key != 'CompletedDate'
                 )
                 {
-                    //at the teamid index, and key, compile whatever key it is at with the value. Essentially creating a running total
-                    $return_array[$arrayKey][$key] = $return_array[$arrayKey][$key] + $value;
+                    if($key != 'AllianceColor')
+                        //at the teamid index, and key, compile whatever key it is at with the value. Essentially creating a running total
+                        $return_array[$arrayKey][$key] = $return_array[$arrayKey][$key] + $value;
 
                     //check if we need to nullify any offense ratings
                     if ($key == 'OffenseRating' && $value == 0)
@@ -53,6 +59,8 @@ switch($_POST['action'])
             //compile a running total for how many cards a team has, to calculate an average
             $return_array[$arrayKey]['CardCount'] = ((empty($return_array[$arrayKey]['CardCount'])) ? 1 : $return_array[$arrayKey]['CardCount'] + 1);
 
+            $return_array[$arrayKey]['AllianceColor'] = $scoutCard->AllianceColor;
+
         }
 
         //once the totals have been calculated iterate through to calculate averages
@@ -62,7 +70,7 @@ switch($_POST['action'])
             foreach($stats as $key => $value)
             {
                 //don't change the values specified
-                if($key != 'CardCount' && $key != 'NulledOffenseRatings' && $key != 'NulledDefenseRatings')
+                if($key != 'CardCount' && $key != 'NulledOffenseRatings' && $key != 'NulledDefenseRatings' && $key != 'AllianceColor')
                 {
                     //if we aren't calculating the offense or defense rating, don't worry about nulled ratings
                     //essentially get the total calculated above and divide it by the number of scout cards
@@ -94,7 +102,6 @@ switch($_POST['action'])
             if($key != 'TeamCount')
                 $return_array['EventAvg'][$key] = $return_array['EventAvg'][$key] / $return_array['EventAvg']['TeamCount'];
         }
-
 
         //if the teams array is not empty, teams were searched
         if(!empty($teams))
@@ -135,17 +142,17 @@ switch($_POST['action'])
                 {
                     //get all the scout cards from the matches that the single team was in
                     $scoutCards = array();
-                    foreach ($event->getMatches(null, $team) as $match)
+                    foreach ($event->getMatches(null, $team) as $matchObj)
                     {
-                        foreach ($match->getScoutCards() as $scoutCard)
+                        foreach ($matchObj->getScoutCards() as $scoutCard)
                             $scoutCards[] = $scoutCard;
                     }
 
                     //calculate all the match averages from the scout cards
                     foreach ($scoutCards as $scoutCard)
                     {
-                        $match = Matches::withId($scoutCard->MatchId);
-                        $arrayKey = $match->MatchNumber;
+                        $matchObj = Matches::withId($scoutCard->MatchId);
+                        $arrayKey = $matchObj->MatchNumber;
 
                         //for each scout card object returned, get the key and value from it
                         foreach ($scoutCard as $key => $value)
@@ -187,11 +194,11 @@ switch($_POST['action'])
                     }
 
                     //once the totals have been calculated iterate through to calculate averages
-                    foreach ($return_array as $key => $match)
+                    foreach ($return_array as $key => $matchObj)
                     {
                         if ($key != 'EventAvg')
                         {
-                            foreach ($match as $matchKey => $matchValue)
+                            foreach ($matchObj as $matchKey => $matchValue)
                             {
                                 //for each stat inside each team, get the key of that stat and value
                                 foreach ($matchValue as $statKey => $statValue)
@@ -220,7 +227,7 @@ switch($_POST['action'])
 
 
                     //iterate through each searched team
-                    foreach ($return_array as $teamId => $match)
+                    foreach ($return_array as $teamId => $matchObj)
                     {
                         //skip over the eventavg and matchavg key
                         if ($teamId != 'EventAvg' && $teamId != 'MatchAvgs')
@@ -261,6 +268,8 @@ switch($_POST['action'])
 
             }
         }
+
+
 
         //sort the array by team ids
         ksort($return_array);
