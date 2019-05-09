@@ -2,14 +2,19 @@
 require_once("config.php");
 require_once(ROOT_DIR . "/classes/Events.php");
 require_once(ROOT_DIR . "/classes/Matches.php");
+require_once(ROOT_DIR . "/classes/Teams.php");
 
 $eventId = $_GET['eventId'];
 $matchId = $_GET['matchId'];
+$teamId = $_GET['teamId'];
 $allianceColor = $_GET['allianceColor'];
 
 $event = Events::withId($eventId);
 
 $match = Matches::withId($matchId);
+
+if(!empty($teamId))
+    $team = Teams::withId($teamId);
 
 ?>
 
@@ -25,17 +30,25 @@ $match = Matches::withId($matchId);
     <?php
     $navBarArray = new NavBarArray();
 
+    if(!empty($team))
+    {
+        $navBarLinksArray = new NavBarLinkArray();
+        $navBarLinksArray[] = new NavBarLink('Teams', '/team-list.php?eventId=' . $event->BlueAllianceId);
+        $navBarLinksArray[] = new NavBarLink('Team ' . $teamId, '/team-matches.php?eventId=' . $event->BlueAllianceId . '&teamId=' . $team->Id, true);
+        $navBarArray[] = new NavBar($navBarLinksArray);
+    }
+
     $navBarLinksArray = new NavBarLinkArray();
-    $navBarLinksArray[] = new NavBarLink('Matches', '/match-list.php?eventId=' . $event->BlueAllianceId);
+    if(empty($team))
+        $navBarLinksArray[] = new NavBarLink('Matches', '/match-list.php?eventId=' . $event->BlueAllianceId);
     $navBarLinksArray[] = new NavBarLink($match->toString(), '', true);
 
     $navBarArray[] = new NavBar($navBarLinksArray);
 
     $navBarLinksArray = new NavBarLinkArray();
-    $navBarLinksArray[] = new NavBarLink('Stats', '/match-stats.php?eventId=' . $event->BlueAllianceId . '&matchId=' . $match->Key);
-    $navBarLinksArray[] = new NavBarLink('Blue Alliance', '/match.php?eventId=' . $event->BlueAllianceId . '&matchId=' . $match->Key . '&allianceColor=BLUE', ($allianceColor == 'BLUE'));
-    $navBarLinksArray[] = new NavBarLink('Red Alliance', '/match.php?eventId=' . $event->BlueAllianceId . '&matchId=' . $match->Key . '&allianceColor=RED', ($allianceColor == 'RED'));
-
+    $navBarLinksArray[] = new NavBarLink('Stats', '/match-stats.php?eventId=' . $event->BlueAllianceId . '&matchId=' . $match->Key . ((!empty($team)) ? '&teamId=' . $team->Id : ''));
+    $navBarLinksArray[] = new NavBarLink('Blue Alliance', '/match.php?eventId=' . $event->BlueAllianceId . '&matchId=' . $match->Key . '&allianceColor=BLUE' . ((!empty($team)) ? '&teamId=' . $team->Id : ''), ($allianceColor == 'BLUE'));
+    $navBarLinksArray[] = new NavBarLink('Red Alliance', '/match.php?eventId=' . $event->BlueAllianceId . '&matchId=' . $match->Key . '&allianceColor=RED' . ((!empty($team)) ? '&teamId=' . $team->Id : ''), ($allianceColor == 'RED'));
 
     $navBarArray[] = new NavBar($navBarLinksArray);
 

@@ -176,15 +176,8 @@ $pitCard = $team->getPitCards($event)[0];
         <?php
 
         foreach ($event->getMatches(null, $team) as $match)
-        {
-            $scoutCards = $match->getScoutCards($team);
+            echo $match->toHtml('/match-stats.php?eventId=' . $match->EventId . '&matchId=' . $match->Key . '&teamId=' . $team->Id, 'View Match Overview', $teamId);
 
-            if (!empty($scoutCards))
-                echo $match->toHtml('/scout-card.php?eventId=' . $event->BlueAllianceId . '&matchId=' . $match->Key . '&teamId=' . $team->Id . '&scoutCardId=' . $scoutCards[0]->Id, 'View Scout Card', $team->Id);
-
-            else
-                echo $match->toHtml('/match.php?eventId=' . $match->EventId . '&matchId=' . $match->Key . '&allianceColor=BLUE', 'View Match Overview', $team->Id);
-        }
 
         ?>
     </main>
