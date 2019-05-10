@@ -126,28 +126,6 @@ $pitCard = $team->getPitCards($event)[0];
             <div style="height: unset" class="mdl-layout--large-screen-only mdl-layout__header-row">
                 <h6 style="margin: unset"><strong>DPR:</strong><span id="dpr">0</span></h6>
             </div>
-            <div id="quick-stats" style="padding-left: 40px" hidden>
-                <h6 style="margin: unset"><strong>Drivetrain:</strong>' . $pitCard->DriveStyle . '</h6>
-                <h6 style="margin: unset"><strong>Robot Weight:</strong>' . $pitCard->RobotWeight . '</h6>
-                <h6 style="margin: unset"><strong>Robot Length:</strong>' . $pitCard->RobotLength . '</h6>
-                <h6 style="margin: unset"><strong>Robot Width:</strong>' . $pitCard->RobotWidth . '</h6>
-                <h6 style="margin: unset"><strong>Robot Height:</strong>' . $pitCard->RobotHeight . '</h6>
-    
-                <h6 style="margin: unset"><strong>Auto Exit Habitat:</strong>' . $pitCard->AutoExitHabitat . '</h6>
-                <h6 style="margin: unset"><strong>Auto Hatch Panels:</strong>' . $pitCard->AutoHatch . '</h6>
-                <h6 style="margin: unset"><strong>Auto Cargo:</strong>' . $pitCard->AutoCargo . '</h6>
-    
-                <h6 style="margin: unset"><strong>Teleop Hatch:</strong>' . $pitCard->TeleopHatch . '</h6>
-                <h6 style="margin: unset"><strong>Teleop Cargo:</strong>' . $pitCard->TeleopCargo . '</h6>
-    
-                <h6 style="margin: unset"><strong>Return To Habitat:</strong>' . $pitCard->ReturnToHabitat . '</h6>
-    
-                <h6 style="margin: unset"><strong>Notes:</strong>' . $pitCard->Notes . '</h6>
-                <h6 style="margin: unset"><strong>Completed By:</strong>' . $pitCard->CompletedBy . '</h6>
-            </div>
-            <div style="height: unset" class="mdl-layout--large-screen-only mdl-layout__header-row">
-                <h6 style="margin: unset" ><a id="show-stats-btn" href="#" style="color:white" onclick="showQuickStats()">Show More</a></h6>
-            </div>
             <div class="mdl-layout--large-screen-only mdl-layout__header-row"></div>';
 
     $header = new Header($event->Name, $additionContent, $navBarArray, $event);
@@ -171,7 +149,6 @@ $pitCard = $team->getPitCards($event)[0];
     </main>
 </div>
 <?php require_once('includes/bottom-scripts.php') ?>
-<script defer src="<?php echo URL_PATH ?>/js/quick-stats-toggle.js"></script>
 <script defer src="<?php echo URL_PATH ?>/js/get-opr.js"></script>
 
 </body>

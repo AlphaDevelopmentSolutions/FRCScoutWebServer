@@ -4,7 +4,7 @@
 //error_reporting(E_ALL);
 
 //define all constants
-define('VERSION', 'v2019.2.4.0');
+define('VERSION', 'v2019.3.0.0');
 
 //define error codes
 define('FILE_WRITE_FAIL_CODE' , '5x01');

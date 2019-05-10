@@ -28,11 +28,13 @@ class RobotInfoArray extends \ArrayObject implements ArrayAccess
                 //for each event, iterate through each team and add the html for a new card
                 foreach($eventInfo as $teamId => $teamInfo)
                 {
+                    $team = Teams::withId($teamId);
+
                     $html = '
                         <div class="mdl-layout__tab-panel is-active" id="overview">
                             <section class="section--center mdl-grid mdl-grid--no-spacing mdl-shadow--2dp">
                                 <div class="mdl-card mdl-cell mdl-cell--12-col">
-                                <h4 style="padding-left: 40px;">' . $teamId . '</h4>
+                                <h4 style="padding-left: 40px;">' . $team->toString() . '</h4>
                                     <form method="post" action="' . $_SERVER['REQUEST_URI'] . '" id="scout-card-form">';
 
                     //for each of the robot info key states (pre game, post game, auto, teleop etc..) get the value from the team we are currently viewing
