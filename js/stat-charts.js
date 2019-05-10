@@ -170,11 +170,13 @@ function generateData(graphItem, context)
             {
                 $($(context).parent()[0]).removeClass('stats-chart').addClass('team-stats-chart');
                 $('#dodBreakdownChart').show();
+                $('#oprDprStats').show();
             }
             else
             {
-                $('#dodBreakdownChart').hide();
                 $($(context).parent()[0]).removeClass('team-stats-chart').addClass('stats-chart');
+                $('#dodBreakdownChart').hide();
+                $('#oprDprStats').hide();
             }
 
             //parse the response data into JSON

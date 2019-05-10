@@ -40,11 +40,11 @@ $event = Events::withId($eventId);
     <main class="mdl-layout__content">
         <div class="stats-search-wrapper">
             <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label stats-search">
-                <input id="teamSearch" class="mdl-textfield__input" type="text" placeholder="1114, 2056, 5885..." >
+                <input id="teamSearch" class="mdl-textfield__input" type="text" placeholder="1114, 2056, 5885...">
                 <label class="mdl-textfield__label">Search</label>
             </div>
         </div>
-            <div class="content-grid mdl-grid">
+        <div class="content-grid mdl-grid">
 
             <div class="mdl-cell stats-cell">
                 <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
@@ -94,16 +94,16 @@ $event = Events::withId($eventId);
                 </div>
             </div>
 
-                <div class="mdl-cell stats-cell">
-                    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label" style="visibility: hidden">
-                        <input hidden class="mdl-textfield__input" type="text" value="placeholder">
-                        <select class="mdl-textfield__input">
-                        </select>
-                    </div>
-                    <div class="stats-chart">
-                        <canvas id="dodBreakdownChart"></canvas>
-                    </div>
+            <div class="mdl-cell stats-cell">
+                <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label" style="visibility: hidden">
+                    <input hidden class="mdl-textfield__input" type="text" value="placeholder">
+                    <select class="mdl-textfield__input">
+                    </select>
                 </div>
+                <div class="stats-chart">
+                    <canvas id="dodBreakdownChart"></canvas>
+                </div>
+            </div>
         </div>
     </main>
 

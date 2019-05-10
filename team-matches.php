@@ -114,16 +114,7 @@ $pitCard = $team->getPitCards($event)[0];
     }
 
     $additionContent .=
-        '
-            </div>
-            <div style="height: unset" class="mdl-layout--large-screen-only mdl-layout__header-row">
-                <h6 style="margin: unset"><strong>OPR:</strong><span id="opr">0</span></h6>
-            </div>
-    
-            <div style="height: unset" class="mdl-layout--large-screen-only mdl-layout__header-row">
-                <h6 style="margin: unset"><strong>DPR:</strong><span id="dpr">0</span></h6>
-            </div>
-            <div class="mdl-layout--large-screen-only mdl-layout__header-row"></div>';
+        '</div>';
 
     $header = new Header($event->Name, $additionContent, $navBarArray, $event);
 
@@ -161,7 +152,5 @@ $pitCard = $team->getPitCards($event)[0];
     </main>
 </div>
 <?php require_once('includes/bottom-scripts.php') ?>
-<script defer src="<?php echo URL_PATH ?>/js/get-opr.js"></script>
-
 </body>
 </html>

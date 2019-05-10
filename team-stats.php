@@ -116,16 +116,7 @@ $pitCard = $team->getPitCards($event)[0];
     }
 
     $additionContent .=
-        '
-            </div>
-            <div style="height: unset" class="mdl-layout--large-screen-only mdl-layout__header-row">
-                <h6 style="margin: unset"><strong>OPR:</strong><span id="opr">0</span></h6>
-            </div>
-    
-            <div style="height: unset" class="mdl-layout--large-screen-only mdl-layout__header-row">
-                <h6 style="margin: unset"><strong>DPR:</strong><span id="dpr">0</span></h6>
-            </div>
-            <div class="mdl-layout--large-screen-only mdl-layout__header-row"></div>';
+        '</div>';
 
     $header = new Header($event->Name, $additionContent, $navBarArray, $event);
 
@@ -196,6 +187,14 @@ $pitCard = $team->getPitCards($event)[0];
                 </div>
                 <div class="team-stats-chart">
                     <canvas id="dodBreakdownChart"></canvas>
+                </div>
+            </div>
+
+            <div class="mdl-cell stats-cell" id="oprDprStats">
+                <h6>OPR / DPR</h6>
+                <div>
+                    <h3>OPR: <span id="opr">0</span></h3><br>
+                    <h3>DPR: <span id="dpr">0</span></h3>
                 </div>
             </div>
         </div>
