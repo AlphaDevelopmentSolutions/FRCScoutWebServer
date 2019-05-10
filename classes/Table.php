@@ -95,7 +95,7 @@ abstract class Table
                 if($key != 'Id' && property_exists($this, $key))
                 {
                     //only add to insert statement if value is not empty
-                    if(!empty($value))
+                    if(!empty($value) || $value == '0')
                     {
                         if(!empty($columnsString))
                             $columnsString .= ', ';
@@ -137,7 +137,7 @@ abstract class Table
                 if($key != 'Id' && property_exists($this, $key))
                 {
                     //only add to insert statement if value is not empty
-                    if(!empty($value))
+                    if(!empty($value) || $value == '0')
                     {
                         if(!empty($updates))
                             $updates .= ', ';

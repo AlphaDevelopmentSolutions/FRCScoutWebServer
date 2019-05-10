@@ -63,7 +63,7 @@ if(isPostBack() && loggedIn())
         <?php
         $navBarLinksArray = new NavBarLinkArray();
         $navBarLinksArray[] = new NavBarLink('Teams', '/team-list.php?eventId=' . $event->BlueAllianceId);
-        $navBarLinksArray[] = new NavBarLink('Team ' . $pitCard->TeamId, '/team-pits.php?teamId=' . $pitCard->TeamId . '&eventId=' . $pitCard->EventId);
+        $navBarLinksArray[] = new NavBarLink('Team ' . $pitCard->TeamId, '/team-robot-info.php?teamId=' . $pitCard->TeamId . '&eventId=' . $pitCard->EventId);
         $navBarLinksArray[] = new NavBarLink($pitCard->TeamId . ' - Pit Card', '', true);
 
 

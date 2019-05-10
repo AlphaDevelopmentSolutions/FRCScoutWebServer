@@ -2,6 +2,10 @@
 require_once("config.php");
 require_once(ROOT_DIR . "/classes/Teams.php");
 require_once(ROOT_DIR . "/classes/Events.php");
+require_once(ROOT_DIR . "/classes/RobotInfo.php");
+require_once(ROOT_DIR . "/classes/RobotInfoKeys.php");
+require_once(ROOT_DIR . "/classes/PitCards.php");
+require_once(ROOT_DIR . "/classes/Matches.php");
 
 
 $eventId = $_GET['eventId'];
@@ -31,7 +35,7 @@ $pitCard = $team->getPitCards($event)[0];
 
     $navBarLinksArray = new NavBarLinkArray();
     $navBarLinksArray[] = new NavBarLink('Matches', '/team-matches.php?eventId=' . $event->BlueAllianceId . '&teamId=' . $team->Id);
-    $navBarLinksArray[] = new NavBarLink('Pits', '/team-pits.php?eventId=' . $event->BlueAllianceId . '&teamId=' . $team->Id, true);
+    $navBarLinksArray[] = new NavBarLink('Robot Info', '/team-robot-info.php?eventId=' . $event->BlueAllianceId . '&teamId=' . $team->Id, true);
     $navBarLinksArray[] = new NavBarLink('Photos', '/team-photos.php?eventId=' . $event->BlueAllianceId . '&teamId=' . $team->Id);
     $navBarLinksArray[] = new NavBarLink('Stats', '/team-stats.php?eventId=' . $event->BlueAllianceId . '&teamId=' . $team->Id);
 
@@ -159,10 +163,11 @@ $pitCard = $team->getPitCards($event)[0];
 
         <?php
 
-        foreach ($team->getPitCards($event) as $pitCard)
-            echo $pitCard->toCard();
+            $array = RobotInfo::forTeam(null, $event, $team);
 
+            echo $array->toHtml();
         ?>
+
     </main>
 </div>
 <?php require_once('includes/bottom-scripts.php') ?>

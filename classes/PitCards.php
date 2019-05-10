@@ -147,6 +147,10 @@ class PitCards extends Table
         return $html;
     }
 
+    /**
+     * Compiles the name of the object when displayed as a string
+     * @return string
+     */
     public function toString()
     {
         return 'Pit Card - ' . $this->Id;
