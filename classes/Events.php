@@ -235,19 +235,22 @@ class Events extends Table
     }
 
     /**
-     * Gets all pitcards from this event
+     * Gets all robot info from this event
      * @param Teams | null $team if specified, filters by team
-     * @param PitCards | null $pitCard if specified, filters by pit card
+     * @param RobotInfo | null $robotInfo if specified, filters by pit card
      * @return PitCards[]
      */
-    public function getPitCards($team = null, $pitCard = null)
+    public function getRobotInfo($team = null, $robotInfo = null)
     {
         require_once(ROOT_DIR . '/classes/Teams.php');
-        require_once(ROOT_DIR . '/classes/PitCards.php');
+        require_once(ROOT_DIR . '/classes/RobotInfo.php');
 
         //create the sql statement
-        $sql = "SELECT * FROM !";
-        $cols[] = PitCards::$TABLE_NAME;
+        $sql = "SELECT * FROM ! WHERE ! = ?";
+        $cols[] = RobotInfo::$TABLE_NAME;
+
+        $cols[] = 'EventId';
+        $args[] = $this->BlueAllianceId;
 
         //if team specified, filter by team
         if(!empty($team))
@@ -259,12 +262,12 @@ class Events extends Table
         }
 
         //add the team query if a team was specified
-        if(!empty($pitCard))
+        if(!empty($robotInfo))
         {
             $sql .= " AND ! = ? ";
 
             $cols[] = 'Id';
-            $args[] = $pitCard->Id;
+            $args[] = $robotInfo->Id;
         }
 
         $sql .= " ORDER BY ! DESC";
@@ -273,7 +276,7 @@ class Events extends Table
         $rows = self::query($sql, $cols, $args);
 
         foreach($rows as $row)
-            $response[] = PitCards::withProperties($row);
+            $response[] = RobotInfo::withProperties($row);
 
 
         return $response;

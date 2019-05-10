@@ -108,7 +108,7 @@ class Teams extends Table
             $html .=
                     '<div style="height: unset">' .
                     ((empty($robotMedia->FileURI)) ? '' : '<a href="/team-photos.php?eventId=' . $event->BlueAllianceId . '&teamId=' . $this->Id . '">') .
-                        '<div class="team-card-image" style="background-image: url(' . ((empty($robotMedia->FileURI)) ? 'http://scouting.wiredcats5885.ca/assets/robot-media/frc_logo.jpg' : ROBOT_MEDIA_URL . $robotMedia->FileURI) . ')"></div>' .
+                        '<div class="team-card-image" style="background-image: url(' . ((empty($robotMedia->FileURI)) ? ROBOT_MEDIA_URL . 'frc_logo.jpg' : ROBOT_MEDIA_URL . $robotMedia->FileURI) . ')"></div>' .
                     ((empty($robotMedia->FileURI)) ? '' : '</a>') .
                     '</div>';
 

@@ -13,7 +13,6 @@ $teamId = $_GET['teamId'];
 
 $team = Teams::withId($teamId);
 $event = Events::withId($eventId);
-$pitCard = $team->getPitCards($event)[0];
 ?>
 
 <!doctype html>

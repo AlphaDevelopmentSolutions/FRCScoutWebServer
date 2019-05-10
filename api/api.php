@@ -25,7 +25,6 @@ if(!$api->getKeyValid())
     }
 }
 
-
 try {
 
     switch ($action)
@@ -97,14 +96,14 @@ try {
 
             break;
 
-        case 'GetPitCards':
+        case 'GetRobotInfo':
 
             $eventId = filter_var($_POST['EventId'], FILTER_SANITIZE_STRING);
 
             $event = Events::withId($eventId);
 
             if (!empty($eventId))
-                $api->success($event->getPitCards());
+                $api->success($event->getRobotInfo());
             else
                 throw new Exception('Invalid event id');
 
@@ -151,13 +150,13 @@ try {
 
             break;
 
-        case 'SubmitPitCard':
-            $pitCard = PitCards::withProperties($_POST);
+        case 'SubmitRobotInfo':
+            $robotInfo = RobotInfo::withProperties($_POST);
 
-            if ($pitCard->save())
-                $api->success($pitCard->Id);
+            if ($robotInfo->save())
+                $api->success($robotInfo->Id);
             else
-                throw new Exception('Failed to save pit card');
+                throw new Exception('Failed to save robot info');
 
             break;
 
