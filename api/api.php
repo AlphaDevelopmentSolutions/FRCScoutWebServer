@@ -3,7 +3,8 @@ require_once('../config.php');
 require_once(ROOT_DIR . '/classes/ChecklistItemResults.php');
 require_once(ROOT_DIR . '/classes/ChecklistItems.php');
 require_once(ROOT_DIR . '/classes/ScoutCards.php');
-require_once(ROOT_DIR . '/classes/PitCards.php');
+require_once(ROOT_DIR . '/classes/RobotInfo.php');
+require_once(ROOT_DIR . '/classes/RobotInfoKeys.php');
 require_once(ROOT_DIR . '/classes/Teams.php');
 require_once(ROOT_DIR . '/classes/Events.php');
 require_once(ROOT_DIR . '/classes/RobotMedia.php');
@@ -97,7 +98,6 @@ try {
             break;
 
         case 'GetRobotInfo':
-
             $eventId = filter_var($_POST['EventId'], FILTER_SANITIZE_STRING);
 
             $event = Events::withId($eventId);
@@ -107,6 +107,23 @@ try {
             else
                 throw new Exception('Invalid event id');
 
+            break;
+
+        case 'GetRobotInfoKeys':
+            $eventId = filter_var($_POST['EventId'], FILTER_SANITIZE_STRING);
+            $yearId = filter_var($_POST['YearId'], FILTER_SANITIZE_NUMBER_INT);
+
+            $event = (!empty($eventId)) ? Events::withId($eventId) : null;
+            $year = (!empty($yearId)) ? Years::withId($yearId) : null;
+
+            if (!empty($eventId) || !empty($yearId))
+                $api->success(RobotInfoKeys::getRobotInfoKeys($year, $event));
+            else
+                throw new Exception('Invalid event id');
+            break;
+
+        case 'GetRobotInfoKeyStates':
+            $api->success(RobotInfoKeys::getRobotInfoKeyStates());
             break;
 
         case 'GetMatches':

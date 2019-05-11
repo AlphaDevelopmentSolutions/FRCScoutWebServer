@@ -7,7 +7,7 @@ class RobotInfoKeys
      * @param RobotInfoKeyStates | null $state if specified, filters by state (autonomous / teleop)
      * @return String[]
      */
-    static function getRobotInfoKeys2019($state = null)
+    private static function getRobotInfoKeys2019($state = null)
     {
         switch($state)
         {
@@ -47,6 +47,29 @@ class RobotInfoKeys
     public static function getRobotInfoKeyStates()
     {
         return (new ReflectionClass('RobotInfoKeyStates'))->getConstants();
+    }
+
+    /**
+     * Logic for deciding which keyset to return
+     * @param Years | null $year
+     * @param Events | null $event
+     * @param RobotInfoKeyStates | null $state if specified, filters by state (autonomous / teleop)
+     * @return String[]
+     */
+    public static function getRobotInfoKeys($year = null, $event = null, $state = null)
+    {
+        $yearId = ((!empty($year)) ? $year->Id : ((!empty($event)) ? $event->YearId : date('Y')));
+
+        switch($yearId)
+        {
+            case '2019':
+                return RobotInfoKeys::getRobotInfoKeys2019($state);
+                break;
+
+            default:
+                return RobotInfoKeys::getRobotInfoKeys2019($state);
+                break;
+        }
     }
 }
 

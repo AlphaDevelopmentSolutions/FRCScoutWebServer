@@ -27,10 +27,7 @@ class RobotInfo extends Table
 
         $robotInfoArray = new RobotInfoArray();
 
-        if($year->Id == '2019' || $event->YearId == '2019')
-            $robotKeysYearArray = RobotInfoKeys::getRobotInfoKeys2019();
-
-        foreach($robotKeysYearArray as $propertyKey => $propertyValue)
+        foreach(RobotInfoKeys::getRobotInfoKeys($year, $event) as $propertyKey => $propertyValue)
         {
             foreach(RobotInfo::loadByTeam($year, $event, $team, $propertyValue) as $robotInfo)
                 $robotInfoArray[] = $robotInfo;
