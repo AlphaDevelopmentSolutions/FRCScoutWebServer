@@ -1,7 +1,7 @@
 <?php
 require_once("config.php");
-require_once(ROOT_DIR . "/classes/PitCards.php");
-require_once(ROOT_DIR . "/classes/Events.php");
+require_once(ROOT_DIR . "/classes/tables/PitCards.php");
+require_once(ROOT_DIR . "/classes/tables/Events.php");
 
 $pitCardId = $_GET['pitCardId'];
 $action = (isset($_POST['save'])) ? 'save' : ((isset($_POST['delete'])) ? 'delete' : '');

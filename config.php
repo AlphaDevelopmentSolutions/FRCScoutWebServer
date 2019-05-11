@@ -24,8 +24,8 @@ define('ROOT_DIR', __DIR__);
 
 //require all necessary files
 require_once(ROOT_DIR . '/classes/Database.php');
-require_once(ROOT_DIR . '/classes/Table.php');
-require_once(ROOT_DIR . '/classes/Users.php');
+require_once(ROOT_DIR . '/classes/tables/Table.php');
+require_once(ROOT_DIR . '/classes/tables/Users.php');
 require_once(ROOT_DIR . '/interfaces/AllianceColors.php');
 
 //if the session doe not exist, start it

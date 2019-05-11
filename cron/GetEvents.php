@@ -1,6 +1,6 @@
 <?php
 require_once('../config.php');
-require_once('../classes/Events.php');
+require_once('../classes/tables/Events.php');
 
 
 

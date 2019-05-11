@@ -22,8 +22,8 @@ class RobotInfo extends Table
      */
     public static function forTeam($year = null, $event = null, $team = null)
     {
-        require_once(ROOT_DIR . '/classes/RobotInfoKeys.php');
-        require_once(ROOT_DIR . '/classes/RobotInfoArray.php');
+        require_once(ROOT_DIR . '/classes/tables/RobotInfoKeys.php');
+        require_once(ROOT_DIR . '/classes/tables/RobotInfoArray.php');
 
         $robotInfoArray = new RobotInfoArray();
 
@@ -47,9 +47,9 @@ class RobotInfo extends Table
      */
     private static function loadByTeam($year = null, $event = null, $team = null, $propertyKey)
     {
-        require_once(ROOT_DIR . '/classes/Years.php');
-        require_once(ROOT_DIR . '/classes/Events.php');
-        require_once(ROOT_DIR . '/classes/Teams.php');
+        require_once(ROOT_DIR . '/classes/tables/Years.php');
+        require_once(ROOT_DIR . '/classes/tables/Events.php');
+        require_once(ROOT_DIR . '/classes/tables/Teams.php');
 
         //create the sql statement
         $sql = "SELECT * FROM ! WHERE ! = ?";

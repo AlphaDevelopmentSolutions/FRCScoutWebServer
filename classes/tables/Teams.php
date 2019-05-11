@@ -23,7 +23,7 @@ class Teams extends Table
      */
     public function getProfileImage()
     {
-        require_once(ROOT_DIR . '/classes/RobotMedia.php');
+        require_once(ROOT_DIR . '/classes/tables/RobotMedia.php');
 
         //create the sql statement
         $sql = "SELECT * FROM ! WHERE ! = ? ORDER BY ! DESC LIMIT 1";
@@ -36,7 +36,7 @@ class Teams extends Table
 
         foreach ($rows as $row)
         {
-            require_once(ROOT_DIR . "/classes/RobotMedia.php");
+            require_once(ROOT_DIR . "/classes/tables/RobotMedia.php");
             return RobotMedia::withProperties($row);
         }
     }
@@ -48,7 +48,7 @@ class Teams extends Table
      */
     public function getPitCards($event)
     {
-        require_once(ROOT_DIR . '/classes/PitCards.php');
+        require_once(ROOT_DIR . '/classes/tables/PitCards.php');
 
         //create the sql statement
         $sql = "SELECT * FROM ! WHERE ! = ? AND ! = ? ORDER BY ! DESC";
@@ -73,7 +73,7 @@ class Teams extends Table
      */
     public function getRobotPhotos()
     {
-        require_once(ROOT_DIR . '/classes/RobotMedia.php');
+        require_once(ROOT_DIR . '/classes/tables/RobotMedia.php');
 
         //create the sql statement
         $sql = "SELECT * FROM ! WHERE ! = ? ORDER BY ! DESC";
@@ -97,7 +97,7 @@ class Teams extends Table
      */
     public function toHtml($event = null)
     {
-        require_once(ROOT_DIR . '/classes/Events.php');
+        require_once(ROOT_DIR . '/classes/tables/Events.php');
 
         $html =
             '<section class="section--center mdl-grid mdl-grid--no-spacing mdl-shadow--2dp team-card">

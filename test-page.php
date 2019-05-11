@@ -4,14 +4,14 @@
  */
 
 require_once("config.php");
-require_once(ROOT_DIR . "/classes/ScoutCards.php");
-require_once(ROOT_DIR . "/classes/Events.php");
-require_once(ROOT_DIR . "/classes/Matches.php");
-require_once(ROOT_DIR . "/classes/Teams.php");
-require_once(ROOT_DIR . "/classes/Years.php");
-require_once(ROOT_DIR . "/classes/RobotInfo.php");
-require_once(ROOT_DIR . "/classes/PitCards.php");
-require_once(ROOT_DIR . "/classes/RobotInfoKeys.php");
+require_once(ROOT_DIR . "/classes/tables/ScoutCards.php");
+require_once(ROOT_DIR . "/classes/tables/Events.php");
+require_once(ROOT_DIR . "/classes/tables/Matches.php");
+require_once(ROOT_DIR . "/classes/tables/Teams.php");
+require_once(ROOT_DIR . "/classes/tables/Years.php");
+require_once(ROOT_DIR . "/classes/tables/RobotInfo.php");
+require_once(ROOT_DIR . "/classes/tables/PitCards.php");
+require_once(ROOT_DIR . "/classes/tables/RobotInfoKeys.php");
 //
 //foreach(PitCards::getObjects() as $pitCard)
 //{

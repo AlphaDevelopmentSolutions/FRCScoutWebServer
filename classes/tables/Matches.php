@@ -44,8 +44,8 @@ class Matches extends Table
      */
     public function getScoutCards($team = null, $scoutCard = null)
     {
-        require_once(ROOT_DIR . '/classes/ScoutCards.php');
-        require_once(ROOT_DIR . '/classes/Teams.php');
+        require_once(ROOT_DIR . '/classes/tables/ScoutCards.php');
+        require_once(ROOT_DIR . '/classes/tables/Teams.php');
 
         //create the sql statement
         $sql = "SELECT * FROM ! WHERE ! = ?";

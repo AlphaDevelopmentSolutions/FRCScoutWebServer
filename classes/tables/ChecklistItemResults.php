@@ -17,7 +17,7 @@ class ChecklistItemResults extends Table implements Status
      */
     public function toHtml()
     {
-        require_once(ROOT_DIR . '/classes/ChecklistItems.php');
+        require_once(ROOT_DIR . '/classes/tables/ChecklistItems.php');
 
         //get the checklist item
         $checklistItem = ChecklistItems::withId($this->ChecklistItemId);
@@ -59,7 +59,7 @@ class ChecklistItemResults extends Table implements Status
      */
     public function toString()
     {
-        require_once(ROOT_DIR . '/classes/ChecklistItems.php');
+        require_once(ROOT_DIR . '/classes/tables/ChecklistItems.php');
         return ChecklistItems::withId($this->ChecklistItemId)->Title;
     }
 

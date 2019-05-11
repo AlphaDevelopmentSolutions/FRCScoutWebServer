@@ -47,7 +47,7 @@ class ScoutCards extends Table
      */
     public function toHtml()
     {
-        require_once(ROOT_DIR . '/classes/Teams.php');
+        require_once(ROOT_DIR . '/classes/tables/Teams.php');
 
         //load the stars to be shown
         $defenseStars = '&nbsp';

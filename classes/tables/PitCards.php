@@ -32,7 +32,7 @@ class PitCards extends Table
      */
     public function toHtml()
     {
-        require_once(ROOT_DIR . '/classes/Teams.php');
+        require_once(ROOT_DIR . '/classes/tables/Teams.php');
 
         //load the team from the database
         $team = Teams::withId($this->TeamId);

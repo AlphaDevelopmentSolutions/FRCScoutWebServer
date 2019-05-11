@@ -16,7 +16,7 @@ class Years extends Table
      */
     public function getEvents()
     {
-        require_once(ROOT_DIR . '/classes/Events.php');
+        require_once(ROOT_DIR . '/classes/tables/Events.php');
 
         //create the sql statement
         $sql = "SELECT * FROM ! WHERE ! = ? ORDER BY ! DESC";

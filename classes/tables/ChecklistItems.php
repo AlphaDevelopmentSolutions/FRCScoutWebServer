@@ -35,7 +35,7 @@ class ChecklistItems extends Table
      */
     public function getResults($match = null)
     {
-        require_once(ROOT_DIR . '/classes/ChecklistItemResults.php');
+        require_once(ROOT_DIR . '/classes/tables/ChecklistItemResults.php');
 
         //create the sql statement
         $sql = "SELECT * FROM ! WHERE ! = ?";

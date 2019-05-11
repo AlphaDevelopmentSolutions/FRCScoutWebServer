@@ -1,14 +1,14 @@
 <?php
 require_once('../config.php');
-require_once(ROOT_DIR . '/classes/ChecklistItemResults.php');
-require_once(ROOT_DIR . '/classes/ChecklistItems.php');
-require_once(ROOT_DIR . '/classes/ScoutCards.php');
-require_once(ROOT_DIR . '/classes/RobotInfo.php');
-require_once(ROOT_DIR . '/classes/RobotInfoKeys.php');
-require_once(ROOT_DIR . '/classes/Teams.php');
-require_once(ROOT_DIR . '/classes/Events.php');
-require_once(ROOT_DIR . '/classes/RobotMedia.php');
-require_once(ROOT_DIR . '/classes/Matches.php');
+require_once(ROOT_DIR . '/classes/tables/ChecklistItemResults.php');
+require_once(ROOT_DIR . '/classes/tables/ChecklistItems.php');
+require_once(ROOT_DIR . '/classes/tables/ScoutCards.php');
+require_once(ROOT_DIR . '/classes/tables/RobotInfo.php');
+require_once(ROOT_DIR . '/classes/tables/RobotInfoKeys.php');
+require_once(ROOT_DIR . '/classes/tables/Teams.php');
+require_once(ROOT_DIR . '/classes/tables/Events.php');
+require_once(ROOT_DIR . '/classes/tables/RobotMedia.php');
+require_once(ROOT_DIR . '/classes/tables/Matches.php');
 require_once(ROOT_DIR . '/classes/Api.php');
 
 $api = new Api($_POST['key']);

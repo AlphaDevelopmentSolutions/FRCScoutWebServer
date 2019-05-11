@@ -42,9 +42,9 @@ class Events extends Table
      */
     public function getTeams($match = null, $team = null)
     {
-        require_once(ROOT_DIR . '/classes/Teams.php');
-        require_once(ROOT_DIR . '/classes/EventTeamList.php');
-        require_once(ROOT_DIR . '/classes/Matches.php');
+        require_once(ROOT_DIR . '/classes/tables/Teams.php');
+        require_once(ROOT_DIR . '/classes/tables/EventTeamList.php');
+        require_once(ROOT_DIR . '/classes/tables/Matches.php');
 
         //create the sql statement
         $sql = "SELECT * FROM ! WHERE ! IN (SELECT ! FROM ! WHERE ! = ?)";
@@ -131,8 +131,8 @@ class Events extends Table
      */
     public function getMatches($match = null, $team = null)
     {
-        require_once(ROOT_DIR . '/classes/Matches.php');
-        require_once(ROOT_DIR . '/classes/Teams.php');
+        require_once(ROOT_DIR . '/classes/tables/Matches.php');
+        require_once(ROOT_DIR . '/classes/tables/Teams.php');
 
         //create the sql statement
         $sql = "SELECT * FROM ! WHERE ! = ? AND ! = ?";
@@ -185,9 +185,9 @@ class Events extends Table
      */
     public function getScoutCards($match = null, $team = null, $scoutCard = null)
     {
-        require_once(ROOT_DIR . '/classes/ScoutCards.php');
-        require_once(ROOT_DIR . '/classes/Teams.php');
-        require_once(ROOT_DIR . '/classes/Matches.php');
+        require_once(ROOT_DIR . '/classes/tables/ScoutCards.php');
+        require_once(ROOT_DIR . '/classes/tables/Teams.php');
+        require_once(ROOT_DIR . '/classes/tables/Matches.php');
 
         //create the sql statement
         $sql = "SELECT * FROM ! WHERE ! = ?";
@@ -242,8 +242,8 @@ class Events extends Table
      */
     public function getRobotInfo($team = null, $robotInfo = null)
     {
-        require_once(ROOT_DIR . '/classes/Teams.php');
-        require_once(ROOT_DIR . '/classes/RobotInfo.php');
+        require_once(ROOT_DIR . '/classes/tables/Teams.php');
+        require_once(ROOT_DIR . '/classes/tables/RobotInfo.php');
 
         //create the sql statement
         $sql = "SELECT * FROM ! WHERE ! = ?";

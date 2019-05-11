@@ -1,8 +1,8 @@
 <?php
 require_once("../config.php");
-require_once("../classes/Events.php");
-require_once("../classes/Teams.php");
-require_once("../classes/Matches.php");
+require_once(ROOT_DIR . "/classes/tables/Events.php");
+require_once(ROOT_DIR . "/classes/tables/Teams.php");
+require_once(ROOT_DIR . "/classes/tables/Matches.php");
 switch($_POST['action'])
 {
     case 'load_stats':
@@ -280,9 +280,9 @@ switch($_POST['action'])
 
     case 'load_stats_legacy':
 
-        require_once('../classes/Teams.php');
-        require_once('../classes/ScoutCards.php');
-        require_once('../classes/Matches.php');
+        require_once('../classes/tables/Teams.php');
+        require_once('../classes/tables/ScoutCards.php');
+        require_once('../classes/tables/Matches.php');
         $return_array = array();
 
         $eventId = $_POST['eventId'];

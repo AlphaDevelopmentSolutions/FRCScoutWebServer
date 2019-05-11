@@ -1,9 +1,9 @@
 <?php
 require_once("config.php");
-require_once(ROOT_DIR . "/classes/Teams.php");
-require_once(ROOT_DIR . "/classes/Events.php");
-require_once(ROOT_DIR . "/classes/Matches.php");
-require_once(ROOT_DIR . "/classes/ChecklistItems.php");
+require_once(ROOT_DIR . "/classes/tables/Teams.php");
+require_once(ROOT_DIR . "/classes/tables/Events.php");
+require_once(ROOT_DIR . "/classes/tables/Matches.php");
+require_once(ROOT_DIR . "/classes/tables/ChecklistItems.php");
 
 $eventId = $_GET['eventId'];
 $matchId = $_GET['matchId'];
