@@ -238,7 +238,7 @@ class Events extends Table
      * Gets all robot info from this event
      * @param Teams | null $team if specified, filters by team
      * @param RobotInfo | null $robotInfo if specified, filters by pit card
-     * @return PitCards[]
+     * @return RobotInfo[]
      */
     public function getRobotInfo($team = null, $robotInfo = null)
     {

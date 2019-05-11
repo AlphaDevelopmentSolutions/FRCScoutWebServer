@@ -42,32 +42,6 @@ class Teams extends Table
     }
 
     /**
-     * Gets pit cards for a team
-     * @param Events $event if specified, filters by event
-     * @return PitCards[]
-     */
-    public function getPitCards($event)
-    {
-        require_once(ROOT_DIR . '/classes/tables/PitCards.php');
-
-        //create the sql statement
-        $sql = "SELECT * FROM ! WHERE ! = ? AND ! = ? ORDER BY ! DESC";
-        $cols[] = PitCards::$TABLE_NAME;
-        $cols[] = 'TeamId';
-        $args[] = $this->Id;
-        $cols[] = 'EventId';
-        $args[] = $event->BlueAllianceId;
-        $cols[] = 'Id';
-
-        $rows = self::query($sql, $cols, $args);
-
-        foreach ($rows as $row)
-            $response[] = PitCards::withProperties($row);
-
-        return $response;
-    }
-
-    /**
      * Gets all robot media for this team
      * @return RobotMedia[]
      */

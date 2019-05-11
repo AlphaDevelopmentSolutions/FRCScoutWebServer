@@ -10,7 +10,6 @@ require_once(ROOT_DIR . "/classes/tables/Matches.php");
 require_once(ROOT_DIR . "/classes/tables/Teams.php");
 require_once(ROOT_DIR . "/classes/tables/Years.php");
 require_once(ROOT_DIR . "/classes/tables/RobotInfo.php");
-require_once(ROOT_DIR . "/classes/tables/PitCards.php");
 require_once(ROOT_DIR . "/classes/tables/RobotInfoKeys.php");
 //
 //foreach(PitCards::getObjects() as $pitCard)
