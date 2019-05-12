@@ -49,6 +49,8 @@ class Teams extends Table
     {
         require_once(ROOT_DIR . '/classes/tables/RobotMedia.php');
 
+        $response = array();
+
         //create the sql statement
         $sql = "SELECT * FROM ! WHERE ! = ? ORDER BY ! DESC";
         $cols[] = RobotMedia::$TABLE_NAME;

@@ -47,6 +47,8 @@ class Matches extends Table
         require_once(ROOT_DIR . '/classes/tables/ScoutCards.php');
         require_once(ROOT_DIR . '/classes/tables/Teams.php');
 
+        $response = array();
+
         //create the sql statement
         $sql = "SELECT * FROM ! WHERE ! = ?";
         $cols[] = ScoutCards::$TABLE_NAME;

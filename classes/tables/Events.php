@@ -46,6 +46,8 @@ class Events extends Table
         require_once(ROOT_DIR . '/classes/tables/EventTeamList.php');
         require_once(ROOT_DIR . '/classes/tables/Matches.php');
 
+        $response = array();
+
         //create the sql statement
         $sql = "SELECT * FROM ! WHERE ! IN (SELECT ! FROM ! WHERE ! = ?)";
         $cols[] = Teams::$TABLE_NAME;
@@ -134,6 +136,8 @@ class Events extends Table
         require_once(ROOT_DIR . '/classes/tables/Matches.php');
         require_once(ROOT_DIR . '/classes/tables/Teams.php');
 
+        $response = array();
+
         //create the sql statement
         $sql = "SELECT * FROM ! WHERE ! = ? AND ! = ?";
         $cols[] = Matches::$TABLE_NAME;
@@ -188,6 +192,8 @@ class Events extends Table
         require_once(ROOT_DIR . '/classes/tables/ScoutCards.php');
         require_once(ROOT_DIR . '/classes/tables/Teams.php');
         require_once(ROOT_DIR . '/classes/tables/Matches.php');
+
+        $response = array();
 
         //create the sql statement
         $sql = "SELECT * FROM ! WHERE ! = ?";
@@ -244,6 +250,8 @@ class Events extends Table
     {
         require_once(ROOT_DIR . '/classes/tables/Teams.php');
         require_once(ROOT_DIR . '/classes/tables/RobotInfo.php');
+
+        $response = array();
 
         //create the sql statement
         $sql = "SELECT * FROM ! WHERE ! = ?";

@@ -18,6 +18,8 @@ class Years extends Table
     {
         require_once(ROOT_DIR . '/classes/tables/Events.php');
 
+        $response = array();
+
         //create the sql statement
         $sql = "SELECT * FROM ! WHERE ! = ? ORDER BY ! DESC";
         $cols[] = Events::$TABLE_NAME;
