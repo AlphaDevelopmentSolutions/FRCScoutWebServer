@@ -3,6 +3,7 @@ require_once('../config.php');
 require_once(ROOT_DIR . '/classes/tables/ChecklistItemResults.php');
 require_once(ROOT_DIR . '/classes/tables/ChecklistItems.php');
 require_once(ROOT_DIR . '/classes/tables/ScoutCards.php');
+require_once(ROOT_DIR . '/classes/tables/Years.php');
 require_once(ROOT_DIR . '/classes/tables/RobotInfo.php');
 require_once(ROOT_DIR . '/classes/tables/RobotInfoKeys.php');
 require_once(ROOT_DIR . '/classes/tables/Teams.php');
@@ -55,7 +56,10 @@ try {
 
         case 'GetEvents':
             $api->success(Events::getObjects());
+            break;
 
+        case 'GetYears':
+            $api->success(Years::getObjects());
             break;
 
         case 'GetTeamsAtEvent':
@@ -119,7 +123,7 @@ try {
             if (!empty($eventId) || !empty($yearId))
                 $api->success(RobotInfoKeys::getRobotInfoKeys($year, $event));
             else
-                throw new Exception('Invalid event id');
+                throw new Exception('Invalid year id');
             break;
 
         case 'GetRobotInfoKeyStates':

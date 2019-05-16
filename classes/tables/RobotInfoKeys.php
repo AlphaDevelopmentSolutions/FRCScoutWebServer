@@ -12,15 +12,15 @@ class RobotInfoKeys
         switch($state)
         {
             case RobotInfoKeyStates::Autonomous:
-                $returnArray = ['AutoExitHabitat', 'AutoHatch', 'AutoCargo'];
+                $returnArray = RobotInfoKeys2019::Autonomous;
                 break;
 
             case RobotInfoKeyStates::Teleop:
-                $returnArray = ['TeleopHatch', 'TeleopCargo'];
+                $returnArray = RobotInfoKeys2019::Teleop;
                 break;
 
             case RobotInfoKeyStates::EndGame:
-                $returnArray = ['ReturnToHabitat'];
+                $returnArray = RobotInfoKeys2019::EndGame;
                 break;
 
             default:
@@ -67,7 +67,7 @@ class RobotInfoKeys
                 break;
 
             default:
-                return RobotInfoKeys::getRobotInfoKeys2019($state);
+                return [];
                 break;
         }
     }
@@ -75,7 +75,7 @@ class RobotInfoKeys
 
 
 //keys that are to be used in 2019
-class RobotInfoKeys2019
+interface RobotInfoKeys2019
 {
     const AutoExitHabitat = 'Auto Exit Habitat';
     const AutoHatch = 'Auto Hatch';
@@ -85,11 +85,48 @@ class RobotInfoKeys2019
     const TeleopCargo = 'Teleop Cargo';
 
     const ReturnToHabitat = 'Return To Habitat';
+
+    const Autonomous =
+        [
+            'AutoExitHabitat' => RobotInfoKeys2019::AutoExitHabitat,
+            'AutoHatch' => RobotInfoKeys2019::AutoHatch,
+            'AutoCargo' => RobotInfoKeys2019::AutoCargo,
+            'SortOrder' => '2'
+        ];
+
+    const Teleop =
+        [
+            'TeleopHatch' => RobotInfoKeys2019::TeleopHatch,
+            'TeleopCargo' => RobotInfoKeys2019::TeleopCargo,
+            'SortOrder' => '3'
+        ];
+
+    const EndGame =
+        [
+            'ReturnToHabitat' => RobotInfoKeys2019::ReturnToHabitat,
+            'SortOrder' => '4'
+        ];
 }
 
 //keys that are to be used as base keys all the time
 interface RobotInfoKeysBase
 {
+    const PreGame =
+        [
+            'Drivetrain' => RobotInfoKeysBase::Drivetrain,
+            'RobotWeight' => RobotInfoKeysBase::RobotWeight,
+            'RobotLength' => RobotInfoKeysBase::RobotLength,
+            'RobotWidth' => RobotInfoKeysBase::RobotWidth,
+            'RobotHeight' => RobotInfoKeysBase::RobotHeight,
+            'SortOrder' => '1'
+        ];
+
+    const PostGame =
+        [
+            'Notes' => RobotInfoKeysBase::Notes,
+            'SortOrder' => '5'
+        ];
+
     const Drivetrain = 'Drivetrain';
     const RobotWeight = 'Robot Weight';
     const RobotLength = 'Robot Length';
