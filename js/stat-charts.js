@@ -433,7 +433,7 @@ function createChart(context, jsonResponse, graphItem, title)
                         ticks: (lineGraph) ?
                             {
                                 beginAtZero: true,
-                                max: (maxData === 0) ? 1 : maxData * 1.1,
+                                max: ((!graphItem.endsWith('Rating')) ? (maxData === 0) ? 1 : maxData * 1.1 : 5),
                                 min: ((minData >= 0) ? 0 : minData * 1.5)
                             }
                             :
