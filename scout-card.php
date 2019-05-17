@@ -53,7 +53,7 @@ if(isPostBack() && loggedIn())
     else if($action == 'delete')
     {
         if($scoutCard->delete())
-            header('Location: http://scouting.wiredcats5885.ca/team-matches.php?teamId=' . $scoutCard->TeamId . '&eventId=' . $scoutCard->EventId);
+            header('Location: ' . URL_PATH . '/team-matches.php?teamId=' . $scoutCard->TeamId . '&eventId=' . $scoutCard->EventId);
     }
 }
 

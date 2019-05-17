@@ -13,8 +13,8 @@ if(!empty($username) && !empty($password))
 }
 
 if(!empty($url))
-    header('Location: http://scouting.wiredcats5885.ca' . $url);
+    header('Location: ' . URL_PATH . $url);
 
 else
-    header('Location: http://scouting.wiredcats5885.ca');
+    header('Location: ' . URL_PATH);
 ?>
