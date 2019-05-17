@@ -14,9 +14,10 @@ class RobotInfoKeys extends Table
      * Gets and returns all keys from the database
      * @param Years | null $year if specified, filters keys by year
      * @param Events | null $event if specified, filters keys by event
+     * @param string | null $keyState if specified, filters keys by state
      * @return RobotInfoKeys[]
      */
-    public static function getRobotInfoKeys($year = null, $event = null)
+    public static function getRobotInfoKeys($year = null, $event = null, $keyState = null)
     {
         $yearId = ((!empty($year)) ? $year->Id : ((!empty($event)) ? $event->YearId : date('Y')));
 
@@ -28,6 +29,13 @@ class RobotInfoKeys extends Table
 
         $cols[] = 'YearId';
         $args[] = $yearId;
+
+        if(!empty($keyState))
+        {
+            $sql .= " AND ! = ? ";
+            $cols[] = 'KeyState';
+            $args[] = $keyState;
+        }
 
         $sql .= " ORDER BY ! ASC";
         $cols[] = 'SortOrder';

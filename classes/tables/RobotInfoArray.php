@@ -12,18 +12,26 @@ class RobotInfoArray extends \ArrayObject implements ArrayAccess
         $robotInfoArray = array();
         $robotInfoKeyStates = array();
 
-        foreach(RobotInfoKeys::getRobotInfoKeys() as $robotInfoKey)
-            $robotInfoKeyStates[] = $robotInfoKey->KeyState;
-
-        $robotInfoKeyStates = array_unique($robotInfoKeyStates);
-
+        require_once(ROOT_DIR . "/classes/tables/Years.php");
 
         //setup the 'fake' object to display it to html
         //array format is $array[YEAR][EVENT][TEAM][STATE][NAME] = value
         //ex $array[2019][2019onwin][5885][PreGame][RobotWidth] = 5.3 feet
         foreach($this as $robotInfo)
-            $robotInfoArray[$robotInfo->YearId][$robotInfo->EventId][$robotInfo->TeamId][$robotInfo->PropertyState][$robotInfo->PropertyKey] = $robotInfo->PropertyValue;
+        {
+            //retrieve the year in question from the stored array
+            if(empty($yearId))
+                $yearId = $robotInfo->YearId;
 
+            $robotInfoArray[$robotInfo->YearId][$robotInfo->EventId][$robotInfo->TeamId][$robotInfo->PropertyState][$robotInfo->PropertyKey] = $robotInfo->PropertyValue;
+        }
+
+        $year = Years::withId($yearId);
+
+        //get the keys for the specified year and store the states for sections
+        foreach(RobotInfoKeys::getRobotInfoKeys($year) as $robotInfoKey)
+            $robotInfoKeyStates[] = $robotInfoKey->KeyState;
+        $robotInfoKeyStates = array_unique($robotInfoKeyStates);
 
         //first iterate through each year
         foreach($robotInfoArray as $yearInfo)
@@ -51,13 +59,13 @@ class RobotInfoArray extends \ArrayObject implements ArrayAccess
                             '<strong style="padding-left: 40px;">' . $stateKey . '</strong>
                             <div class="mdl-card__supporting-text">';
 
-                        foreach ($teamInfo[$stateKey] as $propertyValueKey => $propertyValueValue)
+                        foreach (RobotInfoKeys::getRobotInfoKeys($year, null, $stateKey) as $robotInfoKey)
                         {
 
                             $html .=
                                 '<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                                        <input disabled class="mdl-textfield__input" type="text" value="' . $propertyValueValue . '" name="completedBy">
-                                        <label class="mdl-textfield__label" >' . $propertyValueKey . '</label>
+                                        <input disabled class="mdl-textfield__input" type="text" value="' . $teamInfo[$stateKey][$robotInfoKey->KeyName] . '" name="completedBy">
+                                        <label class="mdl-textfield__label" >' . $robotInfoKey->KeyName . '</label>
                                     </div>';
                         }
 
