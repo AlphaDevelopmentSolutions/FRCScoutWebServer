@@ -1,17 +1,19 @@
 <?php
 
-class RobotInfo extends Table
+class ScoutCardInfo extends Table
 {
     public $Id;
     public $YearId;
     public $EventId;
+    public $MatchId;
     public $TeamId;
+    public $CompletedBy;
 
     public $PropertyState;
     public $PropertyKey;
     public $PropertyValue;
 
-    public static $TABLE_NAME = 'robot_info';
+    public static $TABLE_NAME = 'scout_card_info';
 
     /**
      * Gets all robot info for a specific team at an event, or in a year
@@ -41,11 +43,12 @@ class RobotInfo extends Table
      * Gets all robot info for a specific team at an event, or in a year
      * @param Years | null $year if specified, filters by year
      * @param Events | null $event if specified, filters by event
+     * @param Matches | null $match if specified, filters by match
      * @param Teams | null $team if specified, filters by team
      * @param RobotInfoKeys $robotInfoKey robot info key to load
      * @return RobotInfoArray
      */
-    private static function loadByTeam($year = null, $event = null, $team = null, $robotInfoKey)
+    private static function loadByTeam($year = null, $event = null, $match = null, $team = null, $robotInfoKey)
     {
 
         //create the sql statement
@@ -73,6 +76,15 @@ class RobotInfo extends Table
 
             $cols[] = 'EventId';
             $args[] = $event->BlueAllianceId;
+        }
+
+        //if event specified, filter by event
+        if(!empty($match))
+        {
+            $sql .= " AND ! = ? ";
+
+            $cols[] = 'MatchId';
+            $args[] = $match->Key;
         }
 
         //if team specified, filter by team
@@ -113,25 +125,25 @@ class RobotInfo extends Table
     {
         if(!empty($this->PropertyValue))
         {
-            require_once(ROOT_DIR . '/classes/tables/Teams.php');
-            require_once(ROOT_DIR . '/classes/tables/Events.php');
-            require_once(ROOT_DIR . '/classes/tables/Years.php');
+//            require_once(ROOT_DIR . '/classes/tables/Teams.php');
+//            require_once(ROOT_DIR . '/classes/tables/Events.php');
+//            require_once(ROOT_DIR . '/classes/tables/Years.php');
 
-            $robotInfoArray = self::forTeam(Years::withId($this->YearId), Events::withId($this->EventId), Teams::withId($this->TeamId));
+//            $robotInfoArray = self::forTeam(Years::withId($this->YearId), Events::withId($this->EventId), Teams::withId($this->TeamId));
+//
+//            $updateRecord = false;
+//
+//            foreach ($robotInfoArray as $robotInfo)
+//            {
+//                if ($robotInfo->YearId == $this->YearId &&
+//                    $robotInfo->EventId == $this->EventId &&
+//                    $robotInfo->TeamId == $this->TeamId &&
+//                    $robotInfo->PropertyState == $this->PropertyState &&
+//                    $robotInfo->PropertyKey == $this->PropertyKey)
+//                    $updateRecord = true;
+//            }
 
-            $updateRecord = false;
-
-            foreach ($robotInfoArray as $robotInfo)
-            {
-                if ($robotInfo->YearId == $this->YearId &&
-                    $robotInfo->EventId == $this->EventId &&
-                    $robotInfo->TeamId == $this->TeamId &&
-                    $robotInfo->PropertyState == $this->PropertyState &&
-                    $robotInfo->PropertyKey == $this->PropertyKey)
-                    $updateRecord = true;
-            }
-
-            if (!$updateRecord)
+            if (true)
             {
                 //create the sql statement
                 $sql = "INSERT INTO ! (";

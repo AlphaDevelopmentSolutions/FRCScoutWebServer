@@ -20,6 +20,27 @@ CREATE TABLE `robot_info_keys` (
  `SortOrder` INT NULL DEFAULT 1,
  PRIMARY KEY (`Id`));
 
+ CREATE TABLE `scout_card_keys` (
+  `Id` INT NOT NULL AUTO_INCREMENT,
+  `YearId` INT NULL DEFAULT 2019,
+  `KeyState` VARCHAR(45) NULL DEFAULT '',
+  `KeyName` VARCHAR(45) NULL DEFAULT '',
+  `SortOrder` INT NULL DEFAULT 1,
+  PRIMARY KEY (`Id`));
+
+CREATE TABLE `scout_card_info` (
+  `Id` INT NOT NULL AUTO_INCREMENT,
+  `YearId` INT NULL DEFAULT 2019,
+  `EventId` VARCHAR(45) NULL DEFAULT '',
+  `MatchId` VARCHAR(45) NULL DEFAULT '',
+  `TeamId` INT NULL DEFAULT 1,
+  `CompletedBy` VARCHAR(200) NULL DEFAULT '',
+  `PropertyState` VARCHAR(45) NULL DEFAULT '',
+  `PropertyKey` VARCHAR(45) NULL DEFAULT '',
+  `PropertyValue` VARCHAR(2000) NULL DEFAULT '',
+  PRIMARY KEY (`Id`));
+
+
 
 ALTER TABLE `checklist_items`
 CHANGE COLUMN `Title` `Title` VARCHAR(3000) NULL DEFAULT '' ,

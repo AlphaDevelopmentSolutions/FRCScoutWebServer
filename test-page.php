@@ -10,47 +10,96 @@ require_once(ROOT_DIR . "/classes/tables/Matches.php");
 require_once(ROOT_DIR . "/classes/tables/Teams.php");
 require_once(ROOT_DIR . "/classes/tables/Years.php");
 require_once(ROOT_DIR . "/classes/tables/RobotInfo.php");
+require_once(ROOT_DIR . "/classes/tables/ScoutCardInfo.php");
 require_once(ROOT_DIR . "/classes/tables/RobotInfoKeys.php");
 //
-//foreach(PitCards::getObjects() as $pitCard)
+//foreach(ScoutCards::getObjects() as $scoutCard)
 //{
-//    foreach ($pitCard as $key => $value)
+//    foreach ($scoutCard as $key => $value)
 //    {
 //        if ($key != 'Id' &&
 //            $key != 'TeamId' &&
+//            $key != 'MatchId' &&
 //            $key != 'EventId' &&
-//            $key != 'CompletedBy')
+//            $key != 'CompletedBy' &&
+//            $key != 'RedAllianceFinalScore' &&
+//            $key != 'BlueAllianceFinalScore' &&
+//            $key != 'AllianceColor' &&
+//            $key != 'CompletedDate')
 //        {
-//            $robotinfo = new RobotInfo();
-//            $robotinfo->YearId = '2019';
-//            $robotinfo->EventId = $pitCard->EventId;
-//            $robotinfo->TeamId = $pitCard->TeamId;
+//            $scoutCardInfo = new ScoutCardInfo();
+//            $scoutCardInfo->YearId = '2019';
+//            $scoutCardInfo->EventId = $scoutCard->EventId;
+//            $scoutCardInfo->TeamId = $scoutCard->TeamId;
+//            $scoutCardInfo->MatchId = $scoutCard->MatchId;
+//            $scoutCardInfo->CompletedBy = $scoutCard->CompletedBy;
 //
-//            if (strpos($key, 'Drive') !== false || strpos($key, 'Robot') !== false)
-//                $robotinfo->PropertyState = RobotInfoKeyStates::PreGame;
+//            if (strpos($key, 'PreGame') !== false)
+//                $scoutCardInfo->PropertyState = "Pre Game";
 //
-//            else if (strpos($key, 'Auto') !== false)
-//                $robotinfo->PropertyState = RobotInfoKeyStates::Autonomous;
+//            else if (strpos($key, 'Autonomous') !== false)
+//                $scoutCardInfo->PropertyState = 'Autonomous';
 //
 //            else if (strpos($key, 'Teleop') !== false)
-//                $robotinfo->PropertyState = RobotInfoKeyStates::Teleop;
+//                $scoutCardInfo->PropertyState = 'Teleop';
 //
-//            else if (strpos($key, 'Return') !== false)
-//                $robotinfo->PropertyState = RobotInfoKeyStates::EndGame;
+//            else if (strpos($key, 'EndGame') !== false)
+//                $scoutCardInfo->PropertyState = 'End Game';
 //
-//            else if (strpos($key, 'Notes') !== false)
-//                $robotinfo->PropertyState = RobotInfoKeyStates::PostGame;
+//            else if (strpos($key, 'Defense') !== false
+//                || strpos($key, 'Offense') !== false
+//                || strpos($key, 'Drive') !== false
+//                || strpos($key, 'Notes') !== false
+//            )
+//                $scoutCardInfo->PropertyState = 'Post Game';
 //
 //
 //
-//            $robotinfo->PropertyName = $key;
-//            $robotinfo->PropertyValue = $value;
+//            $scoutCardInfo->PropertyKey = $key;
+//            $scoutCardInfo->PropertyValue = $value;
 //
-////           echo  $robotinfo->save();
+//           echo  serialize($scoutCardInfo->save());
+//
+////            echo serialize($scoutCardInfo) . '<br><br>';
 //        }
 //
 //    }
 //}
+//
+//$database = new Database();
+//$results = $database->query('UPDATE scout_card_info SET propertykey = "Starting Position" WHERE propertykey = "pregamestartingposition"', array(), array());
+//$results = $database->query('UPDATE scout_card_info SET propertykey = "Starting Level" WHERE propertykey = "pregamestartinglevel"', array(), array());
+//$results = $database->query('UPDATE scout_card_info SET propertykey = "Starting Piece" WHERE propertykey = "pregamestartingpiece"', array(), array());
+//
+//
+//$results = $database->query('UPDATE scout_card_info SET propertykey = "Exit HAB" WHERE propertykey = "autonomousexithabitat"', array(), array());
+//$results = $database->query('UPDATE scout_card_info SET propertykey = "Hatches Picked Up" WHERE propertykey = "autonomoushatchpanelspickedup"', array(), array());
+//$results = $database->query('UPDATE scout_card_info SET propertykey = "Hatches Dropped" WHERE propertykey = "autonomoushatchpanelssecuredattempts"', array(), array());
+//$results = $database->query('UPDATE scout_card_info SET propertykey = "Hatches Secured" WHERE propertykey = "AutonomousHatchPanelsSecured"', array(), array());
+//$results = $database->query('UPDATE scout_card_info SET propertykey = "Cargo Picked Up" WHERE propertykey = "autonomousCargopickedup"', array(), array());
+//$results = $database->query('UPDATE scout_card_info SET propertykey = "Cargo Dropped" WHERE propertykey = "autonomousCargostoredattempts"', array(), array());
+//$results = $database->query('UPDATE scout_card_info SET propertykey = "Cargo Stored" WHERE propertykey = "AutonomousCargostored"', array(), array());
+//
+//
+//$results = $database->query('UPDATE scout_card_info SET propertykey = "Hatches Picked Up" WHERE propertykey = "teleophatchpanelspickedup"', array(), array());
+//$results = $database->query('UPDATE scout_card_info SET propertykey = "Hatches Dropped" WHERE propertykey = "teleophatchpanelssecuredattempts"', array(), array());
+//$results = $database->query('UPDATE scout_card_info SET propertykey = "Hatches Secured" WHERE propertykey = "teleopHatchPanelsSecured"', array(), array());
+//$results = $database->query('UPDATE scout_card_info SET propertykey = "Cargo Picked Up" WHERE propertykey = "teleopCargopickedup"', array(), array());
+//$results = $database->query('UPDATE scout_card_info SET propertykey = "Cargo Dropped" WHERE propertykey = "teleopCargostoredattempts"', array(), array());
+//$results = $database->query('UPDATE scout_card_info SET propertykey = "Cargo Stored" WHERE propertykey = "teleopCargostored"', array(), array());
+//
+//
+//
+//$results = $database->query('UPDATE scout_card_info SET propertykey = "Returned To HAB" WHERE propertykey = "EndGameReturnedToHabitat"', array(), array());
+//$results = $database->query('UPDATE scout_card_info SET propertykey = "Returned To HAB Failed Attempt" WHERE propertykey = "EndGameReturnedToHabitatAttempts"', array(), array());
+//
+//$results = $database->query('UPDATE scout_card_info SET propertykey = "Defense Rating" WHERE propertykey = "defenseRating"', array(), array());
+//$results = $database->query('UPDATE scout_card_info SET propertykey = "Offense Rating" WHERE propertykey = "offenserating"', array(), array());
+//$results = $database->query('UPDATE scout_card_info SET propertykey = "Drive Rating" WHERE propertykey = "driverating"', array(), array());
+//
+//
+//
+//$database->close();
 
 
 ?>
