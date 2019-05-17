@@ -217,11 +217,12 @@ abstract class Table
     /**
      * Retrieves objects from the database
      * @param string $orderBy override if the order by column needs to be changed
+     * @param string $orderDirection override if the order direction needs to be changed
      * @return static[]
      */
-    public static function getObjects($orderBy = 'Id')
+    public static function getObjects($orderBy = 'Id', $orderDirection = 'DESC')
     {
-        $sql = 'SELECT * FROM ! ORDER BY ! DESC';
+        $sql = 'SELECT * FROM ! ORDER BY ! ' . $orderDirection;
         $cols[] = static::$TABLE_NAME;
         $cols[] = $orderBy;
 
