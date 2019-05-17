@@ -20,7 +20,7 @@ CREATE TABLE `robot_info_keys` (
  `SortOrder` INT NULL DEFAULT 1,
  PRIMARY KEY (`Id`));
 
- CREATE TABLE `scout_card_keys` (
+ CREATE TABLE `scout_card_info_keys` (
   `Id` INT NOT NULL AUTO_INCREMENT,
   `YearId` INT NULL DEFAULT 2019,
   `KeyState` VARCHAR(45) NULL DEFAULT '',

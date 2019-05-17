@@ -121,7 +121,7 @@ try {
             $year = (!empty($yearId)) ? Years::withId($yearId) : null;
 
             if (!empty($eventId) || !empty($yearId))
-                $api->success(RobotInfoKeys::getRobotInfoKeys($year, $event));
+                $api->success(RobotInfoKeys::getKeys($year, $event));
             else
                 throw new Exception('Invalid year id');
             break;

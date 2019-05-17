@@ -19,24 +19,25 @@ class ScoutCardInfo extends Table
      * Gets all robot info for a specific team at an event, or in a year
      * @param Years | null $year if specified, filters by year
      * @param Events | null $event if specified, filters by event
+     * @param Matches | null $match if specified, filters by match
      * @param Teams | null $team if specified, filters by team
-     * @return RobotInfoArray
+     * @return ScoutCardInfoArray
      */
-    public static function forTeam($year = null, $event = null, $team = null)
+    public static function forTeam($year = null, $event = null, $match = null, $team = null)
     {
-        require_once(ROOT_DIR . '/classes/tables/RobotInfoKeys.php');
-        require_once(ROOT_DIR . '/classes/tables/RobotInfoArray.php');
+        require_once(ROOT_DIR . '/classes/tables/ScoutCardInfoKeys.php');
+        require_once(ROOT_DIR . '/classes/tables/ScoutCardInfoArray.php');
 
-        $robotInfoArray = new RobotInfoArray();
+        $scoutCardInfoArray = new ScoutCardInfoArray();
 
-        foreach(RobotInfoKeys::getRobotInfoKeys($year, $event) as $robotInfoKey)
+        foreach(ScoutCardInfoKeys::getKeys($year, $event) as $scoutCardInfoKey)
         {
-            foreach(self::loadByTeam($year, $event, $team, $robotInfoKey) as $robotInfo)
-                $robotInfoArray[] = $robotInfo;
+            foreach(self::loadByTeam($year, $event, $match, $team, $scoutCardInfoKey) as $scoutCardInfo)
+                $scoutCardInfoArray[] = $scoutCardInfo;
         }
 
 
-        return $robotInfoArray;
+        return $scoutCardInfoArray;
     }
 
     /**
@@ -45,10 +46,10 @@ class ScoutCardInfo extends Table
      * @param Events | null $event if specified, filters by event
      * @param Matches | null $match if specified, filters by match
      * @param Teams | null $team if specified, filters by team
-     * @param RobotInfoKeys $robotInfoKey robot info key to load
-     * @return RobotInfoArray
+     * @param ScoutCardInfoKeys $scoutCardInfoKey scout card info key to load
+     * @return ScoutCardInfoArray
      */
-    private static function loadByTeam($year = null, $event = null, $match = null, $team = null, $robotInfoKey)
+    private static function loadByTeam($year = null, $event = null, $match = null, $team = null, $scoutCardInfoKey)
     {
 
         //create the sql statement
@@ -56,9 +57,9 @@ class ScoutCardInfo extends Table
         $cols[] = self::$TABLE_NAME;
 
         $cols[] = 'PropertyState';
-        $args[] = $robotInfoKey->KeyState;
+        $args[] = $scoutCardInfoKey->KeyState;
         $cols[] = 'PropertyKey';
-        $args[] = $robotInfoKey->KeyName;
+        $args[] = $scoutCardInfoKey->KeyName;
 
         //if year specified, filter by year
         if(!empty($year))
@@ -98,22 +99,22 @@ class ScoutCardInfo extends Table
 
         $rows = self::query($sql, $cols, $args);
 
-        $robotInfoArray = new RobotInfoArray();
+        $scoutCardInfoArray = new ScoutCardInfoArray();
 
         foreach ($rows as $row)
         {
-            $robotInfo = new RobotInfo();
+            $obj = new self();
             foreach($row as $key => $value)
             {
-                if(property_exists($robotInfo, $key))
-                    $robotInfo->$key = $value;
+                if(property_exists($obj, $key))
+                    $obj->$key = $value;
 
             }
 
-            $robotInfoArray[] = $robotInfo;
+            $scoutCardInfoArray[] = $obj;
         }
 
-        return $robotInfoArray;
+        return $scoutCardInfoArray;
     }
 
     /**
@@ -125,25 +126,26 @@ class ScoutCardInfo extends Table
     {
         if(!empty($this->PropertyValue))
         {
-//            require_once(ROOT_DIR . '/classes/tables/Teams.php');
-//            require_once(ROOT_DIR . '/classes/tables/Events.php');
-//            require_once(ROOT_DIR . '/classes/tables/Years.php');
+            require_once(ROOT_DIR . '/classes/tables/Teams.php');
+            require_once(ROOT_DIR . '/classes/tables/Events.php');
+            require_once(ROOT_DIR . '/classes/tables/Years.php');
 
-//            $robotInfoArray = self::forTeam(Years::withId($this->YearId), Events::withId($this->EventId), Teams::withId($this->TeamId));
-//
-//            $updateRecord = false;
-//
-//            foreach ($robotInfoArray as $robotInfo)
-//            {
-//                if ($robotInfo->YearId == $this->YearId &&
-//                    $robotInfo->EventId == $this->EventId &&
-//                    $robotInfo->TeamId == $this->TeamId &&
-//                    $robotInfo->PropertyState == $this->PropertyState &&
-//                    $robotInfo->PropertyKey == $this->PropertyKey)
-//                    $updateRecord = true;
-//            }
+            $scoutCardInfoArray = self::forTeam(Years::withId($this->YearId), Events::withId($this->EventId), Teams::withId($this->TeamId));
 
-            if (true)
+            $updateRecord = false;
+
+            foreach ($scoutCardInfoArray as $scoutCardInfo)
+            {
+                if ($scoutCardInfo->YearId == $this->YearId &&
+                    $scoutCardInfo->EventId == $this->EventId &&
+                    $scoutCardInfo->MatchId == $this->MatchId &&
+                    $scoutCardInfo->TeamId == $this->TeamId &&
+                    $scoutCardInfo->PropertyState == $this->PropertyState &&
+                    $scoutCardInfo->PropertyKey == $this->PropertyKey)
+                    $updateRecord = true;
+            }
+
+            if ($updateRecord)
             {
                 //create the sql statement
                 $sql = "INSERT INTO ! (";

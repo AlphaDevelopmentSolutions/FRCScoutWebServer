@@ -27,7 +27,7 @@ class RobotInfo extends Table
 
         $robotInfoArray = new RobotInfoArray();
 
-        foreach(RobotInfoKeys::getRobotInfoKeys($year, $event) as $robotInfoKey)
+        foreach(RobotInfoKeys::getKeys($year, $event) as $robotInfoKey)
         {
             foreach(self::loadByTeam($year, $event, $team, $robotInfoKey) as $robotInfo)
                 $robotInfoArray[] = $robotInfo;

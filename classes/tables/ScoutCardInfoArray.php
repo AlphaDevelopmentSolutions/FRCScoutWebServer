@@ -1,6 +1,6 @@
 <?php
 
-class RobotInfoArray extends \ArrayObject implements ArrayAccess
+class ScoutCardInfoArray extends \ArrayObject implements ArrayAccess
 {
 
     /**
@@ -9,32 +9,32 @@ class RobotInfoArray extends \ArrayObject implements ArrayAccess
      */
     public function toHtml()
     {
-        $robotInfoArray = array();
-        $robotInfoKeyStates = array();
+        $scoutCardInfoArray = array();
+        $scoutCardInfoKeyStates = array();
 
         require_once(ROOT_DIR . "/classes/tables/Years.php");
 
         //setup the 'fake' object to display it to html
         //array format is $array[YEAR][EVENT][TEAM][STATE][NAME] = value
         //ex $array[2019][2019onwin][5885][PreGame][RobotWidth] = 5.3 feet
-        foreach($this as $robotInfo)
+        foreach($this as $scoutCardInfo)
         {
             //retrieve the year in question from the stored array
             if(empty($yearId))
-                $yearId = $robotInfo->YearId;
+                $yearId = $scoutCardInfo->YearId;
 
-            $robotInfoArray[$robotInfo->YearId][$robotInfo->EventId][$robotInfo->TeamId][$robotInfo->PropertyState][$robotInfo->PropertyKey] = $robotInfo->PropertyValue;
+            $scoutCardInfoArray[$scoutCardInfo->YearId][$scoutCardInfo->EventId][$scoutCardInfo->TeamId][$scoutCardInfo->PropertyState][$scoutCardInfo->PropertyKey] = $scoutCardInfo->PropertyValue;
         }
 
         $year = Years::withId($yearId);
 
         //get the keys for the specified year and store the states for sections
-        foreach(RobotInfoKeys::getKeys($year) as $robotInfoKey)
-            $robotInfoKeyStates[] = $robotInfoKey->KeyState;
-        $robotInfoKeyStates = array_unique($robotInfoKeyStates);
+        foreach(ScoutCardInfoKeys::getKeys($year) as $scoutCardInfoKey)
+            $scoutCardInfoKeyStates[] = $scoutCardInfoKey->KeyState;
+        $scoutCardInfoKeyStates = array_unique($scoutCardInfoKeyStates);
 
         //first iterate through each year
-        foreach($robotInfoArray as $yearInfo)
+        foreach($scoutCardInfoArray as $yearInfo)
         {
             //then iterate through each event
             foreach($yearInfo as $eventInfo)
@@ -51,21 +51,21 @@ class RobotInfoArray extends \ArrayObject implements ArrayAccess
                                 <h4 style="padding-left: 40px;">' . $team->toString() . '</h4>
                                     <form method="post" action="' . $_SERVER['REQUEST_URI'] . '" id="scout-card-form">';
 
-                    //for each of the robot info key states (pre game, post game, auto, teleop etc..) get the value from the team we are currently viewing
+                    //for each of the scout card info key states (pre game, post game, auto, teleop etc..) get the value from the team we are currently viewing
                     //and add a new field for it
-                    foreach ($robotInfoKeyStates as $stateKey)
+                    foreach ($scoutCardInfoKeyStates as $stateKey)
                     {
                         $html .=
                             '<strong style="padding-left: 40px;">' . $stateKey . '</strong>
                             <div class="mdl-card__supporting-text">';
 
-                        foreach (RobotInfoKeys::getKeys($year, null, $stateKey) as $robotInfoKey)
+                        foreach (ScoutCardInfoKeys::getKeys($year, null, $stateKey) as $scoutCardInfoKey)
                         {
 
                             $html .=
                                 '<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                                        <input disabled class="mdl-textfield__input" type="text" value="' . $teamInfo[$stateKey][$robotInfoKey->KeyName] . '" name="completedBy">
-                                        <label class="mdl-textfield__label" >' . $robotInfoKey->KeyName . '</label>
+                                        <input disabled class="mdl-textfield__input" type="text" value="' . $teamInfo[$stateKey][$scoutCardInfoKey->KeyName] . '" name="completedBy">
+                                        <label class="mdl-textfield__label" >' . $scoutCardInfoKey->KeyName . '</label>
                                     </div>';
                         }
 

@@ -1,6 +1,6 @@
 <?php
 
-class RobotInfoKeys extends Table
+class ScoutCardInfoKeys extends Table
 {
     public $Id;
     public $YearId;
@@ -8,14 +8,14 @@ class RobotInfoKeys extends Table
     public $KeyName;
     public $SortOrder;
 
-    public static $TABLE_NAME = 'robot_info_keys';
+    public static $TABLE_NAME = 'scout_card_info_keys';
     
     /**
      * Gets and returns all keys from the database
      * @param Years | null $year if specified, filters keys by year
      * @param Events | null $event if specified, filters keys by event
      * @param string | null $keyState if specified, filters keys by state
-     * @return RobotInfoKeys[]
+     * @return ScoutCardInfoKeys[]
      */
     public static function getKeys($year = null, $event = null, $keyState = null)
     {
@@ -43,10 +43,11 @@ class RobotInfoKeys extends Table
         $rows = self::query($sql, $cols, $args);
 
         foreach($rows as $row)
-            $response[] = RobotInfoKeys::withProperties($row);
+            $response[] = self::withProperties($row);
 
         return $response;
     }
+
     public static function getObjects()
     {
         return parent::getObjects('SortOrder', 'ASC');
