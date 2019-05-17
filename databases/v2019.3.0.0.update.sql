@@ -12,6 +12,15 @@ CREATE TABLE `robot_info` (
 `PropertyValue` TEXT NULL DEFAULT '',
 PRIMARY KEY (`Id`));
 
+CREATE TABLE `robot_info_keys` (
+ `Id` INT NOT NULL AUTO_INCREMENT,
+ `YearId` INT NULL DEFAULT 2019,
+ `KeyState` VARCHAR(45) NULL DEFAULT '',
+ `KeyName` VARCHAR(45) NULL DEFAULT '',
+ `SortOrder` INT NULL DEFAULT 1,
+ PRIMARY KEY (`Id`));
+
+
 ALTER TABLE `checklist_items`
 CHANGE COLUMN `Title` `Title` VARCHAR(3000) NULL DEFAULT '' ,
 CHANGE COLUMN `Description` `Description` VARCHAR(3000) NULL DEFAULT '' ;

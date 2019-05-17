@@ -126,10 +126,6 @@ try {
                 throw new Exception('Invalid year id');
             break;
 
-        case 'GetRobotInfoKeyStates':
-            $api->success(RobotInfoKeys::getRobotInfoKeyStates());
-            break;
-
         case 'GetMatches':
             $eventId = filter_var($_POST['EventId'], FILTER_SANITIZE_STRING);
 

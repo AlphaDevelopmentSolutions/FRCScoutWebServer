@@ -27,9 +27,9 @@ class RobotInfo extends Table
 
         $robotInfoArray = new RobotInfoArray();
 
-        foreach(RobotInfoKeys::getRobotInfoKeys($year, $event) as $propertyKey => $propertyValue)
+        foreach(RobotInfoKeys::getRobotInfoKeys($year, $event) as $robotInfoKey)
         {
-            foreach(RobotInfo::loadByTeam($year, $event, $team, $propertyValue) as $robotInfo)
+            foreach(RobotInfo::loadByTeam($year, $event, $team, $robotInfoKey) as $robotInfo)
                 $robotInfoArray[] = $robotInfo;
         }
 
@@ -42,21 +42,20 @@ class RobotInfo extends Table
      * @param Years | null $year if specified, filters by year
      * @param Events | null $event if specified, filters by event
      * @param Teams | null $team if specified, filters by team
-     * @param String $propertyKey name of property to filter by
+     * @param RobotInfoKeys $robotInfoKey robot info key to load
      * @return RobotInfoArray
      */
-    private static function loadByTeam($year = null, $event = null, $team = null, $propertyKey)
+    private static function loadByTeam($year = null, $event = null, $team = null, $robotInfoKey)
     {
-        require_once(ROOT_DIR . '/classes/tables/Years.php');
-        require_once(ROOT_DIR . '/classes/tables/Events.php');
-        require_once(ROOT_DIR . '/classes/tables/Teams.php');
 
         //create the sql statement
-        $sql = "SELECT * FROM ! WHERE ! = ?";
+        $sql = "SELECT * FROM ! WHERE ! = ? AND ! = ?";
         $cols[] = self::$TABLE_NAME;
 
+        $cols[] = 'PropertyState';
+        $args[] = $robotInfoKey->KeyState;
         $cols[] = 'PropertyKey';
-        $args[] = $propertyKey;
+        $args[] = $robotInfoKey->KeyName;
 
         //if team specified, filter by year
         if(!empty($year))
@@ -103,6 +102,120 @@ class RobotInfo extends Table
         }
 
         return $robotInfoArray;
+    }
+
+    /**
+     * Overrides parent save function
+     * Updates or inserts record into database
+     * @return bool
+     */
+    public function save()
+    {
+        require_once(ROOT_DIR . '/classes/tables/Teams.php');
+        require_once(ROOT_DIR . '/classes/tables/Events.php');
+        require_once(ROOT_DIR . '/classes/tables/Years.php');
+
+        $robotInfoArray = self::forTeam(Years::withId($this->YearId), Events::withId($this->EventId), Teams::withId($this->TeamId));
+
+        $updateRecord = false;
+
+        foreach($robotInfoArray as $robotInfo)
+        {
+            if($robotInfo->YearId == $this->YearId &&
+                $robotInfo->EventId == $this->EventId &&
+                $robotInfo->TeamId == $this->TeamId &&
+                $robotInfo->PropertyState == $this->PropertyState &&
+                $robotInfo->PropertyKey == $this->PropertyKey)
+                $updateRecord = true;
+        }
+
+        if(!$updateRecord)
+        {
+            //create the sql statement
+            $sql = "INSERT INTO ! (";
+            $cols[] = $this::$TABLE_NAME;
+
+            $columnsString = '';
+            $valuesString = '';
+            //iterate through each field in the current class
+            foreach ($this as $key => $value)
+            {
+                //dont use Id in cols or vals
+                if($key != 'Id' && property_exists($this, $key))
+                {
+                    //only add to insert statement if value is not empty
+                    if(!empty($value) || $value == '0')
+                    {
+                        if(!empty($columnsString))
+                            $columnsString .= ', ';
+
+                        $columnsString .= '!';
+                        $cols[] = $key;
+
+                        if(!empty($valuesString))
+                            $valuesString .= ', ';
+
+                        $valuesString .=  '?';
+                        $args[] = $value;
+                    }
+                }
+            }
+
+            $sql .="$columnsString) VALUES ($valuesString)";
+
+            if($insertId = self::insertOrUpdate($sql, $cols, $args) > -1)
+            {
+                $this->Id = $insertId;
+
+                return true;
+            }
+            return false;
+
+        }
+        else
+        {
+            //create the sql statement
+            $sql = "UPDATE ! SET ";
+            $cols[] = $this::$TABLE_NAME;
+
+            $updates = '';
+            //iterate through each field in the current class
+            foreach ($this as $key => $value)
+            {
+                //dont use Id in cols or vals
+                if($key != 'Id' && property_exists($this, $key))
+                {
+                    //only add to insert statement if value is not empty
+                    if(!empty($value) || $value == '0')
+                    {
+                        if(!empty($updates))
+                            $updates .= ', ';
+
+                        $updates .= ' ! = ?';
+                        $cols[] = $key;
+                        $args[] = $value;
+                    }
+                }
+            }
+
+            $sql .= $updates . " WHERE ! = ? AND ! = ? AND ! = ? AND ! = ? AND ! = ? ";
+            $cols[] = 'YearId';
+            $args[] = $this->YearId;
+            $cols[] = 'EventId';
+            $args[] = $this->EventId;
+            $cols[] = 'TeamId';
+            $args[] = $this->TeamId;
+            $cols[] = 'PropertyState';
+            $args[] = $this->PropertyState;
+            $cols[] = 'PropertyKey';
+            $args[] = $this->PropertyKey;
+
+
+            if($insertId = self::insertOrUpdate($sql, $cols, $args) > -1)
+                return true;
+
+            return false;
+        }
     }
 
     /**

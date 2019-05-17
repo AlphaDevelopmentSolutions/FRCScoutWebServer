@@ -114,7 +114,7 @@ abstract class Table
 
             $sql .="$columnsString) VALUES ($valuesString)";
 
-            if($insertId = self::insertOrUpdate($sql, $cols, $args) > 0)
+            if($insertId = self::insertOrUpdate($sql, $cols, $args) > -1)
             {
                 $this->Id = $insertId;
 
@@ -154,12 +154,9 @@ abstract class Table
             $args[] = $this->Id;
 
 
-            if($insertId = self::insertOrUpdate($sql, $cols, $args) > 0)
-            {
-                $this->Id = $insertId;
-
+            if($insertId = self::insertOrUpdate($sql, $cols, $args) > -1)
                 return true;
-            }
+
             return false;
         }
     }
@@ -209,7 +206,7 @@ abstract class Table
      * @param string[] | int[] $args arguments that will replace ?
      * @return int
      */
-    private static function insertOrUpdate($query, $cols = array(), $args = array())
+    protected static function insertOrUpdate($query, $cols = array(), $args = array())
     {
         $database = new Database();
         $id = $database->insertOrUpdate($query, $cols, $args);

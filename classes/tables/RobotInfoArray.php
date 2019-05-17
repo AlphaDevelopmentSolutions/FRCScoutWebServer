@@ -10,7 +10,13 @@ class RobotInfoArray extends \ArrayObject implements ArrayAccess
     public function toHtml()
     {
         $robotInfoArray = array();
-        $robotInfoKeyStates = RobotInfoKeys::getRobotInfoKeyStates();
+        $robotInfoKeyStates = array();
+
+        foreach(RobotInfoKeys::getRobotInfoKeys() as $robotInfoKey)
+            $robotInfoKeyStates[] = $robotInfoKey->KeyState;
+
+        $robotInfoKeyStates = array_unique($robotInfoKeyStates);
+
 
         //setup the 'fake' object to display it to html
         //array format is $array[YEAR][EVENT][TEAM][STATE][NAME] = value
