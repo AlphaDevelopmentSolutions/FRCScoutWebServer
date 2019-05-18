@@ -37,6 +37,46 @@ class Matches extends Table
     }
 
     /**
+     * Gets and returns the color of the team specified in a match
+     * @param Teams $team
+     * @return string
+     */
+    public function getAllianceColor($team)
+    {
+       if($team->Id == $this->BlueAllianceTeamOneId
+            || $team->Id == $this->BlueAllianceTeamTwoId
+            || $team->Id == $this->BlueAllianceTeamThreeId)
+            return AllianceColors::BLUE;
+
+        else
+            return AllianceColors::RED;
+    }
+
+    /**
+     * Returns the amount of scout cards for a match
+     * A scout card is defined as 1 team being scouted with multiple entries in the scout_card_info database
+     * @return string
+     */
+    public function getScoutCardCount()
+    {
+        require_once(ROOT_DIR . '/interfaces/AllianceColors.php');
+
+        //create the sql statement
+        $sql = "SELECT * FROM ! WHERE ! = ? AND ! = ? GROUP BY !";
+        $cols[] = ScoutCardInfo::$TABLE_NAME;
+
+        $cols[] = 'EventId';
+        $args[] = $this->EventId;
+
+        $cols[] = 'MatchId';
+        $args[] = $this->Key;
+
+        $cols[] = 'TeamId';
+
+        return count(self::query($sql, $cols, $args));
+    }
+
+    /**
      * Gets scout cards for a specific match
      * @param null | Teams $team if specified, filters by team
      * @param null | ScoutCards $scoutCard if specified, filters by scoutcard

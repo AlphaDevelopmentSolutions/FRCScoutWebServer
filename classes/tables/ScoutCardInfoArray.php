@@ -64,7 +64,7 @@ class ScoutCardInfoArray extends \ArrayObject implements ArrayAccess
 
                             $html .=
                                 '<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                                        <input disabled class="mdl-textfield__input" type="text" value="' . $teamInfo[$stateKey][$scoutCardInfoKey->KeyName] . '" name="completedBy">
+                                        <input disabled class="mdl-textfield__input" type="text" value="' . (($scoutCardInfoKey->IsBoolean == 1) ? (($teamInfo[$stateKey][$scoutCardInfoKey->KeyName] == 1) ? 'Yes' : 'No') : $teamInfo[$stateKey][$scoutCardInfoKey->KeyName]) . '" name="completedBy">
                                         <label class="mdl-textfield__label" >' . $scoutCardInfoKey->KeyName . '</label>
                                     </div>';
                         }

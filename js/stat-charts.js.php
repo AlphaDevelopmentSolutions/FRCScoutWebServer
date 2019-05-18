@@ -1,5 +1,9 @@
+<?php
+require_once("../config.php");
+require_once(ROOT_DIR . "/interfaces/AllianceColors.php");
+?>
 
-var autoChart, teleopChart, endGameChart, postGameChart, dodBreakdownChart;
+var autoChart, teleopChart, endGameChart, postGameChart;
 
 var teamList =
     ($('#teamId').length === 0) ?
@@ -14,26 +18,26 @@ var matchId = ($('#matchId').length === 0) ? '' : $('#matchId').val();
 
 const AUTO_ITEMS =
     {
-        Hatches : 'AutonomousHatchPanelsSecured',
-        Cargo : 'AutonomousCargoStored'
+        Hatches : 'Autonomous Hatches Secured',
+        Cargo : 'Autonomous Cargo Stored'
     };
 
 const TELEOP_ITEMS =
     {
-        Hatches : 'TeleopHatchPanelsSecured',
-        Cargo : 'TeleopCargoStored'
+        Hatches : 'Teleop Hatches Secured',
+        Cargo : 'Teleop Cargo Stored'
     };
 
 const END_GAME_ITEMS =
     {
-        Return_To_Hab: 'EndGameReturnedToHabitat'
+        Return_To_Hab: 'End Game Returned To HAB'
     };
 
 const POST_GAME_ITEMS =
     {
-        Defense_Rating: 'DefenseRating',
-        Offense_Rating: 'OffenseRating',
-        Drive_Rating: 'DriveRating'
+        Defense_Rating: 'Post Game Defense Rating',
+        Offense_Rating: 'Post Game Offense Rating',
+        Drive_Rating: 'Post Game Drive Rating'
     };
 
 const GRAPH_PERIODS =
@@ -95,9 +99,6 @@ function updateGraphs()
     setItems(GRAPH_PERIODS.Teleop, document.getElementById('teleopChart'), $('#changeTeleopItem'));
     setItems(GRAPH_PERIODS.EndGame, document.getElementById('endGameChart'), $('#changeEndGameItem'));
     setItems(GRAPH_PERIODS.PostGame, document.getElementById('postGameChart'), $('#changePostGameItem'));
-
-    if(teamList.length === 1 || matchId !== '')
-        setItems(GRAPH_PERIODS.EndGame, document.getElementById('dodBreakdownChart'), null);
 }
 
 
@@ -152,12 +153,12 @@ function setItems(graphPeriod, context, selectBox)
  */
 function generateData(graphItem, context)
 {
-    var matchData = (teamList.length === 1) && ($(context).attr('id') !== 'dodBreakdownChart');
+    var matchData = (teamList.length === 1);
 
     //get data from the ajax script
     $.post('/ajax/ajax.php',
         {
-            action: 'load_stats',
+            action: 'load_new_stats',
             eventId: $('#eventId').val(),
             teamIds: JSON.stringify(teamList),
             matchId: matchId,
@@ -165,17 +166,16 @@ function generateData(graphItem, context)
         },
         function(data)
         {
+            console.log(data);
             //only 1 team specified, change the size of the graphs and hide the team breakdown
             if((teamList.length === 1) || matchId !== '')
             {
                 $($(context).parent()[0]).removeClass('stats-chart').addClass('team-stats-chart');
-                $('#dodBreakdownChart').show();
                 $('#oprDprStats').show();
             }
             else
             {
                 $($(context).parent()[0]).removeClass('team-stats-chart').addClass('stats-chart');
-                $('#dodBreakdownChart').hide();
                 $('#oprDprStats').hide();
             }
 
@@ -212,43 +212,6 @@ function generateData(graphItem, context)
                 if(postGameChart !== undefined)
                     postGameChart.destroy();
                 postGameChart = createChart(context, jsonResponse, graphItem, 'Post Game');
-            }
-
-            //if the chart context was the dod breakdown chart, update the dod breakdown chart
-            if($(context).attr('id') === 'dodBreakdownChart')
-            {
-                //create new arrays to hold the radar data and labels
-                var radarLabels = [];
-                var radarData = [];
-                var eventAverageRadarData = [];
-
-                //iterate through each stat inside the team specified and store the defense, offense and drive rating
-                $.each(jsonResponse, function (key, value)
-                {
-                    if(key !== 'EventAvg')
-                    {
-                        $.each(value, function (statKey, statValue)
-                        {
-                            if (statKey.endsWith('Rating'))
-                            {
-                                radarLabels.push(statKey);
-                                radarData.push(jsonResponse[teamList[0]][statKey]);
-                            }
-                        });
-                    }
-                    else if(key === 'EventAvg')
-                    {
-                        $.each(value, function (statKey, statValue)
-                        {
-                            if (statKey.endsWith('Rating'))
-                                eventAverageRadarData.push(jsonResponse['EventAvg'][statKey]);
-                        });
-                    }
-                });
-
-                if(dodBreakdownChart !== undefined)
-                    dodBreakdownChart.destroy();
-                dodBreakdownChart = createRadarChart(context, radarLabels, radarData, eventAverageRadarData, 'DOD Ratings');
             }
         });
 }
@@ -314,7 +277,7 @@ function createChart(context, jsonResponse, graphItem, title)
 
             //match specified, assign colors based on alliance
             else
-                backgroundColors.push(averages['AllianceColor'] === 'RED' ? 'rgba(255, 0, 0, 0.5)' : 'rgba(0, 100, 255, 0.5)');
+                backgroundColors.push(averages['Alliance Color'] === '<?php echo AllianceColors::RED ?>' ? '<?php echo AllianceColors::RED_RGBA ?>' : '<?php echo AllianceColors::BLUE_RGBA ?>');
 
         }
     });
@@ -470,84 +433,10 @@ function createChart(context, jsonResponse, graphItem, title)
                         borderDash: [7],
                         label: {
                             enabled: true,
-                            content: (matchId === '' ? 'Event  ' : 'Match ') + 'Average ' + Math.round(average * 100.00) / 100.00
+                            content: (matchId === '' ? ' ' : 'Match ') + 'Average ' + Math.round(average * 100.00) / 100.00
                         }
                     }]
                 }
-            }
-
-        });
-}
-
-/**
- * Creates a new Chart.js chart as a radar graph to display defense and offense stats
- * @param context context of the canvas to add the chartbar to
- * @param labels all Y axis labels (Team Ids)
- * @param data to display for each team (Item Averages)
- * @param data2 to display for event averages
- * @param title of the graph
- * @returns Chart
- */
-function createRadarChart(context, labels, data, data2, title)
-{
-
-    return new Chart(context,
-        {
-            //graph type
-            type: 'radar',
-            data:
-                {
-                    //team ids
-                    labels: labels,
-                    datasets:
-                        [
-                            {
-                                //item averages
-                                label: 'Team Average',
-                                data: data,
-
-                                //stat colors
-                                backgroundColor: 'rgba(3, 169, 244, 0.2)',
-                                borderColor: ['#03A9F4']
-                            },
-                            {
-                                label: 'Event Average',
-
-                                //Event averages
-                                data: data2,
-
-                                //stat colors
-                                backgroundColor: 'rgba(255, 0, 0, 0.2)',
-                                borderColor: ['#F00']
-                            }
-                        ]
-                },
-            options: {
-                tooltips: {
-                    callbacks: {
-                        label: function(tooltipItem)
-                        {
-                            //tooltip title
-                            return tooltipItem.yLabel;
-                        }
-                    }
-                },
-                title:
-                    {
-                        //show graph title
-                        display: true,
-                        text: title
-                    },
-                scale:
-                    {
-                        ticks:
-                            {
-                                beginAtZero: true,
-                                max: 5
-                            }
-                    },
-                maintainAspectRatio: false,
-                responsive: true,
             }
 
         });

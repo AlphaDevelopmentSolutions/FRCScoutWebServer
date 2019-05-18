@@ -26,6 +26,11 @@ CREATE TABLE `robot_info_keys` (
   `KeyState` VARCHAR(45) NULL DEFAULT '',
   `KeyName` VARCHAR(45) NULL DEFAULT '',
   `SortOrder` INT NULL DEFAULT 1,
+  `MinValue` INT NULL DEFAULT 0,
+  `MaxValue` INT NULL DEFAULT 1000,
+  `IsBoolean` INT NULL DEFAULT 0,
+  `NullZeros` INT NULL DEFAULT 0,
+  `IncludeInStats` INT NULL DEFAULT 0,
   PRIMARY KEY (`Id`));
 
 CREATE TABLE `scout_card_info` (

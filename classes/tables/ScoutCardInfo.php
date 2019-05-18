@@ -32,7 +32,7 @@ class ScoutCardInfo extends Table
 
         foreach(ScoutCardInfoKeys::getKeys($year, $event) as $scoutCardInfoKey)
         {
-            foreach(self::loadByTeam($year, $event, $match, $team, $scoutCardInfoKey) as $scoutCardInfo)
+            foreach(self::load($year, $event, $match, $team, $scoutCardInfoKey) as $scoutCardInfo)
                 $scoutCardInfoArray[] = $scoutCardInfo;
         }
 
@@ -49,7 +49,7 @@ class ScoutCardInfo extends Table
      * @param ScoutCardInfoKeys $scoutCardInfoKey scout card info key to load
      * @return ScoutCardInfoArray
      */
-    private static function loadByTeam($year = null, $event = null, $match = null, $team = null, $scoutCardInfoKey)
+    private static function load($year = null, $event = null, $match = null, $team = null, $scoutCardInfoKey)
     {
 
         //create the sql statement
@@ -97,6 +97,9 @@ class ScoutCardInfo extends Table
             $args[] = $team->Id;
         }
 
+        $sql .= ' ORDER BY ! DESC';
+        $cols[] = 'MatchId';
+
         $rows = self::query($sql, $cols, $args);
 
         $scoutCardInfoArray = new ScoutCardInfoArray();
@@ -118,34 +121,56 @@ class ScoutCardInfo extends Table
     }
 
     /**
+     * @param Events $event
+     * @param Teams $team
+     * @return int
+     */
+    public static function getMatchCount($event, $team)
+    {
+        //create the sql statement
+        $sql = "SELECT * FROM ! WHERE ! = ? AND ! = ?";
+        $cols[] = self::$TABLE_NAME;
+
+        $cols[] = 'EventId';
+        $args[] = $event->BlueAllianceId;
+        $cols[] = 'TeamId';
+        $args[] = $team->Id;
+
+        $sql .= ' GROUP BY ! ';
+        $cols[] = 'MatchId';
+
+        return count(self::query($sql, $cols, $args));
+    }
+
+    /**
      * Overrides parent save function
      * Updates or inserts record into database
      * @return bool
      */
     public function save()
     {
-        if(!empty($this->PropertyValue))
+        if(true)
         {
-            require_once(ROOT_DIR . '/classes/tables/Teams.php');
-            require_once(ROOT_DIR . '/classes/tables/Events.php');
-            require_once(ROOT_DIR . '/classes/tables/Years.php');
+//            require_once(ROOT_DIR . '/classes/tables/Teams.php');
+//            require_once(ROOT_DIR . '/classes/tables/Events.php');
+//            require_once(ROOT_DIR . '/classes/tables/Years.php');
+//
+//            $scoutCardInfoArray = self::forTeam(Years::withId($this->YearId), Events::withId($this->EventId), Teams::withId($this->TeamId));
+//
+//            $updateRecord = false;
+//
+//            foreach ($scoutCardInfoArray as $scoutCardInfo)
+//            {
+//                if ($scoutCardInfo->YearId == $this->YearId &&
+//                    $scoutCardInfo->EventId == $this->EventId &&
+//                    $scoutCardInfo->MatchId == $this->MatchId &&
+//                    $scoutCardInfo->TeamId == $this->TeamId &&
+//                    $scoutCardInfo->PropertyState == $this->PropertyState &&
+//                    $scoutCardInfo->PropertyKey == $this->PropertyKey)
+//                    $updateRecord = true;
+//            }
 
-            $scoutCardInfoArray = self::forTeam(Years::withId($this->YearId), Events::withId($this->EventId), Teams::withId($this->TeamId));
-
-            $updateRecord = false;
-
-            foreach ($scoutCardInfoArray as $scoutCardInfo)
-            {
-                if ($scoutCardInfo->YearId == $this->YearId &&
-                    $scoutCardInfo->EventId == $this->EventId &&
-                    $scoutCardInfo->MatchId == $this->MatchId &&
-                    $scoutCardInfo->TeamId == $this->TeamId &&
-                    $scoutCardInfo->PropertyState == $this->PropertyState &&
-                    $scoutCardInfo->PropertyKey == $this->PropertyKey)
-                    $updateRecord = true;
-            }
-
-            if ($updateRecord)
+            if (true)
             {
                 //create the sql statement
                 $sql = "INSERT INTO ! (";

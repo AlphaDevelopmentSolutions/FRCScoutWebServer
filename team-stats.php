@@ -178,17 +178,6 @@ $event = Events::withId($eventId);
                 </div>
             </div>
 
-            <div class="mdl-cell stats-cell">
-                <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label" style="visibility: hidden">
-                    <input hidden class="mdl-textfield__input" type="text" value="placeholder">
-                    <select class="mdl-textfield__input">
-                    </select>
-                </div>
-                <div class="team-stats-chart">
-                    <canvas id="dodBreakdownChart"></canvas>
-                </div>
-            </div>
-
             <div class="mdl-cell stats-cell" id="oprDprStats">
                 <h6>OPR / DPR</h6>
                 <div>
@@ -200,7 +189,7 @@ $event = Events::withId($eventId);
     </main>
 </div>
 <?php require_once('includes/bottom-scripts.php') ?>
-<script defer src="<?php echo URL_PATH ?>/js/stat-charts.js"></script>
+<script defer src="<?php echo URL_PATH ?>/js/stat-charts.js.php"></script>
 <script defer src="<?php echo URL_PATH ?>/js/get-opr.js"></script>
 </body>
 </html>

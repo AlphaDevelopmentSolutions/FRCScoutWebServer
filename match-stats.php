@@ -4,6 +4,7 @@ require_once(ROOT_DIR . "/classes/tables/Events.php");
 require_once(ROOT_DIR . "/classes/tables/Matches.php");
 require_once(ROOT_DIR . "/classes/tables/Teams.php");
 
+
 $eventId = $_GET['eventId'];
 $matchId = $_GET['matchId'];
 $teamId = $_GET['teamId'];
@@ -119,6 +120,6 @@ if(!empty($teamId))
     </main>
 </div>
 <?php require_once('includes/bottom-scripts.php') ?>
-<script defer src="<?php echo URL_PATH ?>/js/stat-charts.js"></script>
+<script defer src="<?php echo URL_PATH ?>/js/stat-charts.js.php"></script>
 </body>
 </html>

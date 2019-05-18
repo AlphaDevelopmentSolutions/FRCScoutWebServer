@@ -7,6 +7,11 @@ class ScoutCardInfoKeys extends Table
     public $KeyState;
     public $KeyName;
     public $SortOrder;
+    public $MinValue;
+    public $MaxValue;
+    public $IsBoolean;
+    public $NullZeros;
+    public $IncludeInStats;
 
     public static $TABLE_NAME = 'scout_card_info_keys';
     
@@ -48,6 +53,51 @@ class ScoutCardInfoKeys extends Table
         return $response;
     }
 
+    /**
+     * @return static
+     */
+    public static function withStateAndName($keyState, $keyName)
+    {
+        $instance = new self();
+        $instance->loadByStateAndKey($keyState, $keyName);
+        return $instance;
+    }
+
+    /**
+     * Loads a new instance by its database id
+     * @return boolean
+     */
+    protected function loadByStateAndKey($keyState, $keyName)
+    {
+        //create the sql statement
+        $sql = "SELECT * FROM ! WHERE ! = ? AND ! = ?";
+        $cols[] = self::$TABLE_NAME;
+
+        $cols[] = 'KeyState';
+        $args[] = $keyState;
+        $cols[] = 'KeyName';
+        $args[] = $keyName;
+
+        $rows = self::query($sql, $cols, $args);
+
+        foreach ($rows as $row)
+        {
+            foreach($row as $key => $value)
+            {
+                if(property_exists($this, $key))
+                    $this->$key = $value;
+
+            }
+
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * @return static[]
+     */
     public static function getObjects()
     {
         return parent::getObjects('SortOrder', 'ASC');

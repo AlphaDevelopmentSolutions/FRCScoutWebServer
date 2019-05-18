@@ -109,6 +109,6 @@ $event = Events::withId($eventId);
 
 </div>
 <?php require_once('includes/bottom-scripts.php') ?>
-<script defer src="<?php echo URL_PATH ?>/js/stat-charts.js"></script>
+<script defer src="<?php echo URL_PATH ?>/js/stat-charts.js.php"></script>
 </body>
 </html>
