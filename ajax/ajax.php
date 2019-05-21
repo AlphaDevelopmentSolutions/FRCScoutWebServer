@@ -11,82 +11,122 @@ switch ($_POST['action'])
         require_once(ROOT_DIR . "/classes/tables/ScoutCardInfo.php");
         require_once(ROOT_DIR . "/classes/tables/ScoutCardInfoKeys.php");
 
+        //grab items from post response
         $eventId = $_POST['eventId'];
         $teamIds = json_decode($_POST['teamIds']);
         $matchId = $_POST['matchId'];
-        $matchData = $_POST['matchData'];
 
+        //init base vars
         $event = Events::withId($eventId);
         $teams = null;
         $match = null;
 
+        //assign all the teams to the array
         if (!empty($teamIds))
             foreach ($teamIds as $teamId)
                 $teams[] = Teams::withId($teamId);
 
+        //assign the match if specified
         if (!empty($matchId))
             $match = Matches::withId($matchId);
 
-        $scoutCardInfoKeys = ScoutCardInfoKeys::getObjects();
-        $scoutCardInfoKey = null;
-        $i = 0;
+        $scoutCardInfoKeys = ScoutCardInfoKeys::getObjects();//get all the scout card info keys from the database
+        $scoutCardInfoKey = null; //set the current key to null
+        $i = 0;//var to get the record at specified index
+        $addRecord = false;//boolean if we should add the record to the list
+        $eventScoutCardInfo = ScoutCardInfo::forTeam(null, $event, $match, null);//get all scout cards from the event / match
+        $temp = array();//overwritten multiple times, placeholder for getting what teams were in a match
 
-        $recordArray = array();
-
-        $addRecord = false;
-
-        $eventScoutCards = ScoutCardInfo::forTeam(null, $event, $match, null);
-
-        //get event card count for event avg
-        $temp = array();
-
-        foreach ($eventScoutCards as $scoutCardInfo)
+        //iterate through each scout card info at the event
+        foreach ($eventScoutCardInfo as $scoutCardInfo)
         {
-
+            //this holds a placeholder for each match a team was at
+            //because the way arrays work, we just overwrite each time we hit the same record
+            //with placeholder text
+            //we later count how many teams were at each match (how many indexes are at a matchid)
+            //to determine how many scout cards were made
             $temp[$scoutCardInfo->MatchId][$scoutCardInfo->TeamId] = 'placeholder';
 
+            //while there is no current scout card info key selected
+            //iterate through the current scout card info and match it up to the key
             do
             {
+                //match the state & key
                 if ($scoutCardInfo->PropertyState == $scoutCardInfoKeys[$i]->KeyState && $scoutCardInfo->PropertyKey == $scoutCardInfoKeys[$i]->KeyName)
                     $scoutCardInfoKey = $scoutCardInfoKeys[$i];
                 $i++;
 
             } while (empty($scoutCardInfoKey) && $i < count($scoutCardInfoKeys));
 
+            $i = 0;//key matched, reset $i
+
+            //if the current key we are on is specified as being included in the stats, generate stats
             if ($scoutCardInfoKey->IncludeInStats == 1)
             {
+                //set the array key so we don't have to change it manually
                 $arrayKey = $scoutCardInfo->PropertyState . ' ' . $scoutCardInfo->PropertyKey;
 
-                $return_array['EventAvg'][$arrayKey] = ((empty($return_array['EventAvg'][$arrayKey])) ? $scoutCardInfo->PropertyValue : $return_array['EventAvg'][$arrayKey] + $scoutCardInfo->PropertyValue);
+                //add to the event avgs
+                $return_array['EventAvg'][$arrayKey] =
+                    ((empty($return_array['EventAvg'][$arrayKey])) ?
+                        $scoutCardInfo->PropertyValue
+                        :
+                        $return_array['EventAvg'][$arrayKey] + $scoutCardInfo->PropertyValue);
 
+                //if the current scout card info indicates to null 0's
+                //add a null zero count to the index
+                if ($scoutCardInfoKey->NullZeros == 1)
+                    if ($scoutCardInfo->PropertyValue == 0)
+                        $return_array['EventAvg']['Nulled ' . $arrayKey] =
+                            ((empty($return_array['EventAvg']['Nulled ' . $arrayKey])) ?
+                                1
+                                :
+                                $return_array['EventAvg']['Nulled ' . $arrayKey] + 1);
+
+                //if teams were specified, filter out all the teams that were not specified
                 if (!empty($teams))
                 {
+                    //iterate through the teams and check if the scout card info team matches the specified team
                     foreach ($teams as $team)
                         if ($team->Id == $scoutCardInfo->TeamId)
                             $addRecord = true;
-                } else
+                }
+
+                //otherwise just add the record
+                else
                     $addRecord = true;
 
-
+                //if addRecord was changed from false to true
+                //add the record
                 if ($addRecord)
                 {
+                    //specifying 1 team indicates a match breakdown
+                    //as long as teams is not 1, give event breakdown
                     if (count($teams) != 1)
                     {
+                        //add the value of the scoutcardinfo to the array
                         $return_array[$scoutCardInfo->TeamId][$arrayKey] =
                             ((empty($return_array[$scoutCardInfo->TeamId][$arrayKey])) ?
                                 $scoutCardInfo->PropertyValue
                                 :
                                 $return_array[$scoutCardInfo->TeamId][$arrayKey] + $scoutCardInfo->PropertyValue);
 
-
+                        //if the current scout card info indicates to null 0's
+                        //add a null zero count to the index
                         if ($scoutCardInfoKey->NullZeros == 1)
                             if ($scoutCardInfo->PropertyValue == 0)
-                                $return_array[$scoutCardInfo->TeamId]['Nulled ' . $arrayKey] = ((empty($return_array[$scoutCardInfo->TeamId]['Nulled ' . $arrayKey])) ? 1 : $return_array[$scoutCardInfo->TeamId]['Nulled ' . $arrayKey] + 1);
+                                $return_array[$scoutCardInfo->TeamId]['Nulled ' . $arrayKey] =
+                                    ((empty($return_array[$scoutCardInfo->TeamId]['Nulled ' . $arrayKey])) ?
+                                        1
+                                        :
+                                        $return_array[$scoutCardInfo->TeamId]['Nulled ' . $arrayKey] + 1);
 
                     }
 
+                    //1 team was specified, the array struct changes a bit
                     else
                     {
+                        //add the value of the scoutcardinfo to the array
                         $return_array[$scoutCardInfo->TeamId][$scoutCardInfo->MatchId][$arrayKey] =
                             ((empty($return_array[$scoutCardInfo->TeamId][$scoutCardInfo->MatchId][$arrayKey])) ?
                                 $scoutCardInfo->PropertyValue
@@ -99,104 +139,116 @@ switch ($_POST['action'])
                 }
             }
 
-            $scoutCardInfoKey = null;
-            $i = 0;
-            $addRecord = false;
+            $scoutCardInfoKey = null;//reset the key
+            $addRecord = false;//reset the addRecord
 
         }
 
+        //this will count how many scout cards were generated at an event based on the array
         $eventScoutCardCount = 0;
-        foreach ($temp as $value)
-            $eventScoutCardCount += count($value);
+        foreach ($temp as $matchRecord)//iterate through each matchRecord in the temp array and count how many team records are in it
+            $eventScoutCardCount += count($matchRecord);
         $return_array['EventAvg']['CardCount'] = $eventScoutCardCount;
 
-
-
-        //TEAM / MATCH AVG
+        //if a match was not specified, give an event avg and event breakdown
         if (empty($match))
         {
-
-            //TEAM AVG
+            //not match breakdown, calculate all averages
             if (count($teams) != 1)
             {
+                //iterate through each team in the array
                 foreach ($return_array as $teamKey => $statKey)
                 {
+                    //do not calculate averages for the event average yet
                     if($teamKey != 'EventAvg')
                     {
                         $cardCount = 0;
 
+                        //iterate through each match record inside the temp array
                         foreach($temp as $tempKey => $tempVal)
+                            //iterate through each team inside the match record
                             foreach($tempVal as $tempValKey => $temValVal)
-                            if($tempValKey == $teamKey)
-                                $cardCount++;
+                                //if the key of the team is the same as the team we are generating stats for, add to the card count
+                                if($tempValKey == $teamKey)
+                                    $cardCount++;
 
+                        //iterate through each stat inside the return array and calculate averages
                         foreach ($statKey as $key => $statValue)
                         {
+                            //do not modify nulled stored records
                             if (strpos($key, 'Nulled') === false)
                             {
                                 $tempCardCount = $cardCount;
 
+                                //check if a nulled key exists inside the array at the current record
                                 if (!empty($return_array[$teamKey]['Nulled ' . $key]))
-                                    $tempCardCount = $cardCount - $return_array[$teamKey]['Nulled ' . $key];
+                                    $tempCardCount = $cardCount - $return_array[$teamKey]['Nulled ' . $key];//if it does, modify the card count to remove nulled records
 
-                                $return_array[$teamKey][$key] = (($statValue != 0) ? round($statValue / $tempCardCount, 2) : 0);
+                                $return_array[$teamKey][$key] = (($statValue != 0) ? round($statValue / $tempCardCount, 2) : 0);//calculate average
 
-                                unset($return_array[$teamKey]['Nulled ' . $key]);
+                                unset($return_array[$teamKey]['Nulled ' . $key]);//remove nulled record from array
 
                             }
-
                         }
 
-                        $cardCount = 0;
+                        $cardCount = 0;//reset card count
                     }
-
-
                 }
 
-                $temp = array();
+                $temp = array();//reset temp array
             }
 
 
-            //1 TEAM
+            //1 Team specified, match breakdown
             else
             {
+                //reset the array from starting
                 $temp = array();
 
-                //MATCH STATS
+                //declare starting vars
                 $currMatch = null;
                 $currTeam = null;
 
+                //iterate through each item in the return array
                 foreach ($return_array as $teamId => $matches)
                 {
+                    //don't touch event avgs
                     if ($teamId != 'EventAvg')
                     {
+                        //iterate through each stat inside each match
                         foreach ($matches as $matchId => $statKey)
                         {
-
+                            //get the match from the database
                             $match = Matches::withId($matchId);
 
-                            foreach ($eventScoutCards as $scoutCardInfo)
+                            //iterate through each of the scout card infos pulled from event
+                            foreach ($eventScoutCardInfo as $scoutCardInfo)
                             {
+                                //if the current scout card info matches the current match key
+                                //calculate match average
                                 if($scoutCardInfo->MatchId == $match->Key)
                                 {
+                                    //match the info to the info key
                                     do
                                     {
+                                        //match state and key name
                                         if ($scoutCardInfo->PropertyState == $scoutCardInfoKeys[$i]->KeyState && $scoutCardInfo->PropertyKey == $scoutCardInfoKeys[$i]->KeyName)
                                             $scoutCardInfoKey = $scoutCardInfoKeys[$i];
                                         $i++;
 
                                     } while (empty($scoutCardInfoKey) && $i < count($scoutCardInfoKeys));
 
+                                    //check if the key is require to be included in stats
                                     if ($scoutCardInfoKey->IncludeInStats == 1)
                                     {
-
+                                        //add records to match avgs
                                         $return_array['MatchAvgs'][$match->MatchNumber][$scoutCardInfo->PropertyState . ' ' . $scoutCardInfo->PropertyKey] =
                                             ((empty($return_array['MatchAvgs'][$match->MatchNumber][$scoutCardInfo->PropertyState . ' ' . $scoutCardInfo->PropertyKey])) ?
                                                 $scoutCardInfo->PropertyValue
                                                 :
                                                 $return_array['MatchAvgs'][$match->MatchNumber][$scoutCardInfo->PropertyState . ' ' . $scoutCardInfo->PropertyKey] + $scoutCardInfo->PropertyValue);
 
-
+                                        //if key specifies to null zeros, add null record to array
                                         if ($scoutCardInfoKey->NullZeros == 1)
                                             if ($scoutCardInfo->PropertyValue == 0)
                                                 $return_array['MatchAvgs'][$match->MatchNumber]['Nulled ' . $scoutCardInfo->PropertyState . ' ' . $scoutCardInfo->PropertyKey] = ((empty($return_array['MatchAvgs'][$match->MatchNumber]['Nulled ' . $scoutCardInfo->PropertyState . ' ' . $scoutCardInfo->PropertyKey])) ? 1 : $return_array[$scoutCardInfo->TeamId]['Nulled ' . $scoutCardInfo->PropertyState . ' ' . $scoutCardInfo->PropertyKey] + 1);
@@ -204,52 +256,60 @@ switch ($_POST['action'])
 
                                     }
 
-                                    $scoutCardInfoKey = null;
-                                    $i = 0;
+                                    $scoutCardInfoKey = null;//reset key
+                                    $i = 0;//reset index
 
-                                    $temp[$match->MatchNumber][$scoutCardInfo->TeamId] = 'placeholder';
+                                    $temp[$match->MatchNumber][$scoutCardInfo->TeamId] = 'placeholder';//add team placeholder
                                 }
 
                             }
 
+                            //iterate through each record inside the temp array to set card counts
                             foreach($temp as $key => $value)
                                 $return_array['MatchAvgs'][$match->MatchNumber]['CardCount'] = count($value);
 
-
-                            $return_array[$teamId][$match->MatchNumber] = $return_array[$teamId][$matchId];
-                            unset($return_array[$teamId][$matchId]);
+                            $return_array[$teamId][$match->MatchNumber] = $return_array[$teamId][$matchId];//rename all records with match numbers to match ids
+                            unset($return_array[$teamId][$matchId]);//remove transferred records
                         }
                     }
                 }
 
+                //reset temp array
                 $temp = array();
 
-
+                //iterate through each match avg record to calc averages
                 foreach ($return_array['MatchAvgs'] as $matchId => $statKey)
                 {
+                    //iterate through each stat inside the match avgs
                     foreach ($statKey as $key => $statValue)
                     {
+                        //don't touch null and card count records
                         if (strpos($key, 'Nulled') === false && strpos($key, 'CardCount') === false)
                         {
+                            //get the card count
                             $tempCardCount = $return_array['MatchAvgs'][$matchId]['CardCount'];
 
+                            //modify the card count if a null count record exists
                             if (!empty($return_array['MatchAvgs'][$matchId]['Nulled ' . $key]))
                                 $tempCardCount = $tempCardCount - $return_array['MatchAvgs'][$matchId]['Nulled ' . $key];
 
+                            //calc average
                             $return_array['MatchAvgs'][$matchId][$key] = round($statValue / $tempCardCount, 2);
 
+                            //remove null record count from array
                             unset($return_array['MatchAvgs'][$matchId]['Nulled ' . $key]);
-
-
                         }
-
                     }
 
+                    //remove card count once match avgs generated
                     unset($return_array['MatchAvgs'][$matchId]['CardCount']);
                 }
-
             }
-        } else
+        }
+
+        //match was specified, majority of the work does not have to be done
+        //only thing needed to be added is the color of each alliance member
+        else
         {
             foreach ($return_array as $teamId => $statKey)
             {
@@ -259,304 +319,47 @@ switch ($_POST['action'])
             }
         }
 
+        //for each record inside of the event array, we need to calculate the average based on the number of scout cards
         foreach ($return_array['EventAvg'] as $key => $statValue)
-            if ($key != 'CardCount')
-                $return_array['EventAvg'][$key] = (($statValue != 0) ? round($statValue / $return_array['EventAvg']['CardCount'], 2) : 0);
+        {
+            //don't touch null and card count records
+            if (strpos($key, 'Nulled') === false && strpos($key, 'CardCount') === false)
+            {
+                //get the card count
+                $tempCardCount = $return_array['EventAvg']['CardCount'];
 
-        unset($return_array['EventAvg']['CardCount']);
+                //modify the card count if a null count record exists
+                if (!empty($return_array['EventAvg']['Nulled ' . $key]))
+                    $tempCardCount = $tempCardCount - $return_array['EventAvg']['Nulled ' . $key];
+
+                //calc average
+                $return_array['EventAvg'][$key] = (($statValue != 0) ? round($statValue / $tempCardCount, 2) : 0);
+
+                //remove null record count from array
+                unset($return_array['EventAvg']['Nulled ' . $key]);
+            }
+        }
+
+        unset($return_array['EventAvg']['CardCount']);//remove the card count record from the array
 
 
-        //SORTING
+        //sort the array by the team id that shows up
         if (count($teams) != 1)
             ksort($return_array);
 
+        //if only 1 team was specified (match breakdown)
+        //sort the array by the match number
         else
         {
-            foreach ($return_array as $teamId => $teamValue)
-            {
-                if($teamId != 'EventAvg' && $teamId != 'MatchId')
-                {
-                    ksort($teamValue, SORT_NUMERIC);
+            $matchRecords = $return_array[$teams[0]];//get all the match records from the array
 
-                    unset($return_array[$teamId]);
+            ksort($return_array[$teams[0]], SORT_NUMERIC);//sort by the match number
 
-                    $return_array[$teamId] = $teamValue;
-                }
-            }
+            unset($return_array[$teams[0]]);//remove all the match records from the array
+
+            $return_array[$teams[0]] = $matchRecords;//re-add the sorted array of matches
         }
 
-
-        echo json_encode($return_array);
-
-        break;
-
-    case 'load_stats':
-        $return_array = array();
-
-        $eventId = $_POST['eventId'];
-        $teamIds = json_decode($_POST['teamIds']);
-        $matchId = $_POST['matchId'];
-        $matchData = $_POST['matchData'];
-
-        $event = Events::withId($eventId);
-        $teams = null;
-        $match = null;
-
-        if (!empty($teamIds))
-            foreach ($teamIds as $teamId)
-                $teams[] = Teams::withId($teamId);
-
-        if (!empty($matchId))
-            $match = Matches::withId($matchId);
-
-        //get all the scout cards from the event specified
-        foreach ($event->getScoutCards($match, $team) as $scoutCard)
-        {
-            $arrayKey = $scoutCard->TeamId;
-
-            //for each scout card object returned, get the key and value from it
-            foreach ($scoutCard as $key => $value)
-            {
-                //filter out the fields we do not want
-                if ($key != 'Id' &&
-                    $key != 'MatchId' &&
-                    $key != 'TeamId' &&
-                    $key != 'EventId' &&
-                    $key != 'CompletedBy' &&
-                    $key != 'Notes' &&
-                    $key != 'CompletedDate'
-                )
-                {
-                    if ($key != 'AllianceColor')
-                        //at the teamid index, and key, compile whatever key it is at with the value. Essentially creating a running total
-                        $return_array[$arrayKey][$key] = $return_array[$arrayKey][$key] + $value;
-
-                    //check if we need to nullify any offense ratings
-                    if ($key == 'OffenseRating' && $value == 0)
-                        $return_array[$arrayKey]['NulledOffenseRatings'] = ((empty($return_array[$arrayKey]['NulledOffenseRatings'])) ? 1 : $return_array[$arrayKey]['NulledOffenseRatings'] + 1);
-
-                    //check if we need to nullify any defense ratings
-                    else if ($key == 'DefenseRating' && $value == 0)
-                        $return_array[$arrayKey]['NulledDefenseRatings'] = ((empty($return_array[$arrayKey]['NulledDefenseRatings'])) ? 1 : $return_array[$arrayKey]['NulledDefenseRatings'] + 1);
-                }
-            }
-
-            //compile a running total for how many cards a team has, to calculate an average
-            $return_array[$arrayKey]['CardCount'] = ((empty($return_array[$arrayKey]['CardCount'])) ? 1 : $return_array[$arrayKey]['CardCount'] + 1);
-
-            $return_array[$arrayKey]['AllianceColor'] = $scoutCard->AllianceColor;
-
-        }
-
-        //once the totals have been calculated iterate through to calculate averages
-        foreach ($return_array as $teamId => $stats)
-        {
-            //for each stat inside each team, get the key of that stat and value
-            foreach ($stats as $key => $value)
-            {
-                //don't change the values specified
-                if ($key != 'CardCount' && $key != 'NulledOffenseRatings' && $key != 'NulledDefenseRatings' && $key != 'AllianceColor')
-                {
-                    //if we aren't calculating the offense or defense rating, don't worry about nulled ratings
-                    //essentially get the total calculated above and divide it by the number of scout cards
-                    if ($key != 'OffenseRating' && $key != 'DefenseRating')
-                        $return_array[$teamId][$key] = round($return_array[$teamId][$key] / $return_array[$teamId]['CardCount'], 2);
-
-                    //if we are calculating offense rating, check for nulled ratings
-                    else if ($key == 'OffenseRating' && $return_array[$teamId][$key] != 0)
-                        $return_array[$teamId][$key] = round($return_array[$teamId][$key] / ($return_array[$teamId]['CardCount'] - $return_array[$teamId]['NulledOffenseRatings']), 2);
-
-                    //if we are calculating defense rating, check for nulled ratings
-                    else if ($key == 'DefenseRating' && $return_array[$teamId][$key] != 0)
-                        $return_array[$teamId][$key] = round($return_array[$teamId][$key] / ($return_array[$teamId]['CardCount'] - $return_array[$teamId]['NulledDefenseRatings']), 2);
-                }
-            }
-
-            //once all the averages for a team have been calculated
-            //iterate through the array and create a running total of averages into the EventAvg key
-            foreach ($stats as $key => $value)
-                $return_array['EventAvg'][$key] += $return_array[$teamId][$key];
-
-            $return_array['EventAvg']['TeamCount'] = ((empty($return_array['EventAvg']['TeamCount'])) ? 1 : $return_array['EventAvg']['TeamCount'] + 1);
-        }
-
-
-        //once all the event averages have been totalled, divide each average by the number of teams at the event
-        foreach ($return_array['EventAvg'] as $key => $value)
-        {
-            if ($key != 'TeamCount')
-                $return_array['EventAvg'][$key] = $return_array['EventAvg'][$key] / $return_array['EventAvg']['TeamCount'];
-        }
-
-        //if the teams array is not empty, teams were searched
-        if (!empty($teams))
-        {
-            //iterate through each searched team
-            foreach ($return_array as $key => $value)
-            {
-                //skip over the eventavg key
-                if ($key != 'EventAvg')
-                {
-                    $searchedTeamInTeams = false;
-
-                    //check if the team that was searched is the same as the current key we are on
-                    foreach ($teams as $searchedTeams)
-                    {
-                        if ($key == $searchedTeams->Id)
-                            $searchedTeamInTeams = true;
-                    }
-
-                    //if the current key is not a searched team, delete it from the array
-                    if (!$searchedTeamInTeams)
-                        unset($return_array[$key]);
-                }
-            }
-
-
-            //match data specified as true, give a match breakdown
-            if ($matchData == 'true')
-            {
-                //remove all keys except the event avg
-                foreach ($return_array as $key => $value)
-                {
-                    if ($key != 'EventAvg')
-                        unset($return_array[$key]);
-                }
-
-                foreach ($teams as $team)
-                {
-                    //get all the scout cards from the matches that the single team was in
-                    $scoutCards = array();
-                    foreach ($event->getMatches(null, $team) as $matchObj)
-                    {
-                        foreach ($matchObj->getScoutCards() as $scoutCard)
-                            $scoutCards[] = $scoutCard;
-                    }
-
-                    //calculate all the match averages from the scout cards
-                    foreach ($scoutCards as $scoutCard)
-                    {
-                        $matchObj = Matches::withId($scoutCard->MatchId);
-                        $arrayKey = $matchObj->MatchNumber;
-
-                        //for each scout card object returned, get the key and value from it
-                        foreach ($scoutCard as $key => $value)
-                        {
-                            //filter out the fields we do not want
-                            if ($key != 'Id' &&
-                                $key != 'MatchId' &&
-                                $key != 'TeamId' &&
-                                $key != 'EventId' &&
-                                $key != 'AllianceColor' &&
-                                $key != 'CompletedBy' &&
-                                $key != 'Notes' &&
-                                $key != 'CompletedDate'
-                            )
-                            {
-                                //at the teamid index, and key, compile whatever key it is at with the value. Essentially creating a running total
-                                $return_array[$scoutCard->TeamId][$arrayKey][$key] = $return_array[$scoutCard->TeamId][$arrayKey][$key] + $value;
-                                $return_array['MatchAvgs'][$arrayKey][$key] = $return_array['MatchAvgs'][$arrayKey][$key] + $value;
-
-                                //check if we need to nullify any offense ratings
-                                if ($key == 'OffenseRating' && $value == 0)
-                                {
-                                    $return_array[$scoutCard->TeamId][$arrayKey]['NulledOffenseRatings'] = ((empty($return_array[$scoutCard->TeamId][$arrayKey]['NulledOffenseRatings'])) ? 1 : $return_array[$scoutCard->TeamId][$arrayKey]['NulledOffenseRatings'] + 1);
-                                    $return_array['MatchAvgs'][$arrayKey]['NulledOffenseRatings'] = ((empty($return_array['MatchAvgs'][$arrayKey]['NulledOffenseRatings'])) ? 1 : $return_array['MatchAvgs'][$arrayKey]['NulledOffenseRatings'] + 1);
-
-                                } //check if we need to nullify any defense ratings
-                                else if ($key == 'DefenseRating' && $value == 0)
-                                {
-                                    $return_array[$scoutCard->TeamId][$arrayKey]['NulledDefenseRatings'] = ((empty($return_array[$scoutCard->TeamId][$arrayKey]['NulledDefenseRatings'])) ? 1 : $return_array[$scoutCard->TeamId][$arrayKey]['NulledDefenseRatings'] + 1);
-                                    $return_array['MatchAvgs'][$arrayKey]['NulledDefenseRatings'] = ((empty($return_array['MatchAvgs'][$arrayKey]['NulledDefenseRatings'])) ? 1 : $return_array['MatchAvgs'][$arrayKey]['NulledDefenseRatings'] + 1);
-                                }
-                            }
-                        }
-
-                        //compile a running total for how many cards a team has, to calculate an average
-                        $return_array[$scoutCard->TeamId][$arrayKey]['CardCount'] = ((empty($return_array[$scoutCard->TeamId][$arrayKey]['CardCount'])) ? 1 : $return_array[$scoutCard->TeamId][$arrayKey]['CardCount'] + 1);
-                        $return_array['MatchAvgs'][$arrayKey]['CardCount'] = ((empty($return_array['MatchAvgs'][$arrayKey]['CardCount'])) ? 1 : $return_array['MatchAvgs'][$arrayKey]['CardCount'] + 1);
-
-                    }
-
-                    //once the totals have been calculated iterate through to calculate averages
-                    foreach ($return_array as $key => $matchObj)
-                    {
-                        if ($key != 'EventAvg')
-                        {
-                            foreach ($matchObj as $matchKey => $matchValue)
-                            {
-                                //for each stat inside each team, get the key of that stat and value
-                                foreach ($matchValue as $statKey => $statValue)
-                                {
-                                    //don't change the values specified
-                                    if ($statKey != 'CardCount' && $statKey != 'NulledOffenseRatings' && $statKey != 'NulledDefenseRatings')
-                                    {
-                                        //if we aren't calculating the offense or defense rating, don't worry about nulled ratings
-                                        //essentially get the total calculated above and divide it by the number of scout cards
-                                        if ($statKey != 'OffenseRating' && $statKey != 'DefenseRating')
-                                            $return_array[$key][$matchKey][$statKey] = round($return_array[$key][$matchKey][$statKey] / $return_array[$key][$matchKey]['CardCount'], 2);
-
-                                        //if we are calculating offense rating, check for nulled ratings
-                                        else if ($statKey == 'OffenseRating' && $return_array[$key][$matchKey][$statKey] != 0)
-                                            $return_array[$key][$matchKey][$statKey] = round($return_array[$key][$matchKey][$statKey] / ($return_array[$key][$matchKey]['CardCount'] - $return_array[$key][$matchKey]['NulledOffenseRatings']), 2);
-
-                                        //if we are calculating defense rating, check for nulled ratings
-                                        else if ($statKey == 'DefenseRating' && $return_array[$key][$matchKey][$statKey] != 0)
-                                            $return_array[$key][$matchKey][$statKey] = round($return_array[$key][$matchKey][$statKey] / ($return_array[$key][$matchKey]['CardCount'] - $return_array[$key][$matchKey]['NulledDefenseRatings']), 2);
-                                    }
-                                }
-                            }
-
-                        }
-                    }
-
-
-                    //iterate through each searched team
-                    foreach ($return_array as $teamId => $matchObj)
-                    {
-                        //skip over the eventavg and matchavg key
-                        if ($teamId != 'EventAvg' && $teamId != 'MatchAvgs')
-                        {
-                            $searchedTeamInTeams = false;
-
-                            //check if the team that was searched is the same as the current key we are on
-                            foreach ($teams as $searchedTeams)
-                            {
-                                if ($teamId == $searchedTeams->Id)
-                                    $searchedTeamInTeams = true;
-                            }
-
-                            //if the current key is not a searched team, delete it from the array
-                            if (!$searchedTeamInTeams)
-                                unset($return_array[$teamId]);
-                        }
-                    }
-
-                    //iterate through each match avg match
-                    foreach ($return_array['MatchAvgs'] as $matchKey => $matchValue)
-                    {
-                        $correctMatch = false;
-
-                        //check if the team that was search contains the current match index we are on
-                        foreach ($return_array[$team->Id] as $correctMatchKey => $correctMatchValue)
-                        {
-                            if ($matchKey == $correctMatchKey)
-                                $correctMatch = true;
-                        }
-
-                        //if the current key is not a searched team, delete it from the array
-                        if (!$correctMatch)
-                            unset($return_array['MatchAvgs'][$matchKey]);
-
-                    }
-                }
-
-            }
-        }
-
-
-        //sort the array by team ids
-        ksort($return_array);
 
         echo json_encode($return_array);
 
