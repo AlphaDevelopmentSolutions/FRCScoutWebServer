@@ -1,6 +1,13 @@
 <?php
 require_once("../config.php");
 require_once(ROOT_DIR . "/interfaces/AllianceColors.php");
+require_once(ROOT_DIR . "/classes/tables/ScoutCardInfoKeys.php");
+require_once(ROOT_DIR . "/classes/tables/Events.php");
+
+$eventId = $_GET['eventId'];
+
+$event = Events::withId($eventId);
+
 ?>
 
 var autoChart, teleopChart, endGameChart, postGameChart;
@@ -15,38 +22,6 @@ var teamList =
         });
 
 var matchId = ($('#matchId').length === 0) ? '' : $('#matchId').val();
-
-const AUTO_ITEMS =
-    {
-        Hatches : 'Autonomous Hatches Secured',
-        Cargo : 'Autonomous Cargo Stored'
-    };
-
-const TELEOP_ITEMS =
-    {
-        Hatches : 'Teleop Hatches Secured',
-        Cargo : 'Teleop Cargo Stored'
-    };
-
-const END_GAME_ITEMS =
-    {
-        Return_To_Hab: 'End Game Returned To HAB'
-    };
-
-const POST_GAME_ITEMS =
-    {
-        Defense_Rating: 'Post Game Defense Rating',
-        Offense_Rating: 'Post Game Offense Rating',
-        Drive_Rating: 'Post Game Drive Rating'
-    };
-
-const GRAPH_PERIODS =
-    {
-        Autonomous: AUTO_ITEMS,
-        Teleop: TELEOP_ITEMS,
-        EndGame: END_GAME_ITEMS,
-        PostGame: POST_GAME_ITEMS
-    };
 
 $(document).ready(function ()
 {
@@ -95,10 +70,10 @@ $(document).ready(function ()
  */
 function updateGraphs()
 {
-    setItems(GRAPH_PERIODS.Autonomous, document.getElementById('autoChart'), $('#changeAutoItem'));
-    setItems(GRAPH_PERIODS.Teleop, document.getElementById('teleopChart'), $('#changeTeleopItem'));
-    setItems(GRAPH_PERIODS.EndGame, document.getElementById('endGameChart'), $('#changeEndGameItem'));
-    setItems(GRAPH_PERIODS.PostGame, document.getElementById('postGameChart'), $('#changePostGameItem'));
+    setItems('<?php echo json_encode(ScoutCardInfoKeys::getKeys(null, $event, 'Autonomous')) ?>', document.getElementById('autoChart'), $('#changeAutoItem'));
+    setItems('<?php echo json_encode(ScoutCardInfoKeys::getKeys(null, $event, 'Teleop')) ?>', document.getElementById('teleopChart'), $('#changeTeleopItem'));
+    setItems('<?php echo json_encode(ScoutCardInfoKeys::getKeys(null, $event, 'End Game')) ?>', document.getElementById('endGameChart'), $('#changeEndGameItem'));
+    setItems('<?php echo json_encode(ScoutCardInfoKeys::getKeys(null, $event, 'Post Game')) ?>', document.getElementById('postGameChart'), $('#changePostGameItem'));
 }
 
 
@@ -110,40 +85,32 @@ function updateGraphs()
  */
 function setItems(graphPeriod, context, selectBox)
 {
+    graphPeriod = JSON.parse(graphPeriod);
     if(selectBox !== null)
         //empty out the contents of the select box before adding in the new contents
         $(selectBox).empty();
 
+    var defaultVal;
+
     //for each item inside the GRAPH_PERIODS enum
     //match the specified graphperiod to the one in the enum
-    $.each(GRAPH_PERIODS , function(key, value)
+    $.each(graphPeriod , function(key, value)
     {
-        if(key === graphPeriod || value === graphPeriod)
+        if(value['IncludeInStats'] === 1)
         {
             //temp var to hold the default (first) value in the graph period
-            var defaultVal;
-
-            //iterate through to set the default val
-            //if default val is set, break out of the loop
-            $.each(value, function (key, value)
-            {
-                if(defaultVal === undefined)
-                    defaultVal = value;
-                else
-                    return;
-            });
 
 
-                generateData(defaultVal, context);
+            if (defaultVal === undefined)
+                defaultVal = value['KeyState'] + ' ' + value['KeyName'];
 
-            if(selectBox !== null)
-                //add options to the select boxes for the items within each graph item
-                $.each(value , function(key, value)
-                {
-                    selectBox.append('<option value="' + value + '">' + key + '</option>');
-                });
+            if (selectBox !== null)
+            //add options to the select boxes for the items within each graph item
+                selectBox.append('<option value="' + value['KeyState'] + ' ' + value['KeyName'] + '">' + value['KeyName'] + '</option>');
         }
     });
+
+    generateData(defaultVal, context);
 }
 
 /**
@@ -166,7 +133,6 @@ function generateData(graphItem, context)
         },
         function(data)
         {
-            console.log(data);
             //only 1 team specified, change the size of the graphs and hide the team breakdown
             if((teamList.length === 1) || matchId !== '')
             {
@@ -284,29 +250,18 @@ function createChart(context, jsonResponse, graphItem, title)
 
     var xAxesTitle, yAxesTitle;
 
-    //set the titles of the axes
-    $.each(GRAPH_PERIODS , function(key, value)
+    if(matchAveragData.length > 0)
     {
-        $.each(value, function (key, value)
-        {
-            if(graphItem === value)
-            {
-                if(matchAveragData.length > 0)
-                {
-                    yAxesTitle = key;
-                    xAxesTitle = 'Matches';
-                    return;
-                }
-                else
-                {
-                    xAxesTitle = (matchId === '' ? 'Average ' : '') + key;
-                    yAxesTitle = 'Teams';
-                    return;
-                }
+        yAxesTitle = graphItem;
+        xAxesTitle = 'Matches';
+    }
+    else
+    {
+        xAxesTitle = (matchId === '' ? 'Average ' : '') + graphItem;
+        yAxesTitle = 'Teams';
+    }
 
-            }
-        });
-    });
+
 
     xAxesTitle = xAxesTitle.toUpperCase();
     yAxesTitle = yAxesTitle.toUpperCase();
@@ -433,7 +388,7 @@ function createChart(context, jsonResponse, graphItem, title)
                         borderDash: [7],
                         label: {
                             enabled: true,
-                            content: (matchId === '' ? ' ' : 'Match ') + 'Average ' + Math.round(average * 100.00) / 100.00
+                            content: (matchId === '' ? 'Event ' : 'Match ') + 'Average ' + Math.round(average * 100.00) / 100.00
                         }
                     }]
                 }

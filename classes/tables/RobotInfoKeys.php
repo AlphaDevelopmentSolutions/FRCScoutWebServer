@@ -47,6 +47,7 @@ class RobotInfoKeys extends Table
 
         return $response;
     }
+
     public static function getObjects()
     {
         return parent::getObjects('SortOrder', 'ASC');
