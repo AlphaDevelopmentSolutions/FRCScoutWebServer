@@ -2,8 +2,9 @@
 require_once('../config.php');
 require_once(ROOT_DIR . '/classes/tables/ChecklistItemResults.php');
 require_once(ROOT_DIR . '/classes/tables/ChecklistItems.php');
-require_once(ROOT_DIR . '/classes/tables/ScoutCards.php');
 require_once(ROOT_DIR . '/classes/tables/Years.php');
+require_once(ROOT_DIR . '/classes/tables/ScoutCardInfoKeys.php');
+require_once(ROOT_DIR . '/classes/tables/ScoutCardInfo.php');
 require_once(ROOT_DIR . '/classes/tables/RobotInfo.php');
 require_once(ROOT_DIR . '/classes/tables/RobotInfoKeys.php');
 require_once(ROOT_DIR . '/classes/tables/Teams.php');
@@ -75,14 +76,14 @@ try {
 
             break;
 
-        case 'GetScoutCards':
+        case 'GetScoutCardInfo':
 
             $eventId = filter_var($_POST['EventId'], FILTER_SANITIZE_STRING);
 
             $event = Events::withId($eventId);
 
             if (!empty($eventId))
-                $api->success($event->getScoutCards());
+                $api->success($event->getScoutCardInfo());
             else
                 throw new Exception('Invalid event id');
 
@@ -157,13 +158,13 @@ try {
         //endregion
 
         //region Setters
-        case 'SubmitScoutCard':
-            $scoutCard = ScoutCards::withProperties($_POST);
+        case 'SubmitScoutCardInfo':
+            $scoutCardInfo = ScoutCardInfo::withProperties($_POST);
 
-            if ($scoutCard->save())
-                $api->success($scoutCard->Id);
+            if ($scoutCardInfo->save())
+                $api->success($scoutCardInfo->Id);
             else
-                throw new Exception('Failed to save scout card');
+                throw new Exception('Failed to save scout card info');
 
             break;
 

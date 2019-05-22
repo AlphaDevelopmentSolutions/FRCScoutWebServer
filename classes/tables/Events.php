@@ -181,69 +181,9 @@ class Events extends Table
     }
 
     /**
-     * Gets all scout cards from event
-     * @param Matches | null $match if specified, filters by match
-     * @param Teams | null $team if specified, filters by team
-     * @param ScoutCards | null $scoutCard if specified, filters by scoutcard
-     * @return ScoutCards[]
-     */
-    public function getScoutCards($match = null, $team = null, $scoutCard = null)
-    {
-        require_once(ROOT_DIR . '/classes/tables/ScoutCards.php');
-        require_once(ROOT_DIR . '/classes/tables/Teams.php');
-        require_once(ROOT_DIR . '/classes/tables/Matches.php');
-
-        $response = array();
-
-        //create the sql statement
-        $sql = "SELECT * FROM ! WHERE ! = ?";
-        $cols[] = ScoutCards::$TABLE_NAME;
-        $cols[] = 'EventId';
-        $args[] = $this->BlueAllianceId;
-
-        //if team specified, filter by team
-        if(!empty($team))
-        {
-            $sql .= " AND ! = ? ";
-
-            $cols[] = 'TeamId';
-            $args[] = $team->Id;
-        }
-
-        //if match specified, filter by match
-        if(!empty($match))
-        {
-            $sql .= " AND ! = ? ";
-
-            $cols[] = 'MatchId';
-            $args[] = $match->Key;
-        }
-
-        //if scoutcard specified, filter by scoutcard
-        if(!empty($scoutCard))
-        {
-            $sql .= " AND ! = ? ";
-
-            $cols[] = 'Id';
-            $args[] = $scoutCard->Id;
-        }
-
-        $sql .= " ORDER BY ! DESC";
-        $cols[] = 'Id';
-
-        $rows = self::query($sql, $cols, $args);
-
-
-        foreach ($rows as $row)
-            $response[] = ScoutCards::withProperties($row);
-
-        return $response;
-    }
-
-    /**
      * Gets all robot info from this event
      * @param Teams | null $team if specified, filters by team
-     * @param RobotInfo | null $robotInfo if specified, filters by pit card
+     * @param RobotInfo | null $robotInfo if specified, filters by robot info
      * @return RobotInfo[]
      */
     public function getRobotInfo($team = null, $robotInfo = null)
@@ -285,6 +225,53 @@ class Events extends Table
 
         foreach($rows as $row)
             $response[] = RobotInfo::withProperties($row);
+
+
+        return $response;
+    }
+
+    /**
+     * Gets all scout card info from event
+     * @param Teams | null $team if specified, filters by team
+     * @param ScoutCardInfo | null $scoutCardInfo if specified, filters by scout card info
+     * @return ScoutCardInfo[]
+     */
+    public function getScoutCardInfo($team = null, $scoutCardInfo = null)
+    {
+        require_once(ROOT_DIR . '/classes/tables/Teams.php');
+        require_once(ROOT_DIR . '/classes/tables/ScoutCardInfo.php');
+
+        $response = array();
+
+        //create the sql statement
+        $sql = "SELECT * FROM ! WHERE ! = ?";
+        $cols[] = ScoutCardInfo::$TABLE_NAME;
+
+        $cols[] = 'EventId';
+        $args[] = $this->BlueAllianceId;
+
+        //if team specified, filter by team
+        if(!empty($team))
+        {
+            $sql .= " AND ! = ? ";
+
+            $cols[] = 'TeamId';
+            $args[] = $team->Id;
+        }
+
+        //add the team query if a team was specified
+        if(!empty($scoutCardInfo))
+        {
+            $sql .= " AND ! = ? ";
+
+            $cols[] = 'Id';
+            $args[] = $scoutCardInfo->Id;
+        }
+
+        $rows = self::query($sql, $cols, $args);
+
+        foreach($rows as $row)
+            $response[] = ScoutCardInfo::withProperties($row);
 
 
         return $response;
