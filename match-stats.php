@@ -3,6 +3,7 @@ require_once("config.php");
 require_once(ROOT_DIR . "/classes/tables/Events.php");
 require_once(ROOT_DIR . "/classes/tables/Matches.php");
 require_once(ROOT_DIR . "/classes/tables/Teams.php");
+require_once(ROOT_DIR . "/classes/tables/ScoutCardInfoKeys.php");
 
 
 $eventId = $_GET['eventId'];
@@ -64,62 +65,43 @@ if(!empty($teamId))
     ?>
     <main class="mdl-layout__content">
 
-        <input id="eventId" hidden disabled value="<?php echo $event->BlueAllianceId ?>">
-        <input id="matchId" hidden disabled value="<?php echo $match->Key ?>">
-
         <div class="content-grid mdl-grid">
 
-            <div class="mdl-cell stats-cell">
-                <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                    <input hidden class="mdl-textfield__input" type="text" value="placeholder">
-                    <select class="mdl-textfield__input" id="changeAutoItem" name="changeAutoItem">
-                    </select>
-                    <label class="mdl-textfield__label" for="changeAutoItem">Item</label>
-                </div>
-                <div class="team-stats-chart">
-                    <canvas id="autoChart"></canvas>
-                </div>
-            </div>
+            <?php
 
-            <div class="mdl-cell stats-cell">
-                <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                    <input hidden class="mdl-textfield__input" type="text" value="placeholder">
-                    <select class="mdl-textfield__input" id="changeTeleopItem" name="changeTeleopItem">
-                    </select>
-                    <label class="mdl-textfield__label" for="changeTeleopItem">Item</label>
-                </div>
-                <div class="team-stats-chart">
-                    <canvas id="teleopChart"></canvas>
-                </div>
-            </div>
+            $keys = ScoutCardInfoKeys::getKeys(null, $event);
 
-            <div class="mdl-cell stats-cell">
-                <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                    <input hidden class="mdl-textfield__input" type="text" value="placeholder">
-                    <select class="mdl-textfield__input" id="changeEndGameItem" name="changeEndGameItem">
-                    </select>
-                    <label class="mdl-textfield__label" for="changeEndGameItem">Item</label>
-                </div>
-                <div class="team-stats-chart">
-                    <canvas id="endGameChart"></canvas>
-                </div>
-            </div>
+            $keyStates = array();
 
-            <div class="mdl-cell stats-cell">
-                <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                    <input hidden class="mdl-textfield__input" type="text" value="placeholder">
-                    <select class="mdl-textfield__input" id="changePostGameItem" name="changePostGameItem">
-                    </select>
-                    <label class="mdl-textfield__label" for="changePostGameItem">Item</label>
+            foreach ($keys as $key)
+                if($key->IncludeInStats)
+                {
+                    $keyStr = str_replace(' ', '', $key->KeyState);
+                    $keyStates[$keyStr] = 'placeholder';
+                }
+
+            foreach ($keyStates as $keyState => $placeholder)
+            {
+                $keyState = str_replace(' ', '', $keyState);
+                ?>
+                <div class="mdl-cell stats-cell">
+                    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                        <input hidden class="mdl-textfield__input" type="text" value="placeholder">
+                        <select class="mdl-textfield__input" id="<?php echo 'change' . $keyState . 'Item' ?>" name="<?php echo 'change' . $keyState . 'Item' ?>">
+                        </select>
+                        <label class="mdl-textfield__label" for="<?php echo 'change' . $keyState . 'Item' ?>">Item</label>
+                    </div>
+                    <div class="stats-chart">
+                        <canvas id="<?php echo $keyState . 'Chart' ?>"></canvas>
+                    </div>
                 </div>
-                <div class="team-stats-chart">
-                    <canvas id="postGameChart"></canvas>
-                </div>
-            </div>
+                <?php
+            }
+            ?>
         </div>
     </main>
 </div>
 <?php require_once('includes/bottom-scripts.php') ?>
-<script defer src="<?php echo URL_PATH ?>/js/stat-charts.js.php"></script>
+<script defer src="<?php echo URL_PATH ?>/js/stat-charts.js.php?eventId=<?php echo $event->BlueAllianceId ?>&matchId=<?php echo $match->Key ?>"></script>
 </body>
 </html>

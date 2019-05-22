@@ -3,14 +3,38 @@ require_once("../config.php");
 require_once(ROOT_DIR . "/interfaces/AllianceColors.php");
 require_once(ROOT_DIR . "/classes/tables/ScoutCardInfoKeys.php");
 require_once(ROOT_DIR . "/classes/tables/Events.php");
+require_once(ROOT_DIR . "/classes/tables/Matches.php");
 
 $eventId = $_GET['eventId'];
+$matchId = $_GET['matchId'];
 
 $event = Events::withId($eventId);
 
+if(!empty($matchId))
+    $match = Matches::withId($matchId);
+
+$keys = ScoutCardInfoKeys::getKeys(null, $event);
+
+$keyStates = array();
+
+foreach ($keys as $key)
+    if($key->IncludeInStats)
+        $keyStates[$key->KeyState] = 'placeholder';
 ?>
 
-var autoChart, teleopChart, endGameChart, postGameChart;
+var <?php
+    $varStr = '';
+    foreach ($keyStates as $keyState => $placeholder)
+    {
+        $keyState = str_replace(' ', '', $keyState);
+        if(!empty($varStr))
+            $varStr .= ', ';
+
+        $varStr .= $keyState . 'Chart';
+    }
+
+    echo $varStr . ';';
+    ?>
 
 var teamList =
     ($('#teamId').length === 0) ?
@@ -21,36 +45,25 @@ var teamList =
             return el != null && el != "";
         });
 
-var matchId = ($('#matchId').length === 0) ? '' : $('#matchId').val();
+var matchId = '<?php echo ((empty($match)) ? '' : $match->Key) ?>';
 
 $(document).ready(function ()
 {
     updateGraphs();
 
+    <?php
+    foreach ($keyStates as $keyState => $placeholder)
+    {
+    $keyState = str_replace(' ', '', $keyState);
+    ?>
     //set the change listener for the auto item
-    $('#changeAutoItem').change(function()
+    $('#<?php echo 'change' . $keyState . 'Item' ?>').change(function()
     {
-        generateData($(this).children('option:selected').val(), document.getElementById('autoChart'))
+        generateData($(this).children('option:selected').val(), document.getElementById('<?php echo $keyState . 'Chart' ?>'))
     });
-
-    //set the change listener for the teleop item
-    $('#changeTeleopItem').change(function()
-    {
-        generateData($(this).children('option:selected').val(), document.getElementById('teleopChart'))
-    });
-
-    //set the change listener for the end game item
-    $('#changeEndGameItem').change(function()
-    {
-        generateData($(this).children('option:selected').val(), document.getElementById('endGameChart'))
-    });
-
-    //set the change listener for the post game item
-    $('#changePostGameItem').change(function()
-    {
-        generateData($(this).children('option:selected').val(), document.getElementById('postGameChart'))
-    });
-
+    <?php
+    }
+    ?>
 
     //set the change listener for the search field
     $('#teamSearch').change(function()
@@ -70,10 +83,14 @@ $(document).ready(function ()
  */
 function updateGraphs()
 {
-    setItems('<?php echo json_encode(ScoutCardInfoKeys::getKeys(null, $event, 'Autonomous')) ?>', document.getElementById('autoChart'), $('#changeAutoItem'));
-    setItems('<?php echo json_encode(ScoutCardInfoKeys::getKeys(null, $event, 'Teleop')) ?>', document.getElementById('teleopChart'), $('#changeTeleopItem'));
-    setItems('<?php echo json_encode(ScoutCardInfoKeys::getKeys(null, $event, 'End Game')) ?>', document.getElementById('endGameChart'), $('#changeEndGameItem'));
-    setItems('<?php echo json_encode(ScoutCardInfoKeys::getKeys(null, $event, 'Post Game')) ?>', document.getElementById('postGameChart'), $('#changePostGameItem'));
+    <?php
+    foreach ($keyStates as $keyState => $placeholder)
+    {
+    ?>
+    setItems('<?php echo json_encode(ScoutCardInfoKeys::getKeys(null, $event, $keyState)) ?>', document.getElementById('<?php echo str_replace(' ', '', $keyState) . 'Chart' ?>'), $('#<?php echo 'change' . str_replace(' ', '', $keyState) . 'Item' ?>'));
+    <?php
+    }
+    ?>
 }
 
 
@@ -126,7 +143,7 @@ function generateData(graphItem, context)
     $.post('/ajax/ajax.php',
         {
             action: 'load_new_stats',
-            eventId: $('#eventId').val(),
+            eventId: '<?php echo $event->BlueAllianceId ?>',
             teamIds: JSON.stringify(teamList),
             matchId: matchId,
             matchData: matchData
@@ -148,37 +165,22 @@ function generateData(graphItem, context)
             //parse the response data into JSON
             var jsonResponse = JSON.parse(data);
 
+            <?php
+            foreach ($keyStates as $keyState => $placeholder)
+            {
+                $keyState = str_replace(' ', '', $keyState);
+            ?>
             //if the chart context was the auto chart, update the auto chart
-            if($(context).attr('id') === 'autoChart')
+            if($(context).attr('id') === '<?php echo $keyState . 'Chart' ?>')
             {
-                if(autoChart !== undefined)
-                    autoChart.destroy();
-                autoChart = createChart(context, jsonResponse, graphItem, 'Autonomous');
+                if(<?php echo $keyState . 'Chart' ?> !== undefined)
+                <?php echo $keyState . 'Chart' ?>.destroy();
+                <?php echo $keyState . 'Chart' ?> = createChart(context, jsonResponse, graphItem, 'Autonomous');
             }
+            <?php
+            }
+            ?>
 
-            //if the chart context was the teleop chart, update the teleop chart
-            else if($(context).attr('id') === 'teleopChart')
-            {
-                if(teleopChart !== undefined)
-                    teleopChart.destroy();
-                teleopChart = createChart(context, jsonResponse, graphItem, 'Teleop');
-            }
-
-            //if the chart context was the end game chart, update the end game chart
-            else if($(context).attr('id') === 'endGameChart')
-            {
-                if(endGameChart !== undefined)
-                    endGameChart.destroy();
-                endGameChart = createChart(context, jsonResponse, graphItem, 'End Game');
-            }
-
-            //if the chart context was the post game chart, update the post game chart
-            else if($(context).attr('id') === 'postGameChart')
-            {
-                if(postGameChart !== undefined)
-                    postGameChart.destroy();
-                postGameChart = createChart(context, jsonResponse, graphItem, 'Post Game');
-            }
         });
 }
 
