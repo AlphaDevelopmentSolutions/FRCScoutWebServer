@@ -13,6 +13,7 @@ class ScoutCardInfoArray extends \ArrayObject implements ArrayAccess
         $scoutCardInfoKeyStates = array();
 
         require_once(ROOT_DIR . "/classes/tables/Years.php");
+        require_once(ROOT_DIR . "/classes/tables/ScoutCardInfoKeys.php");
 
         //setup the 'fake' object to display it to html
         //array format is $array[YEAR][EVENT][TEAM][STATE][NAME] = value

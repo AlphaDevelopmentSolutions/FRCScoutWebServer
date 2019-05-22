@@ -60,15 +60,19 @@ if(!empty($teamId))
     <main class="mdl-layout__content">
 
         <?php
+        //get all scout cards from match
+        $scoutCardInfoArray = $match->getScoutCards();
 
-        $scoutCards = $match->getScoutCards();
-
-        foreach ($scoutCards AS $scoutCard)
+        foreach($scoutCardInfoArray as $scoutCardInfo)
         {
-            if ($allianceColor == $scoutCard->AllianceColor)
-                echo $scoutCard->toHtml();
-        }
+            $arr = new ScoutCardInfoArray();
 
+            foreach($scoutCardInfo as $testVal)
+                $arr[] = $testVal;
+
+            if ($allianceColor == $match->getAllianceColor(Teams::withId($arr[0]->TeamId)))
+                echo $arr->toHtml();
+        }
 
         ?>
     </main>
