@@ -89,6 +89,21 @@ try {
 
             break;
 
+        case 'GetScoutCardInfoKeys':
+
+            $eventId = filter_var($_POST['EventId'], FILTER_SANITIZE_STRING);
+            $yearId = filter_var($_POST['YearId'], FILTER_SANITIZE_NUMBER_INT);
+
+            $event = (!empty($eventId)) ? Events::withId($eventId) : null;
+            $year = (!empty($yearId)) ? Years::withId($yearId) : null;
+
+            if (!empty($eventId) || !empty($yearId))
+                $api->success(ScoutCardInfoKeys::getKeys($year, $event));
+            else
+                throw new Exception('Invalid year id');
+
+            break;
+
         case 'GetRobotMedia':
 
             $teamId = filter_var($_POST['TeamId'], FILTER_SANITIZE_NUMBER_INT);
