@@ -9,9 +9,9 @@ class ScoutCardInfoKeys extends Table
     public $SortOrder;
     public $MinValue;
     public $MaxValue;
-    public $IsBoolean;
     public $NullZeros;
     public $IncludeInStats;
+    public $DataType;
 
     public static $TABLE_NAME = 'scout_card_info_keys';
     
@@ -112,4 +112,11 @@ class ScoutCardInfoKeys extends Table
     {
         return '';
     }
+}
+
+interface DataTypes
+{
+    const INT = 'INT';
+    const BOOL = 'BOOL';
+    const TEXT = 'TEXT';
 }

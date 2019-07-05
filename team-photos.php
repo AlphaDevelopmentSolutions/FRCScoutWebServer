@@ -130,6 +130,8 @@ $event = Events::withId($eventId);
             echo $robotMedia->toHtml();
 
         ?>
+
+        <?php require_once('includes/footer.php') ?>
     </main>
 </div>
 <?php require_once('includes/bottom-scripts.php') ?>

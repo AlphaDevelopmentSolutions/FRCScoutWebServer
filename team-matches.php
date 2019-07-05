@@ -148,6 +148,8 @@ $event = Events::withId($eventId);
 
 
         ?>
+
+        <?php require_once('includes/footer.php') ?>
     </main>
 </div>
 <?php require_once('includes/bottom-scripts.php') ?>

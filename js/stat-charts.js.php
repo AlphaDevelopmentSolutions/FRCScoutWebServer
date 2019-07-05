@@ -59,7 +59,7 @@ $(document).ready(function ()
     //set the change listener for the auto item
     $('#<?php echo 'change' . $keyState . 'Item' ?>').change(function()
     {
-        generateData($(this).children('option:selected').val(), document.getElementById('<?php echo $keyState . 'Chart' ?>'))
+        generateData($(this).children('option:selected').val(), document.getElementById('<?php echo $keyState . 'Chart' ?>'));
     });
     <?php
     }

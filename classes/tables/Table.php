@@ -234,6 +234,20 @@ abstract class Table
         return $response;
     }
 
+    /**
+     * Retrieves column names from the database
+     * @return string[] array of column names and types
+     */
+    public static function getColumns()
+    {
+        $sql = 'SHOW COLUMNS FROM !';
+        $cols[] = static::$TABLE_NAME;
+
+        $rows = self::query($sql, $cols);
+
+        return $rows;
+    }
+
     abstract public function toString();
     abstract public function toHtml();
 

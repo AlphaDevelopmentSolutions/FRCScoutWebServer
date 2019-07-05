@@ -135,6 +135,7 @@ $event = Events::withId($eventId);
             echo $array->toHtml();
         ?>
 
+        <?php require_once('includes/footer.php') ?>
     </main>
 </div>
 <?php require_once('includes/bottom-scripts.php') ?>

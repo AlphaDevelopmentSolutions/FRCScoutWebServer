@@ -24,6 +24,8 @@ require_once(ROOT_DIR . "/classes/tables/Years.php");
               echo $year->toHtml();
 
           ?>
+
+          <?php require_once('includes/footer.php') ?>
       </main>
     </div>
     <?php require_once('includes/bottom-scripts.php') ?>

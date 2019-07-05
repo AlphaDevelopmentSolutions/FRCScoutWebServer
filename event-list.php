@@ -28,6 +28,8 @@ $year = Years::withId($yearId);
               echo $event->toHtml();
 
           ?>
+
+          <?php require_once('includes/footer.php') ?>
       </main>
     </div>
     <?php require_once('includes/bottom-scripts.php') ?>

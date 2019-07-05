@@ -48,6 +48,53 @@ class RobotInfoKeys extends Table
         return $response;
     }
 
+    /**
+     * Override for the Table class save function
+     * Ensures all records associated with this key are updated before saving
+     * @return bool
+     */
+    public function save()
+    {
+        if(!empty($this->Id))
+        {
+            require_once(ROOT_DIR . '/classes/tables/RobotInfo.php');
+
+            $currRobotInfoKey = RobotInfoKeys::withId($this->Id);
+
+            //create the sql statement
+            $sql = "UPDATE ! SET ! = ?, ! = ?, ! = ? WHERE ! = ? AND ! = ? AND ! = ?";
+            $cols[] = RobotInfo::$TABLE_NAME;
+
+            //Set
+            $cols[] = 'YearId';
+            $args[] = $this->YearId;
+
+            $cols[] = 'PropertyState';
+            $args[] = $this->KeyState;
+
+            $cols[] = 'PropertyKey';
+            $args[] = $this->KeyName;
+
+            //Where
+            $cols[] = 'YearId';
+            $args[] = $currRobotInfoKey->YearId;
+
+            $cols[] = 'PropertyState';
+            $args[] = $currRobotInfoKey->KeyState;
+
+            $cols[] = 'PropertyKey';
+            $args[] = $currRobotInfoKey->KeyName;
+
+            self::insertOrUpdate($sql, $cols, $args);
+        }
+
+        return parent::save();
+    }
+
+    /**
+     * Override for the Table class getObjects method
+     * @return RobotInfoKeys[]
+     */
     public static function getObjects()
     {
         return parent::getObjects('SortOrder', 'ASC');

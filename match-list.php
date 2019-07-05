@@ -33,6 +33,8 @@ $event = Events::withId($eventId);
             echo $match->toHtml('/match-stats.php?eventId=' . $match->EventId . '&matchId=' . $match->Key, 'View Match Overview');
 
         ?>
+
+        <?php require_once('includes/footer.php') ?>
     </main>
 </div>
 <?php require_once('includes/bottom-scripts.php') ?>
