@@ -10,18 +10,8 @@ require_once(ROOT_DIR . "/classes/tables/RobotInfoKeys.php");
 require_once(ROOT_DIR . "/classes/tables/ScoutCardInfoKeys.php");
 require_once(ROOT_DIR . "/classes/tables/ChecklistItems.php");
 
-$yearId = $_GET['yearId'];
+$panel = Users::class;
 
-$year = ((empty($yearId)) ? null : Years::withId($yearId));
-
-$panel = $_GET['adminPanel'];
-
-interface AdminPanels
-{
-    const ROBOT_INFO = RobotInfoKeys::class;
-    const SCOUT_CARD_INFO = ScoutCardInfoKeys::class;
-    const CHECKLIST_INFO = ChecklistItems::class;
-}
 
 $htmlMysqlDatatypes =
     [
@@ -29,49 +19,22 @@ $htmlMysqlDatatypes =
       'int' => 'number'
     ];
 
-switch ($panel)
-{
-    case AdminPanels::ROBOT_INFO:
-        $cols = RobotInfoKeys::getColumns();
-        $objs = RobotInfoKeys::getObjects();
-        break;
-
-    case AdminPanels::SCOUT_CARD_INFO:
-        $cols = ScoutCardInfoKeys::getColumns();
-        $objs = ScoutCardInfoKeys::getObjects();
-        break;
-
-    case AdminPanels::CHECKLIST_INFO:
-        $cols = ChecklistItems::getColumns();
-        $objs = ChecklistItems::getObjects();
-        break;
-
-    default:
-        $cols = RobotInfoKeys::getColumns();
-        $objs = RobotInfoKeys::getObjects();
-        break;
-}
-
+$cols = Users::getColumns();
+$objs = Users::getObjects('Id', 'ASC');
 
 ?>
 
 <!doctype html>
 <html lang="en">
 <head>
-    <title><?php echo $year->Id ?> - Admin Page</title>
+    <title>App Admin Page</title>
     <?php require_once('includes/meta.php') ?>
 </head>
 <body class="mdl-demo mdl-color--grey-100 mdl-color-text--grey-700 mdl-base">
 <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header" style="min-width: 1200px !important;">
     <?php
-    $navBarLinksArray = new NavBarLinkArray();
-    $navBarLinksArray[] = new NavBarLink('Robot Info', '/admin-year.php?yearId=' . $year->Id . '&adminPanel=' . AdminPanels::ROBOT_INFO, ($panel == AdminPanels::ROBOT_INFO || empty($panel)));
-    $navBarLinksArray[] = new NavBarLink('Scout Card Info', '/admin-year.php?yearId=' . $year->Id . '&adminPanel=' . AdminPanels::SCOUT_CARD_INFO, ($panel == AdminPanels::SCOUT_CARD_INFO));
-    $navBarLinksArray[] = new NavBarLink('Checklist Info', '/admin-year.php?yearId=' . $year->Id . '&adminPanel=' . AdminPanels::CHECKLIST_INFO, ($panel == AdminPanels::CHECKLIST_INFO));
 
-    $navBar = new NavBar($navBarLinksArray);
-
-    $header = new Header($year->toString() . ' - Admin Panel', null, $navBar, null, $year);
+    $header = new Header('App Admin Panel');
 
     echo $header->toHtml();
     ?>
@@ -183,7 +146,7 @@ switch ($panel)
 
                     foreach ($cols as $col)
                     {
-                        if ($col['Field'] != 'Id' && strpos($col['Field'], 'Year') === false)
+                        if ($col['Field'] != 'Id' && strpos($col['Field'], 'Year') === false && strpos($col['Field'], 'Password') === false)
                         {
                             ?>
                             <th class="admin-table-header"><?php echo $col['Field'] ?></th>
@@ -207,7 +170,7 @@ switch ($panel)
                         foreach ($cols as $col)
                         {
                             ?>
-                            <td class="admin-table-data" <?php echo(($col['Field'] == 'Id' || strpos($col['Field'], 'Year') !== false) ? 'hidden' : '') ?> changeable="changeable" sql-col-id="<?php echo $col['Field'] ?>" sql-data-type="<?php echo substr($col['Type'], 0, strpos($col['Type'], '(')) ?>"><?php echo $obj->{$col['Field']} ?></td>
+                            <td class="admin-table-data" <?php echo(($col['Field'] == 'Id' || strpos($col['Field'], 'Year') !== false ||  strpos($col['Field'], 'Password') !== false) ? 'hidden' : '') ?> changeable="changeable" sql-col-id="<?php echo $col['Field'] ?>" sql-data-type="<?php echo substr($col['Type'], 0, strpos($col['Type'], '(')) ?>"><?php echo $obj->{$col['Field']} ?></td>
                             <?php
                         }
                         ?>

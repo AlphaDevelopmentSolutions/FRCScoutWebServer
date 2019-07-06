@@ -117,7 +117,7 @@ class Events extends Table
         $sql .= " ORDER BY ! ASC";
         $cols[] = 'Id';
 
-        $rows = self::query($sql, $cols, $args);
+        $rows = self::queryRecords($sql, $cols, $args);
 
         foreach($rows as $row)
             $response[] = Teams::withProperties($row);
@@ -172,7 +172,7 @@ class Events extends Table
         $sql .= " ORDER BY ! DESC";
         $cols[] = 'MatchNumber';
 
-        $rows = self::query($sql, $cols, $args);
+        $rows = self::queryRecords($sql, $cols, $args);
 
         foreach($rows as $row)
             $response[] = Matches::withProperties($row);
@@ -221,7 +221,7 @@ class Events extends Table
         $sql .= " ORDER BY ! DESC";
         $cols[] = 'Id';
 
-        $rows = self::query($sql, $cols, $args);
+        $rows = self::queryRecords($sql, $cols, $args);
 
         foreach($rows as $row)
             $response[] = RobotInfo::withProperties($row);
@@ -268,7 +268,7 @@ class Events extends Table
             $args[] = $scoutCardInfo->Id;
         }
 
-        $rows = self::query($sql, $cols, $args);
+        $rows = self::queryRecords($sql, $cols, $args);
 
         foreach($rows as $row)
             $response[] = ScoutCardInfo::withProperties($row);

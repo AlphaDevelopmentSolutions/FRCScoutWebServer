@@ -27,7 +27,7 @@ class Years extends Table
         $args[] = $this->Id;
         $cols[] = 'StartDate';
 
-        $rows = self::query($sql, $cols, $args);
+        $rows = self::queryRecords($sql, $cols, $args);
 
         foreach ($rows as $row)
             $response[] = Events::withProperties($row);

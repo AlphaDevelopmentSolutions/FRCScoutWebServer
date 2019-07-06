@@ -5,6 +5,8 @@ class Users extends Table
     public $Id;
     public $FirstName;
     public $LastName;
+    public $UserName;
+    public $Password;
     public $IsAdmin;
 
     public static $TABLE_NAME = 'users';
@@ -25,12 +27,18 @@ class Users extends Table
         $cols[] = 'Password';
         $args[] = md5($password);
 
-        $response = self::withProperties(self::query($sql, $cols, $args)[0]);
+        $query = self::queryRecords($sql, $cols, $args);
 
-        $this->Id = $response->Id;
-        $this->FirstName = $response->FirstName;
-        $this->LastName = $response->LastName;
-        $this->IsAdmin = $response->IsAdmin;
+        if(!empty($query))
+        {
+            $response = self::withProperties($query[0]);
+
+            $this->Id = $response->Id;
+            $this->FirstName = $response->FirstName;
+            $this->LastName = $response->LastName;
+            $this->IsAdmin = $response->IsAdmin;
+        }
+
 
         return (!empty($response));
     }

@@ -40,7 +40,7 @@ class RobotInfoKeys extends Table
         $sql .= " ORDER BY ! ASC";
         $cols[] = 'SortOrder';
 
-        $rows = self::query($sql, $cols, $args);
+        $rows = self::queryRecords($sql, $cols, $args);
 
         foreach($rows as $row)
             $response[] = RobotInfoKeys::withProperties($row);
@@ -62,13 +62,10 @@ class RobotInfoKeys extends Table
             $currRobotInfoKey = RobotInfoKeys::withId($this->Id);
 
             //create the sql statement
-            $sql = "UPDATE ! SET ! = ?, ! = ?, ! = ? WHERE ! = ? AND ! = ? AND ! = ?";
+            $sql = "UPDATE ! SET ! = ?, ! = ? WHERE ! = ? AND ! = ? AND ! = ?";
             $cols[] = RobotInfo::$TABLE_NAME;
 
             //Set
-            $cols[] = 'YearId';
-            $args[] = $this->YearId;
-
             $cols[] = 'PropertyState';
             $args[] = $this->KeyState;
 
@@ -85,10 +82,41 @@ class RobotInfoKeys extends Table
             $cols[] = 'PropertyKey';
             $args[] = $currRobotInfoKey->KeyName;
 
-            self::insertOrUpdate($sql, $cols, $args);
+            self::insertOrUpdateRecords($sql, $cols, $args);
         }
 
         return parent::save();
+    }
+
+    /**
+     * Override for the Table class delete function
+     * Ensures all records associated with this key are deleted before deletion
+     * @return bool
+     */
+    public function delete()
+    {
+        if(!empty($this->Id))
+        {
+            require_once(ROOT_DIR . '/classes/tables/RobotInfo.php');
+
+            //create the sql statement
+            $sql = "DELETE FROM ! WHERE ! = ? AND ! = ? AND ! = ?";
+            $cols[] = RobotInfo::$TABLE_NAME;
+
+            //Where
+            $cols[] = 'YearId';
+            $args[] = $this->YearId;
+
+            $cols[] = 'PropertyState';
+            $args[] = $this->KeyState;
+
+            $cols[] = 'PropertyKey';
+            $args[] = $this->KeyName;
+
+            self::deleteRecords($sql, $cols, $args);
+        }
+
+        return parent::delete();
     }
 
     /**

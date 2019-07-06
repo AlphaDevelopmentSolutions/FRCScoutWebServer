@@ -7,11 +7,9 @@ require_once(ROOT_DIR . "/classes/tables/ChecklistItems.php");
 
 $ajax = new Ajax();
 
-if(loggedIn())
-{
-    $ajax->error('You must be logged in as an administrator to change table values.');
-    die();
-}
+if(!getUser()->IsAdmin)
+    $ajax->error('You must be logged in as an administrator to access this page.');
+
 
 switch ($_POST['action'])
 {
@@ -85,13 +83,13 @@ switch ($_POST['action'])
                 if(!ctype_digit($scoutCardInfoKey->NullZeros))
                     $ajax->error("Null zeros may only be numeric (0-9).");
 
-                if($scoutCardInfoKey->NullZeros != 0 || $scoutCardInfoKey->NullZeros != 1)
+                if($scoutCardInfoKey->NullZeros != 0 && $scoutCardInfoKey->NullZeros != 1)
                     $ajax->error("Null zeros may only be 1 (Yes) or 0 (No).");
 
                 if(!ctype_digit($scoutCardInfoKey->IncludeInStats))
                     $ajax->error("Include in stats name may only be numeric (0-9).");
 
-                if($scoutCardInfoKey->IncludeInStats != 0 || $scoutCardInfoKey->IncludeInStats != 1)
+                if($scoutCardInfoKey->IncludeInStats != 0 && $scoutCardInfoKey->IncludeInStats != 1)
                     $ajax->error("Include in stats may only be 1 (Yes) or 0 (No).");
 
                 if(!ctype_alpha($scoutCardInfoKey->DataType))
@@ -128,6 +126,49 @@ switch ($_POST['action'])
                     $ajax->error("Checklist info failed to save.");
 
                 break;
+
+            case Users::class:
+
+                $user = Users::withProperties($_POST);
+
+                if(empty($user->FirstName))
+                    $ajax->error("First name cannot be empty.");
+
+                if(!validAlnum($user->FirstName))
+                    $ajax->error("First name may only be alpha-numeric (A-Z 0-9).");
+
+                if(empty($user->LastName))
+                    $ajax->error("Last name cannot be empty.");
+
+                if(!validAlnum($user->LastName))
+                    $ajax->error("Last name may only be alphanumeric (A-Z 0-9).");
+
+                if(empty($user->UserName))
+                    $ajax->error("Username cannot be empty.");
+
+                if(!validAlnum($user->UserName))
+                    $ajax->error("Username may only be alphanumeric (A-Z 0-9).");
+
+                if(!validAlnum($user->Password))
+                    $ajax->error("Password may only be alphanumeric (A-Z 0-9).");
+
+                if(empty($user->Id))
+                    $user->Password = md5($user->Password);
+
+                if($user->IsAdmin != 0 && $user->IsAdmin != 1)
+                    $ajax->error("Admin flag may only be 1 (Yes) or 0 (No).");
+
+                if(!ctype_digit($user->IsAdmin))
+                    $ajax->error("Admin flag may only be numeric (0-9).");
+
+
+                if($user->save())
+                    $ajax->success("User saved successfully.");
+
+                else
+                    $ajax->error("User failed to save.");
+
+                break;
         }
 
         break;
@@ -145,8 +186,7 @@ switch ($_POST['action'])
 
                 $robotInfoKey = RobotInfoKeys::withProperties($_POST);
 
-                if(true)
-//                if($robotInfoKey->delete())
+                if($robotInfoKey->delete())
                     $ajax->success("Robot info deleted successfully.");
 
                 else
@@ -156,10 +196,9 @@ switch ($_POST['action'])
 
             case ScoutCardInfoKeys::class:
 
-                $scoutCardInfoKey = ScoutCardInfo::withProperties($_POST);
+                $scoutCardInfoKey = ScoutCardInfoKeys::withProperties($_POST);
 
-                if(true)
-//                if($scoutCardInfoKey->delete())
+                if($scoutCardInfoKey->delete())
                     $ajax->success("Scout card info deleted successfully.");
 
                 else
@@ -171,12 +210,23 @@ switch ($_POST['action'])
 
                 $checklistItem = ChecklistItems::withProperties($_POST);
 
-                if(true)
-//                if($checklistItem->delete())
+                if($checklistItem->delete())
                     $ajax->success("Checklist info deleted successfully.");
 
                 else
                     $ajax->error("Checklist info failed to delete.");
+
+                break;
+
+            case Users::class:
+
+                $user = Users::withProperties($_POST);
+
+                if($user->delete())
+                    $ajax->success("User deleted successfully.");
+
+                else
+                    $ajax->error("User failed to delete.");
 
                 break;
         }

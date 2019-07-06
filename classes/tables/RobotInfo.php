@@ -84,7 +84,7 @@ class RobotInfo extends Table
             $args[] = $team->Id;
         }
 
-        $rows = self::query($sql, $cols, $args);
+        $rows = self::queryRecords($sql, $cols, $args);
 
         $robotInfoArray = new RobotInfoArray();
 
@@ -165,7 +165,7 @@ class RobotInfo extends Table
 
                 $sql .= "$columnsString) VALUES ($valuesString)";
 
-                if ($insertId = self::insertOrUpdate($sql, $cols, $args) > -1)
+                if ($insertId = self::insertOrUpdateRecords($sql, $cols, $args) > -1)
                 {
                     $this->Id = $insertId;
 
@@ -212,7 +212,7 @@ class RobotInfo extends Table
                 $args[] = $this->PropertyKey;
 
 
-                if ($insertId = self::insertOrUpdate($sql, $cols, $args) > -1)
+                if ($insertId = self::insertOrUpdateRecords($sql, $cols, $args) > -1)
                     return true;
 
                 return false;

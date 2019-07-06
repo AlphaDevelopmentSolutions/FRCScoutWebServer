@@ -32,7 +32,7 @@ class Teams extends Table
         $args[] = $this->Id;
         $cols[] = 'Id';
 
-        $rows = self::query($sql, $cols, $args);
+        $rows = self::queryRecords($sql, $cols, $args);
 
         foreach ($rows as $row)
         {
@@ -58,7 +58,7 @@ class Teams extends Table
         $args[] = $this->Id;
         $cols[] = 'Id';
 
-        $rows = self::query($sql, $cols, $args);
+        $rows = self::queryRecords($sql, $cols, $args);
 
         foreach ($rows as $row)
             $response[] = RobotMedia::withProperties($row);

@@ -73,7 +73,7 @@ class Matches extends Table
 
         $cols[] = 'TeamId';
 
-        return count(self::query($sql, $cols, $args));
+        return count(self::queryRecords($sql, $cols, $args));
     }
 
     /**
@@ -107,7 +107,7 @@ class Matches extends Table
         $sql .= " ORDER BY ! DESC";
         $cols[] = 'Id';
 
-        $rows = self::query($sql, $cols, $args);
+        $rows = self::queryRecords($sql, $cols, $args);
 
         foreach ($rows as $row)
             $response[] = ScoutCardInfo::withProperties($row);

@@ -109,10 +109,10 @@ class Header
                 '
                 <div class="mdl-layout__drawer">
                     <span class="mdl-layout-title">' . APP_NAME . '</span>' .
-                ((getUser()->IsAdmin == 1) ?
+                ((getUser()->IsAdmin) ?
                     '<nav class="mdl-navigation">
                         <a href="/event-list.php?yearId=' . $this->Year->Id . '" class="mdl-navigation__link">Events</a>
-                        <a href="/admin.php?yearId=' . $this->Year->Id . '" class="mdl-navigation__link">' . $this->Year->Id . ' Configuration</a>
+                        <a href="/admin-year.php?yearId=' . $this->Year->Id . '" class="mdl-navigation__link">' . $this->Year->Id . ' Configuration</a>
                     </nav>' : '') .
                     '<form action="' . URL_PATH . '/year-list.php" style="margin: 1.5em; position: absolute !important; bottom: 0 !important;" method="get">
                         <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" style="width: 199px;">
@@ -121,6 +121,18 @@ class Header
                     </form>
                 </div>
                 ';
+
+        else if(getUser()->IsAdmin)
+            $html .=
+                '
+                <div class="mdl-layout__drawer">
+                    <span class="mdl-layout-title">' . APP_NAME . '</span>' .
+                ((getUser()->IsAdmin) ?
+                    '<nav class="mdl-navigation">
+                        <a href="/year-list.php" class="mdl-navigation__link">Years</a>
+                        <a href="/admin-app.php" class="mdl-navigation__link">App Configuration</a>
+                    </nav>' : '') .
+                '</div>';
 
 
         //login code temporarily disabled

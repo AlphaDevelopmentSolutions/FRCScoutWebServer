@@ -100,7 +100,7 @@ class ScoutCardInfo extends Table
         $sql .= ' ORDER BY ! DESC';
         $cols[] = 'MatchId';
 
-        $rows = self::query($sql, $cols, $args);
+        $rows = self::queryRecords($sql, $cols, $args);
 
         $scoutCardInfoArray = new ScoutCardInfoArray();
 
@@ -139,7 +139,7 @@ class ScoutCardInfo extends Table
         $sql .= ' GROUP BY ! ';
         $cols[] = 'MatchId';
 
-        return count(self::query($sql, $cols, $args));
+        return count(self::queryRecords($sql, $cols, $args));
     }
 
     /**
@@ -204,7 +204,7 @@ class ScoutCardInfo extends Table
 
                 $sql .= "$columnsString) VALUES ($valuesString)";
 
-                if ($insertId = self::insertOrUpdate($sql, $cols, $args) > -1)
+                if ($insertId = self::insertOrUpdateRecords($sql, $cols, $args) > -1)
                 {
                     $this->Id = $insertId;
 
@@ -251,7 +251,7 @@ class ScoutCardInfo extends Table
                 $args[] = $this->PropertyKey;
 
 
-                if ($insertId = self::insertOrUpdate($sql, $cols, $args) > -1)
+                if ($insertId = self::insertOrUpdateRecords($sql, $cols, $args) > -1)
                     return true;
 
                 return false;
