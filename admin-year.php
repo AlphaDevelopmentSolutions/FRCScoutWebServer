@@ -158,10 +158,42 @@ switch ($panel)
                         {
                             ?>
 
-                            <td <?php echo ((strpos($col['Field'], 'Year') !== false) ? 'hidden' : '') ?> changeable="changeable" sql-col-id="<?php echo $col['Field'] ?>">
-                                <input placeholder="<?php echo $col['Field'] . '...' ?>" <?php echo ((strpos($col['Field'], 'Year') !== false) ? 'value="' . $year->Id . '"' : '') ?> class="admin-table-field" type="<?php echo $htmlMysqlDatatypes[substr($col['Type'], 0, strpos($col['Type'], '('))] ?>">
-                            </td>
 
+
+                            <td <?php echo ((strpos($col['Field'], 'Year') !== false) ? 'hidden' : '') ?> changeable="changeable" sql-col-id="<?php echo $col['Field'] ?>">
+
+                                <?php
+
+                                if(strpos(strtolower($col['Type']), 'enum') === false)
+                                {
+                                    ?>
+                                    <input placeholder="<?php echo $col['Field'] . '...' ?>" <?php echo ((strpos($col['Field'], 'Year') !== false) ? 'value="' . $year->Id . '"' : '') ?> class="admin-table-field" type="<?php echo $htmlMysqlDatatypes[substr($col['Type'], 0, strpos($col['Type'], '('))] ?>">
+                                    <?php
+                                }
+
+                                else
+                                {
+                                    $enumOptions = $col['Type'];
+                                    $enumOptions = str_replace('enum(', '', $enumOptions);
+                                    $enumOptions = str_replace(')', '', $enumOptions);
+                                    $enumOptions = str_replace('\'', '', $enumOptions);
+                                    $enumOptions = explode(',', $enumOptions);
+
+                                    ?>
+                                        <select <?php echo ((strpos($col['Field'], 'Year') !== false) ? 'value="' . $year->Id . '"' : '') ?> class="admin-table-field">
+                                            <?php
+                                                foreach($enumOptions as $option)
+                                                {
+                                                    ?>
+                                                        <option value="<?php echo $option ?>"><?php echo $option ?></option>
+                                                    <?php
+                                                }
+                                            ?>
+                                        </select>
+                                    <?php
+                                }
+                                ?>
+                            </td>
                             <?php
                         }
                     }
@@ -207,7 +239,7 @@ switch ($panel)
                         foreach ($cols as $col)
                         {
                             ?>
-                            <td class="admin-table-data" <?php echo(($col['Field'] == 'Id' || strpos($col['Field'], 'Year') !== false) ? 'hidden' : '') ?> changeable="changeable" sql-col-id="<?php echo $col['Field'] ?>" sql-data-type="<?php echo substr($col['Type'], 0, strpos($col['Type'], '(')) ?>"><?php echo $obj->{$col['Field']} ?></td>
+                            <td class="admin-table-data" <?php echo(($col['Field'] == 'Id' || strpos($col['Field'], 'Year') !== false) ? 'hidden' : '') ?> changeable="changeable" sql-col-id="<?php echo $col['Field'] ?>" sql-data-type="<?php echo $col['Type'] ?>"><?php echo $obj->{$col['Field']} ?></td>
                             <?php
                         }
                         ?>
@@ -313,11 +345,33 @@ switch ($panel)
                             //grab the datatype from the sql-data-type attribute
                             var sqlDataType = $(this).attr('sql-data-type');
 
-                            //convert it into HTML data type
-                            sqlDataType = HTML_MYSQL_DATATYPES[sqlDataType];
+                            var inputField;
+
+                            //check if the datatype was an enum, if it was provide a select box
+                            if(sqlDataType.toLowerCase().indexOf('enum') === -1)
+                                inputField = '<input class="admin-table-field" type="' + HTML_MYSQL_DATATYPES[sqlDataType.substring(0, sqlDataType.indexOf('('))] + '" value="' + $(this).html() + '">';
+
+                            //enum specified, create a select box
+                            else
+                            {
+                                var enumOptions = sqlDataType.replace('enum(', '');
+                                enumOptions = enumOptions.replace(')', '');
+                                enumOptions = enumOptions.replace(/\'/g, '');
+                                enumOptions = enumOptions.split(',');
+
+                                inputField = '<select class="admin-table-field" value="' + $(this).html() + '">';
+
+                                $.each(enumOptions, function(key, value)
+                                {
+                                    inputField += '<option value="' + value + '">' + value + '</option>';
+
+                                });
+
+                                inputField += '</select>';
+                            }
 
                             //change the field into an input field
-                            $(this).html('<input class="admin-table-field" type="' + sqlDataType + '" value="' + $(this).html() + '">');
+                            $(this).html(inputField);
                         });
                     }
                     else
@@ -353,6 +407,8 @@ switch ($panel)
                         {
                             var row = $(this);
                             var input = $(row).children();
+
+                            console.log($(input));
 
                             $(row).html($(input).attr('value'));
 
