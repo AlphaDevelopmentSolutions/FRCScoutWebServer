@@ -109,7 +109,7 @@ class Header
                 '
                 <div class="mdl-layout__drawer">
                     <span class="mdl-layout-title">' . APP_NAME . '</span>' .
-                ((getUser()->IsAdmin) ?
+                ((loggedIn() && getUser()->IsAdmin) ?
                     '<nav class="mdl-navigation">
                         <a href="/event-list.php?yearId=' . $this->Year->Id . '" class="mdl-navigation__link">Events</a>
                         <a href="/admin-year.php?yearId=' . $this->Year->Id . '" class="mdl-navigation__link">' . $this->Year->Id . ' Configuration</a>
