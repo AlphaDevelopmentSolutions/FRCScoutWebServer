@@ -1,7 +1,13 @@
+<?php
+    header("Content-type: text/css; charset: UTF-8");
+    require_once('../config.php');
+
+?>
+
 :root
 {
-  --color-primary: #03A9F4;
-  --color-primary-dark: #0288D1;
+  --color-primary: #<?php echo PRIMARY_COLOR ?>;
+  --color-primary-dark: #<?php echo PRIMARY_COLOR_DARK ?>;
 }
 
 /**

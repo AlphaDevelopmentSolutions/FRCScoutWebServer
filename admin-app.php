@@ -10,8 +10,13 @@ require_once(ROOT_DIR . "/classes/tables/RobotInfoKeys.php");
 require_once(ROOT_DIR . "/classes/tables/ScoutCardInfoKeys.php");
 require_once(ROOT_DIR . "/classes/tables/ChecklistItems.php");
 
-$panel = Users::class;
+$panel = $_GET['adminPanel'];
 
+interface AdminPanels
+{
+    const USERS = Users::class;
+    const CONFIG = Config::class;
+}
 
 $htmlMysqlDatatypes =
     [
@@ -19,8 +24,23 @@ $htmlMysqlDatatypes =
       'int' => 'number'
     ];
 
-$cols = Users::getColumns();
-$objs = Users::getObjects('Id', 'ASC');
+switch($panel)
+{
+    case AdminPanels::CONFIG:
+        $cols = Config::getColumns();
+        $objs = Config::getObjects('Id', 'ASC');
+        break;
+
+    case AdminPanels::USERS:
+        $cols = Users::getColumns();
+        $objs = Users::getObjects('Id', 'ASC');
+        break;
+
+    default:
+        $cols = Config::getColumns();
+        $objs = Config::getObjects();
+        break;
+}
 
 ?>
 
@@ -34,7 +54,13 @@ $objs = Users::getObjects('Id', 'ASC');
 <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header" style="min-width: 1200px !important;">
     <?php
 
-    $header = new Header('App Admin Panel');
+    $navBarLinksArray = new NavBarLinkArray();
+    $navBarLinksArray[] = new NavBarLink('Config', '/admin-app.php?adminPanel=' . AdminPanels::CONFIG, ($panel == AdminPanels::CONFIG || empty($panel)));
+    $navBarLinksArray[] = new NavBarLink('Users', '/admin-app.php?adminPanel=' . AdminPanels::USERS, ($panel == AdminPanels::USERS));
+
+    $navBar = new NavBar($navBarLinksArray);
+
+    $header = new Header('App Admin Panel', null, $navBar);
 
     echo $header->toHtml();
     ?>
@@ -110,34 +136,44 @@ $objs = Users::getObjects('Id', 'ASC');
 
 
         <div class="admin-table-wrapper">
-            <table width="75%" align="center" style="table-layout: fixed;  white-space: unset"
-                   class="mdl-data-table mdl-js-data-table mdl-shadow--2dp">
-                <tr style="border-bottom-color: rgba(0, 0, 0, 0)">
-                    <?php
+            <?php
+            if($panel != AdminPanels::CONFIG)
+            {
+                ?>
+                <table width="75%" align="center" style="table-layout: fixed;  white-space: unset"
+                       class="mdl-data-table mdl-js-data-table mdl-shadow--2dp">
+                    <tr style="border-bottom-color: rgba(0, 0, 0, 0)">
+                        <?php
 
-                    foreach ($cols as $col)
-                    {
-                        if ($col['Field'] != 'Id')
+                        foreach ($cols as $col)
                         {
-                            ?>
+                            if ($col['Field'] != 'Id')
+                            {
+                                ?>
 
-                            <td <?php echo ((strpos($col['Field'], 'Year') !== false) ? 'hidden' : '') ?> changeable="changeable" sql-col-id="<?php echo $col['Field'] ?>">
-                                <input placeholder="<?php echo $col['Field'] . '...' ?>" <?php echo ((strpos($col['Field'], 'Year') !== false) ? 'value="' . $year->Id . '"' : '') ?> class="admin-table-field" type="<?php echo $htmlMysqlDatatypes[substr($col['Type'], 0, strpos($col['Type'], '('))] ?>">
-                            </td>
+                                <td <?php echo((strpos($col['Field'], 'Year') !== false) ? 'hidden' : '') ?>
+                                        changeable="changeable" sql-col-id="<?php echo $col['Field'] ?>">
+                                    <input placeholder="<?php echo $col['Field'] . '...' ?>" <?php echo((strpos($col['Field'], 'Year') !== false) ? 'value="' . $year->Id . '"' : '') ?>
+                                           class="admin-table-field"
+                                           type="<?php echo $htmlMysqlDatatypes[substr($col['Type'], 0, strpos($col['Type'], '('))] ?>">
+                                </td>
 
-                            <?php
+                                <?php
+                            }
                         }
-                    }
-                    ?>
-                    <td></td>
-                    <td class="admin-table-data">
-                        <button onclick="addRecord($(this).parent().parent()[0])"
-                                class="mdl-button mdl-js-button mdl-js-ripple-effect table-button add">
-                            <span class="button-text">Add</span>
-                        </button>
-                    </td>
-                </tr>
-            </table>
+                        ?>
+                        <td></td>
+                        <td class="admin-table-data">
+                            <button onclick="addRecord($(this).parent().parent()[0])"
+                                    class="mdl-button mdl-js-button mdl-js-ripple-effect table-button add">
+                                <span class="button-text">Add</span>
+                            </button>
+                        </td>
+                    </tr>
+                </table>
+                <?php
+            }
+            ?>
             <table width="75%" align="center" style="table-layout: fixed;  white-space: unset"
                    class="mdl-data-table mdl-js-data-table mdl-shadow--2dp">
                 <thead>
@@ -324,43 +360,58 @@ $objs = Users::getObjects('Id', 'ASC');
                 }
                 else if (action == ACTIONS.DELETE)
                 {
-                    //update classes, onclick button and text for the edit button
-                    $("#dialog-confirm")
-                        .unbind('click')
-                        .click(function ()
-                        {
-                            //call the admin ajax script to modify the records in the database
-                            $.post('/ajax/admin.php',
+                    <?php
+                    if($panel != AdminPanels::CONFIG)
+                    {
+                    ?>
+                        //update classes, onclick button and text for the edit button
+                        $("#dialog-confirm")
+                            .unbind('click')
+                            .click(function ()
                             {
-                                action: 'delete',
-                                class: '<?php echo $panel ?>',
+                                //call the admin ajax script to modify the records in the database
+                                $.post('/ajax/admin.php',
+                                    {
+                                        action: 'delete',
+                                        class: '<?php echo $panel ?>',
                                 <?php
                                 foreach($cols as $col)
                                 {
                                 ?>
-                                    <?php echo $col['Field'] ?>: $(row).children('[sql-col-id=<?php echo $col['Field'] ?>]').html(),
+                                <?php echo $col['Field'] ?>:
+                                $(row).children('[sql-col-id=<?php echo $col['Field'] ?>]').html(),
                                 <?php
                                 }
                                 ?>
                             },
-                            function (data)
-                            {
-                                data = JSON.parse(data);
 
-                                //check success status code
-                                if (data['<?php echo Ajax::$STATUS_KEY ?>'] == '<?php echo Ajax::$SUCCESS_STATUS_CODE ?>')
+                                function (data)
                                 {
-                                    $(row).remove();
-                                }
+                                    data = JSON.parse(data);
 
-                                //display response to screen
-                                showToast(data['<?php echo Ajax::$RESPONSE_KEY ?>']);
+                                    //check success status code
+                                    if (data['<?php echo Ajax::$STATUS_KEY ?>'] == '<?php echo Ajax::$SUCCESS_STATUS_CODE ?>')
+                                    {
+                                        $(row).remove();
+                                    }
+
+                                    //display response to screen
+                                    showToast(data['<?php echo Ajax::$RESPONSE_KEY ?>']);
+                                });
+
+                                dialog.close();
                             });
 
-                            dialog.close();
-                        });
-
-                    dialog.showModal();
+                        dialog.showModal();
+                    <?php
+                    }
+                    else
+                    {
+                    ?>
+                        showToast('You can only edit config values.');
+                    <?php
+                    }
+                    ?>
                 }
 
 

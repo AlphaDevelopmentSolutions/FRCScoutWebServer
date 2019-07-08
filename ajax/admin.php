@@ -169,6 +169,24 @@ switch ($_POST['action'])
                     $ajax->error("User failed to save.");
 
                 break;
+
+            case Config::class:
+
+                $config = Config::withProperties($_POST);
+
+                if(empty($config->Value))
+                    $ajax->error("Value name cannot be empty.");
+
+                if(!validAlnum($config->Value))
+                    $ajax->error("Value may only be alpha-numeric (A-Z 0-9).");
+
+                if($config->save())
+                    $ajax->success("Config saved successfully.");
+
+                else
+                    $ajax->error("User failed to save.");
+
+                break;
         }
 
         break;
