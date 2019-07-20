@@ -3,6 +3,7 @@ require_once('../config.php');
 require_once(ROOT_DIR . '/classes/tables/ChecklistItemResults.php');
 require_once(ROOT_DIR . '/classes/tables/ChecklistItems.php');
 require_once(ROOT_DIR . '/classes/tables/Years.php');
+require_once(ROOT_DIR . '/classes/tables/EventTeamList.php');
 require_once(ROOT_DIR . '/classes/tables/ScoutCardInfoKeys.php');
 require_once(ROOT_DIR . '/classes/tables/ScoutCardInfo.php');
 require_once(ROOT_DIR . '/classes/tables/RobotInfo.php');
@@ -57,6 +58,9 @@ try {
         case 'GetEvents':
             $api->success(Events::getObjects());
             break;
+
+        case 'GetEventTeamList':
+            $api->success(EventTeamList::getObjects());
 
         case 'GetYears':
             $api->success(Years::getObjects());
