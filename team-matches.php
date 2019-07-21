@@ -40,7 +40,7 @@ $event = Events::withId($eventId);
 
     $additionContent = '';
 
-    $robotMedia = $team->getProfileImage();
+    $robotMedia = $team->getProfileImage(Years::withId($event->YearId));
 
     if (!empty($robotMedia->FileURI))
     {

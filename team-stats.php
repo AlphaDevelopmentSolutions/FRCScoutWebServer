@@ -2,6 +2,7 @@
 require_once("config.php");
 require_once(ROOT_DIR . "/classes/tables/Teams.php");
 require_once(ROOT_DIR . "/classes/tables/Events.php");
+require_once(ROOT_DIR . "/classes/tables/Years.php");
 require_once(ROOT_DIR . "/classes/tables/ScoutCardInfoKeys.php");
 
 
@@ -42,7 +43,7 @@ $event = Events::withId($eventId);
 
     $additionContent = '';
 
-    $profileMedia = $team->getProfileImage();
+    $profileMedia = $team->getProfileImage(Years::withId($event->YearId));
 
     if (!empty($profileMedia->FileURI))
     {

@@ -2,6 +2,7 @@
 require_once("config.php");
 require_once(ROOT_DIR . "/classes/tables/Teams.php");
 require_once(ROOT_DIR . "/classes/tables/Events.php");
+require_once(ROOT_DIR . "/classes/tables/Years.php");
 require_once(ROOT_DIR . "/classes/tables/RobotInfo.php");
 require_once(ROOT_DIR . "/classes/tables/RobotInfoKeys.php");
 require_once(ROOT_DIR . "/classes/tables/Matches.php");
@@ -41,7 +42,7 @@ $event = Events::withId($eventId);
 
     $additionContent = '';
 
-    $robotMedia = $team->getProfileImage();
+    $robotMedia = $team->getProfileImage(Years::withId($event->YearId));
 
     if (!empty($robotMedia->FileURI))
     {

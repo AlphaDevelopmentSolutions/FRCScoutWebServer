@@ -19,17 +19,20 @@ class Teams extends Table
 
     /**
      * Returns the URI of the teams profile image
+     * @param $year Years to get the image from
      * @return RobotMedia
      */
-    public function getProfileImage()
+    public function getProfileImage($year)
     {
         require_once(ROOT_DIR . '/classes/tables/RobotMedia.php');
 
         //create the sql statement
-        $sql = "SELECT * FROM ! WHERE ! = ? ORDER BY ! DESC LIMIT 1";
+        $sql = "SELECT * FROM ! WHERE ! = ? AND ! = ? ORDER BY ! DESC LIMIT 1";
         $cols[] = RobotMedia::$TABLE_NAME;
         $cols[] = 'TeamId';
         $args[] = $this->Id;
+        $cols[] = 'YearId';
+        $args[] = $year->Id;
         $cols[] = 'Id';
 
         $rows = self::queryRecords($sql, $cols, $args);
@@ -43,19 +46,27 @@ class Teams extends Table
 
     /**
      * Gets all robot media for this team
+     * @param $year Years to get the image from
      * @return RobotMedia[]
      */
-    public function getRobotPhotos()
+    public function getRobotPhotos($year = null)
     {
         require_once(ROOT_DIR . '/classes/tables/RobotMedia.php');
 
         $response = array();
 
         //create the sql statement
-        $sql = "SELECT * FROM ! WHERE ! = ? ORDER BY ! DESC";
+        $sql = "SELECT * FROM ! WHERE ! = ? " . ((empty($year)) ? "" : "AND ! = ?") . " ORDER BY ! DESC";
         $cols[] = RobotMedia::$TABLE_NAME;
         $cols[] = 'TeamId';
         $args[] = $this->Id;
+
+        if(!empty($year))
+        {
+            $cols[] = 'YearId';
+            $args[] = $year->Id;
+        }
+
         $cols[] = 'Id';
 
         $rows = self::queryRecords($sql, $cols, $args);
@@ -79,7 +90,7 @@ class Teams extends Table
             '<section class="section--center mdl-grid mdl-grid--no-spacing mdl-shadow--2dp team-card">
                 <header class="section__play-btn mdl-cell mdl-cell--3-col-desktop mdl-cell--2-col-tablet mdl-cell--4-col-phone mdl-color--white mdl-color-text--white">';
 
-            $robotMedia = $this->getProfileImage();
+            $robotMedia = $this->getProfileImage(Years::withId($event->YearId));
 
             $html .=
                     '<div style="height: unset">' .

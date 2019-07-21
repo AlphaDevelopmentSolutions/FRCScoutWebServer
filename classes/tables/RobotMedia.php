@@ -3,6 +3,7 @@
 class RobotMedia extends Table
 {
     public $Id;
+    public $YearId;
     public $TeamId;
     public $FileURI;
     public $Base64Image;
