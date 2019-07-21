@@ -359,11 +359,13 @@ switch ($panel)
                                 enumOptions = enumOptions.replace(/\'/g, '');
                                 enumOptions = enumOptions.split(',');
 
-                                inputField = '<select class="admin-table-field" value="' + $(this).html() + '">';
+                                var originalVal = $(this).html();
+
+                                inputField = '<select class="admin-table-field" value="' + originalVal + '">';
 
                                 $.each(enumOptions, function(key, value)
                                 {
-                                    inputField += '<option value="' + value + '">' + value + '</option>';
+                                    inputField += '<option ' + ((originalVal == value) ? 'selected' : '') + ' value="' + value + '">' + value + '</option>';
 
                                 });
 

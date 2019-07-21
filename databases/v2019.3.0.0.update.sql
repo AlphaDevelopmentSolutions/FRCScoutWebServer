@@ -61,5 +61,9 @@ ALTER TABLE `scout_card_info_keys`
 ADD COLUMN `GroupNumber` INT NULL DEFAULT NULL AFTER `SortOrder`;
 
 
+ALTER TABLE `robot_media`
+ADD COLUMN `YearId` INT NULL DEFAULT 2019 AFTER `Id`;
+
+
 
 
