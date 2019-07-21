@@ -136,15 +136,19 @@ abstract class Table
                 //dont use Id in cols or vals
                 if($key != 'Id' && property_exists($this, $key))
                 {
-                    //only add to insert statement if value is not empty
+                    if(!empty($updates))
+                        $updates .= ', ';
+
                     if(!empty($value) || $value == '0')
                     {
-                        if(!empty($updates))
-                            $updates .= ', ';
-
                         $updates .= ' ! = ?';
                         $cols[] = $key;
                         $args[] = $value;
+                    }
+                    else
+                    {
+                        $updates .= ' ! = NULL';
+                        $cols[] = $key;
                     }
                 }
             }

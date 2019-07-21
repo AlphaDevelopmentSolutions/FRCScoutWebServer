@@ -57,5 +57,9 @@ CHANGE COLUMN `Name` `Name` VARCHAR(3000) NULL DEFAULT '' ;
 ALTER TABLE `years`
 CHANGE COLUMN `Name` `Name` VARCHAR(3000) NULL DEFAULT '' ;
 
+ALTER TABLE `scout_card_info_keys`
+ADD COLUMN `GroupNumber` INT NULL DEFAULT NULL AFTER `SortOrder`;
+
+
 
 
