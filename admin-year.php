@@ -147,7 +147,7 @@ switch ($panel)
 
 
         <div class="admin-table-wrapper">
-            <table width="75%" align="center" style="table-layout: fixed;  white-space: unset"
+            <table width="95%" align="center" style="table-layout: fixed;  white-space: unset"
                    class="mdl-data-table mdl-js-data-table mdl-shadow--2dp">
                 <tr style="border-bottom-color: rgba(0, 0, 0, 0)">
                     <?php
@@ -207,7 +207,7 @@ switch ($panel)
                     </td>
                 </tr>
             </table>
-            <table width="75%" align="center" style="table-layout: fixed;  white-space: unset"
+            <table width="95%" align="center" style="table-layout: fixed;  white-space: unset"
                    class="mdl-data-table mdl-js-data-table mdl-shadow--2dp">
                 <thead>
                 <tr>

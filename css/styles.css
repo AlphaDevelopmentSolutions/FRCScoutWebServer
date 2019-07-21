@@ -397,7 +397,7 @@ html, body {
 .admin-table-wrapper
 {
   width: 100%;
-  padding: 15px;
+  padding: 15px 0 15px 0;
 }
 
 .admin-table-header

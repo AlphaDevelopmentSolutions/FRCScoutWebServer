@@ -4,13 +4,19 @@ class ScoutCardInfoKeys extends Table
 {
     public $Id;
     public $YearId;
+
     public $KeyState;
     public $KeyName;
+
     public $SortOrder;
+    public $GroupNumber;
+
     public $MinValue;
     public $MaxValue;
+
     public $NullZeros;
     public $IncludeInStats;
+
     public $DataType;
 
     public static $TABLE_NAME = 'scout_card_info_keys';

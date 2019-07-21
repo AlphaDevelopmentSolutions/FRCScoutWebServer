@@ -74,20 +74,23 @@ switch ($_POST['action'])
                 if(!ctype_digit($scoutCardInfoKey->SortOrder))
                     $ajax->error("Sort order may only be numeric (0-9).");
 
-                if(!ctype_digit($scoutCardInfoKey->MinValue))
+                if(!ctype_digit($scoutCardInfoKey->GroupNumber) && $scoutCardInfoKey->GroupNumber != "")
+                    $ajax->error("Group number may only be numeric (0-9).");
+
+                if(!ctype_digit($scoutCardInfoKey->MinValue) && $scoutCardInfoKey->MinValue != "")
                     $ajax->error("Min value may only be numeric (0-9).");
 
-                if(!ctype_digit($scoutCardInfoKey->MaxValue))
+                if(!ctype_digit($scoutCardInfoKey->MaxValue)  && $scoutCardInfoKey->MaxValue != "")
                     $ajax->error("Max value may only be numeric (0-9).");
 
                 if(!ctype_digit($scoutCardInfoKey->NullZeros))
-                    $ajax->error("Null zeros may only be numeric (0-9).");
+                    $ajax->error("Null zeros may only be 1 (Yes) or 0 (No).");
 
                 if($scoutCardInfoKey->NullZeros != 0 && $scoutCardInfoKey->NullZeros != 1)
                     $ajax->error("Null zeros may only be 1 (Yes) or 0 (No).");
 
                 if(!ctype_digit($scoutCardInfoKey->IncludeInStats))
-                    $ajax->error("Include in stats name may only be numeric (0-9).");
+                    $ajax->error("Include in stats may only be 1 (Yes) or 0 (No).");
 
                 if($scoutCardInfoKey->IncludeInStats != 0 && $scoutCardInfoKey->IncludeInStats != 1)
                     $ajax->error("Include in stats may only be 1 (Yes) or 0 (No).");
