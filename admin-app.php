@@ -37,6 +37,7 @@ switch($panel)
         break;
 
     default:
+        $panel = Config::class;
         $cols = Config::getColumns();
         $objs = Config::getObjects();
         break;

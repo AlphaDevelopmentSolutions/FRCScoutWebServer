@@ -85,6 +85,7 @@ class Teams extends Table
     public function toHtml($event = null)
     {
         require_once(ROOT_DIR . '/classes/tables/Events.php');
+        require_once(ROOT_DIR . "/classes/tables/Years.php");
 
         $html =
             '<section class="section--center mdl-grid mdl-grid--no-spacing mdl-shadow--2dp team-card">

@@ -47,6 +47,7 @@ switch ($panel)
         break;
 
     default:
+        $panel = RobotInfoKeys::class;
         $cols = RobotInfoKeys::getColumns();
         $objs = RobotInfoKeys::getObjects();
         break;

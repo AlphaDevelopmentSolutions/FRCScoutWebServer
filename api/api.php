@@ -41,12 +41,7 @@ try {
 
         //region Getters
         case 'GetServerConfig':
-
-            $api->success(array(
-                'ApiKey' => API_KEY,
-                'TeamNumber' => TEAM_NUMBER,
-                'TeamName' => TEAM_NAME
-            ));
+            $api->success(Config::getObjects());
 
             break;
 

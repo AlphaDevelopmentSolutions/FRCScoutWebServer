@@ -176,6 +176,10 @@ switch ($_POST['action'])
             case Config::class:
 
                 $config = Config::withProperties($_POST);
+                $prevConfig = Config::withId($config->Id);
+
+                if($config->Key != $prevConfig->Key)
+                    $ajax->error("Key cannot be changed");
 
                 if(empty($config->Value))
                     $ajax->error("Value name cannot be empty.");
