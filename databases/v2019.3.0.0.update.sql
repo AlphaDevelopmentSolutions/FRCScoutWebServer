@@ -7,9 +7,8 @@ CREATE TABLE `robot_info` (
 `YearId` INT NULL DEFAULT 2019,
 `EventId` VARCHAR(45) NULL DEFAULT '',
 `TeamId` INT NULL DEFAULT 0,
-`PropertyState` TEXT NULL DEFAULT '',
-`PropertyKey` TEXT NULL DEFAULT '',
 `PropertyValue` TEXT NULL DEFAULT '',
+`PropertyKeyId` INT NULL DEFAULT '',
 PRIMARY KEY (`Id`));
 
 CREATE TABLE `robot_info_keys` (
@@ -40,9 +39,8 @@ CREATE TABLE `scout_card_info` (
   `MatchId` VARCHAR(45) NULL DEFAULT '',
   `TeamId` INT NULL DEFAULT 1,
   `CompletedBy` VARCHAR(200) NULL DEFAULT '',
-  `PropertyState` VARCHAR(45) NULL DEFAULT '',
-  `PropertyKey` VARCHAR(45) NULL DEFAULT '',
   `PropertyValue` VARCHAR(2000) NULL DEFAULT '',
+  `PropertyKeyId` INT NULL DEFAULT 0,
   PRIMARY KEY (`Id`));
 
 
@@ -56,7 +54,6 @@ CHANGE COLUMN `Name` `Name` VARCHAR(3000) NULL DEFAULT '' ;
 
 ALTER TABLE `years`
 CHANGE COLUMN `Name` `Name` VARCHAR(3000) NULL DEFAULT '' ;
-
 
 ALTER TABLE `robot_media`
 ADD COLUMN `YearId` INT NULL DEFAULT 2019 AFTER `Id`;

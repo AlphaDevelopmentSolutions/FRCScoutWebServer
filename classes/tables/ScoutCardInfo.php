@@ -52,13 +52,11 @@ class ScoutCardInfo extends Table
     {
 
         //create the sql statement
-        $sql = "SELECT * FROM ! WHERE ! = ? AND ! = ?";
+        $sql = "SELECT * FROM ! WHERE ! = ?";
         $cols[] = self::$TABLE_NAME;
 
-        $cols[] = 'PropertyState';
-        $args[] = $scoutCardInfoKey->KeyState;
-        $cols[] = 'PropertyKey';
-        $args[] = $scoutCardInfoKey->KeyName;
+        $cols[] = 'PropertyKeyId';
+        $args[] = $scoutCardInfoKey->Id;
 
         //if year specified, filter by year
         if(!empty($year))

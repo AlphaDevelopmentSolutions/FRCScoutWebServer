@@ -7,9 +7,8 @@ class RobotInfo extends Table
     public $EventId;
     public $TeamId;
 
-    public $PropertyState;
-    public $PropertyKey;
     public $PropertyValue;
+    public $PropertyKeyId;
 
     public static $TABLE_NAME = 'robot_info';
 
@@ -49,13 +48,11 @@ class RobotInfo extends Table
     {
 
         //create the sql statement
-        $sql = "SELECT * FROM ! WHERE ! = ? AND ! = ?";
+        $sql = "SELECT * FROM ! WHERE ! = ?";
         $cols[] = self::$TABLE_NAME;
 
-        $cols[] = 'PropertyState';
-        $args[] = $robotInfoKey->KeyState;
-        $cols[] = 'PropertyKey';
-        $args[] = $robotInfoKey->KeyName;
+        $cols[] = 'PropertyKeyId';
+        $args[] = $robotInfoKey->Id;
 
         //if year specified, filter by year
         if(!empty($year))
@@ -126,8 +123,7 @@ class RobotInfo extends Table
                 if ($robotInfo->YearId == $this->YearId &&
                     $robotInfo->EventId == $this->EventId &&
                     $robotInfo->TeamId == $this->TeamId &&
-                    $robotInfo->PropertyState == $this->PropertyState &&
-                    $robotInfo->PropertyKey == $this->PropertyKey)
+                    $robotInfo->PropertyKeyId == $this->PropertyKeyId)
                     $updateRecord = true;
             }
 
@@ -199,18 +195,15 @@ class RobotInfo extends Table
                     }
                 }
 
-                $sql .= $updates . " WHERE ! = ? AND ! = ? AND ! = ? AND ! = ? AND ! = ? ";
+                $sql .= $updates . " WHERE ! = ? AND ! = ? AND ! = ? AND ! = ? ";
                 $cols[] = 'YearId';
                 $args[] = $this->YearId;
                 $cols[] = 'EventId';
                 $args[] = $this->EventId;
                 $cols[] = 'TeamId';
                 $args[] = $this->TeamId;
-                $cols[] = 'PropertyState';
-                $args[] = $this->PropertyState;
-                $cols[] = 'PropertyKey';
-                $args[] = $this->PropertyKey;
-
+                $cols[] = 'PropertyKeyId';
+                $args[] = $this->PropertyKeyId;
 
                 if ($insertId = self::insertOrUpdateRecords($sql, $cols, $args) > -1)
                     return true;

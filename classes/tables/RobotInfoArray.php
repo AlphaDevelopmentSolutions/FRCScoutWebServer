@@ -14,22 +14,34 @@ class RobotInfoArray extends \ArrayObject implements ArrayAccess
 
         require_once(ROOT_DIR . "/classes/tables/Years.php");
 
+        for($i = 0; $i < sizeof($this) && empty($yearId); $i++)
+        {
+            $yearId = $this[$i]->YearId;
+        }
+
+        $year = Years::withId($yearId);
+        $robotInfoKeys = RobotInfoKeys::getKeys($year);
+
         //setup the 'fake' object to display it to html
         //array format is $array[YEAR][EVENT][TEAM][STATE][NAME] = value
         //ex $array[2019][2019onwin][5885][PreGame][RobotWidth] = 5.3 feet
         foreach($this as $robotInfo)
         {
-            //retrieve the year in question from the stored array
-            if(empty($yearId))
-                $yearId = $robotInfo->YearId;
+            $robotInfoKey = null;
 
-            $robotInfoArray[$robotInfo->YearId][$robotInfo->EventId][$robotInfo->TeamId][$robotInfo->PropertyState][$robotInfo->PropertyKey] = $robotInfo->PropertyValue;
+            for($i = 0; $i < sizeof($robotInfoKeys) && empty($robotInfoKey); $i++)
+            {
+                if($robotInfo->PropertyKeyId == $robotInfoKeys[$i]->Id)
+                    $robotInfoKey = $robotInfoKeys[$i];
+            }
+
+            $robotInfoArray[$robotInfo->YearId][$robotInfo->EventId][$robotInfo->TeamId][$robotInfoKey->KeyState][$robotInfoKey->KeyName] = $robotInfo->PropertyValue;
         }
 
         $year = Years::withId($yearId);
 
         //get the keys for the specified year and store the states for sections
-        foreach(RobotInfoKeys::getKeys($year) as $robotInfoKey)
+        foreach($robotInfoKeys as $robotInfoKey)
             $robotInfoKeyStates[] = $robotInfoKey->KeyState;
         $robotInfoKeyStates = array_unique($robotInfoKeyStates);
 
