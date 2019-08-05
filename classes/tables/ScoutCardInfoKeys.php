@@ -9,7 +9,6 @@ class ScoutCardInfoKeys extends Table
     public $KeyName;
 
     public $SortOrder;
-    public $GroupNumber;
 
     public $MinValue;
     public $MaxValue;

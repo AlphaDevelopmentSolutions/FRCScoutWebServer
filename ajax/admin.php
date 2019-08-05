@@ -74,9 +74,6 @@ switch ($_POST['action'])
                 if(!ctype_digit($scoutCardInfoKey->SortOrder))
                     $ajax->error("Sort order may only be numeric (0-9).");
 
-                if(!ctype_digit($scoutCardInfoKey->GroupNumber) && $scoutCardInfoKey->GroupNumber != "")
-                    $ajax->error("Group number may only be numeric (0-9).");
-
                 if(!ctype_digit($scoutCardInfoKey->MinValue) && $scoutCardInfoKey->MinValue != "")
                     $ajax->error("Min value may only be numeric (0-9).");
 
