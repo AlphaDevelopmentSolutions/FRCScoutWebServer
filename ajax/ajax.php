@@ -5,7 +5,7 @@ require_once(ROOT_DIR . "/classes/tables/Teams.php");
 require_once(ROOT_DIR . "/classes/tables/Matches.php");
 switch ($_POST['action'])
 {
-    case 'load_new_stats':
+    case 'load_stats':
         $return_array = array();
 
         require_once(ROOT_DIR . "/classes/tables/ScoutCardInfo.php");
@@ -52,7 +52,7 @@ switch ($_POST['action'])
             do
             {
                 //match the state & key
-                if ($scoutCardInfo->PropertyState == $scoutCardInfoKeys[$i]->KeyState && $scoutCardInfo->PropertyKey == $scoutCardInfoKeys[$i]->KeyName)
+                if ($scoutCardInfo->PropertyKeyId == $scoutCardInfoKeys[$i]->Id)
                     $scoutCardInfoKey = $scoutCardInfoKeys[$i];
                 $i++;
 
@@ -64,7 +64,7 @@ switch ($_POST['action'])
             if ($scoutCardInfoKey->IncludeInStats == 1)
             {
                 //set the array key so we don't have to change it manually
-                $arrayKey = $scoutCardInfo->PropertyState . ' ' . $scoutCardInfo->PropertyKey;
+                $arrayKey = $scoutCardInfoKey->KeyState . ' ' . $scoutCardInfoKey->KeyName;
 
                 //add to the event avgs
                 $return_array['EventAvg'][$arrayKey] =
@@ -232,7 +232,7 @@ switch ($_POST['action'])
                                     do
                                     {
                                         //match state and key name
-                                        if ($scoutCardInfo->PropertyState == $scoutCardInfoKeys[$i]->KeyState && $scoutCardInfo->PropertyKey == $scoutCardInfoKeys[$i]->KeyName)
+                                        if ($scoutCardInfo->PropertyKeyId == $scoutCardInfoKeys[$i]->Id)
                                             $scoutCardInfoKey = $scoutCardInfoKeys[$i];
                                         $i++;
 
@@ -242,16 +242,16 @@ switch ($_POST['action'])
                                     if ($scoutCardInfoKey->IncludeInStats == 1)
                                     {
                                         //add records to match avgs
-                                        $return_array['MatchAvgs'][$match->MatchNumber][$scoutCardInfo->PropertyState . ' ' . $scoutCardInfo->PropertyKey] =
-                                            ((empty($return_array['MatchAvgs'][$match->MatchNumber][$scoutCardInfo->PropertyState . ' ' . $scoutCardInfo->PropertyKey])) ?
+                                        $return_array['MatchAvgs'][$match->MatchNumber][$scoutCardInfoKey->KeyState . ' ' . $scoutCardInfoKey->KeyName] =
+                                            ((empty($return_array['MatchAvgs'][$match->MatchNumber][$scoutCardInfoKey->KeyState . ' ' . $scoutCardInfoKey->KeyName])) ?
                                                 $scoutCardInfo->PropertyValue
                                                 :
-                                                $return_array['MatchAvgs'][$match->MatchNumber][$scoutCardInfo->PropertyState . ' ' . $scoutCardInfo->PropertyKey] + $scoutCardInfo->PropertyValue);
+                                                $return_array['MatchAvgs'][$match->MatchNumber][$scoutCardInfoKey->KeyState . ' ' . $scoutCardInfoKey->KeyName] + $scoutCardInfo->PropertyValue);
 
                                         //if key specifies to null zeros, add null record to array
                                         if ($scoutCardInfoKey->NullZeros == 1)
                                             if ($scoutCardInfo->PropertyValue == 0)
-                                                $return_array['MatchAvgs'][$match->MatchNumber]['Nulled ' . $scoutCardInfo->PropertyState . ' ' . $scoutCardInfo->PropertyKey] = ((empty($return_array['MatchAvgs'][$match->MatchNumber]['Nulled ' . $scoutCardInfo->PropertyState . ' ' . $scoutCardInfo->PropertyKey])) ? 1 : $return_array[$scoutCardInfo->TeamId]['Nulled ' . $scoutCardInfo->PropertyState . ' ' . $scoutCardInfo->PropertyKey] + 1);
+                                                $return_array['MatchAvgs'][$match->MatchNumber]['Nulled ' . $scoutCardInfoKey->KeyState . ' ' . $scoutCardInfoKey->KeyName] = ((empty($return_array['MatchAvgs'][$match->MatchNumber]['Nulled ' . $scoutCardInfoKey->KeyState . ' ' . $scoutCardInfoKey->KeyName])) ? 1 : $return_array[$scoutCardInfo->TeamId]['Nulled ' . $scoutCardInfoKey->KeyState . ' ' . $scoutCardInfoKey->KeyName] + 1);
 
 
                                     }

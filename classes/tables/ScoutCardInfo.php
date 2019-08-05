@@ -9,9 +9,8 @@ class ScoutCardInfo extends Table
     public $TeamId;
     public $CompletedBy;
 
-    public $PropertyState;
-    public $PropertyKey;
     public $PropertyValue;
+    public $PropertyKeyId;
 
     public static $TABLE_NAME = 'scout_card_info';
 

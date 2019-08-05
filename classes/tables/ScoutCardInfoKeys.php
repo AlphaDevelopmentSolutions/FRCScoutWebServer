@@ -114,25 +114,19 @@ class ScoutCardInfoKeys extends Table
             $currScoutCardInfokey = RobotInfoKeys::withId($this->Id);
 
             //create the sql statement
-            $sql = "UPDATE ! SET ! = ?, ! = ? WHERE ! = ? AND ! = ? AND ! = ?";
+            $sql = "UPDATE ! SET ! = ? WHERE ! = ? AND ! = ?";
             $cols[] = ScoutCardInfo::$TABLE_NAME;
 
             //Set
-            $cols[] = 'PropertyState';
-            $args[] = $this->KeyState;
-
-            $cols[] = 'PropertyKey';
-            $args[] = $this->KeyName;
+            $cols[] = 'PropertyKeyId';
+            $args[] = $this->Id;
 
             //Where
             $cols[] = 'YearId';
             $args[] = $currScoutCardInfokey->YearId;
 
-            $cols[] = 'PropertyState';
-            $args[] = $currScoutCardInfokey->KeyState;
-
-            $cols[] = 'PropertyKey';
-            $args[] = $currScoutCardInfokey->KeyName;
+            $cols[] = 'PropertyKeyId';
+            $args[] = $currScoutCardInfokey->Id;
 
             self::insertOrUpdateRecords($sql, $cols, $args);
         }
@@ -152,18 +146,15 @@ class ScoutCardInfoKeys extends Table
             require_once(ROOT_DIR . '/classes/tables/ScoutCardInfo.php');
 
             //create the sql statement
-            $sql = "DELETE FROM ! WHERE ! = ? AND ! = ? AND ! = ?";
+            $sql = "DELETE FROM ! WHERE ! = ? AND ! = ?";
             $cols[] = ScoutCardInfo::$TABLE_NAME;
 
             //Where
             $cols[] = 'YearId';
             $args[] = $this->YearId;
 
-            $cols[] = 'PropertyState';
-            $args[] = $this->KeyState;
-
-            $cols[] = 'PropertyKey';
-            $args[] = $this->KeyName;
+            $cols[] = 'PropertyKeyId';
+            $args[] = $this->Id;
 
             self::deleteRecords($sql, $cols, $args);
         }

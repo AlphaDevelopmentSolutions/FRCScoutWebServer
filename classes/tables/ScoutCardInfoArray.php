@@ -15,22 +15,32 @@ class ScoutCardInfoArray extends \ArrayObject implements ArrayAccess
         require_once(ROOT_DIR . "/classes/tables/Years.php");
         require_once(ROOT_DIR . "/classes/tables/ScoutCardInfoKeys.php");
 
+        for($i = 0; $i < sizeof($this) && empty($yearId); $i++)
+        {
+            $yearId = $this[$i]->YearId;
+        }
+
+        $year = Years::withId($yearId);
+        $scoutCardInfoKeys = ScoutCardInfoKeys::getKeys($year);
+
         //setup the 'fake' object to display it to html
         //array format is $array[YEAR][EVENT][TEAM][STATE][NAME] = value
         //ex $array[2019][2019onwin][5885][PreGame][RobotWidth] = 5.3 feet
         foreach($this as $scoutCardInfo)
         {
-            //retrieve the year in question from the stored array
-            if(empty($yearId))
-                $yearId = $scoutCardInfo->YearId;
+            $scoutCardInfoKey = null;
 
-            $scoutCardInfoArray[$scoutCardInfo->YearId][$scoutCardInfo->EventId][$scoutCardInfo->TeamId][$scoutCardInfo->PropertyState][$scoutCardInfo->PropertyKey] = $scoutCardInfo->PropertyValue;
+            for($i = 0; $i < sizeof($scoutCardInfoKeys) && empty($scoutCardInfoKey); $i++)
+            {
+                if($scoutCardInfo->PropertyKeyId == $scoutCardInfoKeys[$i]->Id)
+                    $scoutCardInfoKey = $scoutCardInfoKeys[$i];
+            }
+
+            $scoutCardInfoArray[$scoutCardInfo->YearId][$scoutCardInfo->EventId][$scoutCardInfo->TeamId][$scoutCardInfoKey->KeyState][$scoutCardInfoKey->KeyName] = $scoutCardInfo->PropertyValue;
         }
 
-        $year = Years::withId($yearId);
-
         //get the keys for the specified year and store the states for sections
-        foreach(ScoutCardInfoKeys::getKeys($year) as $scoutCardInfoKey)
+        foreach($scoutCardInfoKeys as $scoutCardInfoKey)
             $scoutCardInfoKeyStates[] = $scoutCardInfoKey->KeyState;
         $scoutCardInfoKeyStates = array_unique($scoutCardInfoKeyStates);
 

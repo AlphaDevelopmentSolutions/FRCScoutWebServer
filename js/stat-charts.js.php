@@ -142,7 +142,7 @@ function generateData(graphItem, context)
     //get data from the ajax script
     $.post('/ajax/ajax.php',
         {
-            action: 'load_new_stats',
+            action: 'load_stats',
             eventId: '<?php echo $event->BlueAllianceId ?>',
             teamIds: JSON.stringify(teamList),
             matchId: matchId,
