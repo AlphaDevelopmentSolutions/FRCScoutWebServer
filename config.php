@@ -14,15 +14,6 @@ define('VERSION', '4.0.0');
 define('ROOT_DIR', __DIR__);
 
 /**
- * ERROR CORDS
- */
-define('FILE_WRITE_FAIL_CODE' , '5x01');
-define('CURL_FAIL_CODE' , '5x02');
-
-
-//verifyInstall();
-
-/**
  * REQUIRED FILES
  */
 require_once(ROOT_DIR . '/classes/Keys.php');
@@ -34,14 +25,14 @@ require_once(ROOT_DIR . '/classes/tables/core/CoreConfig.php');
 require_once(ROOT_DIR . '/classes/tables/core/Accounts.php');
 require_once(ROOT_DIR . '/interfaces/AllianceColors.php');
 
+/**
+ * LOAD CONFIGS
+ */
 if($_SERVER['REQUEST_URI'] != '/' && !coreLoggedIn())
     header('Location: ' . '/');
 else if(coreLoggedIn())
     define('DB_NAME', getCoreAccount()->DbId);
 
-/**
- * LOAD CONFIGS
- */
 if(coreLoggedIn())
 {
     foreach (Config::getObjects() as $config)
@@ -126,17 +117,5 @@ function getCoreAccount()
 function getUser()
 {
     return !empty($_SESSION['user']) ? unserialize($_SESSION['user']) : null;
-}
-
-/**
- * Verifies the install on then server
- * If not valid install, redirects to the install page
- */
-function verifyInstall()
-{
-    if(file_exists(__DIR__ . '/classes/Keys.php'))
-        require_once('classes/Keys.php');
-    else if (strpos($_SERVER['REQUEST_URI'], 'install.php') < 1)
-        header('Location: ' . '/install.php');
 }
 ?>
