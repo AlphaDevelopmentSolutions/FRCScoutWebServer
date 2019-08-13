@@ -1,6 +1,6 @@
 <?php
 
-class ChecklistItems extends Table
+class ChecklistItems extends LocalTable
 {
     public $Id;
     public $Title;
@@ -17,7 +17,7 @@ class ChecklistItems extends Table
     {
         if(!empty($this->Id))
         {
-            require_once(ROOT_DIR . '/classes/tables/ChecklistItemResults.php');
+            require_once(ROOT_DIR . '/classes/tables/local/ChecklistItemResults.php');
 
             //create the sql statement
             $sql = "DELETE FROM ! WHERE ! = ?";
@@ -40,7 +40,7 @@ class ChecklistItems extends Table
      */
     public function getResults($match = null)
     {
-        require_once(ROOT_DIR . '/classes/tables/ChecklistItemResults.php');
+        require_once(ROOT_DIR . '/classes/tables/local/ChecklistItemResults.php');
 
         $response = array();
 

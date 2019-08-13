@@ -1,8 +1,8 @@
 <?php
 require_once('../config.php');
-require_once('../classes/tables/Events.php');
+require_once('../classes/tables/core/Events.php');
 
-
+set_time_limit(600);
 
 foreach (getEvents() as $eventJson)
 {
@@ -22,13 +22,15 @@ $database = new Database();
 $database->query("DELETE event1 FROM events event1, events event2 WHERE event1.Id < event2.Id AND event1.BlueAllianceId = event2.BlueAllianceId;");
 $database->close();
 
+//echo serialize(getEvents());
+
 /**
  * Queries the blue alliance API for events on a specific team
  * @return mixed
  */
 function getEvents()
 {
-    $url = "https://www.thebluealliance.com/api/v3/team/frc" . TEAM_NUMBER . "/events/" . date("Y") . "?X-TBA-Auth-Key=" . BLUE_ALLIANCE_KEY;
+    $url = "https://www.thebluealliance.com/api/v3/events/" . date("Y") . "?X-TBA-Auth-Key=" . BLUE_ALLIANCE_KEY;
 
     $ch = curl_init();
 

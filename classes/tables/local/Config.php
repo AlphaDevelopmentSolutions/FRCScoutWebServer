@@ -1,6 +1,6 @@
 <?php
 
-class Config extends Table
+class Config extends LocalTable
 {
     public $Id;
     public $Key;

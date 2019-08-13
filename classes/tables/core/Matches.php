@@ -1,6 +1,6 @@
 <?php
 
-class Matches extends Table
+class Matches extends CoreTable
 {
 
     public $Id;
@@ -83,8 +83,8 @@ class Matches extends Table
      */
     public function getScoutCards($team = null)
     {
-        require_once(ROOT_DIR . '/classes/tables/ScoutCardInfo.php');
-        require_once(ROOT_DIR . '/classes/tables/ScoutCardInfoArray.php');
+        require_once(ROOT_DIR . '/classes/tables/local/ScoutCardInfo.php');
+        require_once(ROOT_DIR . '/classes/tables/local/ScoutCardInfoArray.php');
 
         $response = new ScoutCardInfoArray();
         $scoutCardInfoArray = array();
@@ -107,7 +107,7 @@ class Matches extends Table
         $sql .= " ORDER BY ! DESC";
         $cols[] = 'Id';
 
-        $rows = self::queryRecords($sql, $cols, $args);
+        $rows = self::queryRecords($sql, $cols, $args, LocalTable::$DB_NAME);
 
         foreach ($rows as $row)
             $response[] = ScoutCardInfo::withProperties($row);

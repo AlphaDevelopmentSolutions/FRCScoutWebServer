@@ -1,6 +1,6 @@
 <?php
 
-class ChecklistItemResults extends Table implements Status
+class ChecklistItemResults extends LocalTable implements Status
 {
     public $Id;
     public $ChecklistItemId;
@@ -17,7 +17,7 @@ class ChecklistItemResults extends Table implements Status
      */
     public function toHtml()
     {
-        require_once(ROOT_DIR . '/classes/tables/ChecklistItems.php');
+        require_once(ROOT_DIR . '/classes/tables/local/ChecklistItems.php');
 
         //get the checklist item
         $checklistItem = ChecklistItems::withId($this->ChecklistItemId);
@@ -59,7 +59,7 @@ class ChecklistItemResults extends Table implements Status
      */
     public function toString()
     {
-        require_once(ROOT_DIR . '/classes/tables/ChecklistItems.php');
+        require_once(ROOT_DIR . '/classes/tables/local/ChecklistItems.php');
         return ChecklistItems::withId($this->ChecklistItemId)->Title;
     }
 

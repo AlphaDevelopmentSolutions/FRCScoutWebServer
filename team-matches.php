@@ -1,8 +1,8 @@
 <?php
 require_once("config.php");
-require_once(ROOT_DIR . "/classes/tables/Teams.php");
-require_once(ROOT_DIR . "/classes/tables/Events.php");
-require_once(ROOT_DIR . "/classes/tables/Years.php");
+require_once(ROOT_DIR . "/classes/tables/core/Teams.php");
+require_once(ROOT_DIR . "/classes/tables/core/Events.php");
+require_once(ROOT_DIR . "/classes/tables/core/Years.php");
 
 $eventId = $_GET['eventId'];
 $teamId = $_GET['teamId'];

@@ -12,8 +12,8 @@ class ScoutCardInfoArray extends \ArrayObject implements ArrayAccess
         $scoutCardInfoArray = array();
         $scoutCardInfoKeyStates = array();
 
-        require_once(ROOT_DIR . "/classes/tables/Years.php");
-        require_once(ROOT_DIR . "/classes/tables/ScoutCardInfoKeys.php");
+        require_once(ROOT_DIR . "/classes/tables/core/Years.php");
+        require_once(ROOT_DIR . "/classes/tables/local/ScoutCardInfoKeys.php");
 
         for($i = 0; $i < sizeof($this) && empty($yearId); $i++)
         {

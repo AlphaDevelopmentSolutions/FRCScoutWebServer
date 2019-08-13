@@ -1,10 +1,13 @@
 <?php
 require_once("config.php");
-require_once(ROOT_DIR . "/classes/tables/Events.php");
-require_once(ROOT_DIR . "/classes/tables/Years.php");
+require_once(ROOT_DIR . "/classes/tables/core/Events.php");
+require_once(ROOT_DIR . "/classes/tables/core/Years.php");
+require_once(ROOT_DIR . "/classes/tables/core/Teams.php");
 
 $yearId = $_GET['yearId'];
 $year = Years::withId($yearId);
+
+$team = Teams::withId(getCoreAccount()->TeamId)
 
 ?>
 
@@ -24,7 +27,7 @@ $year = Years::withId($yearId);
       <main class="mdl-layout__content">
           <?php
 
-          foreach($year->getEvents() as $event)
+          foreach($year->getEvents($team) as $event)
               echo $event->toHtml();
 
           ?>

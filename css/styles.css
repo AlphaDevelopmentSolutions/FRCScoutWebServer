@@ -410,3 +410,47 @@ html, body {
 {
   width: unset !important;
 }
+
+.homescreen
+{
+  background-color: #03A9F4;
+}
+
+.home-login
+{
+  text-align: center;
+  padding: 20px;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -60%);
+}
+
+.home-login > div
+{
+  padding: 20px;
+  background-color: white;
+  border-radius: 4px;
+  box-shadow: 0 0 5px;
+}
+
+.home-login > img
+{
+  padding: 5px;
+}
+
+.home-login .mdl-textfield__label:after
+{
+  background-color: #0288D1 !important;
+}
+
+.home-login .mdl-textfield__label
+{
+  color: #0288D1 !important;
+}
+
+.home-login button
+{
+  background-color: #0288D1 !important;
+  margin: 0 auto;
+}

@@ -1,23 +1,23 @@
 <?php
 require_once('../config.php');
-require_once(ROOT_DIR . '/classes/tables/Matches.php');
+require_once(ROOT_DIR . '/classes/tables/core/Matches.php');
+require_once(ROOT_DIR . '/classes/tables/core/Events.php');
 
-$database = new Database();
-$events = $database->query("SELECT BlueAllianceId FROM events");
+set_time_limit(600);
+
+$database = new Database('core');
+$database->query("delete from matches;");
 $database->close();
 
-if($events && $events->num_rows > 0)
+foreach(Events::getObjects() as $event)
 {
-    while ($row = $events->fetch_assoc())
-    {
-        getMatches($row['BlueAllianceId']);
-    }
+    getMatches($event->BlueAllianceId);
 }
 
-//cleanup duplicates
-$database = new Database();
-$database->query("DELETE matches1 FROM matches matches1, matches matches2 WHERE matches1.Id < matches2.Id AND matches1.Key = matches2.Key;");
-$database->close();
+////cleanup duplicates
+//$database = new Database('core');
+//$database->query("DELETE matches1 FROM matches matches1, matches matches2 WHERE matches1.Id < matches2.Id AND matches1.Key = matches2.Key;");
+//$database->close();
 
 function getMatches($eventCode)
 {

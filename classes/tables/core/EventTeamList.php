@@ -1,6 +1,6 @@
 <?php
 
-class EventTeamList extends Table
+class EventTeamList extends CoreTable
 {
     public $Id;
     public $TeamId;

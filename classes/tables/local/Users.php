@@ -1,6 +1,6 @@
 <?php
 
-class Users extends Table
+class Users extends LocalTable
 {
     public $Id;
     public $FirstName;

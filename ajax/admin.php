@@ -1,9 +1,9 @@
 <?php
 require_once("../config.php");
 require_once(ROOT_DIR . "/classes/Ajax.php");
-require_once(ROOT_DIR . "/classes/tables/RobotInfoKeys.php");
-require_once(ROOT_DIR . "/classes/tables/ScoutCardInfoKeys.php");
-require_once(ROOT_DIR . "/classes/tables/ChecklistItems.php");
+require_once(ROOT_DIR . "/classes/tables/local/RobotInfoKeys.php");
+require_once(ROOT_DIR . "/classes/tables/local/ScoutCardInfoKeys.php");
+require_once(ROOT_DIR . "/classes/tables/local/ChecklistItems.php");
 
 $ajax = new Ajax();
 

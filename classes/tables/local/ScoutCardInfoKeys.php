@@ -1,6 +1,6 @@
 <?php
 
-class ScoutCardInfoKeys extends Table
+class ScoutCardInfoKeys extends LocalTable
 {
     public $Id;
     public $YearId;
@@ -109,7 +109,7 @@ class ScoutCardInfoKeys extends Table
     {
         if(!empty($this->Id))
         {
-            require_once(ROOT_DIR . '/classes/tables/ScoutCardInfo.php');
+            require_once(ROOT_DIR . '/classes/tables/local/ScoutCardInfo.php');
 
             $currScoutCardInfokey = RobotInfoKeys::withId($this->Id);
 
@@ -143,7 +143,7 @@ class ScoutCardInfoKeys extends Table
     {
         if(!empty($this->Id))
         {
-            require_once(ROOT_DIR . '/classes/tables/ScoutCardInfo.php');
+            require_once(ROOT_DIR . '/classes/tables/local/ScoutCardInfo.php');
 
             //create the sql statement
             $sql = "DELETE FROM ! WHERE ! = ? AND ! = ?";

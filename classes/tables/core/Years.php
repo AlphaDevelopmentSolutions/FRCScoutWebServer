@@ -1,6 +1,6 @@
 <?php
 
-class Years extends Table
+class Years extends CoreTable
 {
     public $Id;
     public $Name;
@@ -12,19 +12,35 @@ class Years extends Table
 
     /**
      * Gets all events within this year
+     * @param $team Teams if specified, filters events by teams assigned to it
      * @return Events[]
      */
-    public function getEvents()
+    public function getEvents($team = null)
     {
-        require_once(ROOT_DIR . '/classes/tables/Events.php');
+        require_once(ROOT_DIR . '/classes/tables/core/Events.php');
 
         $response = array();
 
         //create the sql statement
-        $sql = "SELECT * FROM ! WHERE ! = ? ORDER BY ! DESC";
+        $sql = "SELECT * FROM ! WHERE ! = ? ";
         $cols[] = Events::$TABLE_NAME;
         $cols[] = 'YearId';
         $args[] = $this->Id;
+
+
+        if(!empty($team))
+        {
+            require_once(ROOT_DIR . '/classes/tables/core/EventTeamList.php');
+
+            $sql .= " AND ! IN (SELECT ! FROM ! WHERE ! = ?) ";
+            $cols[] = 'BlueAllianceId';
+            $cols[] = 'EventId';
+            $cols[] = EventTeamList::$TABLE_NAME;
+            $cols[] = 'TeamId';
+            $args[] = $team->Id;
+        }
+
+        $sql .= ' ORDER BY ! DESC';
         $cols[] = 'StartDate';
 
         $rows = self::queryRecords($sql, $cols, $args);

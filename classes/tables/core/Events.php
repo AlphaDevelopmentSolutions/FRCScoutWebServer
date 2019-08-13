@@ -1,6 +1,6 @@
 <?php
 
-class Events extends Table
+class Events extends CoreTable
 {
     public $Id;
     public $BlueAllianceId;
@@ -42,9 +42,9 @@ class Events extends Table
      */
     public function getTeams($match = null, $team = null)
     {
-        require_once(ROOT_DIR . '/classes/tables/Teams.php');
-        require_once(ROOT_DIR . '/classes/tables/EventTeamList.php');
-        require_once(ROOT_DIR . '/classes/tables/Matches.php');
+        require_once(ROOT_DIR . '/classes/tables/core/Teams.php');
+        require_once(ROOT_DIR . '/classes/tables/core/EventTeamList.php');
+        require_once(ROOT_DIR . '/classes/tables/core/Matches.php');
 
         $response = array();
 
@@ -133,8 +133,8 @@ class Events extends Table
      */
     public function getMatches($match = null, $team = null)
     {
-        require_once(ROOT_DIR . '/classes/tables/Matches.php');
-        require_once(ROOT_DIR . '/classes/tables/Teams.php');
+        require_once(ROOT_DIR . '/classes/tables/core/Matches.php');
+        require_once(ROOT_DIR . '/classes/tables/core/Teams.php');
 
         $response = array();
 
@@ -188,8 +188,8 @@ class Events extends Table
      */
     public function getRobotInfo($team = null, $robotInfo = null)
     {
-        require_once(ROOT_DIR . '/classes/tables/Teams.php');
-        require_once(ROOT_DIR . '/classes/tables/RobotInfo.php');
+        require_once(ROOT_DIR . '/classes/tables/core/Teams.php');
+        require_once(ROOT_DIR . '/classes/tables/local/RobotInfo.php');
 
         $response = array();
 
@@ -238,8 +238,8 @@ class Events extends Table
      */
     public function getScoutCardInfo($team = null, $scoutCardInfo = null)
     {
-        require_once(ROOT_DIR . '/classes/tables/Teams.php');
-        require_once(ROOT_DIR . '/classes/tables/ScoutCardInfo.php');
+        require_once(ROOT_DIR . '/classes/tables/core/Teams.php');
+        require_once(ROOT_DIR . '/classes/tables/local/ScoutCardInfo.php');
 
         $response = array();
 

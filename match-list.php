@@ -1,6 +1,6 @@
 <?php
 require_once("config.php");
-require_once(ROOT_DIR . "/classes/tables/Events.php");
+require_once(ROOT_DIR . "/classes/tables/core/Events.php");
 
 $eventId = $_GET['eventId'];
 

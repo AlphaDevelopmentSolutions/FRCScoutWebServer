@@ -1,6 +1,6 @@
 <?php
 
-class Teams extends Table
+class Teams extends CoreTable
 {
     public $Id;
     public $Name;
@@ -24,7 +24,7 @@ class Teams extends Table
      */
     public function getProfileImage($year)
     {
-        require_once(ROOT_DIR . '/classes/tables/RobotMedia.php');
+        require_once(ROOT_DIR . '/classes/tables/local/RobotMedia.php');
 
         //create the sql statement
         $sql = "SELECT * FROM ! WHERE ! = ? AND ! = ? ORDER BY ! DESC LIMIT 1";
@@ -35,11 +35,11 @@ class Teams extends Table
         $args[] = $year->Id;
         $cols[] = 'Id';
 
-        $rows = self::queryRecords($sql, $cols, $args);
+        $rows = self::queryRecords($sql, $cols, $args, LocalTable::$DB_NAME);
 
         foreach ($rows as $row)
         {
-            require_once(ROOT_DIR . "/classes/tables/RobotMedia.php");
+            require_once(ROOT_DIR . "/classes/tables/local/RobotMedia.php");
             return RobotMedia::withProperties($row);
         }
     }
@@ -51,7 +51,7 @@ class Teams extends Table
      */
     public function getRobotPhotos($year = null)
     {
-        require_once(ROOT_DIR . '/classes/tables/RobotMedia.php');
+        require_once(ROOT_DIR . '/classes/tables/local/RobotMedia.php');
 
         $response = array();
 
@@ -69,7 +69,7 @@ class Teams extends Table
 
         $cols[] = 'Id';
 
-        $rows = self::queryRecords($sql, $cols, $args);
+        $rows = self::queryRecords($sql, $cols, $args, LocalTable::$DB_NAME);
 
         foreach ($rows as $row)
             $response[] = RobotMedia::withProperties($row);
@@ -84,8 +84,8 @@ class Teams extends Table
      */
     public function toHtml($event = null)
     {
-        require_once(ROOT_DIR . '/classes/tables/Events.php');
-        require_once(ROOT_DIR . "/classes/tables/Years.php");
+        require_once(ROOT_DIR . '/classes/tables/core/Events.php');
+        require_once(ROOT_DIR . "/classes/tables/core/Years.php");
 
         $html =
             '<section class="section--center mdl-grid mdl-grid--no-spacing mdl-shadow--2dp team-card">

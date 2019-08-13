@@ -1,6 +1,6 @@
 <?php
 
-class RobotInfo extends Table
+class RobotInfo extends LocalTable
 {
     public $Id;
     public $YearId;
@@ -21,8 +21,8 @@ class RobotInfo extends Table
      */
     public static function forTeam($year = null, $event = null, $team = null)
     {
-        require_once(ROOT_DIR . '/classes/tables/RobotInfoKeys.php');
-        require_once(ROOT_DIR . '/classes/tables/RobotInfoArray.php');
+        require_once(ROOT_DIR . '/classes/tables/local/RobotInfoKeys.php');
+        require_once(ROOT_DIR . '/classes/tables/local/RobotInfoArray.php');
 
         $robotInfoArray = new RobotInfoArray();
 
@@ -110,9 +110,9 @@ class RobotInfo extends Table
     {
         if(!empty($this->PropertyValue))
         {
-            require_once(ROOT_DIR . '/classes/tables/Teams.php');
-            require_once(ROOT_DIR . '/classes/tables/Events.php');
-            require_once(ROOT_DIR . '/classes/tables/Years.php');
+            require_once(ROOT_DIR . '/classes/tables/core/Teams.php');
+            require_once(ROOT_DIR . '/classes/tables/core/Events.php');
+            require_once(ROOT_DIR . '/classes/tables/core/Years.php');
 
             $robotInfoArray = self::forTeam(Years::withId($this->YearId), Events::withId($this->EventId), Teams::withId($this->TeamId));
 

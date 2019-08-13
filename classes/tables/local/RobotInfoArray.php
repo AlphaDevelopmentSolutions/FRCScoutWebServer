@@ -12,7 +12,7 @@ class RobotInfoArray extends \ArrayObject implements ArrayAccess
         $robotInfoArray = array();
         $robotInfoKeyStates = array();
 
-        require_once(ROOT_DIR . "/classes/tables/Years.php");
+        require_once(ROOT_DIR . "/classes/tables/core/Years.php");
 
         for($i = 0; $i < sizeof($this) && empty($yearId); $i++)
         {

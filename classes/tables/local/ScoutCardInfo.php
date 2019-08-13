@@ -1,6 +1,6 @@
 <?php
 
-class ScoutCardInfo extends Table
+class ScoutCardInfo extends LocalTable
 {
     public $Id;
     public $YearId;
@@ -24,8 +24,8 @@ class ScoutCardInfo extends Table
      */
     public static function forTeam($year = null, $event = null, $match = null, $team = null)
     {
-        require_once(ROOT_DIR . '/classes/tables/ScoutCardInfoKeys.php');
-        require_once(ROOT_DIR . '/classes/tables/ScoutCardInfoArray.php');
+        require_once(ROOT_DIR . '/classes/tables/local/ScoutCardInfoKeys.php');
+        require_once(ROOT_DIR . '/classes/tables/local/ScoutCardInfoArray.php');
 
         $scoutCardInfoArray = new ScoutCardInfoArray();
 

@@ -1,6 +1,6 @@
 <?php
 
-class RobotMedia extends Table
+class RobotMedia extends LocalTable
 {
     public $Id;
     public $YearId;
@@ -23,6 +23,7 @@ class RobotMedia extends Table
 
         return false;
     }
+
 
     /**
      * Overrides parent::delete() method

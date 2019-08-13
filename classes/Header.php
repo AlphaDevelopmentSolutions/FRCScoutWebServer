@@ -39,7 +39,7 @@ class Header
                     <span class="mdl-layout-title header-title"><a style="text-decoration: none; color: white;" href="/">' . $this->Title . '</a></span>
                     <div class="mdl-layout-spacer"></div>' .
             ((!loggedIn()) ?
-                    '<form  action="login.php" method="post" style="">
+                    '<form  action="/ajax/login.php" method="post" style="">
                             <div class="mdl-textfield mdl-js-textfield login-field-wrapper">
                                 <input class="mdl-textfield__input login-field" type="text" name="username" style="background-color: white !important; color: black; ">
                                 <label class="mdl-textfield__label" for="username" style="padding-left: .5em; padding-right: .5em; ">Username</label>
@@ -54,7 +54,7 @@ class Header
                             <input type="hidden" name="url" value="' . $_SERVER['REQUEST_URI'] . '">
                         </form>'
                     :
-                    '<form action="/logout.php?" method="post">
+                    '<form action="/ajax/logout.php?" method="post">
                         <div class="mdl-textfield mdl-js-textfield login-field-wrapper">
                                 <h6 style="margin: 0 10px 0 0">Hello, ' . getUser()->FirstName . '</h6>
                             </div>

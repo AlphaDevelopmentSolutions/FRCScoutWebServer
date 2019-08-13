@@ -20,22 +20,37 @@ define('FILE_WRITE_FAIL_CODE' , '5x01');
 define('CURL_FAIL_CODE' , '5x02');
 
 
-verifyInstall();
+//verifyInstall();
 
 /**
  * REQUIRED FILES
  */
+require_once(ROOT_DIR . '/classes/Keys.php');
 require_once(ROOT_DIR . '/classes/Database.php');
 require_once(ROOT_DIR . '/classes/tables/Table.php');
-require_once(ROOT_DIR . '/classes/tables/Users.php');
-require_once(ROOT_DIR . '/classes/tables/Config.php');
+require_once(ROOT_DIR . '/classes/tables/local/Users.php');
+require_once(ROOT_DIR . '/classes/tables/local/Config.php');
+require_once(ROOT_DIR . '/classes/tables/core/CoreConfig.php');
+require_once(ROOT_DIR . '/classes/tables/core/Accounts.php');
 require_once(ROOT_DIR . '/interfaces/AllianceColors.php');
+
+if($_SERVER['REQUEST_URI'] != '/' && !coreLoggedIn())
+    header('Location: ' . '/');
+else if(coreLoggedIn())
+    define('DB_NAME', getCoreAccount()->DbId);
 
 /**
  * LOAD CONFIGS
  */
-$configs = Config::getObjects();
-foreach($configs as $config)
+if(coreLoggedIn())
+{
+    foreach (Config::getObjects() as $config)
+    {
+        define($config->Key, $config->Value);
+    }
+}
+
+foreach(CoreConfig::getObjects() as $config)
 {
     define($config->Key, $config->Value);
 }
@@ -84,6 +99,24 @@ function isPostBack()
 function loggedIn()
 {
     return !is_null(getUser());
+}
+
+/**
+ * Returns if the current user is logged into the core of the app
+ * @return bool
+ */
+function coreLoggedIn()
+{
+    return !is_null(getCoreAccount());
+}
+
+/**
+ * Returns the currently logged in user, if any
+ * @return Accounts|null
+ */
+function getCoreAccount()
+{
+    return !empty($_SESSION['coreAccount']) ? unserialize($_SESSION['coreAccount']) : null;
 }
 
 /**

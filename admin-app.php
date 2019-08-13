@@ -5,10 +5,10 @@ if (!getUser()->IsAdmin)
     header('Location: ' . URL_PATH);
 
 require_once(ROOT_DIR . "/classes/Ajax.php");
-require_once(ROOT_DIR . "/classes/tables/Years.php");
-require_once(ROOT_DIR . "/classes/tables/RobotInfoKeys.php");
-require_once(ROOT_DIR . "/classes/tables/ScoutCardInfoKeys.php");
-require_once(ROOT_DIR . "/classes/tables/ChecklistItems.php");
+require_once(ROOT_DIR . "/classes/tables/core/Years.php");
+require_once(ROOT_DIR . "/classes/tables/local/RobotInfoKeys.php");
+require_once(ROOT_DIR . "/classes/tables/local/ScoutCardInfoKeys.php");
+require_once(ROOT_DIR . "/classes/tables/local/ChecklistItems.php");
 
 $panel = $_GET['adminPanel'];
 

@@ -1,5 +1,8 @@
 <?php
 
+require_once(ROOT_DIR . '/classes/tables/core/CoreTable.php');
+require_once(ROOT_DIR . '/classes/tables/local/LocalTable.php');
+
 abstract class Table
 {
 
@@ -79,7 +82,6 @@ abstract class Table
      */
     function save()
     {
-
         if(empty($this->Id))
         {
             //create the sql statement
@@ -187,11 +189,12 @@ abstract class Table
      * @param string $query to run
      * @param string[] cols columns that will replace !
      * @param string[] | int[] $args arguments that will replace ?
+     * @param string | null $db database name to read from
      * @return string[]
      */
-    protected static function queryRecords($query, $cols = array(), $args = array())
+    protected static function queryRecords($query, $cols = array(), $args = array(), $db = null)
     {
-        $database = new Database();
+        $database = new Database((($db == null) ? static::$DB_NAME : $db));
         $results = $database->query($query, $cols, $args);
         $database->close();
 
@@ -208,7 +211,7 @@ abstract class Table
      */
     protected static function insertOrUpdateRecords($query, $cols = array(), $args = array())
     {
-        $database = new Database();
+        $database = new Database(static::$DB_NAME);
         $id = $database->insertOrUpdate($query, $cols, $args);
         $database->close();
         return $id;
@@ -223,7 +226,7 @@ abstract class Table
      */
     protected static function deleteRecords($query, $cols = array(), $args = array())
     {
-        $database = new Database();
+        $database = new Database(static::$DB_NAME);
         $success = $database->delete($query, $cols, $args);
         $database->close();
 

@@ -1,9 +1,9 @@
 <?php
 require_once("../config.php");
 require_once(ROOT_DIR . "/interfaces/AllianceColors.php");
-require_once(ROOT_DIR . "/classes/tables/ScoutCardInfoKeys.php");
-require_once(ROOT_DIR . "/classes/tables/Events.php");
-require_once(ROOT_DIR . "/classes/tables/Matches.php");
+require_once(ROOT_DIR . "/classes/tables/local/ScoutCardInfoKeys.php");
+require_once(ROOT_DIR . "/classes/tables/core/Events.php");
+require_once(ROOT_DIR . "/classes/tables/core/Matches.php");
 
 $eventId = $_GET['eventId'];
 $matchId = $_GET['matchId'];

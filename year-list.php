@@ -1,6 +1,6 @@
 <?php
 require_once("config.php");
-require_once(ROOT_DIR . "/classes/tables/Years.php");
+require_once(ROOT_DIR . "/classes/tables/core/Years.php");
 
 ?>
 
