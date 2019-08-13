@@ -10,7 +10,7 @@ if (session_status() == PHP_SESSION_NONE)
 /**
  * CONSTANTS
  */
-define('VERSION', 'v2019.3.0.0');
+define('VERSION', '4.0.0');
 define('ROOT_DIR', __DIR__);
 
 /**
