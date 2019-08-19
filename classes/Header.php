@@ -103,7 +103,8 @@ class Header
                         <a href="/event-list.php?yearId=' . $this->Event->YearId . '" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" style="margin: 1.5em; position: absolute !important; bottom: 0 !important; width: 167px;" >
                         Change Event
                         </a>
-                </div>';
+                </div>
+                ';
 
         else if(!empty($this->Year))
             $html .=
@@ -118,7 +119,35 @@ class Header
                         Change Year
                         </button>
                     </form>
+                </div>
+                ';
+
+        else if(getUser()->IsAdmin)
+            $html .=
+                '
+                <div class="mdl-layout__drawer">
+                    <span class="mdl-layout-title">' . APP_NAME . '</span>
+                    <nav class="mdl-navigation">
+                        <a href="/year-list.php" class="mdl-navigation__link">Years</a>
+                    </nav>
                 </div>';
+
+
+        //login code temporarily disabled
+
+//            $html .=
+//                '
+//                <div class="mdl-layout__drawer">
+//                    <span class="mdl-layout-title">' . ((loggedIn()) ? 'Hello, ' . getUser()->FirstName : APP_NAME) . '</span>
+//                    <nav class="mdl-navigation">
+//                        <a href="/match-list.php?eventId=' . $this->EventId . '" class="mdl-navigation__link">Matches</a>
+//                        <a href="/team-list.php?eventId=' . $this->EventId . '" class="mdl-navigation__link">Teams</a>
+//                        <a href="/checklist-item-list.php?eventId=' . $this->EventId . '" class="mdl-navigation__link">Checklist</a>
+//                        <a href="/stats.php?eventId=' . $this->EventId . '" class="mdl-navigation__link ">Stats</a>
+//                    </nav>' .
+//                 . '
+//                </div>
+//                ';
 
         return $html;
     }
