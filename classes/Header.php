@@ -7,6 +7,7 @@ class Header
     private $NavBar;
     private $Event;
     private $Year;
+    private $SettingsUrl;
 
     /**
      * Header constructor.
@@ -15,14 +16,16 @@ class Header
      * @param NavBar | NavBarArray $NavBar
      * @param Events $Event
      * @param Years $Year
+     * @param null $SettingsUrl
      */
-    public function __construct($Title, $AdditionalContent = null, $NavBar = null, $Event = null, $Year = null)
+    public function __construct($Title, $AdditionalContent = null, $NavBar = null, $Event = null, $Year = null, $SettingsUrl = null)
     {
         $this->Title = $Title;
         $this->AdditionalContent = $AdditionalContent;
         $this->NavBar = $NavBar;
         $this->Event = $Event;
         $this->Year = $Year;
+        $this->SettingsUrl = $SettingsUrl;
     }
 
     /**
@@ -54,15 +57,14 @@ class Header
                             <input type="hidden" name="url" value="' . $_SERVER['REQUEST_URI'] . '">
                         </form>'
                     :
-                    '<form action="/ajax/logout.php?" method="post">
-                        <div class="mdl-textfield mdl-js-textfield login-field-wrapper">
-                                <h6 style="margin: 0 10px 0 0">Hello, ' . getUser()->FirstName . '</h6>
-                            </div>
-                        <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" style="background-color: var(--color-primary-dark) !important;">
-                        Logout
-                        </button>
-                        <input type="hidden" name="url" value="' . $_SERVER['REQUEST_URI'] . '">
-                    </form>') .
+                    '<div style="font-size: 25px;">
+                        <a style="color: white; text-decoration: none; margin: 10px;" href="/account.php">
+                            <i class="fas fa-user-circle"></i>
+                        </a>
+                        <a style="color: white; text-decoration: none" href="/' . ((empty($this->SettingsUrl)) ? 'admin-app.php' : $this->SettingsUrl) . '">
+                            <i class="fa fa-cog"></i>
+                        </a>
+                    </div>') .
                 '</div>';
 
         //if additional content given, add
@@ -101,55 +103,22 @@ class Header
                         <a href="/event-list.php?yearId=' . $this->Event->YearId . '" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" style="margin: 1.5em; position: absolute !important; bottom: 0 !important; width: 167px;" >
                         Change Event
                         </a>
-                </div>
-                ';
+                </div>';
 
         else if(!empty($this->Year))
             $html .=
                 '
                 <div class="mdl-layout__drawer">
-                    <span class="mdl-layout-title">' . APP_NAME . '</span>' .
-                ((loggedIn() && getUser()->IsAdmin) ?
-                    '<nav class="mdl-navigation">
+                    <span class="mdl-layout-title">' . APP_NAME . '</span>
+                    <nav class="mdl-navigation">
                         <a href="/event-list.php?yearId=' . $this->Year->Id . '" class="mdl-navigation__link">Events</a>
-                        <a href="/admin-year.php?yearId=' . $this->Year->Id . '" class="mdl-navigation__link">' . $this->Year->Id . ' Configuration</a>
-                    </nav>' : '') .
-                    '<form action="' . URL_PATH . '/year-list.php" style="margin: 1.5em; position: absolute !important; bottom: 0 !important;" method="get">
+                    </nav>
+                    <form action="' . URL_PATH . '/year-list.php" style="margin: 1.5em; position: absolute !important; bottom: 0 !important;" method="get">
                         <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" style="width: 199px;">
                         Change Year
                         </button>
                     </form>
-                </div>
-                ';
-
-        else if(getUser()->IsAdmin)
-            $html .=
-                '
-                <div class="mdl-layout__drawer">
-                    <span class="mdl-layout-title">' . APP_NAME . '</span>' .
-                ((getUser()->IsAdmin) ?
-                    '<nav class="mdl-navigation">
-                        <a href="/year-list.php" class="mdl-navigation__link">Years</a>
-                        <a href="/admin-app.php" class="mdl-navigation__link">App Configuration</a>
-                    </nav>' : '') .
-                '</div>';
-
-
-        //login code temporarily disabled
-
-//            $html .=
-//                '
-//                <div class="mdl-layout__drawer">
-//                    <span class="mdl-layout-title">' . ((loggedIn()) ? 'Hello, ' . getUser()->FirstName : APP_NAME) . '</span>
-//                    <nav class="mdl-navigation">
-//                        <a href="/match-list.php?eventId=' . $this->EventId . '" class="mdl-navigation__link">Matches</a>
-//                        <a href="/team-list.php?eventId=' . $this->EventId . '" class="mdl-navigation__link">Teams</a>
-//                        <a href="/checklist-item-list.php?eventId=' . $this->EventId . '" class="mdl-navigation__link">Checklist</a>
-//                        <a href="/stats.php?eventId=' . $this->EventId . '" class="mdl-navigation__link ">Stats</a>
-//                    </nav>' .
-//                 . '
-//                </div>
-//                ';
+                </div>';
 
         return $html;
     }

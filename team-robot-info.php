@@ -118,7 +118,7 @@ $event = Events::withId($eventId);
     $additionContent .=
         '</div>';
 
-    $header = new Header($event->Name, $additionContent, $navBarArray, $event);
+    $header = new Header($event->Name, $additionContent, $navBarArray, $event, null, 'admin-year.php?yearId=' . $event->YearId);
 
     echo $header->toHtml();
 

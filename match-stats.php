@@ -58,7 +58,7 @@ if(!empty($teamId))
     $navBarArray[] = new NavBar($navBarLinksArray);
 
 
-    $header = new Header($event->Name, $additionContent, $navBarArray, $event);
+    $header = new Header($event->Name, $additionContent, $navBarArray, $event, null, 'admin-year.php?yearId=' . $event->YearId);
 
     echo $header->toHtml();
 

@@ -14,11 +14,6 @@ foreach(Events::getObjects() as $event)
     getMatches($event->BlueAllianceId);
 }
 
-////cleanup duplicates
-//$database = new Database('core');
-//$database->query("DELETE matches1 FROM matches matches1, matches matches2 WHERE matches1.Id < matches2.Id AND matches1.Key = matches2.Key;");
-//$database->close();
-
 function getMatches($eventCode)
 {
     $url = "https://www.thebluealliance.com/api/v3/event/" . $eventCode . "/matches/simple?X-TBA-Auth-Key=" . BLUE_ALLIANCE_KEY;

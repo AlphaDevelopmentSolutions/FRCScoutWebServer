@@ -72,7 +72,7 @@ switch ($panel)
 
     $navBar = new NavBar($navBarLinksArray);
 
-    $header = new Header($year->toString() . ' - Admin Panel', null, $navBar, null, $year);
+    $header = new Header($year->toString() . ' - Admin Panel', null, $navBar, null, $year, 'admin-year.php?yearId=' . $year->Id);
 
     echo $header->toHtml();
     ?>
