@@ -15,7 +15,7 @@ class NavBarLink
     public function __construct($Title, $Link, $IsActive = false)
     {
         $this->Title = $Title;
-        $this->Link = $Link;
+        $this->Link = URL_PATH . $Link;
         $this->IsActive = $IsActive;
     }
 

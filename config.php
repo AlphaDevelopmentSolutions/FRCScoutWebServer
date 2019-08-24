@@ -46,6 +46,8 @@ foreach(CoreConfig::getObjects() as $config)
     define($config->Key, $config->Value);
 }
 
+define('URL_PATH', 'https://' . $_SERVER[SERVER_NAME] . ((coreLoggedIn()) ? '/' . getCoreAccount()->TeamId : ''));
+
 /**
  * MEDIA FILES
  */
@@ -58,7 +60,6 @@ require_once(ROOT_DIR . "/classes/NavBarArray.php");
 require_once(ROOT_DIR . "/classes/NavBarLink.php");
 require_once(ROOT_DIR . "/classes/NavBarLinkArray.php");
 
-
 //set the user var
 $user = getUser();
 
@@ -69,7 +70,6 @@ if(false)
     define('APP_NAME', '');
     define('TEAM_NUMBER', '');
     define('TEAM_NAME', '');
-    define('URL_PATH', '');
     define('BLUE_ALLIANCE_KEY', '');
     define('API_KEY', '');
 }

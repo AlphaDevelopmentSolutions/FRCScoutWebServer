@@ -184,15 +184,15 @@ class Matches extends CoreTable
                             <div class="row">
                                 <table class="match-table">
                                     <tr class="blue-alliance-bg">
-                                        <td><a href="/team-matches.php?teamId=' . $this->BlueAllianceTeamOneId . '&eventId=' . $this->EventId .'" class="team-link ' . (($teamId == $this->BlueAllianceTeamOneId) ? " tr-selected-team " : "") . (($this->BlueAllianceScore > $this->RedAllianceScore) ? " tr-win " : "") . '">' . $this->BlueAllianceTeamOneId . '</a></td>
-                                        <td><a href="/team-matches.php?teamId=' . $this->BlueAllianceTeamTwoId . '&eventId=' . $this->EventId .'" class="team-link ' . (($teamId == $this->BlueAllianceTeamTwoId) ? " tr-selected-team " : "") . (($this->BlueAllianceScore > $this->RedAllianceScore) ? " tr-win " : "") . '">' . $this->BlueAllianceTeamTwoId . '</a></td>
-                                        <td><a href="/team-matches.php?teamId=' . $this->BlueAllianceTeamThreeId . '&eventId=' . $this->EventId .'" class="team-link ' . (($teamId == $this->BlueAllianceTeamThreeId) ? " tr-selected-team " : "") . (($this->BlueAllianceScore > $this->RedAllianceScore) ? " tr-win " : "") . '">' . $this->BlueAllianceTeamThreeId . '</a></td>
+                                        <td><a href="' . URL_PATH . '/team-matches.php?teamId=' . $this->BlueAllianceTeamOneId . '&eventId=' . $this->EventId .'" class="team-link ' . (($teamId == $this->BlueAllianceTeamOneId) ? " tr-selected-team " : "") . (($this->BlueAllianceScore > $this->RedAllianceScore) ? " tr-win " : "") . '">' . $this->BlueAllianceTeamOneId . '</a></td>
+                                        <td><a href="' . URL_PATH . '/team-matches.php?teamId=' . $this->BlueAllianceTeamTwoId . '&eventId=' . $this->EventId .'" class="team-link ' . (($teamId == $this->BlueAllianceTeamTwoId) ? " tr-selected-team " : "") . (($this->BlueAllianceScore > $this->RedAllianceScore) ? " tr-win " : "") . '">' . $this->BlueAllianceTeamTwoId . '</a></td>
+                                        <td><a href="' . URL_PATH . '/team-matches.php?teamId=' . $this->BlueAllianceTeamThreeId . '&eventId=' . $this->EventId .'" class="team-link ' . (($teamId == $this->BlueAllianceTeamThreeId) ? " tr-selected-team " : "") . (($this->BlueAllianceScore > $this->RedAllianceScore) ? " tr-win " : "") . '">' . $this->BlueAllianceTeamThreeId . '</a></td>
                                         <td><span ' . (($this->BlueAllianceScore > $this->RedAllianceScore) ? 'style="font-weight: bold;"' : 'style="font-weight: 300;"') . '>' . $this->BlueAllianceScore . '</span></td>
                                     </tr>
                                     <tr class="red-alliance-bg">
-                                        <td><a href="/team-matches.php?teamId=' . $this->RedAllianceTeamOneId . '&eventId=' . $this->EventId .'" class="team-link ' . (($teamId == $this->RedAllianceTeamOneId) ? " tr-selected-team " : "") . (($this->BlueAllianceScore < $this->RedAllianceScore) ? " tr-win " : "") . '">' . $this->RedAllianceTeamOneId . '</a></td>
-                                        <td><a href="/team-matches.php?teamId=' . $this->RedAllianceTeamTwoId . '&eventId=' . $this->EventId .'" class="team-link ' . (($teamId == $this->RedAllianceTeamTwoId) ? " tr-selected-team " : "") . (($this->BlueAllianceScore < $this->RedAllianceScore) ? " tr-win " : "") . '">' . $this->RedAllianceTeamTwoId . '</a></td>
-                                        <td><a href="/team-matches.php?teamId=' . $this->RedAllianceTeamThreeId . '&eventId=' . $this->EventId .'" class="team-link ' . (($teamId == $this->RedAllianceTeamThreeId) ? " tr-selected-team " : "") . (($this->BlueAllianceScore < $this->RedAllianceScore) ? " tr-win " : "") . '">' . $this->RedAllianceTeamThreeId . '</a></td>
+                                        <td><a href="' . URL_PATH . '/team-matches.php?teamId=' . $this->RedAllianceTeamOneId . '&eventId=' . $this->EventId .'" class="team-link ' . (($teamId == $this->RedAllianceTeamOneId) ? " tr-selected-team " : "") . (($this->BlueAllianceScore < $this->RedAllianceScore) ? " tr-win " : "") . '">' . $this->RedAllianceTeamOneId . '</a></td>
+                                        <td><a href="' . URL_PATH . '/team-matches.php?teamId=' . $this->RedAllianceTeamTwoId . '&eventId=' . $this->EventId .'" class="team-link ' . (($teamId == $this->RedAllianceTeamTwoId) ? " tr-selected-team " : "") . (($this->BlueAllianceScore < $this->RedAllianceScore) ? " tr-win " : "") . '">' . $this->RedAllianceTeamTwoId . '</a></td>
+                                        <td><a href="' . URL_PATH . '/team-matches.php?teamId=' . $this->RedAllianceTeamThreeId . '&eventId=' . $this->EventId .'" class="team-link ' . (($teamId == $this->RedAllianceTeamThreeId) ? " tr-selected-team " : "") . (($this->BlueAllianceScore < $this->RedAllianceScore) ? " tr-win " : "") . '">' . $this->RedAllianceTeamThreeId . '</a></td>
                                         <td><span ' . (($this->BlueAllianceScore < $this->RedAllianceScore) ? 'style="font-weight: bold;"' : 'style="font-weight: 300;"') . '>' . $this->RedAllianceScore . '</span></td>
                                     </tr>
                                 </table>
@@ -200,7 +200,7 @@ class Matches extends CoreTable
                         </div>
                     </div>
                     <div class="mdl-card__actions">
-                        <a href="' . $buttonHref . '" class="mdl-button">' . $buttonText . '</a>
+                        <a href="' . URL_PATH . $buttonHref . '" class="mdl-button">' . $buttonText . '</a>
                     </div>
                 </div>
             </section>
