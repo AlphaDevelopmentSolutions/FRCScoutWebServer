@@ -258,6 +258,7 @@ html, body {
   text-align: center;
   width: 100%;
   color: rgba(0, 0, 0, .25);
+  padding: 8px 0;
 }
 
 .circle-image
@@ -453,4 +454,14 @@ html, body {
 {
   background-color: #0288D1 !important;
   margin: 0 auto;
+}
+
+.center-div-outer
+{
+  text-align: center;
+}
+
+.center-div-inner
+{
+  display: inline-block;
 }

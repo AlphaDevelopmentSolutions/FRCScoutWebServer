@@ -106,6 +106,7 @@ class Header
                 </div>
                 ';
 
+        //or if the year given, add nav drawer
         else if(!empty($this->Year))
             $html .=
                 '
@@ -122,7 +123,7 @@ class Header
                 </div>
                 ';
 
-        else if(getUser()->IsAdmin)
+        else
             $html .=
                 '
                 <div class="mdl-layout__drawer">
@@ -131,23 +132,6 @@ class Header
                         <a href="/year-list.php" class="mdl-navigation__link">Years</a>
                     </nav>
                 </div>';
-
-
-        //login code temporarily disabled
-
-//            $html .=
-//                '
-//                <div class="mdl-layout__drawer">
-//                    <span class="mdl-layout-title">' . ((loggedIn()) ? 'Hello, ' . getUser()->FirstName : APP_NAME) . '</span>
-//                    <nav class="mdl-navigation">
-//                        <a href="/match-list.php?eventId=' . $this->EventId . '" class="mdl-navigation__link">Matches</a>
-//                        <a href="/team-list.php?eventId=' . $this->EventId . '" class="mdl-navigation__link">Teams</a>
-//                        <a href="/checklist-item-list.php?eventId=' . $this->EventId . '" class="mdl-navigation__link">Checklist</a>
-//                        <a href="/stats.php?eventId=' . $this->EventId . '" class="mdl-navigation__link ">Stats</a>
-//                    </nav>' .
-//                 . '
-//                </div>
-//                ';
 
         return $html;
     }

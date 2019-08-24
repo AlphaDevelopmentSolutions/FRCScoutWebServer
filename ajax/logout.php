@@ -1,7 +1,7 @@
 <?php
 require_once("../config.php");
 
-session_destroy();
+unset($_SESSION['user']);
 
 $url = $_POST['url'];
 

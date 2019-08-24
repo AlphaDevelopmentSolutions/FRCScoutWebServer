@@ -36,6 +36,7 @@ class Users extends LocalTable
             $this->Id = $response->Id;
             $this->FirstName = $response->FirstName;
             $this->LastName = $response->LastName;
+            $this->UserName = $response->UserName;
             $this->IsAdmin = $response->IsAdmin;
         }
 
@@ -49,7 +50,36 @@ class Users extends LocalTable
      */
     public function toHtml()
     {
-        // TODO: Implement toHtml() method.
+        $html = '<div style="width: 50%; margin: auto;">
+            <div style="height: unset" class="mdl-layout__header-row">
+                <div>
+                    <h1>Hello,</h1>
+                    <h3>' . $this->FirstName . '</h3>
+                </div>
+                <div class="circle-image" style="margin-left:auto; margin-right:0;">
+                    <i style="font-size: 200px" class="fas fa-user-circle"></i>
+                </div>
+            </div>
+            
+            <div style="margin: 0 40px;" class="mdl-card__supporting-text">
+                <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                    <input disabled class="mdl-textfield__input" type="text" value="' . $this->FirstName . ' ' . $this->LastName .'" name="completedBy">
+                    <label class="mdl-textfield__label" >Name</label>
+                </div>
+                <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                    <input disabled class="mdl-textfield__input" type="text" value="' . $this->UserName .'" name="completedBy">
+                    <label class="mdl-textfield__label" >Username</label>
+                </div>
+              
+            </div>
+            <div class="center-div-outer">
+                <form class="center-div-inner" action="/ajax/logout.php">
+                    <button class="mdl-button mdl-js-button mdl-js-ripple-effect">Logout</button>
+                </form>
+            </div>
+        </div>';
+
+        return $html;
     }
 
     /**
