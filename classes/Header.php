@@ -84,54 +84,46 @@ class Header
 
         //close the title view
         $html .=
-            '
-            </header>
-            ';
+            '</header>
+            <div class="mdl-layout__drawer">';
 
         //if event id given, add the nav drawer
         if(!empty($this->Event))
             $html .=
-                '
-                <div class="mdl-layout__drawer">
-                    <span class="mdl-layout-title">' . APP_NAME . '</span>
+                '<span class="mdl-layout-title">' . APP_NAME . '</span>
                     <nav class="mdl-navigation">
                         <a href="' . URL_PATH . '/match-list.php?eventId=' . $this->Event->BlueAllianceId . '" class="mdl-navigation__link">Matches</a>
                         <a href="' . URL_PATH . '/team-list.php?eventId=' . $this->Event->BlueAllianceId . '" class="mdl-navigation__link">Teams</a>
                         <a href="' . URL_PATH . '/checklist-item-list.php?eventId=' . $this->Event->BlueAllianceId . '" class="mdl-navigation__link">Checklist</a>
                         <a href="' . URL_PATH . '/stats.php?eventId=' . $this->Event->BlueAllianceId . '" class="mdl-navigation__link ">Stats</a>
                     </nav>
-                        <a href="' . URL_PATH . '/event-list.php?yearId=' . $this->Event->YearId . '" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" style="margin: 1.5em; position: absolute !important; bottom: 0 !important; width: 167px;" >
+                    <a href="' . URL_PATH . '/event-list.php?yearId=' . $this->Event->YearId . '" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" style="margin: 1.5em; position: absolute !important; bottom: 50px !important; width: 167px;" >
                         Change Event
-                        </a>
-                </div>
-                ';
+                    </a>';
 
         //or if the year given, add nav drawer
         else if(!empty($this->Year))
             $html .=
-                '
-                <div class="mdl-layout__drawer">
-                    <span class="mdl-layout-title">' . APP_NAME . '</span>
+                '<span class="mdl-layout-title">' . APP_NAME . '</span>
                     <nav class="mdl-navigation">
                         <a href="' . URL_PATH . '/event-list.php?yearId=' . $this->Year->Id . '" class="mdl-navigation__link">Events</a>
                     </nav>
-                    <form action="' . URL_PATH . '/year-list.php" style="margin: 1.5em; position: absolute !important; bottom: 0 !important;" method="get">
-                        <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" style="width: 199px;">
+                    <a href="' . URL_PATH . '/year-list.php" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" style="margin: 1.5em; position: absolute !important; bottom: 50px !important; width: 167px;" >
                         Change Year
-                        </button>
-                    </form>
-                </div>
-                ';
+                    </a>';
 
         else
             $html .=
-                '
-                <div class="mdl-layout__drawer">
-                    <span class="mdl-layout-title">' . APP_NAME . '</span>
+                '<span class="mdl-layout-title">' . APP_NAME . '</span>
                     <nav class="mdl-navigation">
                         <a href="' . URL_PATH . '/year-list.php" class="mdl-navigation__link">Years</a>
-                    </nav>
-                </div>';
+                    </nav>';
+
+        $html .=
+                '<a href="' . ROOT_URL . '?logout=1' . '" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" style="margin: 1.5em; position: absolute !important; bottom: 0 !important; width: 167px;" >
+                    Change Team
+                </a>
+            </div>';
 
         return $html;
     }

@@ -46,7 +46,8 @@ foreach(CoreConfig::getObjects() as $config)
     define($config->Key, $config->Value);
 }
 
-define('URL_PATH', 'https://' . $_SERVER[SERVER_NAME] . ((coreLoggedIn()) ? '/' . getCoreAccount()->TeamId : ''));
+define('ROOT_URL', 'https://' . $_SERVER[SERVER_NAME]);
+define('URL_PATH', ROOT_URL . ((coreLoggedIn()) ? '/' . getCoreAccount()->TeamId : ''));
 
 /**
  * MEDIA FILES

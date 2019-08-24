@@ -2,6 +2,12 @@
 require_once("config.php");
 require_once(ROOT_DIR . '/classes/tables/core/Accounts.php');
 
+if($_GET['logout'] == 1)
+{
+    session_destroy();
+    header('Location: '. ROOT_URL);
+}
+
 if(isPostBack())
 {
     $coreAccount = Accounts::login($_POST['username'], $_POST['password']);
@@ -10,10 +16,8 @@ if(isPostBack())
         $_SESSION['coreAccount'] = serialize($coreAccount);
 }
 
-//unset($_SESSION['coreAccount']);
-
 if(coreLoggedIn())
-    header('Location: '. URL_PATH . '/event-list.php?yearId=' . date('Y'));
+    header('Location: '. ROOT_URL . '/' . getCoreAccount()->TeamId . '/event-list.php?yearId=' . date('Y'));
 ?>
 <!doctype html>
 <html lang="en">
