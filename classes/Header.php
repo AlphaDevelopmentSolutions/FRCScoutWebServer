@@ -96,10 +96,8 @@ class Header
                         <a href="' . URL_PATH . '/team-list.php?eventId=' . $this->Event->BlueAllianceId . '" class="mdl-navigation__link">Teams</a>
                         <a href="' . URL_PATH . '/checklist-item-list.php?eventId=' . $this->Event->BlueAllianceId . '" class="mdl-navigation__link">Checklist</a>
                         <a href="' . URL_PATH . '/stats.php?eventId=' . $this->Event->BlueAllianceId . '" class="mdl-navigation__link ">Stats</a>
-                    </nav>
-                    <a href="' . URL_PATH . '/event-list.php?yearId=' . $this->Event->YearId . '" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" style="margin: 1.5em; position: absolute !important; bottom: 50px !important; width: 167px;" >
-                        Change Event
-                    </a>';
+                        <a href="' . URL_PATH . '/event-list.php?yearId=' . $this->Event->YearId . '" class="mdl-navigation__link ">Events</a>
+                    </nav>';
 
         //or if the year given, add nav drawer
         else if(!empty($this->Year))
@@ -107,10 +105,8 @@ class Header
                 '<span class="mdl-layout-title">' . APP_NAME . '</span>
                     <nav class="mdl-navigation">
                         <a href="' . URL_PATH . '/event-list.php?yearId=' . $this->Year->Id . '" class="mdl-navigation__link">Events</a>
-                    </nav>
-                    <a href="' . URL_PATH . '/year-list.php" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" style="margin: 1.5em; position: absolute !important; bottom: 50px !important; width: 167px;" >
-                        Change Year
-                    </a>';
+                        <a href="' . URL_PATH . '/year-list.php" class="mdl-navigation__link">Years</a>
+                    </nav>';
 
         else
             $html .=
@@ -120,8 +116,8 @@ class Header
                     </nav>';
 
         $html .=
-                '<a href="' . ROOT_URL . '?logout=1' . '" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" style="margin: 1.5em; position: absolute !important; bottom: 0 !important; width: 167px;" >
-                    Change Team
+                '<a href="' . ROOT_URL . '?logout=1' . '" class="mdl-button mdl-js-button mdl-js-ripple-effect" style="margin: 1.5em; position: absolute !important; bottom: 0 !important; width: 167px;" >
+                    Logout
                 </a>
             </div>';
 

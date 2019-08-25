@@ -465,3 +465,28 @@ html, body {
 {
   display: inline-block;
 }
+
+.create-account,
+.create-account a
+{
+  font-size: 12px;
+  font-weight: 200;
+  text-decoration: none;
+  color: white;
+  margin-top: 8px;
+}
+
+.create-account a:hover
+{
+  color: lightgrey;
+}
+
+.card-section-header
+{
+  padding-left: 40px;
+}
+
+.create-acc-button
+{
+  margin: 0 5px 2px 1px;
+}

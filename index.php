@@ -1,12 +1,17 @@
 <?php
+
+if(!empty($_GET))
+{
+    if ($_GET['logout'] == 1)
+    {
+        session_start();
+        unset($_SESSION);
+        session_destroy();
+    }
+}
+
 require_once("config.php");
 require_once(ROOT_DIR . '/classes/tables/core/Accounts.php');
-
-if($_GET['logout'] == 1)
-{
-    session_destroy();
-    header('Location: '. ROOT_URL);
-}
 
 if(isPostBack())
 {
@@ -47,9 +52,45 @@ if(coreLoggedIn())
                     </button>
                 </form>
             </div>
+            <p class="create-account">
+                New to the platform? <a href="<?php ROOT_URL ?>/create-account.php">Create your teams account!</a>
+            </p>
+
         </div>
     </main>
 </div>
+<?php
+
+if(!empty($_GET))
+{
+    if($_GET['installSuccess'] == 1)
+    {
+        ?>
+        <div id="demo-toast-example" class="mdl-js-snackbar mdl-snackbar">
+            <div class="mdl-snackbar__text"></div>
+            <button class="mdl-snackbar__action" type="button"></button>
+        </div>
+
+        <script>
+            var snackbarContainer = document.querySelector('#demo-toast-example');
+
+            function showToast(message)
+            {
+                'use strict';
+                var data = {message: message};
+                snackbarContainer.MaterialSnackbar.showSnackbar(data);
+            }
+
+            $(document).ready(function()
+            {
+               showToast('Install Successful. You may now login with your credentials.'); 
+            });
+        </script>
+<?php
+    }
+}
+
+?>
 <?php require_once('includes/bottom-scripts.php') ?>
 </body>
 </html>

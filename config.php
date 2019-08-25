@@ -3,6 +3,8 @@
 //ini_set('display_startup_errors', 1);
 //error_reporting(E_ALL);
 
+header("Access-Control-Allow-Origin: *");
+
 //start session
 if (session_status() == PHP_SESSION_NONE)
     session_start();
@@ -28,10 +30,11 @@ require_once(ROOT_DIR . '/interfaces/AllianceColors.php');
 /**
  * LOAD CONFIGS
  */
-if($_SERVER['REQUEST_URI'] != '/' && !coreLoggedIn())
-    header('Location: ' . '/');
-else if(coreLoggedIn())
+if(coreLoggedIn())
     define('DB_NAME', getCoreAccount()->DbId);
+else if($_SERVER['SCRIPT_NAME'] != '/index.php' && $_SERVER['SCRIPT_NAME'] != '/create-account.php' && strpos($_SERVER['REQUEST_URI'], 'ajax') === false)
+    header('Location: ' . '/');
+
 
 if(coreLoggedIn())
 {
@@ -46,7 +49,7 @@ foreach(CoreConfig::getObjects() as $config)
     define($config->Key, $config->Value);
 }
 
-define('ROOT_URL', 'https://' . $_SERVER[SERVER_NAME]);
+define('ROOT_URL', 'https://' . $_SERVER['SERVER_NAME']);
 define('URL_PATH', ROOT_URL . ((coreLoggedIn()) ? '/' . getCoreAccount()->TeamId : ''));
 
 /**

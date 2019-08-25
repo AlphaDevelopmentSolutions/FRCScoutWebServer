@@ -6,6 +6,7 @@ class Accounts extends CoreTable
     public $TeamId;
     public $Email;
     public $Username;
+    public $Password;
     public $DbId;
 
     public static $TABLE_NAME = 'accounts';

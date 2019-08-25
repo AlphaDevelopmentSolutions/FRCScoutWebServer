@@ -5,9 +5,9 @@ class Database extends PDO
 
     /**
      * Database constructor.
-     * @param $db name for database to access
+     * @param string | null $db name for database to access
      */
-    function __construct($db)
+    function __construct($db = null)
     {
 
         // Get the main settings from the array we just loaded
@@ -15,7 +15,7 @@ class Database extends PDO
         $user = MYSQL_USER;
         $pass = MYSQL_PASSWORD;
 
-        $dsn = "mysql:host=$host;dbname=$db;charset=utf8mb4";
+        $dsn = "mysql:host=$host;" . ((!empty($db)) ? "dbname=$db;" : "") . "charset=utf8mb4";
 
         $options = [
             PDO::ATTR_EMULATE_PREPARES   => false, // turn off emulation mode for "real" prepared statements

@@ -13,7 +13,7 @@ if(!empty($username) && !empty($password))
 }
 
 if(!empty($url))
-    header('Location: ' . URL_PATH . $url);
+    header('Location: ' . ROOT_URL . $url);
 
 else
     header('Location: ' . URL_PATH);
