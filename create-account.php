@@ -57,6 +57,35 @@ require_once(ROOT_DIR . '/classes/Ajax.php');
 
                         </div>
 
+                        <strong class="card-section-header">App Admin Account</strong>
+                        <div class="mdl-card__supporting-text">
+                            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                                <input required class="mdl-textfield__input" type="text" name="adminFirstName" id="adminFirstName" placeholder=" ">
+                                <label class="mdl-textfield__label" >First Name</label>
+                            </div>
+
+                            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                                <input required class="mdl-textfield__input" type="text" name="adminLastName" id="adminLastName" placeholder=" ">
+                                <label class="mdl-textfield__label" >Last Name</label>
+                            </div>
+
+                            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                                <input required class="mdl-textfield__input" type="text" name="adminUsername" id="adminUsername" placeholder=" ">
+                                <label class="mdl-textfield__label" >Username</label>
+                            </div>
+
+                            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                                <input required class="mdl-textfield__input" type="password" name="adminPassword" id="adminPassword" placeholder=" ">
+                                <label class="mdl-textfield__label" >Password</label>
+                            </div>
+
+                            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                                <input required class="mdl-textfield__input" type="password" name="adminRetypePassword" id="adminRetypePassword" placeholder=" ">
+                                <label class="mdl-textfield__label" >Retype Password</label>
+                            </div>
+
+                        </div>
+
                         <strong class="card-section-header">App Details</strong>
                         <div class="mdl-card__supporting-text">
                             <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
@@ -95,11 +124,11 @@ require_once(ROOT_DIR . '/classes/Ajax.php');
                         </div>
 
                         <div class="mdl-card__supporting-text" style="margin-bottom: 30px;">
-                            <button onclick="window.location.replace('<?php echo ROOT_URL ?>')" name="save" id="save" type="submit" class="create-acc-button mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect">
+                            <button onclick="window.location.replace('<?php echo ROOT_URL ?>')" name="save" id="save" type="button" class="create-acc-button mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect">
                                 Cancel
                             </button>
 
-                            <button onclick="createAccount()" name="save" id="save" type="submit" class="create-acc-button mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect">
+                            <button name="save" id="save" type="submit" class="create-acc-button mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect">
                                 Save
                             </button>
                         </div>
@@ -140,6 +169,7 @@ require_once(ROOT_DIR . '/classes/Ajax.php');
         $('#install-form').submit(function(e)
         {
             e.preventDefault();
+            createAccount();
         })
     });
 
@@ -156,6 +186,11 @@ require_once(ROOT_DIR . '/classes/Ajax.php');
                 email : $('#email').val(),
                 password : $('#password').val(),
                 retypePassword : $('#retypePassword').val(),
+                adminFirstName : $('#adminFirstName').val(),
+                adminLastName : $('#adminLastName').val(),
+                adminUsername : $('#adminUsername').val(),
+                adminPassword : $('#adminPassword').val(),
+                adminRetypePassword : $('#adminRetypePassword').val(),
                 teamNumber : $('#teamNumber').val(),
                 appName : $('#appName').val(),
                 apiKey : $('#apiKey').val(),

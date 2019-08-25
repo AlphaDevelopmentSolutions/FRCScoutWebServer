@@ -13,6 +13,12 @@ switch ($_POST['action'])
         $password = $_POST['password'];
         $retypePassword = $_POST['retypePassword'];
 
+        $adminFirstName = $_POST['adminFirstName'];
+        $adminLastName = $_POST['adminLastName'];
+        $adminUsername = $_POST['adminUsername'];
+        $adminPassword = $_POST['adminPassword'];
+        $adminRetypePassword = $_POST['adminRetypePassword'];
+
         $teamNumber = $_POST['teamNumber'];
         $appName = $_POST['appName'];
         $apiKey = $_POST['apiKey'];
@@ -41,6 +47,21 @@ switch ($_POST['action'])
 
         if ($password != $retypePassword)
             $ajax->error('Passwords do not match.');
+
+        if (empty($adminFirstName) || !ctype_alpha($adminFirstName))
+            $ajax->error('Admin first name may only include A-Z.');
+
+        if (empty($adminLastName) || !ctype_alpha($adminLastName))
+            $ajax->error('Admin last name may only include A-Z.');
+
+        if (empty($adminUsername) || !validAlnum($adminUsername) || strlen($adminUsername) < 6)
+            $ajax->error('Admin username may only include A-Z 0-9 and must be at least 6 characters.');
+
+        if (empty($adminPassword) || !validAlnum($adminPassword) || strlen($adminPassword) < 6)
+            $ajax->error('Admin password may only include A-Z 0-9 and must be at least 6 characters.');
+
+        if ($adminPassword != $adminRetypePassword)
+            $ajax->error('Admin passwords do not match.');
 
         if (empty($teamNumber) || !ctype_digit($teamNumber))
             $ajax->error('Team number may only be 0-9.');
@@ -124,6 +145,13 @@ switch ($_POST['action'])
             $conf->Value = $secondaryColor;
             $conf->save();
 
+            $user = new Users();
+            $user->FirstName = $adminFirstName;
+            $user->LastName = $adminLastName;
+            $user->UserName = $adminUsername;
+            $user->Password = md5($adminPassword);
+            $user->IsAdmin = 1;
+            $user->save();
 
             $account = new Accounts();
             $account->TeamId = $teamNumber;
