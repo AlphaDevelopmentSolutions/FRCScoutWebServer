@@ -47,35 +47,51 @@ var teamList =
 
 var matchId = '<?php echo ((empty($match)) ? '' : $match->Key) ?>';
 
+var graphData;
+
 $(document).ready(function ()
 {
-    updateGraphs();
-
-    <?php
-    foreach ($keyStates as $keyState => $placeholder)
-    {
-    $keyState = str_replace(' ', '', $keyState);
-    ?>
-    //set the change listener for the auto item
-    $('#<?php echo 'change' . $keyState . 'Item' ?>').change(function()
-    {
-        generateData($(this).children('option:selected').val(), document.getElementById('<?php echo $keyState . 'Chart' ?>'));
-    });
-    <?php
-    }
-    ?>
-
-    //set the change listener for the search field
-    $('#teamSearch').change(function()
-    {
-        //filter the string and remove empty records
-        teamList = $(this).val().replace(/[^0-9,.]/g,'').split(',').filter(function (el)
+    //get data from the ajax script
+    $.post('/ajax/ajax.php',
         {
-            return el != null && el != "";
-        });
+            action: 'load_stats',
+            eventId: '<?php echo $event->BlueAllianceId ?>',
+            teamIds: JSON.stringify(teamList),
+            matchId: matchId,
+            matchData: (teamList.length === 1)
+        },
+        function(data)
+        {
+            graphData = JSON.parse(data);
 
-        updateGraphs();
-    });
+            updateGraphs();
+
+            <?php
+            foreach ($keyStates as $keyState => $placeholder)
+            {
+            $keyState = str_replace(' ', '', $keyState);
+            ?>
+            //set the change listener for the auto item
+            $('#<?php echo 'change' . $keyState . 'Item' ?>').change(function()
+            {
+                generateData($(this).children('option:selected').val(), document.getElementById('<?php echo $keyState . 'Chart' ?>'));
+            });
+            <?php
+            }
+            ?>
+
+            //set the change listener for the search field
+            $('#teamSearch').change(function()
+            {
+                //filter the string and remove empty records
+                teamList = $(this).val().replace(/[^0-9,.]/g,'').split(',').filter(function (el)
+                {
+                    return el != null && el != "";
+                });
+
+                updateGraphs();
+            });
+        });
 });
 
 /**
@@ -137,51 +153,33 @@ function setItems(graphPeriod, context, selectBox)
  */
 function generateData(graphItem, context)
 {
-    var matchData = (teamList.length === 1);
+    //only 1 team specified, change the size of the graphs and hide the team breakdown
+    if((teamList.length === 1) || matchId !== '')
+    {
+        $($(context).parent()[0]).removeClass('stats-chart').addClass('team-stats-chart');
+        $('#oprDprStats').show();
+    }
+    else
+    {
+        $($(context).parent()[0]).removeClass('team-stats-chart').addClass('stats-chart');
+        $('#oprDprStats').hide();
+    }
 
-    //get data from the ajax script
-    $.post('/ajax/ajax.php',
-        {
-            action: 'load_stats',
-            eventId: '<?php echo $event->BlueAllianceId ?>',
-            teamIds: JSON.stringify(teamList),
-            matchId: matchId,
-            matchData: matchData
-        },
-        function(data)
-        {
-            //only 1 team specified, change the size of the graphs and hide the team breakdown
-            if((teamList.length === 1) || matchId !== '')
-            {
-                $($(context).parent()[0]).removeClass('stats-chart').addClass('team-stats-chart');
-                $('#oprDprStats').show();
-            }
-            else
-            {
-                $($(context).parent()[0]).removeClass('team-stats-chart').addClass('stats-chart');
-                $('#oprDprStats').hide();
-            }
-
-            //parse the response data into JSON
-            var jsonResponse = JSON.parse(data);
-
-            <?php
-            foreach ($keyStates as $keyState => $placeholder)
-            {
-                $keyState = str_replace(' ', '', $keyState);
-            ?>
-            //if the chart context was the auto chart, update the auto chart
-            if($(context).attr('id') === '<?php echo $keyState . 'Chart' ?>')
-            {
-                if(<?php echo $keyState . 'Chart' ?> !== undefined)
-                <?php echo $keyState . 'Chart' ?>.destroy();
-                <?php echo $keyState . 'Chart' ?> = createChart(context, jsonResponse, graphItem);
-            }
-            <?php
-            }
-            ?>
-
-        });
+    <?php
+    foreach ($keyStates as $keyState => $placeholder)
+    {
+    $keyState = str_replace(' ', '', $keyState);
+    ?>
+    //if the chart context was the auto chart, update the auto chart
+    if($(context).attr('id') === '<?php echo $keyState . 'Chart' ?>')
+    {
+        if(<?php echo $keyState . 'Chart' ?> !== undefined)
+        <?php echo $keyState . 'Chart' ?>.destroy();
+        <?php echo $keyState . 'Chart' ?> = createChart(context, graphData, graphItem);
+    }
+    <?php
+    }
+    ?>
 }
 
 /**
