@@ -184,7 +184,7 @@ switch ($_POST['action'])
                                 if (!empty($return_array[$teamKey]['Nulled ' . $key]))
                                     $tempCardCount = $cardCount - $return_array[$teamKey]['Nulled ' . $key];//if it does, modify the card count to remove nulled records
 
-                                $return_array[$teamKey][$key] = (($statValue != 0) ? round($statValue / $tempCardCount, 2) : 0);//calculate average
+                                $return_array[$teamKey][$key] = (($statValue != 0) ? round($statValue / (($tempCardCount != 0) ? $tempCardCount : 1), 2) : 0);//calculate average
 
                                 unset($return_array[$teamKey]['Nulled ' . $key]);//remove nulled record from array
 
@@ -362,6 +362,5 @@ switch ($_POST['action'])
 
 
         echo json_encode($return_array);
-
         break;
 }

@@ -77,7 +77,7 @@ if(!empty($teamId))
                 if($key->IncludeInStats)
                 {
                     $keyStr = str_replace(' ', '', $key->KeyState);
-                    $keyStates[$keyStr] = 'placeholder';
+                    $keyStates[$keyStr] = $key->KeyState;
                 }
 
             foreach ($keyStates as $keyState => $placeholder)
@@ -85,6 +85,7 @@ if(!empty($teamId))
                 $keyState = str_replace(' ', '', $keyState);
                 ?>
                 <div class="mdl-cell stats-cell">
+                    <p><?php echo $placeholder ?></p>
                     <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
                         <input hidden class="mdl-textfield__input" type="text" value="placeholder">
                         <select class="mdl-textfield__input" id="<?php echo 'change' . $keyState . 'Item' ?>" name="<?php echo 'change' . $keyState . 'Item' ?>">

@@ -19,7 +19,7 @@ $keyStates = array();
 
 foreach ($keys as $key)
     if($key->IncludeInStats)
-        $keyStates[$key->KeyState] = 'placeholder';
+        $keyStates[$key->KeyState] = $key->KeyState;
 ?>
 
 var <?php
@@ -175,7 +175,7 @@ function generateData(graphItem, context)
             {
                 if(<?php echo $keyState . 'Chart' ?> !== undefined)
                 <?php echo $keyState . 'Chart' ?>.destroy();
-                <?php echo $keyState . 'Chart' ?> = createChart(context, jsonResponse, graphItem, 'Autonomous');
+                <?php echo $keyState . 'Chart' ?> = createChart(context, jsonResponse, graphItem);
             }
             <?php
             }
@@ -189,10 +189,9 @@ function generateData(graphItem, context)
  * @param context context of the canvas to add the chartbar to
  * @param jsonResponse to display for each team (Item Averages)
  * @param graphItem to display for each team (Item Averages)
- * @param title of the graph
  * @returns Chart
  */
-function createChart(context, jsonResponse, graphItem, title)
+function createChart(context, jsonResponse, graphItem)
 {
     var labels = []; //labels AKA team numbers to show on the Y axis
     var graphData = []; //data AKA item averages to show on the graph
@@ -325,12 +324,6 @@ function createChart(context, jsonResponse, graphItem, title)
                         ]
                 },
             options: {
-                title:
-                    {
-                        //show graph title
-                        display: true,
-                        text: title
-                    },
                 legend:
                     {
                         //hide / show generated data name
