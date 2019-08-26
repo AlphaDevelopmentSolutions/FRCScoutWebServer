@@ -1,4 +1,27 @@
 <?php
+//core account must be logged in to use the API
+session_start();
+if(empty($_SESSION['coreAccount']))
+{
+    require_once(ROOT_DIR . '/classes/Database.php');
+    require_once(ROOT_DIR . '/classes/tables/Table.php');
+    require_once(ROOT_DIR . '/classes/tables/core/Accounts.php');
+    require_once(ROOT_DIR . '/classes/Api.php');
+
+    //attempt to login to the core account
+    $coreAccount = Accounts::login($_POST['CoreUsername'], $_POST['CorePassword']);
+
+    if(!empty($coreAccount))
+        $_SESSION['coreAccount'] = serialize($coreAccount);
+    else
+    {
+        //invalid core, kill the script
+        $api = new Api($_POST['key']);
+        $api->error('Invalid core account.');
+        die();
+    }
+}
+
 require_once('../config.php');
 require_once(ROOT_DIR . '/classes/tables/local/ChecklistItemResults.php');
 require_once(ROOT_DIR . '/classes/tables/local/ChecklistItems.php');
