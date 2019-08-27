@@ -248,6 +248,8 @@ abstract class Table
 
         $rows = self::queryRecords($sql, $cols);
 
+        $response = array();
+
         foreach($rows as $row)
             $response[] = self::withProperties($row);
 

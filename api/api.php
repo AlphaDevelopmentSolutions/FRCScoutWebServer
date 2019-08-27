@@ -1,24 +1,31 @@
 <?php
-//core account must be logged in to use the API
-session_start();
-if(empty($_SESSION['coreAccount']))
+$action = $_POST['action'];
+
+if($action != 'Hello')
 {
-    require_once(ROOT_DIR . '/classes/Database.php');
-    require_once(ROOT_DIR . '/classes/tables/Table.php');
-    require_once(ROOT_DIR . '/classes/tables/core/Accounts.php');
-    require_once(ROOT_DIR . '/classes/Api.php');
-
-    //attempt to login to the core account
-    $coreAccount = Accounts::login($_POST['CoreUsername'], $_POST['CorePassword']);
-
-    if(!empty($coreAccount))
-        $_SESSION['coreAccount'] = serialize($coreAccount);
-    else
+    //core account must be logged in to use the API
+    session_start();
+    if (empty($_SESSION['coreAccount']))
     {
-        //invalid core, kill the script
-        $api = new Api($_POST['key']);
-        $api->error('Invalid core account.');
-        die();
+        define('ROOT_DIR', dirname('../config.php'));
+        require_once(ROOT_DIR . '/classes/Keys.php');
+        require_once(ROOT_DIR . '/classes/Database.php');
+        require_once(ROOT_DIR . '/classes/tables/Table.php');
+        require_once(ROOT_DIR . '/classes/tables/core/Accounts.php');
+        require_once(ROOT_DIR . '/classes/Api.php');
+
+        //attempt to login to the core account
+        $coreAccount = Accounts::login($_POST['CoreUsername'], $_POST['CorePassword']);
+
+        if (!empty($coreAccount))
+            $_SESSION['coreAccount'] = serialize($coreAccount);
+        else
+        {
+            //invalid core, kill the script
+            $api = new Api($_POST['key']);
+            $api->error('Invalid core account.');
+            die();
+        }
     }
 }
 
@@ -38,8 +45,6 @@ require_once(ROOT_DIR . '/classes/tables/core/Matches.php');
 require_once(ROOT_DIR . '/classes/Api.php');
 
 $api = new Api($_POST['key']);
-
-$action = $_POST['action'];
 
 //check if the key was valid
 if(!$api->getKeyValid())
@@ -64,7 +69,24 @@ try {
 
         //region Getters
         case 'GetServerConfig':
-            $api->success(Config::getObjects());
+
+            $configs = Config::getObjects();
+
+            $team = Teams::withId(getCoreAccount()->TeamId);
+
+            $teamNumber = new Config();
+            $teamNumber->Key = "TEAM_NUMBER";
+            $teamNumber->Value = $team->Id;
+
+            $teamName = new Config();
+            $teamName->Key = "TEAM_NAME";
+            $teamName->Value = $team->Name;
+
+
+            $configs[] = $teamNumber;
+            $configs[] = $teamName;
+
+            $api->success($configs);
 
             break;
 
@@ -74,7 +96,16 @@ try {
             break;
 
         case 'GetEvents':
-            $api->success(Events::getObjects());
+            $teamId = filter_var($_POST['TeamId'], FILTER_SANITIZE_NUMBER_INT);
+
+            if (!empty($teamId))
+            {
+                $team = Teams::withId($teamId);
+                $api->success($team->getEvents());
+            }
+            else
+                $api->success(Events::getObjects());
+
             break;
 
         case 'GetEventTeamList':

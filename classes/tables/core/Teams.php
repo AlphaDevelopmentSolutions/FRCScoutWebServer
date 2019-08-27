@@ -45,6 +45,34 @@ class Teams extends CoreTable
     }
 
     /**
+     * Gets all the events where a team is included in
+     * @return Events[] List of events where the team is included
+     */
+    public function getEvents()
+    {
+        require_once(ROOT_DIR . '/classes/tables/core/Events.php');
+        require_once(ROOT_DIR . '/classes/tables/core/EventTeamList.php');
+
+        $response = array();
+
+        //create the sql statement
+        $sql = "SELECT * FROM ! WHERE ! IN (SELECT ! FROM ! WHERE ! = ?)";
+        $cols[] = Events::$TABLE_NAME;
+        $cols[] = 'BlueAllianceId';
+        $cols[] = 'EventId';
+        $cols[] = EventTeamList::$TABLE_NAME;
+        $cols[] = 'TeamId';
+        $args[] = $this->Id;
+
+        $rows = self::queryRecords($sql, $cols, $args, LocalTable::$DB_NAME);
+
+        foreach ($rows as $row)
+            $response[] = Events::withProperties($row);
+
+        return $response;
+    }
+
+    /**
      * Gets all robot media for this team
      * @param $year Years to get the image from
      * @return RobotMedia[]
