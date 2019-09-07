@@ -19,7 +19,7 @@ class Matches extends Table
     public $BlueAllianceScore;
     public $RedAllianceScore;
 
-    protected static $TABLE_NAME = 'matches';
+    public static $TABLE_NAME = 'matches';
 
     static $MATCH_TYPE_QUALIFICATIONS = 'qm';
     static $MATCH_TYPE_QUARTER_FINALS = 'qf';
@@ -27,142 +27,57 @@ class Matches extends Table
     static $MATCH_TYPE_FINALS = 'f';
 
     /**
-     * Loads a new instance by its database key
-     * @param $key
+     * Overrides parent withId method and provides a custom column name to use when loading
+     * @param int|string $id
      * @return Matches
      */
-    static function withKey($key)
+    public static function withId($id)
     {
-        $instance = new self();
-        $instance->loadByKey($key);
-        return $instance;
-
+        return parent::withId($id, 'Key');
     }
 
     /**
-     * Loads a new instance by its database key
-     * @param $key
+     * Gets scout cards for a specific match
+     * @param null | Teams $team if specified, filters by team
+     * @param null | ScoutCards $scoutCard if specified, filters by scoutcard
+     * @return ScoutCards[]
      */
-    protected function loadByKey($key)
+    public function getScoutCards($team = null, $scoutCard = null)
     {
-        $database = new Database();
-        $sql = 'SELECT * FROM ' . self::$TABLE_NAME . ' WHERE '.'`Key` = '.$database->quote($key);
-        $rs = $database->query($sql);
+        require_once(ROOT_DIR . '/classes/ScoutCards.php');
+        require_once(ROOT_DIR . '/classes/Teams.php');
 
-        if($rs && $rs->num_rows > 0) {
-            $row = $rs->fetch_assoc();
+        //create the sql statement
+        $sql = "SELECT * FROM ! WHERE ! = ?";
+        $cols[] = ScoutCards::$TABLE_NAME;
+        $cols[] = 'MatchId';
+        $args[] = $this->Key;
 
-            if(is_array($row)) {
-                foreach($row as $key => $value){
-                    if(property_exists($this, $key)){
-                        $this->$key = $value;
-                    }
-                }
-            }
-        }
-    }
-
-
-    /**
-     * Gets all matches specified by the event
-     * @param Events $event event to get matches from
-     * @param Teams $team team to get matches for
-     * @return array
-     */
-    public static function getMatches($event, $team = null)
-    {
-        $database = new Database();
-
-        $sql = "SELECT 
-                      * 
-                    FROM 
-                      matches 
-                    WHERE
-                      EventId = " . $database->quote($event->BlueAllianceId) .
-            " AND MatchType = " . $database->quote(self::$MATCH_TYPE_QUALIFICATIONS);
-
-        //add the team query if a team was specified
+        //if team specified, filter by team
         if(!empty($team))
-            $sql .= " AND " . $database->quote($team->Id) . " IN (BlueAllianceTeamOneId, BlueAllianceTeamTwoId, BlueAllianceTeamThreeId, RedAllianceTeamOneId, RedAllianceTeamTwoId, RedAllianceTeamThreeId)";
-
-        $sql .= "ORDER BY MatchNumber DESC";
-
-
-        $matchIds = $database->query($sql);
-        $database->close();
-
-        $response = array();
-
-        if($matchIds && $matchIds->num_rows > 0)
         {
-            while ($row = $matchIds->fetch_assoc())
-            {
-                $response[] = $row;
-            }
+            $sql .= " AND ! = ? ";
+
+            $cols[] = 'TeamId';
+            $args[] = $team->Id;
         }
 
-        return $response;
-    }
-
-    public function getMatchScoutCardIds($eventId, $allianceColor)
-    {
-        $database = new Database();
-
-        $sql = "SELECT 
-                      Id
-                    FROM 
-                      scout_cards 
-                    WHERE
-                      EventId = " . $database->quote($eventId) .
-                    "AND 
-                      MatchId = " . $database->quote($this->Key) .
-                    "AND 
-                      AllianceColor = " . $database->quote($allianceColor);
-
-        $teamIds = $database->query($sql);
-        $database->close();
-
-
-        $response = array();
-
-        if($teamIds && $teamIds->num_rows > 0)
+        //if scoutcard specified, filter by scoutcard
+        if(!empty($scoutCard))
         {
-            while ($row = $teamIds->fetch_assoc())
-            {
-                $response[] = $row;
-            }
+            $sql .= " AND ! = ? ";
+
+            $cols[] = 'Id';
+            $args[] = $scoutCard->Id;
         }
 
-        return $response;
-    }
+        $sql .= " ORDER BY ! DESC";
+        $cols[] = 'Id';
 
-    public static function getRedAllianceScoutCardIds($eventId, $matchId)
-    {
-        $database = new Database();
-        $teamIds = $database->query(
-            "SELECT 
-                      Id
-                    FROM 
-                      scout_cards 
-                    WHERE
-                      EventId = " . $database->quote($eventId) .
-                    "AND 
-                      MatchId = " . $database->quote($matchId) .
-                    "AND 
-                      AllianceColor = " . $database->quote('RED')
-        );
-        $database->close();
+        $rows = self::query($sql, $cols, $args);
 
-
-        $response = array();
-
-        if($teamIds && $teamIds->num_rows > 0)
-        {
-            while ($row = $teamIds->fetch_assoc())
-            {
-                $response[] = $row;
-            }
-        }
+        foreach ($rows as $row)
+            $response[] = ScoutCards::withProperties($row);
 
         return $response;
     }
@@ -204,7 +119,7 @@ class Matches extends Table
     }
 
     /**
-     * Returns the final string to be displayed when referencing a match
+     * Compiles the name of the object when displayed as a string
      * @return string
      */
     public function toString()
@@ -212,12 +127,13 @@ class Matches extends Table
         return $this->getMatchTypeString() . ' ' . $this->MatchNumber;
     }
 
+
     /**
-     * Returns the html for displaying a match card
+     * Returns the object once converted into HTML
      * @param string $buttonHref href action when clicking the button
      * @param string $buttonText button text to display
      * @param int | null $teamId selected team
-     * @return string html to display
+     * @return string
      */
     public function toHtml($buttonHref = null, $buttonText = null, $teamId = null)
     {
@@ -234,13 +150,13 @@ class Matches extends Table
                                         <td><a href="/team-matches.php?teamId=' . $this->BlueAllianceTeamOneId . '&eventId=' . $this->EventId .'" class="team-link ' . (($teamId == $this->BlueAllianceTeamOneId) ? " tr-selected-team " : "") . (($this->BlueAllianceScore > $this->RedAllianceScore) ? " tr-win " : "") . '">' . $this->BlueAllianceTeamOneId . '</a></td>
                                         <td><a href="/team-matches.php?teamId=' . $this->BlueAllianceTeamTwoId . '&eventId=' . $this->EventId .'" class="team-link ' . (($teamId == $this->BlueAllianceTeamTwoId) ? " tr-selected-team " : "") . (($this->BlueAllianceScore > $this->RedAllianceScore) ? " tr-win " : "") . '">' . $this->BlueAllianceTeamTwoId . '</a></td>
                                         <td><a href="/team-matches.php?teamId=' . $this->BlueAllianceTeamThreeId . '&eventId=' . $this->EventId .'" class="team-link ' . (($teamId == $this->BlueAllianceTeamThreeId) ? " tr-selected-team " : "") . (($this->BlueAllianceScore > $this->RedAllianceScore) ? " tr-win " : "") . '">' . $this->BlueAllianceTeamThreeId . '</a></td>
-                                        <td><span ' . (($this->BlueAllianceScore > $this->RedAllianceScore) ? 'style="font-weight: bold;"' : "") . '>' . $this->BlueAllianceScore . '</span></td>
+                                        <td><span ' . (($this->BlueAllianceScore > $this->RedAllianceScore) ? 'style="font-weight: bold;"' : 'style="font-weight: 300;"') . '>' . $this->BlueAllianceScore . '</span></td>
                                     </tr>
                                     <tr class="red-alliance-bg">
                                         <td><a href="/team-matches.php?teamId=' . $this->RedAllianceTeamOneId . '&eventId=' . $this->EventId .'" class="team-link ' . (($teamId == $this->RedAllianceTeamOneId) ? " tr-selected-team " : "") . (($this->BlueAllianceScore < $this->RedAllianceScore) ? " tr-win " : "") . '">' . $this->RedAllianceTeamOneId . '</a></td>
                                         <td><a href="/team-matches.php?teamId=' . $this->RedAllianceTeamTwoId . '&eventId=' . $this->EventId .'" class="team-link ' . (($teamId == $this->RedAllianceTeamTwoId) ? " tr-selected-team " : "") . (($this->BlueAllianceScore < $this->RedAllianceScore) ? " tr-win " : "") . '">' . $this->RedAllianceTeamTwoId . '</a></td>
                                         <td><a href="/team-matches.php?teamId=' . $this->RedAllianceTeamThreeId . '&eventId=' . $this->EventId .'" class="team-link ' . (($teamId == $this->RedAllianceTeamThreeId) ? " tr-selected-team " : "") . (($this->BlueAllianceScore < $this->RedAllianceScore) ? " tr-win " : "") . '">' . $this->RedAllianceTeamThreeId . '</a></td>
-                                        <td><span ' . (($this->BlueAllianceScore < $this->RedAllianceScore) ? 'style="font-weight: bold;"' : "") . '>' . $this->RedAllianceScore . '</span></td>
+                                        <td><span ' . (($this->BlueAllianceScore < $this->RedAllianceScore) ? 'style="font-weight: bold;"' : 'style="font-weight: 300;"') . '>' . $this->RedAllianceScore . '</span></td>
                                     </tr>
                                 </table>
                             </div>

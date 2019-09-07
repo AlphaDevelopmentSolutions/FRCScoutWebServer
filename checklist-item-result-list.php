@@ -1,11 +1,9 @@
 <?php
 require_once("config.php");
-require_once("classes/Table.php");
-require_once("classes/Teams.php");
-require_once("classes/Events.php");
-require_once("classes/Matches.php");
-require_once("classes/ChecklistItems.php");
-require_once("classes/ChecklistItemResults.php");
+require_once(ROOT_DIR . "/classes/Teams.php");
+require_once(ROOT_DIR . "/classes/Events.php");
+require_once(ROOT_DIR . "/classes/Matches.php");
+require_once(ROOT_DIR . "/classes/ChecklistItems.php");
 
 $eventId = $_GET['eventId'];
 $matchId = $_GET['matchId'];
@@ -13,7 +11,7 @@ $matchId = $_GET['matchId'];
 $event = Events::withId($eventId);
 
 if(!empty($matchId))
-    $match = Matches::withKey($matchId);
+    $match = Matches::withId($matchId);
 ?>
 
 <!doctype html>
@@ -36,7 +34,7 @@ if(!empty($matchId))
 
     $header = new Header($event->Name, null, $navBar, $event->BlueAllianceId);
 
-    echo $header->toString();
+    echo $header->toHtml();
     ?>
     <main class="mdl-layout__content">
 
@@ -45,22 +43,18 @@ if(!empty($matchId))
         //no match selected, show match list
         if(empty($match))
         {
-            foreach (Matches::getMatches($event, Teams::withId(TEAM_NUMBER)) as $match)
-            {
-                $match = Matches::withProperties($match);
-
-                echo $match->toHtml('checklist-item-result-list.php?eventId=' . $event->BlueAllianceId . '&matchId=' . $match->Key, 'View Checklist Items', TEAM_NUMBER);
-            }
+            foreach ($event->getMatches(null, Teams::withId(TEAM_NUMBER)) as $match)
+                echo $match->toHtml('checklist-item-result-list.php?eventId=' . $event->BlueAllianceId . '&matchId=' . $match->Key, 'View Completed Checklist Items', TEAM_NUMBER);
         }
 
         //match selected, show checklist item results for specified match
         else
         {
-            foreach(ChecklistItemResults::getChecklistItemResults($match) as $checklistItemResult)
+            foreach(ChecklistItems::getObjects() as $checklistItem)
             {
-                $checklistItemResult = ChecklistItemResults::withProperties($checklistItemResult);
+                foreach($checklistItem->getResults($match) as $checklistItemResult)
+                    echo $checklistItemResult->toHtml();
 
-                echo $checklistItemResult->toHtml();
             }
         }
 

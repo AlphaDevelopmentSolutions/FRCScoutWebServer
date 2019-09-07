@@ -1,7 +1,7 @@
 <?php
 require_once("config.php");
-require_once("classes/PitCards.php");
-require_once("classes/Events.php");
+require_once(ROOT_DIR . "/classes/PitCards.php");
+require_once(ROOT_DIR . "/classes/Events.php");
 
 $pitCardId = $_GET['pitCardId'];
 $action = (isset($_POST['save'])) ? 'save' : ((isset($_POST['delete'])) ? 'delete' : '');
@@ -71,36 +71,13 @@ if(isPostBack() && loggedIn())
 
         $header = new Header($event->Name, null, $navBar, $event->BlueAllianceId);
 
-        echo $header->toString();
+        echo $header->toHtml();
         ?>
       <main class="mdl-layout__content">
 
           <?php
           echo $pitCard->toHtml();
           ?>
-
-          
-          <div class="mdl-layout__tab-panel" id="stats">
-<style>
-.demo-card-wide.mdl-card {
-  width: 60%;
-/*    height: 1000px;*/
-    margin: auto;
-}
-.demo-card-wide > .mdl-card__title {
-  color: #fff;
-  height: 176px;
-/*  background: url('../assets/demos/welcome_card.jpg') center / cover;*/
-    background-color: red;
-                  }
-.demo-card-wide > .mdl-card__menu {
-  color: #fff;
-}
-</style>
-              
-          <section class="section--footer mdl-grid">
-          </section>
-        </div>
 
       </main>
     </div>

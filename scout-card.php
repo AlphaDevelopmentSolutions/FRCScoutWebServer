@@ -1,8 +1,8 @@
 <?php
 require_once("config.php");
-require_once("classes/ScoutCards.php");
-require_once("classes/Events.php");
-require_once("classes/Matches.php");
+require_once(ROOT_DIR . "/classes/ScoutCards.php");
+require_once(ROOT_DIR . "/classes/Events.php");
+require_once(ROOT_DIR . "/classes/Matches.php");
 
 $scoutCardId = $_GET['scoutCardId'];
 $eventId = $_GET['eventId'];
@@ -24,7 +24,7 @@ else
 }
 
 
-$match = Matches::withKey($scoutCard->MatchId);
+$match = Matches::withId($scoutCard->MatchId);
 $event = Events::withId($scoutCard->EventId);
 
 if(isPostBack() && loggedIn())
@@ -94,36 +94,13 @@ if(isPostBack() && loggedIn())
 
         $header = new Header($event->Name, null, $navBar, $event->BlueAllianceId);
 
-        echo $header->toString();
+        echo $header->toHtml();
         ?>
       <main class="mdl-layout__content">
 
           <?php
           echo $scoutCard->toHtml();
           ?>
-
-          <div class="mdl-layout__tab-panel" id="stats">
-<style>
-.demo-card-wide.mdl-card {
-  width: 60%;
-/*    height: 1000px;*/
-    margin: auto;
-}
-.demo-card-wide > .mdl-card__title {
-  color: #fff;
-  height: 176px;
-/*  background: url('../assets/demos/welcome_card.jpg') center / cover;*/
-    background-color: red;
-                  }
-.demo-card-wide > .mdl-card__menu {
-  color: #fff;
-}
-</style>
-              
-          <section class="section--footer mdl-grid">
-          </section>
-        </div>
-
       </main>
     </div>
   <?php require_once('includes/bottom-scripts.php') ?>

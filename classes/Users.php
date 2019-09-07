@@ -6,68 +6,53 @@ class Users extends Table
     public $FirstName;
     public $LastName;
 
-    protected static $TABLE_NAME = 'users';
+    public static $TABLE_NAME = 'users';
 
+    /**
+     * Attempts to login with the provided username and password
+     * @param $userName
+     * @param $password
+     * @return boolean
+     */
     public function login($userName, $password)
     {
-        $database = new Database();
-        $users = $database->query(
-            "SELECT 
-                      * 
-                    FROM 
-                      " . self::$TABLE_NAME ."
-                    WHERE  
-                      UserName = " . $database->quote($userName) . "
-                    AND
-                      Password = " . $database->quote(md5($password))
-        );
-        $database->close();
+        //create the sql statement
+        $sql = "SELECT * FROM ! WHERE ! = ? AND ! = ?";
+        $cols[] = self::$TABLE_NAME;
+        $cols[] = 'UserName';
+        $args[] = $userName;
+        $cols[] = 'Password';
+        $args[] = md5($password);
 
-        $response = array();
+        $rows = self::query($sql, $cols, $args);
 
-        if($users && $users->num_rows > 0)
-        {
-            while ($row = $users->fetch_assoc())
-            {
-                $response[] = $row;
-            }
-        }
 
-        return $this->loadById($response[0]['Id']);
+        foreach ($rows as $row)
+            $response[] = self::withProperties($row);
+
+        $this->Id = $response[0]->Id;
+        $this->FirstName = $response[0]->FirstName;
+        $this->LastName = $response[0]->LastName;
+
+        return (!empty($response));
     }
 
-    public static function getUsers()
-    {
-        $database = new Database();
-        $users = $database->query(
-            "SELECT 
-                      * 
-                    FROM 
-                      " . self::$TABLE_NAME
-        );
-        $database->close();
-
-        $response = array();
-
-        if($users && $users->num_rows > 0)
-        {
-            while ($row = $users->fetch_assoc())
-            {
-                $response[] = $row;
-            }
-        }
-
-        return $response;
-    }
-
+    /**
+     * Returns the object once converted into HTML
+     * @return string
+     */
     public function toHtml()
     {
         // TODO: Implement toHtml() method.
     }
 
+    /**
+     * Compiles the name of the object when displayed as a string
+     * @return string
+     */
     public function toString()
     {
-        // TODO: Implement toString() method.
+        return $this->FirstName . ' ' . $this->LastName;
     }
 
 }

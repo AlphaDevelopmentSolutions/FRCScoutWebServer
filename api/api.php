@@ -49,12 +49,12 @@ try {
             break;
 
         case 'GetUsers':
-            $api->success(Users::getUsers());
+            $api->success(Users::getObjects());
 
             break;
 
         case 'GetEvents':
-            $api->success(Events::getEvents());
+            $api->success(Events::getObjects());
 
             break;
 
@@ -62,8 +62,10 @@ try {
 
             $eventId = filter_var($_POST['EventId'], FILTER_SANITIZE_STRING);
 
+            $event = Events::withId($eventId);
+
             if (!empty($eventId))
-                $api->success(Teams::getTeamsAtEvent($eventId));
+                $api->success($event->getTeams());
             else
                 throw new Exception('Invalid event id');
 
@@ -73,28 +75,36 @@ try {
 
             $eventId = filter_var($_POST['EventId'], FILTER_SANITIZE_STRING);
 
+            $event = Events::withId($eventId);
+
             if (!empty($eventId))
-                $api->success(ScoutCards::getScoutCardsForEvent($eventId));
+                $api->success($event->getScoutCards());
             else
                 throw new Exception('Invalid event id');
 
             break;
 
         case 'GetRobotMedia':
+
             $teamId = filter_var($_POST['TeamId'], FILTER_SANITIZE_NUMBER_INT);
 
+            $team = Teams::withId($teamId);
+
             if (!empty($teamId))
-                $api->success(RobotMedia::getRobotMediaForTeam($teamId));
+                $api->success($team->getRobotPhotos());
             else
                 throw new Exception('Invalid team id');
 
             break;
 
         case 'GetPitCards':
+
             $eventId = filter_var($_POST['EventId'], FILTER_SANITIZE_STRING);
 
+            $event = Events::withId($eventId);
+
             if (!empty($eventId))
-                $api->success(PitCards::getPitCardsForEvent($eventId));
+                $api->success($event->getPitCards());
             else
                 throw new Exception('Invalid event id');
 
@@ -106,18 +116,26 @@ try {
             $event = Events::withId($eventId);
 
             if (!empty($event))
-                $api->success(Matches::getMatches($event));
+                $api->success($event->getMatches());
             else
                 throw new Exception('Invalid event id');
 
             break;
 
         case 'GetChecklistItems':
-            $api->success(ChecklistItems::getChecklistItems());
+            $api->success(ChecklistItems::getObjects());
             break;
 
         case 'GetChecklistItemResults':
-            $api->success(ChecklistItemResults::getChecklistItemResults());
+
+            $checklistItemResults = array();
+
+            foreach(ChecklistItems::getObjects() as $checklistItem)
+            {
+                $checklistItemResults[] = $checklistItem->getResults();
+            }
+
+            $api->success($checklistItemResults);
             break;
 
         //endregion

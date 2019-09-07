@@ -7,94 +7,113 @@ class RobotMedia extends Table
     public $FileURI;
     public $Base64Image;
 
-    protected static $TABLE_NAME = 'robot_media';
+    public static $TABLE_NAME = 'robot_media';
 
     /**
-     * Saves a base64 encoded image to the server
-     * @param $base64Img
-     * @return bool if error | | int of bytes written
+     * Overrides parent::save() method
+     * Attempts to save the image before saving the record
+     * @return bool
      */
-    private function saveImage($base64Img)
+    public function save()
     {
-
-        $uid = uniqid();
-
-        //make sure the file doesn't exist
-        while(file_exists($uid . '.jpeg'))
-            $uid = uniqid();
-
-        $image = base64_decode($base64Img);
-
-        $file = fopen("../assets/robot-media/$uid.jpeg", 'wb');
-
-        $success = fwrite($file, $image);
-
-        fclose($file);
-
-        if($success)
-            $this->FileURI = $uid . '.jpeg';
-
-        return $success;
-
-    }
-
-    function delete()
-    {
-        if(empty($this->Id))
-            return false;
-
-        $database = new Database();
-        $sql = 'DELETE FROM '.self::$TABLE_NAME.' WHERE '.'id = '.$database->quote($this->Id);
-        $rs = $database->query($sql);
-
-        if($rs)
-            return true;
-
+        if(!empty($this->Id))
+            if($this->saveImage())
+                return parent::save();
 
         return false;
     }
 
     /**
-     * Returns the base 64 encoded image
-     * @param $teamId
-     * @return array
+     * Overrides parent::delete() method
+     * Attempts to delete the image before deleting the record
+     * @return bool
      */
-    public static function getRobotMediaForTeam($teamId)
+    function delete()
     {
-        $database = new Database();
-        $robotMedia = $database->query(
-            "SELECT 
-                      * 
-                    FROM 
-                      " . self::$TABLE_NAME . "  
-                    WHERE 
-                      TeamId = " . $database->quote($teamId)
-        );
-        $database->close();
+        if($this->deleteImage())
+            return parent::delete();
 
-        $response = array();
-
-        if($robotMedia && $robotMedia->num_rows > 0)
-        {
-            while ($row = $robotMedia->fetch_assoc())
-            {
-//                $file = fopen("../assets/robot-media/" . $row['ImageURI'] . ".png", 'r');
-//                $row['Base64Image'] = base64_encode($file);
-                $response[] = $row;
-            }
-        }
-
-        return $response;
+        return false;
     }
 
+    /**
+     * Saves the specified robot media base64image to the file system
+     * @return boolean
+     */
+    private function saveImage()
+    {
+        //create a unique id
+        $uid = uniqid();
+
+        //make sure the file doesn't already exist
+        while(file_exists($uid . '.jpeg'))
+            $uid = uniqid();
+
+        //decode the base64 image
+        $image = base64_decode($this->Base64Image);
+
+        //prep the file to be written to
+        $file = fopen("../assets/robot-media/$uid.jpeg", 'wb');
+
+        //store if write was successful
+        $success = fwrite($file, $image);
+
+        fclose($file);
+
+        //if successful, store the file URI
+        if($success)
+            $this->FileURI = $uid . '.jpeg';
+
+        return $success;
+    }
+
+    /**
+     * Deletes the saved robot image from the file system
+     * @return boolean
+     */
+    private function deleteImage()
+    {
+        //prep the file to be deleted
+        $file = fopen("../assets/robot-media/$this->FileURI", 'wb');
+
+        //store if delete was successful
+        $success = unlink($file);
+
+        fclose($file);
+
+        return $success;
+    }
+
+    /**
+     * Returns the object once converted into HTML
+     * @return string
+     */
     public function toHtml()
     {
-        // TODO: Implement toHtml() method.
+        $html =
+            '<div class="mdl-layout__tab-panel is-active" id="overview">
+                <section class="section--center mdl-grid mdl-grid--no-spacing mdl-shadow--2dp">
+                    <div class="mdl-card mdl-cell mdl-cell--12-col">
+                        <div class="mdl-card__supporting-text">
+                            <img class="robot-media" src="' . ROBOT_MEDIA_URL . $this->FileURI . '"  height="350"/>
+                        </div>
+                        <div class="mdl-card__actions">
+                            <a target="_blank" href="' . ROBOT_MEDIA_URL . $this->FileURI . '" class="mdl-button">View</a>
+                        </div>
+                    </div>
+                </section>
+            </div>';
+
+        return $html;
     }
 
+    /**
+     * Compiles the name of the object when displayed as a string
+     * @return string
+     */
     public function toString()
     {
-        // TODO: Implement toString() method.
+        return $this->TeamId . ' Robot Media';
     }
 
 

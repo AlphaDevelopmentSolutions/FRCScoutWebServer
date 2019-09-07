@@ -4,7 +4,7 @@
 //error_reporting(E_ALL);
 
 //define all constants
-define('VERSION', 'v2019.2.2.0');
+define('VERSION', 'v2019.2.3.0');
 
 //define error codes
 define('FILE_WRITE_FAIL_CODE' , '5x01');
@@ -22,10 +22,10 @@ define('ROBOT_MEDIA_URL', URL_PATH . '/assets/robot-media/');
 define('ROOT_DIR', __DIR__);
 
 //require all necessary files
-require_once('classes/Database.php');
-require_once('classes/Table.php');
-require_once('classes/Users.php');
-require_once('interfaces/AllianceColors.php');
+require_once(ROOT_DIR . '/classes/Database.php');
+require_once(ROOT_DIR . '/classes/Table.php');
+require_once(ROOT_DIR . '/classes/Users.php');
+require_once(ROOT_DIR . '/interfaces/AllianceColors.php');
 
 //if the session doe not exist, start it
 if (session_status() == PHP_SESSION_NONE) {
@@ -35,11 +35,11 @@ if (session_status() == PHP_SESSION_NONE) {
 //set the user var
 $user = !empty($_SESSION['user']) ? unserialize($_SESSION['user']) : null;
 
-require_once("classes/Header.php");
-require_once("classes/NavBar.php");
-require_once("classes/NavBarArray.php");
-require_once("classes/NavBarLink.php");
-require_once("classes/NavBarLinkArray.php");
+require_once(ROOT_DIR . "/classes/Header.php");
+require_once(ROOT_DIR . "/classes/NavBar.php");
+require_once(ROOT_DIR . "/classes/NavBarArray.php");
+require_once(ROOT_DIR . "/classes/NavBarLink.php");
+require_once(ROOT_DIR . "/classes/NavBarLinkArray.php");
 
 /**
  * Returns if the current page was reuqested back from itself

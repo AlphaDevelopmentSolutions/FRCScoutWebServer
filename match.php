@@ -1,9 +1,7 @@
 <?php
 require_once("config.php");
-require_once("classes/ScoutCards.php");
-require_once("classes/Events.php");
-require_once("classes/Teams.php");
-require_once("classes/Matches.php");
+require_once(ROOT_DIR . "/classes/Events.php");
+require_once(ROOT_DIR . "/classes/Matches.php");
 
 $eventId = $_GET['eventId'];
 $matchId = $_GET['matchId'];
@@ -34,55 +32,30 @@ $match = Matches::withId($matchId);
         $navBarArray[] = new NavBar($navBarLinksArray);
 
         $navBarLinksArray = new NavBarLinkArray();
-        $navBarLinksArray[] = new NavBarLink('Blue Alliance', '/match.php?eventId=' . $event->BlueAllianceId . '&matchId=' . $match->Id . '&allianceColor=BLUE', ($allianceColor == 'BLUE'));
-        $navBarLinksArray[] = new NavBarLink('Red Alliance', '/match.php?eventId=' . $event->BlueAllianceId . '&matchId=' . $match->Id . '&allianceColor=RED', ($allianceColor == 'RED'));
+        $navBarLinksArray[] = new NavBarLink('Blue Alliance', '/match.php?eventId=' . $event->BlueAllianceId . '&matchId=' . $match->Key . '&allianceColor=BLUE', ($allianceColor == 'BLUE'));
+        $navBarLinksArray[] = new NavBarLink('Red Alliance', '/match.php?eventId=' . $event->BlueAllianceId . '&matchId=' . $match->Key . '&allianceColor=RED', ($allianceColor == 'RED'));
 
         $navBarArray[] = new NavBar($navBarLinksArray);
 
         $header = new Header($event->Name, $additionContent, $navBarArray, $event->BlueAllianceId);
 
-        echo $header->toString();
+        echo $header->toHtml();
 
         ?>
       <main class="mdl-layout__content">
 
           <?php
 
-          $scoutCardIds = array();
-          $scoutCardIds = $match->getMatchScoutCardIds($eventId, $allianceColor);
+          $scoutCards = $match->getScoutCards();
 
-          foreach($scoutCardIds AS $scoutCardId)
+          foreach($scoutCards AS $scoutCard)
           {
-              $scoutCard = ScoutCards::withId($scoutCardId['Id']);
-              echo $scoutCard->toHtml();
+              if($allianceColor == $scoutCard->AllianceColor)
+                echo $scoutCard->toHtml();
           }
 
 
           ?>
-
-          
-          <div class="mdl-layout__tab-panel" id="stats">
-<style>
-.demo-card-wide.mdl-card {
-  width: 60%;
-/*    height: 1000px;*/
-    margin: auto;
-}
-.demo-card-wide > .mdl-card__title {
-  color: #fff;
-  height: 176px;
-/*  background: url('../assets/demos/welcome_card.jpg') center / cover;*/
-    background-color: red;
-                  }
-.demo-card-wide > .mdl-card__menu {
-  color: #fff;
-}
-</style>
-              
-          <section class="section--footer mdl-grid">
-          </section>
-        </div>
-
       </main>
     </div>
     <?php require_once('includes/bottom-scripts.php') ?>

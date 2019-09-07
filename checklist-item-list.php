@@ -1,7 +1,7 @@
 <?php
 require_once("config.php");
-require_once("classes/Events.php");
-require_once("classes/ChecklistItems.php");
+require_once(ROOT_DIR . "/classes/Events.php");
+require_once(ROOT_DIR . "/classes/ChecklistItems.php");
 
 $eventId = $_GET['eventId'];
 
@@ -25,28 +25,15 @@ $event = Events::withId($eventId);
 
     $header = new Header($event->Name, null, $navBar, $event->BlueAllianceId);
 
-    echo $header->toString();
+    echo $header->toHtml();
     ?>
     <main class="mdl-layout__content">
 
         <?php
 
-        foreach(ChecklistItems::getChecklistItems() as $checklistItem)
+        foreach(ChecklistItems::getObjects() as $checklistItem)
         {
-            $checklistItem = ChecklistItems::withProperties($checklistItem);
-
-            ?>
-            <div class="mdl-layout__tab-panel is-active" id="overview">
-                <section class="section--center mdl-grid mdl-grid--no-spacing mdl-shadow--2dp">
-                    <div class="mdl-card mdl-cell mdl-cell--12-col">
-                        <div class="mdl-card__supporting-text">
-                            <h4><?php echo $checklistItem->Title ?></h4>
-                            <?php echo $checklistItem->Description ?><br><br>
-                        </div>
-                    </div>
-                </section>
-            </div>
-            <?php
+           echo $checklistItem->toHtml();
         }
 
         ?>

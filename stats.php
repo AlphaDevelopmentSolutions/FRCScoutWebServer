@@ -1,7 +1,7 @@
 <?php
 require_once("config.php");
-require_once("classes/Teams.php");
-require_once("classes/Events.php");
+require_once(ROOT_DIR . "/classes/Teams.php");
+require_once(ROOT_DIR . "/classes/Events.php");
 
 $eventId = $_GET['eventId'];
 
@@ -161,7 +161,7 @@ $event = Events::withId($eventId);
 
     $header = new Header($event->Name, null, $navBar, $event->BlueAllianceId);
 
-    echo $header->toString();
+    echo $header->toHtml();
     ?>
     <main class="mdl-layout__content">
         <div style="padding: 1em 5em 0 5em;">

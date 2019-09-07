@@ -1,15 +1,12 @@
 <?php
 
-class Database
+class Database extends PDO
 {
-    var $classQuery;
-    var $link;
 
-    var $errno = '';
-    var $error = '';
-
-    // Connects to the database
-    function Database()
+    /**
+     * Database constructor.
+     */
+    function __construct()
     {
 
         // Get the main settings from the array we just loaded
@@ -18,90 +15,141 @@ class Database
         $user = MYSQL_USER;
         $pass = MYSQL_PASSWORD;
 
-        // Connect to the database
-        $this->link = new mysqli( $host , $user , $pass , $name );
+        $dsn = "mysql:host=$host;dbname=$name;charset=utf8mb4";
+
+        $options = [
+            PDO::ATTR_EMULATE_PREPARES   => false, // turn off emulation mode for "real" prepared statements
+            PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION, //turn on errors in the form of exceptions
+            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC, //make the default fetch be an associative array
+        ];
+
+        parent::__construct($dsn, $user, $pass, $options);
     }
 
-    // Executes a database query
-    function query( $query )
+    /**
+     * Destroy this instance to close the database
+     */
+    function __destruct()
     {
-        $this->classQuery = $query;
-        return $this->link->query( $query );
+        unset($this);
     }
 
-    function escapeString( $query )
+    /**
+     * Quotes a param with MySQL approved quotes
+     * @param string $string to quote
+     * @param int $parameter_type
+     * @return string
+     */
+    function quote($string, $parameter_type = PDO::PARAM_STR)
     {
-        return $this->link->escape_string( $query );
+        return parent::quote($string, $parameter_type);
     }
 
-    // Get the data return int result
-    function numRows( $result )
+    /**
+     * Quotes columns with ` for MySQL approved column quotes
+     * @param string $column to quote
+     * @return string
+     */
+    function quoteColumn($column)
     {
-        return $result->num_rows;
+        return '`' . $column . '`';
     }
 
-    function lastInsertedID()
-    {
-        return $this->link->insert_id;
-    }
-
-    // Get query using assoc method
-    function fetchAssoc( $result )
-    {
-        return $result->fetch_assoc();
-    }
-
-    // Gets array of query results
-    function fetchArray( $result , $resultType = MYSQLI_ASSOC )
-    {
-        return $result->fetch_array( $resultType );
-    }
-
-    // Fetches all result rows as an associative array, a numeric array, or both
-    function fetchAll( $result , $resultType = MYSQLI_ASSOC )
-    {
-        return $result->fetch_all( $resultType );
-    }
-
-    // Get a result row as an enumerated array
-    function fetchRow( $result )
-    {
-        return $result->fetch_row();
-    }
-
-    // Free all MySQL result memory
-    function freeResult( $result )
-    {
-        $this->link->free_result( $result );
-    }
-
-    //Closes the database connection
+    /**
+     * Destroys the current instance of this database
+     */
     function close()
     {
-        $this->link->close();
+        $this->__destruct();
     }
 
-    //quotes the string
-    function quote($string)
+    /**
+     * Queries the database to gather rows
+     * @param string $query to run
+     * @param string[] cols columns that will replace !
+     * @param string[] | int[] $args arguments that will replace ?
+     * @return string[]
+     */
+    public function query($query, $cols = array(), $args = array())
     {
-        return '"' . $string . '"';
-    }
+        $results = array();
 
-    //quotes the string
-    function quoteColumn($string)
-    {
-        return '`' . $string . '`';
-    }
+        //replace all instances of ! with a quoted column
+        foreach($cols as $col)
+            $query = preg_replace('/!/', $this->quoteColumn($col), $query, 1);
 
-    function sql_error()
-    {
-        if( empty( $error ) )
+        //prepare the MySQL statement
+        if ($pdoStatement = $this->prepare($query))
         {
-            $errno = $this->link->errno;
-            $error = $this->link->error;
+            //execute and get the results
+            if($pdoStatement->execute($args))
+                $results = $pdoStatement->fetchAll();
         }
-        return $errno . ' : ' . $error;
+
+        //close the PDO statement
+        $pdoStatement = null;
+
+        return $results;
     }
+
+    /**
+     * Inserts or updates a record in the database
+     * @param string $query to run
+     * @param string[] $cols columns that will replace !
+     * @param string[] | int[] $args arguments that will replace ?
+     * @return int
+     */
+    public function insertOrUpdate($query, $cols = array(), $args = array())
+    {
+        $insertId = -1;
+
+        //replace all instances of ! with a quoted column
+        foreach($cols as $col)
+            $query = preg_replace('/!/', $this->quoteColumn($col), $query, 1);
+
+        //prepare the MySQL statement
+        if ($pdoStatement = $this->prepare($query))
+        {
+            //execute and get the results
+            if($pdoStatement->execute($args))
+                $insertId = $this->lastInsertId();
+        }
+
+        //close the PDO statement
+        $pdoStatement = null;
+
+        return $insertId;
+
+    }
+
+    /**
+     * Deletes a record in the database
+     * @param string $query to run
+     * @param string[] $cols columns that will replace !
+     * @param string[] | int[] $args arguments that will replace ?
+     * @return int
+     */
+    public function delete($query, $cols = array(), $args = array())
+    {
+        $success = false;
+
+        //replace all instances of ! with a quoted column
+        foreach($cols as $col)
+            $query = preg_replace('/!/', $this->quoteColumn($col), $query, 1);
+
+        //prepare the MySQL statement
+        if ($pdoStatement = $this->prepare($query))
+            //execute and get the results
+            $success = $pdoStatement->execute($args);
+
+
+        //close the PDO statement
+        $pdoStatement = null;
+
+        return $success;
+
+    }
+
 }
 
 ?>

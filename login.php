@@ -12,7 +12,6 @@ if(!empty($username) && !empty($password))
         $_SESSION['user'] = serialize($user);
 }
 
-
 if(!empty($url))
     header('Location: http://scouting.wiredcats5885.ca' . $url);
 

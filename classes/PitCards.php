@@ -24,127 +24,18 @@ class PitCards extends Table
 
     public $CompletedBy;
 
-    protected static $TABLE_NAME = 'pit_cards';
-
-    function delete()
-    {
-        if(empty($this->Id))
-            return false;
-
-        $database = new Database();
-        $sql = 'DELETE FROM '.self::$TABLE_NAME.' WHERE '.'id = '.$database->quote($this->Id);
-        $rs = $database->query($sql);
-
-        if($rs)
-            return true;
-
-
-        return false;
-    }
-
-    public static function getPitCardsForTeam($teamId, $eventId)
-    {
-        $database = new Database();
-        $scoutCards = $database->query(
-            "SELECT 
-                      * 
-                    FROM 
-                      " . PitCards::$TABLE_NAME . " 
-                    WHERE 
-                      TeamId = " . $database->quote($teamId) .
-                    'AND
-                        EventId = ' . $database->quote($eventId) .
-                    'ORDER BY Id DESC'
-        );
-        $database->close();
-
-        $response = array();
-
-        if($scoutCards && $scoutCards->num_rows > 0)
-        {
-            while ($row = $scoutCards->fetch_assoc())
-            {
-                $response[] = $row;
-            }
-        }
-
-        return $response;
-    }
-
-    public static function getNewestPitCard($teamId, $eventId)
-    {
-        $database = new Database();
-        $scoutCards = $database->query(
-            "SELECT 
-                      * 
-                    FROM 
-                      " . PitCards::$TABLE_NAME . " 
-                    WHERE 
-                      TeamId = " . $database->quote($teamId) .
-                    'AND
-                        EventId = ' . $database->quote($eventId) .
-                    'ORDER BY Id DESC LIMIT 1'
-        );
-        $database->close();
-
-        $response = array();
-
-        if($scoutCards && $scoutCards->num_rows > 0)
-        {
-            while ($row = $scoutCards->fetch_assoc())
-            {
-                $response[] = $row;
-            }
-        }
-
-        return $response;
-    }
-
-    public static function getPitCardsForEvent($eventId)
-    {
-        $database = new Database();
-        $scoutCards = $database->query(
-            "SELECT 
-                      * 
-                    FROM 
-                      " . PitCards::$TABLE_NAME . " 
-                    WHERE 
-                        EventId = " . $database->quote($eventId)
-        );
-        $database->close();
-
-        $response = array();
-
-        if($scoutCards && $scoutCards->num_rows > 0)
-        {
-            while ($row = $scoutCards->fetch_assoc())
-            {
-                $response[] = $row;
-            }
-        }
-
-        return $response;
-    }
+    public static $TABLE_NAME = 'pit_cards';
 
     /**
-     * Gets and returns the team assigned to this pit card
-     * @return Teams
-     */
-    public function getTeam()
-    {
-        return Teams::withId($this->TeamId);
-    }
-
-    /**
-     * Returns the html for displaying a pit card
-     * @return string html to display
+     * Returns the object once converted into HTML
+     * @return string
      */
     public function toHtml()
     {
-        require_once("Teams.php");
+        require_once(ROOT_DIR . '/classes/Teams.php');
 
         //load the team from the database
-        $team = $this->getTeam();
+        $team = Teams::withId($this->TeamId);
 
         $html = '
             <div class="mdl-layout__tab-panel is-active" id="overview">
@@ -232,9 +123,33 @@ class PitCards extends Table
         return $html;
     }
 
+    /**
+     * Returns the html for displaying a pit card as a card
+     * @return string
+     */
+    public function toCard()
+    {
+        $html =
+            '<div class="mdl-layout__tab-panel is-active" id="overview">
+                <section class="section--center mdl-grid mdl-grid--no-spacing mdl-shadow--2dp">
+                    <div class="mdl-card mdl-cell mdl-cell--12-col">
+                        <div class="mdl-card__supporting-text">
+                            <h4>' . $this->toString() . '</h4>
+                            Completed By: ' . $this->CompletedBy .
+                        '</div>
+                        <div class="mdl-card__actions">
+                            <a href="/pit-card.php?pitCardId=' . $this->Id  .'" class="mdl-button">View</a>
+                        </div>
+                    </div>
+                </section>
+            </div>';
+
+        return $html;
+    }
+
     public function toString()
     {
-        // TODO: Implement toString() method.
+        return 'Pit Card - ' . $this->Id;
     }
 }
 

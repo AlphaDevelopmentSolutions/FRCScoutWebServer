@@ -1,8 +1,7 @@
 <?php
 require_once("config.php");
-require_once("classes/Teams.php");
-require_once("classes/PitCards.php");
-require_once("classes/Events.php");
+require_once(ROOT_DIR . "/classes/Teams.php");
+require_once(ROOT_DIR . "/classes/Events.php");
 
 
 $eventId = $_GET['eventId'];
@@ -10,7 +9,7 @@ $teamId = $_GET['teamId'];
 
 $team = Teams::withId($teamId);
 $event = Events::withId($eventId);
-$pitCard = PitCards::withId(PitCards::getNewestPitCard($team->Id, $event->BlueAllianceId)['0']['Id']);
+$pitCard = $team->getPitCards($event)[0];
 
 $url = "http://scouting.wiredcats5885.ca/ajax/GetOPRStats.php";
 
@@ -56,14 +55,13 @@ $ccwms = $stats['ccwms']['frc' . $pitCard->TeamId];
 
         $additionContent = '';
 
-        $robotMediaUri = Teams::getProfileImageUri($team->Id);
+        $profileMedia = $team->getProfileImage();
 
-        if(!empty($robotMediaUri))
+        if(!empty($profileMedia->FileURI))
         {
-            $robotMediaUri = ROBOT_MEDIA_URL . $robotMediaUri;
             $additionContent .=
                 '<div style="height: unset" class="mdl-layout--large-screen-only mdl-layout__header-row">
-                  <div class="circle-image" style="background-image: url(' . $robotMediaUri . ')">
+                  <div class="circle-image" style="background-image: url(' . ROBOT_MEDIA_URL . $profileMedia->FileURI . ')">
 
                   </div>
                 </div>';
@@ -166,58 +164,17 @@ $ccwms = $stats['ccwms']['frc' . $pitCard->TeamId];
 
         $header = new Header($event->Name, $additionContent, $navBarArray, $event->BlueAllianceId);
 
-        echo $header->toString();
+        echo $header->toHtml();
 
         ?>
       <main class="mdl-layout__content">
 
           <?php
 
-          foreach(Teams::getRobotPhotos($teamId) as $robotPhotoUri)
-          {
-              $robotMediaUri = ROBOT_MEDIA_URL . $robotPhotoUri;
+          foreach($team->getRobotPhotos() as $robotMedia)
+              echo $robotMedia->toHtml();
 
           ?>
-                <div class="mdl-layout__tab-panel is-active" id="overview">
-                  <section class="section--center mdl-grid mdl-grid--no-spacing mdl-shadow--2dp">
-                    <div class="mdl-card mdl-cell mdl-cell--12-col">
-                      <div class="mdl-card__supporting-text">
-                        <img class="robot-media" src="<?php echo $robotMediaUri ?>"  height="350"/>
-                      </div>
-                       <div class="mdl-card__actions">
-                        <a target="_blank" href="<?php echo $robotMediaUri ?>" class="mdl-button">View</a>
-                      </div>
-                    </div>
-                  </section>
-                </div>
-        <?php
-          }
-
-          ?>
-
-          
-          <div class="mdl-layout__tab-panel" id="stats">
-<style>
-.demo-card-wide.mdl-card {
-  width: 60%;
-/*    height: 1000px;*/
-    margin: auto;
-}
-.demo-card-wide > .mdl-card__title {
-  color: #fff;
-  height: 176px;
-/*  background: url('../assets/demos/welcome_card.jpg') center / cover;*/
-    background-color: red;
-                  }
-.demo-card-wide > .mdl-card__menu {
-  color: #fff;
-}
-</style>
-              
-          <section class="section--footer mdl-grid">
-          </section>
-        </div>
-
       </main>
     </div>
     <?php require_once('includes/bottom-scripts.php') ?>
