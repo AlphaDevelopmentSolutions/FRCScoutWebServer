@@ -13,10 +13,53 @@ class Events
 
     private static $TABLE_NAME = 'events';
 
-    function load($id)
+    /**
+     * Loads a new instance by its database id
+     * @param $id
+     * @return Events
+     */
+    static function withId($id)
+    {
+        $instance = new self();
+        $instance->loadById($id);
+        return $instance;
+
+    }
+
+    /**
+     * Loads a new instance by specified properties
+     * @param array $properties
+     * @return Events
+     */
+    static function withProperties(Array $properties = array())
+    {
+        $instance = new self();
+        $instance->loadByProperties($properties);
+        return $instance;
+
+    }
+
+    /**
+     * Loads a new instance by specified properties
+     * @param array $properties
+     * @return Events
+     */
+    protected function loadByProperties(Array $properties = array())
+    {
+        foreach($properties as $key => $value)
+            $this->{$key} = $value;
+
+    }
+
+    /**
+     * Loads a new instance by its database id
+     * @param $id
+     * @return Events
+     */
+    protected function loadById($id)
     {
         $database = new Database();
-        $sql = 'SELECT * FROM '.$this::$TABLE_NAME.' WHERE '.'BlueAllianceId = '.$database->quote($id);
+        $sql = 'SELECT * FROM ' . self::$TABLE_NAME . ' WHERE '.'BlueAllianceId = '.$database->quote($id);
         $rs = $database->query($sql);
 
         if($rs && $rs->num_rows > 0) {
@@ -76,7 +119,8 @@ class Events
             "SELECT 
                       * 
                     FROM 
-                      " . Events::$TABLE_NAME
+                      " . self::$TABLE_NAME .
+                    " ORDER BY StartDate DESC "
         );
         $database->close();
 

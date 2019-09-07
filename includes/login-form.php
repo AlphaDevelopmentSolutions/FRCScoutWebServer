@@ -15,7 +15,7 @@ if(loggedIn())
 else
     echo
         '
-            <form style="margin: 1.5em; position: absolute; right: 0;" action="login.php" method="post">
+            <form style="margin: 21px; position: absolute; right: 0;" action="login.php" method="post">
                 <div class="mdl-textfield mdl-js-textfield" style="width: 100px; margin-right: .5em;">
                     <input class="mdl-textfield__input" type="text" name="username" style="background-color: white !important; color: black; ">
                     <label class="mdl-textfield__label" for="username" style="padding-left: .5em; padding-right: .5em; ">Username</label>

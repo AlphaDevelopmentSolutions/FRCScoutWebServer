@@ -5,9 +5,7 @@ require_once("classes/Events.php");
 
 $eventId = $_GET['eventId'];
 
-$event = new Events();
-$event->load($eventId);
-
+$event = Events::withId($eventId);
 ?>
 
 <!doctype html>
@@ -189,16 +187,15 @@ $event->load($eventId);
         <div class="mdl-layout--large-screen-only mdl-layout__header-row">
             <h3><?php echo $event->Name; ?></h3>
         </div>
-        <div class="mdl-layout--large-screen-only mdl-layout__header-row">
-        </div>
+
         <div class="version">Version <?php echo VERSION ?></div>
         <div class="mdl-layout__tab-bar mdl-js-ripple-effect mdl-color--primary-dark">
             <a href="/" class="mdl-layout__tab">Events</a>
+            <a href="/match-overview.php?eventId=<?php echo $event->BlueAllianceId; ?>" class="mdl-layout__tab ">Matches</a>
             <a href="/teams.php?eventId=<?php echo $event->BlueAllianceId; ?>" class="mdl-layout__tab">Teams</a>
         </div>
         <div class="mdl-layout__tab-bar mdl-js-ripple-effect mdl-color--primary-dark">
             <a href="/stats.php?eventId=<?php echo $event->BlueAllianceId; ?>" class="mdl-layout__tab is-active">Stats</a>
-            <a href="/match-overview.php?eventId=<?php echo $event->BlueAllianceId; ?>" class="mdl-layout__tab ">Match Overview</a>
         </div>
     </header>
     <main class="mdl-layout__content">
@@ -609,7 +606,7 @@ $event->load($eventId);
         if(aData[minMatchIdsKey] !== undefined)
         {
             aData[minMatchIdsKey].forEach(function (matchId) {
-                tooltipText += 'Match ' + matchId + '<br>';
+                tooltipText += matchId + '<br>';
             });
 
             $(element).attr('data-toggle', 'tooltip').attr('data-html', 'true').attr('data-placement', 'top').attr('title', tooltipText);
@@ -617,7 +614,7 @@ $event->load($eventId);
         else if(aData[maxMatchIdsKey] !== undefined)
         {
             aData[maxMatchIdsKey].forEach(function (matchId) {
-                tooltipText += 'Match ' + matchId + '<br>';
+                tooltipText += matchId + '<br>';
             });
 
             $(element).attr('data-toggle', 'tooltip').attr('data-html', 'true').attr('data-placement', 'top').attr('title', tooltipText);
