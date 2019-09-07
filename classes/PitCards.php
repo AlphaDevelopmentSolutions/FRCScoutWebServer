@@ -81,7 +81,7 @@ class PitCards
                                       )
                                       VALUES 
                                       (
-                                      ' . ((empty($this->TeamId)) ? 'NULL' : $database->quote($this->TeamId)) .',
+                                      ' . ((empty($this->TeamId)) ? '0' : $database->quote($this->TeamId)) .',
                                       ' . ((empty($this->EventId)) ? 'NULL' : $database->quote($this->EventId)) .',
                                       
                                       ' . ((empty($this->DriveStyle)) ? 'NULL' : $database->quote($this->DriveStyle)) .',
@@ -118,7 +118,7 @@ class PitCards
         else
         {
             $sql = "UPDATE " . PitCards::$TABLE_NAME . " SET 
-            TeamId = " . ((empty($this->TeamId)) ? "NULL" : $database->quote($this->TeamId)) .", 
+            TeamId = " . ((empty($this->TeamId)) ? "0" : $database->quote($this->TeamId)) .", 
             EventId = " . ((empty($this->EventId)) ? "NULL" : $database->quote($this->EventId)) .", 
             
             DriveStyle = " . ((empty($this->DriveStyle)) ? "NULL" : $database->quote($this->DriveStyle)) .", 

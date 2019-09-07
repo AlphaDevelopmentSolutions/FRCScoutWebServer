@@ -18,7 +18,7 @@ class EventTeamList
                                   )
                                   VALUES 
                                   (
-                                  ' . ((empty($this->TeamId)) ? 'NULL' : $database->quote($this->TeamId)) .',
+                                  ' . ((empty($this->TeamId)) ? '0' : $database->quote($this->TeamId)) .',
                                   ' . ((empty($this->EventId)) ? 'NULL' : $database->quote($this->EventId)) .'
                                   );';
         if($database->query($sql))

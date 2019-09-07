@@ -96,25 +96,12 @@ $ccwms = $stats['ccwms']['frc' . $pitCard->TeamId];
           if(!empty($robotMediaUri))
           {
               $robotMediaUri = ROBOT_MEDIA_URL . $robotMediaUri;
-              list($width, $height) = getimagesize($robotMediaUri);
-
-              if(!empty($width) && !empty($height))
-              {
-                  if ($width > $height)
-                      echo
-                          '<div style="height: unset" class="mdl-layout--large-screen-only mdl-layout__header-row">
-                  <div class="circle-image-landscape">
-                    <img src="' . $robotMediaUri . '">
+              echo
+                  '<div style="height: unset" class="mdl-layout--large-screen-only mdl-layout__header-row">
+                  <div class="circle-image" style="background-image: url(' . $robotMediaUri . ')">
+                    
                   </div>
                 </div>';
-                  else
-                      echo
-                          '<div style="height: unset" class="mdl-layout--large-screen-only mdl-layout__header-row">
-                  <div class="circle-image-portrait">
-                    <img src="' . $robotMediaUri . '">
-                  </div>
-                </div>';
-              }
           }
 
           ?>
@@ -227,7 +214,9 @@ $ccwms = $stats['ccwms']['frc' . $pitCard->TeamId];
 
           <?php
 
-          foreach(PitCards::getPitCardsForTeam($teamId, $eventId) as $scoutCard)
+          $pitCards = PitCards::getPitCardsForTeam($teamId, $eventId);
+
+          for($i = 0; $i < sizeof($pitCards); $i++)
           {
             echo
             '
@@ -235,11 +224,11 @@ $ccwms = $stats['ccwms']['frc' . $pitCard->TeamId];
                   <section class="section--center mdl-grid mdl-grid--no-spacing mdl-shadow--2dp">
                     <div class="mdl-card mdl-cell mdl-cell--12-col">
                       <div class="mdl-card__supporting-text">
-                        <h4>Pit Card ' . $scoutCard['Id'] . '</h4>
-                        Completed By: ' . $scoutCard['CompletedBy'] .
+                        <h4>Pit Card ' . (sizeof($pitCards) - $i) . '</h4>
+                        Completed By: ' . $pitCards[$i]['CompletedBy'] .
                     '</div>
                       <div class="mdl-card__actions">
-                        <a href="/pit-card.php?pitCardId=' . $scoutCard['Id']  .'" class="mdl-button">View</a>
+                        <a href="/pit-card.php?pitCardId=' . $pitCards[$i]['Id']  .'" class="mdl-button">View</a>
                       </div>
                     </div>
                   </section>

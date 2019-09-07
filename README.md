@@ -21,9 +21,9 @@ Create a new schema and write down the name of it.
 
 After selecting the version of the instance you will be installing, navigate to:
 
-    databases/
+    databases/vYYYY.M.M.P.sql
     
-and select the matching vX.X.X.sql file to import to MySQL.
+and select the matching vYYYY.M.M.P.sql file to import to MySQL.
 
 ## Installation
 Once you have uploaded all your files to your web server and setup the database, navigate to
@@ -54,10 +54,28 @@ If at any time you need to need to change server information, navigate to that f
 ## Cron
 For getting events and teams at those events, the web app runs off of scripts that can be cron tasked. Each script is located at
     
-        cron/GetEvents.php
-        cron/GetTeams.php
+    cron/GetEvents.php
+    cron/GetTeams.php
         
 You can either run these manually or automate it with use of an OS cron.
+
+## Updating
+This repo only supports **_INCREMENTAL DATABASE UPDATES_**. Meaning you if you are v2019.1.0.0 and would like to go to v2019.3.0.0 you must update the database from v2019.1.0.0 > v2019.2.0.0 > v2019.3.0.0.
+
+To update the web server files, either
+    
+    git pull
+
+or copy and replace all files from this repo to your server.
+
+The MySQL update scripts are located in the same directory as the installation scripts.
+
+    databases/vYYYY.M.M.P.update.sql
+        
+## Contributing
+Contributions are welcomed and encouraged! 
+
+To contribute, fork this repo and create a pull request to merge into the release branch your issue is tagged under.
 
 ## Error Codes
 **5x01:** PHP tried to write a file to the server and failed. Does your server have correct permissions?

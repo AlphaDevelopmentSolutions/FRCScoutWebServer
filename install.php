@@ -4,9 +4,8 @@ require_once("config.php");
 if(isPostBack())
     $error = install();
 else if (file_exists('classes/Keys.php'))
-{
-        header('Location: ' . URL_PATH);
-}
+    header('Location: ' . URL_PATH);
+
 
 function install()
 {

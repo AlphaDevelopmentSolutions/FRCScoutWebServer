@@ -243,25 +243,26 @@ $event->load($eventId);
 
 
         </div>
+
         <table id="stats_table" class="display stats-table">
             <thead>
             <tr>
                 <th>Team Number</th>
                 <th>MIN/MAX/AVG</th>
 
-                <th class="autonomous">Exit Habitat</th>
-                <th class="autonomous">Hatch Panels</th>
+                <th class="autonomous">Exit HAB</th>
+                <th class="autonomous">Hatch</th>
                 <th class="autonomous">Hatch Dropped</th>
                 <th class="autonomous">Cargo</th>
                 <th class="autonomous">Cargo Dropped</th>
 
-                <th class="teleop">Hatch Panels</th>
+                <th class="teleop">Hatch</th>
                 <th class="teleop">Hatch Dropped</th>
                 <th class="teleop">Cargo</th>
                 <th class="teleop">Cargo Dropped</th>
 
-                <th class="end-game" style="color: white;">Returned To Habitat</th>
-                <th class="end-game" style="color: white;">Returned To Habitat Failed Attempts</th>
+                <th class="end-game" style="color: white;">Return To HAB</th>
+                <th class="end-game" style="color: white;">Return To HAB Fails</th>
 
                 <th class="post-game" style="color: white;">Defense Rating</th>
                 <th class="post-game" style="color: white;">Offense Rating</th>
@@ -341,10 +342,10 @@ $event->load($eventId);
                 }
 
             },
-            'columnDefs': [function(d)
-            {
-                d.columnDefs = columnDefs;
-            }],
+            'columnDefs' : [
+                { "width": "5%", "targets": 0 }
+
+            ],
             'drawCallback': function(settings)
             {
                 $('[data-toggle="tooltip"]').tooltip();
@@ -412,7 +413,7 @@ $event->load($eventId);
                                generateToolTips(aData, 'teleopCargoStoredAttemptsMinMatchIds', 'teleopCargoStoredAttemptsMaxMatchIds', $(this));
                                break;
 
-                           case (removeAuto ? (removeTeleop ? 2 : 6) : removeTeleop ? 7 : 11):
+                           case (removeEndGame ? -10 : removeAuto ? (removeTeleop ? 2 : 6) : removeTeleop ? 7 : 11):
                                if($(this).html() !== "No")
                                    $(this).css('background-color', '#64FF62');
 
@@ -422,13 +423,55 @@ $event->load($eventId);
 
                                break;
 
-                           case (removeAuto ? (removeTeleop ? 3 : 7) : removeTeleop ? 8 : 12):
+                           case (removeEndGame ? -11 : removeAuto ? (removeTeleop ? 3 : 7) : removeTeleop ? 8 : 12):
                                if($(this).html() !== "No")
                                    $(this).css('background-color', '#E67C73');
 
                                else
                                    $(this).css('background-color', '#64FF62');
                                generateToolTips(aData, 'endGameReturnedToHabitatMinMatchIds', 'endGameReturnedToHabitatMaxMatchIds', $(this));
+
+                               break;
+
+                           case (removeEndGame ? (removeAuto ? (removeTeleop ? 2 : 6) : (removeTeleop ? 7: 11)) : (removeAuto ? (removeTeleop ? 4 : 8) : (removeTeleop ? 9: 13))):
+                               if($(this).html() >= 0 && $(this).html() <= 1.6)
+                                   $(this).css('background-color', '#E67C73');
+
+                               else if($(this).html() > 1.6 && $(this).html() <= 3.2)
+                                   $(this).css('background-color', '#FFA74F');
+
+                               else
+                                   $(this).css('background-color', '#64FF62');
+
+                               generateToolTips(aData, 'postGameDefenseRatingMinMatchIds', 'postGameDefenseRatingMaxMatchIds', $(this));
+
+                               break;
+
+                           case (removeEndGame ? (removeAuto ? (removeTeleop ? 3 : 7) : (removeTeleop ? 8: 12)) : (removeAuto ? (removeTeleop ? 5 : 9) : (removeTeleop ? 10: 14))):
+                               if($(this).html() >= 0 && $(this).html() <= 1.6)
+                                   $(this).css('background-color', '#E67C73');
+
+                               else if($(this).html() > 1.6 && $(this).html() <= 3.2)
+                                   $(this).css('background-color', '#FFA74F');
+
+                               else
+                                   $(this).css('background-color', '#64FF62');
+
+                               generateToolTips(aData, 'postGameOffenseRatingMinMatchIds', 'postGameOffenseRatingMaxMatchIds', $(this));
+
+                               break;
+
+                           case (removeEndGame ? (removeAuto ? (removeTeleop ? 4 : 8) : (removeTeleop ? 9: 13)) : (removeAuto ? (removeTeleop ? 6 : 10) : (removeTeleop ? 11: 15))):
+                               if($(this).html() >= 0 && $(this).html() <= 1.6)
+                                   $(this).css('background-color', '#E67C73');
+
+                               else if($(this).html() > 1.6 && $(this).html() <= 3.2)
+                                   $(this).css('background-color', '#FFA74F');
+
+                               else
+                                   $(this).css('background-color', '#64FF62');
+
+                               generateToolTips(aData, 'postGameDriveRatingMinMatchIds', 'postGameDriveRatingMaxMatchIds', $(this));
 
                                break;
                        }

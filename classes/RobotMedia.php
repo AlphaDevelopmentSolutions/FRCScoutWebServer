@@ -48,7 +48,7 @@ class RobotMedia
                                       )
                                       VALUES
                                       (
-                                      ' . ((empty($this->TeamId)) ? 'NULL' : $database->quote($this->TeamId)) . ',
+                                      ' . ((empty($this->TeamId)) ? '0' : $database->quote($this->TeamId)) . ',
                                       ' . ((empty($this->FileURI)) ? 'NULL' : $database->quote($this->FileURI)) . '
                                       );';
 
@@ -65,7 +65,7 @@ class RobotMedia
             else
                 {
                 $sql = "UPDATE " . self::$TABLE_NAME . " SET
-            TeamId = " . ((empty($this->TeamId)) ? "NULL" : $database->quote($this->TeamId)) . ",
+            TeamId = " . ((empty($this->TeamId)) ? "0" : $database->quote($this->TeamId)) . ",
             FileURI = " . ((empty($this->FileURI)) ? "NULL" : $database->quote($this->FileURI)) . "
             WHERE (Id = " . $database->quote($this->Id) . ");";
 

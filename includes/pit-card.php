@@ -6,32 +6,32 @@
                 <div class="mdl-card__supporting-text">
 
                     <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                        <input class="mdl-textfield__input" type="text" value="<?php echo $pitCard->TeamId ?>" >
+                        <input <?php echo ((loggedIn()) ? "" : "disabled") ?> class="mdl-textfield__input" type="text" value="<?php echo empty($pitCard->TeamId) ? '&nbsp' : $pitCard->TeamId ?>" >
                         <label class="mdl-textfield__label" >Team Id</label>
                     </div>
 
                     <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                        <input class="mdl-textfield__input" type="text" value="<?php echo $pitCard->CompletedBy ?>" name="completedBy">
+                        <input <?php echo ((loggedIn()) ? "" : "disabled") ?> class="mdl-textfield__input" type="text" value="<?php echo empty($pitCard->CompletedBy) ? '&nbsp' : $pitCard->CompletedBy ?>" name="completedBy">
                         <label class="mdl-textfield__label" >Scouter</label>
                     </div>
                     <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                        <input class="mdl-textfield__input" type="text" value="<?php echo $pitCard->DriveStyle ?>" name="driveStyle">
+                        <input <?php echo ((loggedIn()) ? "" : "disabled") ?> class="mdl-textfield__input" type="text" value="<?php echo empty($pitCard->DriveStyle) ? '&nbsp' : $pitCard->DriveStyle ?>" name="driveStyle">
                         <label class="mdl-textfield__label" >Drivetrain</label>
                     </div>
                     <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                        <input class="mdl-textfield__input" type="text" value="<?php echo $pitCard->RobotWeight ?>" name="robotWeight">
+                        <input <?php echo ((loggedIn()) ? "" : "disabled") ?> class="mdl-textfield__input" type="text" value="<?php echo empty($pitCard->RobotWeight) ? '&nbsp' : $pitCard->RobotWeight ?>" name="robotWeight">
                         <label class="mdl-textfield__label" >Robot Weight</label>
                     </div>
                     <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                        <input class="mdl-textfield__input" type="text" value="<?php echo $pitCard->RobotLength ?>" name="robotLength">
+                        <input <?php echo ((loggedIn()) ? "" : "disabled") ?> class="mdl-textfield__input" type="text" value="<?php echo empty($pitCard->RobotLength) ? '&nbsp' : $pitCard->RobotLength ?>" name="robotLength">
                         <label class="mdl-textfield__label" >Robot Length</label>
                     </div>
                     <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                        <input class="mdl-textfield__input" type="text" value="<?php echo $pitCard->RobotWidth ?>" name="robotWidth">
+                        <input <?php echo ((loggedIn()) ? "" : "disabled") ?> class="mdl-textfield__input" type="text" value="<?php echo empty($pitCard->RobotWidth) ? '&nbsp' : $pitCard->RobotWidth ?>" name="robotWidth">
                         <label class="mdl-textfield__label" >Robot Width</label>
                     </div>
                     <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                        <input class="mdl-textfield__input" type="text" value="<?php echo $pitCard->RobotHeight ?>" name="robotHeight">
+                        <input <?php echo ((loggedIn()) ? "" : "disabled") ?> class="mdl-textfield__input" type="text" value="<?php echo empty($pitCard->RobotHeight) ? '&nbsp' : $pitCard->RobotHeight ?>" name="robotHeight">
                         <label class="mdl-textfield__label" >Robot Height</label>
                     </div>
                 </div>
@@ -39,17 +39,17 @@
                 <strong style="padding-left: 40px; padding-top: 10px;">Autonomous</strong>
                 <div class="mdl-card__supporting-text">
                     <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                        <input class="mdl-textfield__input" type="text" value="<?php echo $pitCard->AutoExitHabitat ?>" name="autonomousExitHabitat">
+                        <input <?php echo ((loggedIn()) ? "" : "disabled") ?> class="mdl-textfield__input" type="text" value="<?php echo empty($pitCard->AutoExitHabitat) ? '&nbsp' : $pitCard->AutoExitHabitat ?>" name="autonomousExitHabitat">
                         <label class="mdl-textfield__label" >Exit Habitat</label>
                     </div>
 
                     <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                        <input class="mdl-textfield__input" type="text" value="<?php echo $pitCard->AutoHatch ?>" name="autonomousHatchPanelsSecured">
+                        <input <?php echo ((loggedIn()) ? "" : "disabled") ?> class="mdl-textfield__input" type="text" value="<?php echo empty($pitCard->AutoHatch) ? '&nbsp' : $pitCard->AutoHatch ?>" name="autonomousHatchPanelsSecured">
                         <label class="mdl-textfield__label" >Hatch Panels Secured</label>
                     </div>
 
                     <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                        <input class="mdl-textfield__input" type="text" value="<?php echo $pitCard->AutoCargo ?>" name="autonomousCargoStored">
+                        <input <?php echo ((loggedIn()) ? "" : "disabled") ?> class="mdl-textfield__input" type="text" value="<?php echo empty($pitCard->AutoCargo) ? '&nbsp' : $pitCard->AutoCargo ?>" name="autonomousCargoStored">
                         <label class="mdl-textfield__label" >Cargo Stored</label>
                     </div>
                 </div>
@@ -57,12 +57,12 @@
                 <strong style="padding-left: 40px; padding-top: 10px;">Teleop</strong>
                 <div class="mdl-card__supporting-text">
                     <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                        <input class="mdl-textfield__input" type="text" value="<?php echo $pitCard->TeleopHatch ?>" name="teleopHatchPanelsSecured">
+                        <input <?php echo ((loggedIn()) ? "" : "disabled") ?> class="mdl-textfield__input" type="text" value="<?php echo empty($pitCard->TeleopHatch) ? '&nbsp' : $pitCard->TeleopHatch ?>" name="teleopHatchPanelsSecured">
                         <label class="mdl-textfield__label" >Hatch Panels Secured</label>
                     </div>
 
                     <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                        <input class="mdl-textfield__input" type="text" value="<?php echo $pitCard->TeleopCargo ?>" name="teleopCargoStored">
+                        <input <?php echo ((loggedIn()) ? "" : "disabled") ?> class="mdl-textfield__input" type="text" value="<?php echo empty($pitCard->TeleopCargo) ? '&nbsp' : $pitCard->TeleopCargo ?>" name="teleopCargoStored">
                         <label class="mdl-textfield__label" >Cargo Stored</label>
                     </div>
                 </div>
@@ -70,12 +70,12 @@
                 <strong style="padding-left: 40px; padding-top: 10px;">End Game</strong>
                 <div class="mdl-card__supporting-text">
                     <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                        <input class="mdl-textfield__input" type="text" value="<?php echo $pitCard->ReturnToHabitat ?>" name="returnedToHabitat">
+                        <input <?php echo ((loggedIn()) ? "" : "disabled") ?> class="mdl-textfield__input" type="text" value="<?php echo empty($pitCard->ReturnToHabitat) ? '&nbsp' : $pitCard->ReturnToHabitat ?>" name="returnedToHabitat">
                         <label class="mdl-textfield__label" >Returned To Habitat</label>
                     </div>
 
                     <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                        <textarea class="mdl-textfield__input" type="text" rows="3" name="notes" ><?php echo $pitCard->Notes ?></textarea>
+                        <textarea <?php echo ((loggedIn()) ? "" : "disabled") ?> class="mdl-textfield__input"  rows="3" name="notes" ><?php echo empty($pitCard->Notes) ? '&nbsp' : $pitCard->Notes ?></textarea>
                         <label class="mdl-textfield__label" >Notes</label>
                     </div>
                 </div>

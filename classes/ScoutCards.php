@@ -110,15 +110,15 @@ class ScoutCards
                                       )
                                       VALUES 
                                       (
-                                      ' . ((empty($this->MatchId)) ? 'NULL' : $database->quote($this->MatchId)) .',
-                                      ' . ((empty($this->TeamId)) ? 'NULL' : $database->quote($this->TeamId)) .',
+                                      ' . ((empty($this->MatchId)) ? '0' : $database->quote($this->MatchId)) .',
+                                      ' . ((empty($this->TeamId)) ? '0' : $database->quote($this->TeamId)) .',
                                       ' . ((empty($this->EventId)) ? 'NULL' : $database->quote($this->EventId)) .',
                                       ' . ((empty($this->AllianceColor)) ? 'NULL' : $database->quote($this->AllianceColor)) .',
                                       ' . ((empty($this->CompletedBy)) ? 'NULL' : $database->quote($this->CompletedBy)) .',
                                     
                                       ' . ((empty($this->PreGameStartingLevel)) ? '0' : $database->quote($this->PreGameStartingLevel)) .',
-                                      ' . ((empty($this->PreGameStartingPosition)) ? '0' : $database->quote($this->PreGameStartingPosition)) .',
-                                      ' . ((empty($this->PreGameStartingPiece)) ? '0' : $database->quote($this->PreGameStartingPiece)) .',
+                                      ' . ((empty($this->PreGameStartingPosition)) ? 'NULL' : $database->quote($this->PreGameStartingPosition)) .',
+                                      ' . ((empty($this->PreGameStartingPiece)) ? 'NULL' : $database->quote($this->PreGameStartingPiece)) .',
                                       
                                       ' . ((empty($this->AutonomousExitHabitat)) ? '0' : $database->quote($this->AutonomousExitHabitat)) .',
                                       ' . ((empty($this->AutonomousHatchPanelsPickedUp)) ? '0' : $database->quote($this->AutonomousHatchPanelsPickedUp)) .',
@@ -135,8 +135,8 @@ class ScoutCards
                                       ' . ((empty($this->TeleopCargoStoredAttempts)) ? '0' : $database->quote($this->TeleopCargoStoredAttempts)) .',
                                       ' . ((empty($this->TeleopCargoStored)) ? '0' : $database->quote($this->TeleopCargoStored)) .',
                                       
-                                      ' . ((empty($this->EndGameReturnedToHabitat)) ? 'NULL' : $database->quote($this->EndGameReturnedToHabitat)) .',
-                                      ' . ((empty($this->EndGameReturnedToHabitatAttempts)) ? 'NULL' : $database->quote($this->EndGameReturnedToHabitatAttempts)) .',
+                                      ' . ((empty($this->EndGameReturnedToHabitat)) ? '0' : $database->quote($this->EndGameReturnedToHabitat)) .',
+                                      ' . ((empty($this->EndGameReturnedToHabitatAttempts)) ? '0' : $database->quote($this->EndGameReturnedToHabitatAttempts)) .',
                                       
                                       ' . ((empty($this->BlueAllianceFinalScore)) ? '0' : $database->quote($this->BlueAllianceFinalScore)) .',
                                       ' . ((empty($this->RedAllianceFinalScore)) ? '0' : $database->quote($this->RedAllianceFinalScore)) .',
@@ -145,7 +145,7 @@ class ScoutCards
                                       ' . ((empty($this->DriveRating)) ? '0' : $database->quote($this->DriveRating)) .',
                                       ' . ((empty($this->Notes)) ? 'NULL' : $database->quote($this->Notes)) .',
                                       
-                                      ' . ((empty($this->CompletedDate)) ? 'NULL' : $database->quote($this->CompletedDate)) .'
+                                      ' . ((empty($this->CompletedDate)) ? '0' : $database->quote($this->CompletedDate)) .'
                                       );';
 
             if($database->query($sql))
@@ -162,42 +162,42 @@ class ScoutCards
         else
         {
             $sql = "UPDATE " . self::$TABLE_NAME . " SET 
-            MatchId = " . ((empty($this->MatchId)) ? "NULL" : $database->quote($this->MatchId)) .", 
-            TeamId = " . ((empty($this->TeamId)) ? "NULL" : $database->quote($this->TeamId)) .", 
+            MatchId = " . ((empty($this->MatchId)) ? "0" : $database->quote($this->MatchId)) .", 
+            TeamId = " . ((empty($this->TeamId)) ? "0" : $database->quote($this->TeamId)) .", 
             EventId = " . ((empty($this->EventId)) ? "NULL" : $database->quote($this->EventId)) .", 
             AllianceColor = " . ((empty($this->AllianceColor)) ? "NULL" : $database->quote($this->AllianceColor)) .", 
             CompletedBy = " . ((empty($this->CompletedBy)) ? "NULL" : $database->quote($this->CompletedBy)) .", 
 
-            PreGameStartingLevel = " . ((empty($this->PreGameStartingLevel)) ? "NULL" : $database->quote($this->PreGameStartingLevel)) .", 
+            PreGameStartingLevel = " . ((empty($this->PreGameStartingLevel)) ? "0" : $database->quote($this->PreGameStartingLevel)) .", 
             PreGameStartingPosition = " . ((empty($this->PreGameStartingPosition)) ? "NULL" : $database->quote($this->PreGameStartingPosition)) .", 
             PreGameStartingPiece = " . ((empty($this->PreGameStartingPiece)) ? "NULL" : $database->quote($this->PreGameStartingPiece)) .", 
             
-            AutonomousExitHabitat = " . ((empty($this->AutonomousExitHabitat)) ? "NULL" : $database->quote($this->AutonomousExitHabitat)) .", 
-            AutonomousHatchPanelsPickedUp = " . ((empty($this->AutonomousHatchPanelsPickedUp)) ? "NULL" : $database->quote($this->AutonomousHatchPanelsPickedUp)) .", 
-            AutonomousHatchPanelsSecuredAttempts = " . ((empty($this->AutonomousHatchPanelsSecuredAttempts)) ? "NULL" : $database->quote($this->AutonomousHatchPanelsSecuredAttempts)) .", 
-            AutonomousHatchPanelsSecured = " . ((empty($this->AutonomousHatchPanelsSecured)) ? "NULL" : $database->quote($this->AutonomousHatchPanelsSecured)) .", 
-            AutonomousCargoPickedUp = " . ((empty($this->AutonomousCargoPickedUp)) ? "NULL" : $database->quote($this->AutonomousCargoPickedUp)) .", 
-            AutonomousCargoStoredAttempts = " . ((empty($this->AutonomousCargoStoredAttempts)) ? "NULL" : $database->quote($this->AutonomousCargoStoredAttempts)) .", 
-            AutonomousCargoStored = " . ((empty($this->AutonomousCargoStored)) ? "NULL" : $database->quote($this->AutonomousCargoStored)) .", 
+            AutonomousExitHabitat = " . ((empty($this->AutonomousExitHabitat)) ? "0" : $database->quote($this->AutonomousExitHabitat)) .", 
+            AutonomousHatchPanelsPickedUp = " . ((empty($this->AutonomousHatchPanelsPickedUp)) ? "0" : $database->quote($this->AutonomousHatchPanelsPickedUp)) .", 
+            AutonomousHatchPanelsSecuredAttempts = " . ((empty($this->AutonomousHatchPanelsSecuredAttempts)) ? "0" : $database->quote($this->AutonomousHatchPanelsSecuredAttempts)) .", 
+            AutonomousHatchPanelsSecured = " . ((empty($this->AutonomousHatchPanelsSecured)) ? "0" : $database->quote($this->AutonomousHatchPanelsSecured)) .", 
+            AutonomousCargoPickedUp = " . ((empty($this->AutonomousCargoPickedUp)) ? "0" : $database->quote($this->AutonomousCargoPickedUp)) .", 
+            AutonomousCargoStoredAttempts = " . ((empty($this->AutonomousCargoStoredAttempts)) ? "0" : $database->quote($this->AutonomousCargoStoredAttempts)) .", 
+            AutonomousCargoStored = " . ((empty($this->AutonomousCargoStored)) ? "0" : $database->quote($this->AutonomousCargoStored)) .", 
             
-            TeleopHatchPanelsPickedUp = " . ((empty($this->TeleopHatchPanelsPickedUp)) ? "NULL" : $database->quote($this->TeleopHatchPanelsPickedUp)) .", 
-            TeleopHatchPanelsSecuredAttempts = " . ((empty($this->TeleopHatchPanelsSecuredAttempts)) ? "NULL" : $database->quote($this->TeleopHatchPanelsSecuredAttempts)) .", 
-            TeleopHatchPanelsSecured = " . ((empty($this->TeleopHatchPanelsSecured)) ? "NULL" : $database->quote($this->TeleopHatchPanelsSecured)) .", 
-            TeleopCargoPickedUp = " . ((empty($this->TeleopCargoPickedUp)) ? "NULL" : $database->quote($this->TeleopCargoPickedUp)) .", 
-            TeleopCargoStoredAttempts = " . ((empty($this->TeleopCargoStoredAttempts)) ? "NULL" : $database->quote($this->TeleopCargoStoredAttempts)) .", 
-            TeleopCargoStored = " . ((empty($this->TeleopCargoStored)) ? "NULL" : $database->quote($this->TeleopCargoStored)) .", 
+            TeleopHatchPanelsPickedUp = " . ((empty($this->TeleopHatchPanelsPickedUp)) ? "0" : $database->quote($this->TeleopHatchPanelsPickedUp)) .", 
+            TeleopHatchPanelsSecuredAttempts = " . ((empty($this->TeleopHatchPanelsSecuredAttempts)) ? "0" : $database->quote($this->TeleopHatchPanelsSecuredAttempts)) .", 
+            TeleopHatchPanelsSecured = " . ((empty($this->TeleopHatchPanelsSecured)) ? "0" : $database->quote($this->TeleopHatchPanelsSecured)) .", 
+            TeleopCargoPickedUp = " . ((empty($this->TeleopCargoPickedUp)) ? "0" : $database->quote($this->TeleopCargoPickedUp)) .", 
+            TeleopCargoStoredAttempts = " . ((empty($this->TeleopCargoStoredAttempts)) ? "0" : $database->quote($this->TeleopCargoStoredAttempts)) .", 
+            TeleopCargoStored = " . ((empty($this->TeleopCargoStored)) ? "0" : $database->quote($this->TeleopCargoStored)) .", 
            
-            EndGameReturnedToHabitat = " . ((empty($this->EndGameReturnedToHabitat)) ? "NULL" : $database->quote($this->EndGameReturnedToHabitat)) .", 
-            EndGameReturnedToHabitatAttempts = " . ((empty($this->EndGameReturnedToHabitatAttempts)) ? "NULL" : $database->quote($this->EndGameReturnedToHabitatAttempts)) .", 
+            EndGameReturnedToHabitat = " . ((empty($this->EndGameReturnedToHabitat)) ? "0" : $database->quote($this->EndGameReturnedToHabitat)) .", 
+            EndGameReturnedToHabitatAttempts = " . ((empty($this->EndGameReturnedToHabitatAttempts)) ? "0" : $database->quote($this->EndGameReturnedToHabitatAttempts)) .", 
            
-            BlueAllianceFinalScore = " . ((empty($this->BlueAllianceFinalScore)) ? "NULL" : $database->quote($this->BlueAllianceFinalScore)) .", 
-            RedAllianceFinalScore = " . ((empty($this->RedAllianceFinalScore)) ? "NULL" : $database->quote($this->RedAllianceFinalScore)) .", 
-            DefenseRating = " . ((empty($this->DefenseRating)) ? "NULL" : $database->quote($this->DefenseRating)) .", 
-            OffenseRating = " . ((empty($this->OffenseRating)) ? "NULL" : $database->quote($this->OffenseRating)) .", 
-            DriveRating = " . ((empty($this->DriveRating)) ? "NULL" : $database->quote($this->DriveRating)) .", 
+            BlueAllianceFinalScore = " . ((empty($this->BlueAllianceFinalScore)) ? "0" : $database->quote($this->BlueAllianceFinalScore)) .", 
+            RedAllianceFinalScore = " . ((empty($this->RedAllianceFinalScore)) ? "0" : $database->quote($this->RedAllianceFinalScore)) .", 
+            DefenseRating = " . ((empty($this->DefenseRating)) ? "0" : $database->quote($this->DefenseRating)) .", 
+            OffenseRating = " . ((empty($this->OffenseRating)) ? "0" : $database->quote($this->OffenseRating)) .", 
+            DriveRating = " . ((empty($this->DriveRating)) ? "0" : $database->quote($this->DriveRating)) .", 
             Notes = " . ((empty($this->Notes)) ? "NULL" : $database->quote($this->Notes)) .", 
             
-            CompletedDate = " . ((empty($this->CompletedDate)) ? "NULL" : $database->quote($this->CompletedDate)) ."
+            CompletedDate = " . ((empty($this->CompletedDate)) ? "2019-01-01 00:00:00" : $database->quote($this->CompletedDate)) ."
             WHERE (Id = " . $database->quote($this->Id) . ");";
 
             if($database->query($sql))

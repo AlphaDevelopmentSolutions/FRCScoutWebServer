@@ -1,57 +1,240 @@
-ALTER TABLE `scout_cards`
-DROP COLUMN `TeleopRocketsCompleted`,
-CHANGE COLUMN `BlueAllianceFinalScore` `BlueAllianceFinalScore` INT(11) NULL DEFAULT NULL AFTER `EndGameReturnedToHabitatAttempts`,
-CHANGE COLUMN `RedAllianceFinalScore` `RedAllianceFinalScore` INT(11) NULL DEFAULT NULL AFTER `BlueAllianceFinalScore`,
-ADD COLUMN `PreGameStartingLevel` INT NULL AFTER `CompletedBy`,
-ADD COLUMN `PreGameStartingPosition` VARCHAR(7) NULL AFTER `PreGameStartingLevel`,
-ADD COLUMN `PreGameStartingPiece` VARCHAR(6) NULL AFTER `PreGameStartingPosition`,
-ADD COLUMN `AutonomousHatchPanelsPickedUp` INT NULL AFTER `AutonomousExitHabitat`,
-ADD COLUMN `AutonomousCargoPickedUp` INT NULL AFTER `AutonomousHatchPanelsSecured`,
-ADD COLUMN `TeleopHatchPanelsPickedUp` INT NULL AFTER `AutonomousCargoStored`,
-ADD COLUMN `TeleopCargoPickedUp` INT NULL AFTER `TeleopHatchPanelsSecured`,
-ADD COLUMN `DefenseRating` INT NULL AFTER `RedAllianceFinalScore`,
-ADD COLUMN `OffenseRating` INT NULL AFTER `DefenseRating`,
-ADD COLUMN `DriveRating` INT NULL AFTER `OffenseRating`,
-CHANGE COLUMN `AutonomousHatchPanelsSecuredAttempts` `AutonomousHatchPanelsSecuredAttempts` INT(11) NULL DEFAULT NULL AFTER `AutonomousHatchPanelsPickedUp`,
-CHANGE COLUMN `AutonomousCargoStoredAttempts` `AutonomousCargoStoredAttempts` INT(11) NULL DEFAULT NULL AFTER `AutonomousCargoPickedUp`,
-CHANGE COLUMN `TeleopHatchPanelsSecuredAttempts` `TeleopHatchPanelsSecuredAttempts` INT(11) NULL DEFAULT NULL AFTER `TeleopHatchPanelsPickedUp`,
-CHANGE COLUMN `TeleopCargoStoredAttempts` `TeleopCargoStoredAttempts` INT(11) NULL DEFAULT NULL AFTER `TeleopCargoPickedUp`;
+-- MySQL dump 10.13  Distrib 5.6.23, for Win64 (x86_64)
+--
+-- Host: griffinsorrentino.com    Database: scouting_wiredcats5885_ca
+-- ------------------------------------------------------
+-- Server version	5.5.5-10.1.37-MariaDB-0+deb9u1
 
-update scout_cards set autonomousexithabitat = 0 WHERE autonomousexithabitat = 'No';
-update scout_cards set autonomousexithabitat = substr(autonomousexithabitat, 7) WHERE autonomousexithabitat LIKE '%Level%';
-update scout_cards set pregamestartinglevel = autonomousexithabitat where autonomousexithabitat > 0;
-update scout_cards set autonomousexithabitat = 1 where autonomousexithabitat > 0;
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8 */;
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
-ALTER TABLE `scout_cards`
-CHANGE COLUMN `AutonomousExitHabitat` `AutonomousExitHabitat` INT NULL DEFAULT NULL;
+--
+-- Table structure for table `event_team_list`
+--
 
-update scout_cards set endgamereturnedtohabitat = substr(endgamereturnedtohabitat, 7) WHERE endgamereturnedtohabitat LIKE '%Level%';
-update scout_cards set endgamereturnedtohabitat = 0 WHERE endgamereturnedtohabitat = 'No';
-update scout_cards set endgamereturnedtohabitatattempts = substr(endgamereturnedtohabitatattempts, 7) WHERE endgamereturnedtohabitatattempts LIKE '%Level%';
-update scout_cards set endgamereturnedtohabitatattempts = 0 WHERE endgamereturnedtohabitatattempts = 'No';
-update scout_cards set pregamestartinglevel = 1 where isnull(pregamestartinglevel);
-update scout_cards set autonomoushatchpanelspickedup = 0 where isnull(autonomoushatchpanelspickedup);
-update scout_cards set autonomouscargopickedup = 0 where isnull(autonomouscargopickedup);
-update scout_cards set teleophatchpanelspickedup = 0 where isnull(teleophatchpanelspickedup);
-update scout_cards set teleopcargopickedup = 0 where isnull(teleopcargopickedup);
-update scout_cards set defenserating = 0 where isnull(defenserating);
-update scout_cards set offenserating = 0 where isnull(offenserating);
-update scout_cards set driverating = 0 where isnull(driverating);
+DROP TABLE IF EXISTS `event_team_list`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `event_team_list` (
+  `Id` int(11) NOT NULL AUTO_INCREMENT,
+  `TeamId` int(11) DEFAULT NULL,
+  `EventId` varchar(15) DEFAULT NULL,
+  PRIMARY KEY (`Id`)
+) ENGINE=InnoDB AUTO_INCREMENT=397 DEFAULT CHARSET=utf8mb4;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
-ALTER TABLE `pit_cards`
-ADD COLUMN `RobotWeight` VARCHAR(45) NULL AFTER `DriveStyle`,
-ADD COLUMN `RobotLength` VARCHAR(45) NULL AFTER `RobotWeight`,
-ADD COLUMN `RobotWidth` VARCHAR(45) NULL AFTER `RobotLength`,
-ADD COLUMN `RobotHeight` VARCHAR(45) NULL AFTER `RobotWidth`,
-DROP COLUMN `TeleopRocketsComplete`;
+--
+-- Table structure for table `events`
+--
 
-update pit_cards set robotweight = 0;
-update pit_cards set robotlength = 0;
-update pit_cards set robotwidth = 0;
-update pit_cards set robotheight = 0;
+DROP TABLE IF EXISTS `events`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `events` (
+  `Id` int(11) NOT NULL AUTO_INCREMENT,
+  `BlueAllianceId` varchar(45) DEFAULT NULL,
+  `Name` varchar(45) DEFAULT NULL,
+  `City` varchar(45) DEFAULT NULL,
+  `StateProvince` varchar(45) DEFAULT NULL,
+  `Country` varchar(45) DEFAULT NULL,
+  `StartDate` datetime DEFAULT NULL,
+  `EndDate` datetime DEFAULT NULL,
+  PRIMARY KEY (`Id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
-ALTER TABLE `robot_media`
-CHANGE COLUMN `RobotId` `TeamId` INT(11) NULL DEFAULT NULL,
-CHANGE COLUMN `Id` `Id` INT(11) NOT NULL AUTO_INCREMENT
-CHANGE COLUMN `FileName` `FileURI` VARCHAR(45) NULL DEFAULT NULL ;
+--
+-- Table structure for table `matches`
+--
 
+DROP TABLE IF EXISTS `matches`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `matches` (
+  `Id` int(11) NOT NULL AUTO_INCREMENT,
+  `Date` datetime DEFAULT NULL,
+  `BlueAllianceTeamOneId` int(11) DEFAULT NULL,
+  `BlueAllianceTeamTwoId` int(11) DEFAULT NULL,
+  `BlueAllianceTeamThreeId` int(11) DEFAULT NULL,
+  `BlueAllianceTeamOneScoutCardId` int(11) DEFAULT NULL,
+  `BlueAllianceTeamTwoScoutCardId` int(11) DEFAULT NULL,
+  `BlueAllianceTeamThreeScoutCardId` int(11) DEFAULT NULL,
+  `BlueAllianceScore` int(11) DEFAULT NULL,
+  `RedAllianceScore` int(11) DEFAULT NULL,
+  `RedAllianceTeamOneId` int(11) DEFAULT NULL,
+  `RedAllianceTeamTwoId` int(11) DEFAULT NULL,
+  `RedAllianceTeamThreeId` int(11) DEFAULT NULL,
+  `RedAllianceTeamOneScoutCardId` int(11) DEFAULT NULL,
+  `RedAllianceTeamTwoScoutCardId` int(11) DEFAULT NULL,
+  `RedAllianceTeamThreeScoutCardId` int(11) DEFAULT NULL,
+  PRIMARY KEY (`Id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `pit_cards`
+--
+
+DROP TABLE IF EXISTS `pit_cards`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `pit_cards` (
+  `Id` int(11) NOT NULL AUTO_INCREMENT,
+  `TeamId` int(11) DEFAULT NULL,
+  `EventId` varchar(45) DEFAULT NULL,
+  `DriveStyle` varchar(45) DEFAULT NULL,
+  `RobotWeight` varchar(45) DEFAULT NULL,
+  `RobotLength` varchar(45) DEFAULT NULL,
+  `RobotWidth` varchar(45) DEFAULT NULL,
+  `RobotHeight` varchar(45) DEFAULT NULL,
+  `AutoExitHabitat` varchar(45) DEFAULT NULL,
+  `AutoHatch` varchar(45) DEFAULT NULL,
+  `AutoCargo` varchar(45) DEFAULT NULL,
+  `TeleopHatch` varchar(45) DEFAULT NULL,
+  `TeleopCargo` varchar(45) DEFAULT NULL,
+  `ReturnToHabitat` varchar(45) DEFAULT NULL,
+  `Notes` varchar(100) DEFAULT NULL,
+  `CompletedBy` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`Id`)
+) ENGINE=InnoDB AUTO_INCREMENT=60 DEFAULT CHARSET=utf8mb4;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `robot_media`
+--
+
+DROP TABLE IF EXISTS `robot_media`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `robot_media` (
+  `Id` int(11) NOT NULL AUTO_INCREMENT,
+  `TeamId` int(11) DEFAULT NULL,
+  `FileURI` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`Id`)
+) ENGINE=InnoDB AUTO_INCREMENT=36 DEFAULT CHARSET=utf8mb4;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `robots`
+--
+
+DROP TABLE IF EXISTS `robots`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `robots` (
+  `Id` int(11) NOT NULL AUTO_INCREMENT,
+  `Name` varchar(45) DEFAULT NULL,
+  `TeamId` int(11) DEFAULT NULL,
+  PRIMARY KEY (`Id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `scout_cards`
+--
+
+DROP TABLE IF EXISTS `scout_cards`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `scout_cards` (
+  `Id` int(11) NOT NULL AUTO_INCREMENT,
+  `MatchId` int(11) DEFAULT NULL,
+  `TeamId` int(11) DEFAULT NULL,
+  `EventId` varchar(45) DEFAULT NULL,
+  `AllianceColor` varchar(4) DEFAULT NULL,
+  `CompletedBy` varchar(45) DEFAULT NULL,
+  `PreGameStartingLevel` int(11) DEFAULT NULL,
+  `PreGameStartingPosition` varchar(7) DEFAULT NULL,
+  `PreGameStartingPiece` varchar(6) DEFAULT NULL,
+  `AutonomousExitHabitat` int(11) DEFAULT NULL,
+  `AutonomousHatchPanelsPickedUp` int(11) DEFAULT NULL,
+  `AutonomousHatchPanelsSecuredAttempts` int(11) DEFAULT NULL,
+  `AutonomousHatchPanelsSecured` int(11) DEFAULT NULL,
+  `AutonomousCargoPickedUp` int(11) DEFAULT NULL,
+  `AutonomousCargoStoredAttempts` int(11) DEFAULT NULL,
+  `AutonomousCargoStored` int(11) DEFAULT NULL,
+  `TeleopHatchPanelsPickedUp` int(11) DEFAULT NULL,
+  `TeleopHatchPanelsSecuredAttempts` int(11) DEFAULT NULL,
+  `TeleopHatchPanelsSecured` int(11) DEFAULT NULL,
+  `TeleopCargoPickedUp` int(11) DEFAULT NULL,
+  `TeleopCargoStoredAttempts` int(11) DEFAULT NULL,
+  `TeleopCargoStored` int(11) DEFAULT NULL,
+  `EndGameReturnedToHabitat` varchar(10) DEFAULT NULL,
+  `EndGameReturnedToHabitatAttempts` varchar(10) DEFAULT NULL,
+  `BlueAllianceFinalScore` int(11) DEFAULT NULL,
+  `RedAllianceFinalScore` int(11) DEFAULT NULL,
+  `DefenseRating` int(11) DEFAULT NULL,
+  `OffenseRating` int(11) DEFAULT NULL,
+  `DriveRating` int(11) DEFAULT NULL,
+  `Notes` varchar(250) DEFAULT NULL,
+  `CompletedDate` datetime DEFAULT NULL,
+  PRIMARY KEY (`Id`)
+) ENGINE=InnoDB AUTO_INCREMENT=432 DEFAULT CHARSET=utf8mb4;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `teams`
+--
+
+DROP TABLE IF EXISTS `teams`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `teams` (
+  `Id` int(11) NOT NULL AUTO_INCREMENT,
+  `Name` varchar(45) DEFAULT NULL,
+  `City` varchar(45) DEFAULT NULL,
+  `StateProvince` varchar(45) DEFAULT NULL,
+  `Country` varchar(45) DEFAULT NULL,
+  `RookieYear` int(11) DEFAULT NULL,
+  `FacebookURL` varchar(100) DEFAULT NULL,
+  `TwitterURL` varchar(100) DEFAULT NULL,
+  `InstagramURL` varchar(100) DEFAULT NULL,
+  `YoutubeURL` varchar(100) DEFAULT NULL,
+  `WebsiteURL` varchar(100) DEFAULT NULL,
+  `ImageFileURI` varchar(100) DEFAULT NULL,
+  PRIMARY KEY (`Id`)
+) ENGINE=InnoDB AUTO_INCREMENT=7801 DEFAULT CHARSET=utf8mb4;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `users`
+--
+
+DROP TABLE IF EXISTS `users`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `users` (
+  `Id` int(11) NOT NULL AUTO_INCREMENT,
+  `FirstName` varchar(45) DEFAULT NULL,
+  `LastName` varchar(45) DEFAULT NULL,
+  `UserName` varchar(45) DEFAULT NULL,
+  `Password` varchar(55) DEFAULT NULL,
+  PRIMARY KEY (`Id`)
+) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8mb4;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping events for database 'scouting_wiredcats5885_ca'
+--
+
+--
+-- Dumping routines for database 'scouting_wiredcats5885_ca'
+--
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+
+-- Dump completed on 2019-03-26 10:20:50

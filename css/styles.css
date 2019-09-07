@@ -243,9 +243,9 @@ html, body {
   padding-right: 1em;
 }
 
-#stats_table_wrapper
+.sorting
 {
-  padding: 1em 5em 0 5em;
+  padding: 0 14px 0 0 !important;
 }
 
 .stats-filter
@@ -310,36 +310,14 @@ html, body {
   padding-right: 21px;
 }
 
-.circle-image-portrait
+.circle-image
 {
   position: relative;
+  border-radius: 50%;
   width: 200px;
   height: 200px;
-  overflow: hidden;
-  border-radius: 50%;
-}
-
-.circle-image-portrait img
-{
-  width: 100%;
-  height: auto;
-}
-
-.circle-image-landscape
-{
-  display: inline-block;
-  position: relative;
-  width: 200px;
-  height: 200px;
-  overflow: hidden;
-  border-radius: 50%;
-}
-
-.circle-image-landscape img
-{
-  width: auto;
-  height: 100%;
-  margin-left: -50px;
+  background-size: cover !important;
+  background: no-repeat 50% 50%;
 }
 
 .robot-media
@@ -359,6 +337,22 @@ html, body {
 {
   width: 215px;
   height: 200px;
-  background-size: 215px !important;
+  background-size: cover !important;
   background: no-repeat 50% 50%;
 }
+
+/*Overwrites disabled gray color*/
+.mdl-textfield > input[disabled],
+.mdl-textfield > textarea[disabled]
+{
+  color: unset !important;
+  border-bottom-style: solid !important;
+}
+
+/*Overwrites disabled gray color*/
+.mdl-textfield > input[disabled] + .mdl-textfield__label,
+.mdl-textfield > textarea[disabled] + .mdl-textfield__label
+{
+  color: rgb(63,81,181) !important;
+}
+

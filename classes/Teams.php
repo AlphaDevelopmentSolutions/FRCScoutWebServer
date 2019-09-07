@@ -60,12 +60,12 @@ class Teams
                                   )
                                   VALUES 
                                   (
-                                  ' . ((empty($this->Id)) ? 'NULL' : $database->quote($this->Id)) .',
+                                  ' . ((empty($this->Id)) ? '0' : $database->quote($this->Id)) .',
                                   ' . ((empty($this->Name)) ? 'NULL' : $database->quote($this->Name)) .',
                                   ' . ((empty($this->City)) ? 'NULL' : $database->quote($this->City)) .',
                                   ' . ((empty($this->StateProvince)) ? 'NULL' : $database->quote($this->StateProvince)) .',
                                   ' . ((empty($this->Country)) ? 'NULL' : $database->quote($this->Country)) .',
-                                  ' . ((empty($this->RookieYear)) ? 'NULL' : $database->quote($this->RookieYear)) .',
+                                  ' . ((empty($this->RookieYear)) ? '0' : $database->quote($this->RookieYear)) .',
                                   ' . ((empty($this->FacebookURL)) ? 'NULL' : $database->quote($this->FacebookURL)) .',
                                   ' . ((empty($this->TwitterURL)) ? 'NULL' : $database->quote($this->TwitterURL)) .',
                                   ' . ((empty($this->InstagramURL)) ? 'NULL' : $database->quote($this->InstagramURL)) .',
