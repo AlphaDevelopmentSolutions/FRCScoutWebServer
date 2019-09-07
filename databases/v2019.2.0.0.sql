@@ -23,7 +23,7 @@ DROP TABLE IF EXISTS `events`;
 CREATE TABLE `events` (
   `Id` int(11) NOT NULL AUTO_INCREMENT,
   `BlueAllianceId` varchar(45) DEFAULT NULL,
-  `Name` varchar(45) DEFAULT NULL,
+  `Name` TEXT DEFAULT NULL,
   `City` varchar(45) DEFAULT NULL,
   `StateProvince` varchar(45) DEFAULT NULL,
   `Country` varchar(45) DEFAULT NULL,

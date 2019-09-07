@@ -39,46 +39,8 @@ if(isPostBack() && loggedIn())
 <!doctype html>
 <html lang="en">
   <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="description" content="A front-end template that helps you build fast, modern mobile web apps.">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
-    <title>Pit Card <?php echo $pitCard->Id ?></title>
-
-    <!-- Add to homescreen for Chrome on Android -->
-    <meta name="mobile-web-app-capable" content="yes">
-    <link rel="icon" sizes="192x192" href="images/android-desktop.png">
-
-    <!-- Add to homescreen for Safari on iOS -->
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black">
-    <meta name="apple-mobile-web-app-title" content="Material Design Lite">
-    <link rel="apple-touch-icon-precomposed" href="images/ios-desktop.png">
-
-    <!-- Tile icon for Win8 (144x144 + tile color) -->
-    <meta name="msapplication-TileImage" content="images/touch/ms-touch-icon-144x144-precomposed.png">
-    <meta name="msapplication-TileColor" content="#3372DF">
-
-    <link rel="shortcut icon" href="images/favicon.png">
-
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:regular,bold,italic,thin,light,bolditalic,black,medium&amp;lang=en">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-    <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.deep_purple-pink.min.css">
-    <link rel="stylesheet" href="css/styles.css">
-      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-
-
-      <style>
-    #view-source {
-      position: fixed;
-      display: block;
-      right: 0;
-      bottom: 0;
-      margin-right: 40px;
-      margin-bottom: 40px;
-      z-index: 900;
-    }
-    </style>
+      <?php require_once('includes/meta.php') ?>
+      <title><?php echo $pitCard->TeamId ?> - Pit Card</title>
   </head>
   <body class="mdl-demo mdl-color--grey-100 mdl-color-text--grey-700 mdl-base">
       <div id="demo-toast-example" class="mdl-js-snackbar mdl-snackbar">
@@ -98,26 +60,24 @@ if(isPostBack() && loggedIn())
           </div>
       </dialog>
     <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
-      <header class="mdl-layout__header mdl-layout__header--scroll mdl-color--primary">
-        <div class="mdl-layout--large-screen-only mdl-layout__header-row">
-            <?php include_once('includes/login-form.php') ?>
-        </div>
-        <div class="mdl-layout--large-screen-only mdl-layout__header-row">
-          <h3>Pit Card <?php echo $pitCard->Id ?></h3>
-        </div>
+        <?php
+        $navBarLinksArray = new NavBarLinkArray();
+        $navBarLinksArray[] = new NavBarLink('Teams', '/team-list.php?eventId=' . $event->BlueAllianceId, false);
+        $navBarLinksArray[] = new NavBarLink('Team ' . $pitCard->TeamId, '/team-pits.php?teamId=' . $pitCard->TeamId . '&eventId=' . $pitCard->EventId, false);
+        $navBarLinksArray[] = new NavBarLink($pitCard->TeamId . ' - Pit Card', '', true);
 
-          <div class="version">Version <?php echo VERSION ?></div>
-        <div class="mdl-layout__tab-bar mdl-js-ripple-effect mdl-color--primary-dark">
-          <a href="/" class="mdl-layout__tab">Events</a>
-            <a href="/match-overview.php?eventId=<?php echo $event->BlueAllianceId; ?>" class="mdl-layout__tab ">Matches</a>
-            <a href="/teams.php?eventId=<?php echo $pitCard->EventId; ?>" class="mdl-layout__tab ">Teams</a>
-          <a href="/team-pits.php?teamId=<?php echo $pitCard->TeamId?>&eventId=<?php echo $pitCard->EventId;?>" class="mdl-layout__tab">Team <?php echo $pitCard->TeamId; ?></a>
-          <a href="" class="mdl-layout__tab is-active">Pit Card <?php echo $pitCard->Id; ?></a>
-        </div>
-      </header>
+
+        $navBar = new NavBar($navBarLinksArray);
+
+        $header = new Header($event->Name, null, $navBar, $event->BlueAllianceId);
+
+        echo $header->toString();
+        ?>
       <main class="mdl-layout__content">
 
-          <?php require_once('includes/pit-card.php') ?>
+          <?php
+          echo $pitCard->toHtml();
+          ?>
 
           
           <div class="mdl-layout__tab-panel" id="stats">
@@ -144,9 +104,7 @@ if(isPostBack() && loggedIn())
 
       </main>
     </div>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-    <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.indigo-pink.min.css">
-    <script src="https://code.getmdl.io/1.3.0/material.min.js"></script>
+      <?php require_once('includes/bottom-scripts.php') ?>
       <?php
 
       if(isPostBack() && loggedIn())

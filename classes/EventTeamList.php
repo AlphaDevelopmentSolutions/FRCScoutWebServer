@@ -1,34 +1,21 @@
 <?php
 
-class EventTeamList
+class EventTeamList extends Table
 {
     public $Id;
     public $TeamId;
     public $EventId;
 
-    private static $TABLE_NAME = 'event_team_list';
+    protected static $TABLE_NAME = 'event_team_list';
 
-    function save()
+    public function toHtml()
     {
-        $database = new Database();
-        $sql = 'INSERT INTO ' . EventTeamList::$TABLE_NAME . ' 
-                                  (
-                                  TeamId,
-                                  EventId
-                                  )
-                                  VALUES 
-                                  (
-                                  ' . ((empty($this->TeamId)) ? '0' : $database->quote($this->TeamId)) .',
-                                  ' . ((empty($this->EventId)) ? 'NULL' : $database->quote($this->EventId)) .'
-                                  );';
-        if($database->query($sql))
-        {
-            $database->close();
+        // TODO: Implement toHtml() method.
+    }
 
-            return true;
-        }
-        $database->close();
-        return false;
+    public function toString()
+    {
+        // TODO: Implement toString() method.
     }
 }
 

@@ -1,77 +1,12 @@
 <?php
 
-class Users
+class Users extends Table
 {
     public $Id;
     public $FirstName;
     public $LastName;
-    private static $TABLE_NAME = 'users';
 
-    /**
-     * Loads a new instance by its database id
-     * @param $id
-     * @return Users
-     */
-    static function withId($id)
-    {
-        $instance = new self();
-        $instance->loadById($id);
-        return $instance;
-
-    }
-
-    /**
-     * Loads a new instance by specified properties
-     * @param array $properties
-     * @return Users
-     */
-    static function withProperties(Array $properties = array())
-    {
-        $instance = new self();
-        $instance->loadByProperties($properties);
-        return $instance;
-
-    }
-
-    /**
-     * Loads a new instance by specified properties
-     * @param array $properties
-     * @return Users
-     */
-    protected function loadByProperties(Array $properties = array())
-    {
-        foreach($properties as $key => $value)
-            $this->{$key} = $value;
-
-    }
-
-    /**
-     * Loads a new instance by its database id
-     * @param $id
-     * @return Users
-     */
-    protected function loadById($id)
-    {
-        $database = new Database();
-        $sql = 'SELECT * FROM ' . self::$TABLE_NAME . ' WHERE '.'id = '.$database->quote($id);
-        $rs = $database->query($sql);
-
-        if($rs && $rs->num_rows > 0) {
-            $row = $rs->fetch_assoc();
-
-            if(is_array($row)) {
-                foreach($row as $key => $value){
-                    if(property_exists($this, $key)){
-                        $this->$key = $value;
-                    }
-                }
-            }
-
-            return true;
-        }
-
-        return false;
-    }
+    protected static $TABLE_NAME = 'users';
 
     public function login($userName, $password)
     {
@@ -123,6 +58,16 @@ class Users
         }
 
         return $response;
+    }
+
+    public function toHtml()
+    {
+        // TODO: Implement toHtml() method.
+    }
+
+    public function toString()
+    {
+        // TODO: Implement toString() method.
     }
 
 }

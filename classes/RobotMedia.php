@@ -1,129 +1,13 @@
 <?php
 
-class RobotMedia
+class RobotMedia extends Table
 {
     public $Id;
     public $TeamId;
     public $FileURI;
     public $Base64Image;
 
-    private static $TABLE_NAME = 'robot_media';
-
-    /**
-     * Loads a new instance by its database id
-     * @param $id
-     * @return RobotMedia
-     */
-    static function withId($id)
-    {
-        $instance = new self();
-        $instance->loadById($id);
-        return $instance;
-
-    }
-
-    /**
-     * Loads a new instance by specified properties
-     * @param array $properties
-     * @return RobotMedia
-     */
-    static function withProperties(Array $properties = array())
-    {
-        $instance = new self();
-        $instance->loadByProperties($properties);
-        return $instance;
-
-    }
-
-    /**
-     * Loads a new instance by specified properties
-     * @param array $properties
-     * @return RobotMedia
-     */
-    protected function loadByProperties(Array $properties = array())
-    {
-        foreach($properties as $key => $value)
-            $this->{$key} = $value;
-
-    }
-
-    /**
-     * Loads a new instance by its database id
-     * @param $id
-     * @return RobotMedia
-     */
-    protected function loadById($id)
-    {
-        $database = new Database();
-        $sql = 'SELECT * FROM ' . self::$TABLE_NAME . ' WHERE '.'id = '.$database->quote($id);
-        $rs = $database->query($sql);
-
-        if($rs && $rs->num_rows > 0) {
-            $row = $rs->fetch_assoc();
-
-            if(is_array($row)) {
-                foreach($row as $key => $value){
-                    if(property_exists($this, $key)){
-                        $this->$key = $value;
-                    }
-                }
-            }
-
-            return true;
-        }
-
-        return false;
-    }
-
-    function save()
-    {
-
-        if($this->saveImage($this->Base64Image) > 0)
-        {
-            $database = new Database();
-
-            if (empty($this->Id))
-            {
-                $sql = 'INSERT INTO ' . self::$TABLE_NAME . '
-                                      (
-                                      TeamId,
-                                      FileURI
-                                      )
-                                      VALUES
-                                      (
-                                      ' . ((empty($this->TeamId)) ? '0' : $database->quote($this->TeamId)) . ',
-                                      ' . ((empty($this->FileURI)) ? 'NULL' : $database->quote($this->FileURI)) . '
-                                      );';
-
-                if ($database->query($sql)) {
-                    $this->Id = $database->lastInsertedID();
-                    $database->close();
-
-                    return true;
-                }
-                $database->close();
-                return false;
-
-            }
-            else
-                {
-                $sql = "UPDATE " . self::$TABLE_NAME . " SET
-            TeamId = " . ((empty($this->TeamId)) ? "0" : $database->quote($this->TeamId)) . ",
-            FileURI = " . ((empty($this->FileURI)) ? "NULL" : $database->quote($this->FileURI)) . "
-            WHERE (Id = " . $database->quote($this->Id) . ");";
-
-                if ($database->query($sql)) {
-                    $database->close();
-                    return true;
-                }
-
-                $database->close();
-                return false;
-            }
-        }
-
-        return false;
-    }
+    protected static $TABLE_NAME = 'robot_media';
 
     /**
      * Saves a base64 encoded image to the server
@@ -201,6 +85,16 @@ class RobotMedia
         }
 
         return $response;
+    }
+
+    public function toHtml()
+    {
+        // TODO: Implement toHtml() method.
+    }
+
+    public function toString()
+    {
+        // TODO: Implement toString() method.
     }
 
 

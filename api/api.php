@@ -1,5 +1,7 @@
 <?php
 require_once('../config.php');
+require_once(ROOT_DIR . '/classes/ChecklistItemResults.php');
+require_once(ROOT_DIR . '/classes/ChecklistItems.php');
 require_once(ROOT_DIR . '/classes/ScoutCards.php');
 require_once(ROOT_DIR . '/classes/PitCards.php');
 require_once(ROOT_DIR . '/classes/Teams.php');
@@ -12,6 +14,18 @@ $api = new Api($_POST['key']);
 
 $action = $_POST['action'];
 
+//check if the key was valid
+if(!$api->getKeyValid())
+{
+    //only the hello api and server config api bypass the key
+    if($action != 'Hello' && $action != 'GetServerConfig')
+    {
+        $api->error('Invalid Key');
+        die();
+    }
+}
+
+
 try {
 
     switch ($action)
@@ -22,39 +36,18 @@ try {
 
             break;
 
-        //region Setters
-        case 'SubmitScoutCard':
-            $scoutCard = ScoutCards::withProperties($_POST);
-
-            if ($scoutCard->save())
-                $api->success($scoutCard->Id);
-            else
-                throw new Exception('Failed to save scout card');
-
-            break;
-
-        case 'SubmitPitCard':
-            $pitCard = PitCards::withProperties($_POST);
-
-            if ($pitCard->save())
-                $api->success($pitCard->Id);
-            else
-                throw new Exception('Failed to save pit card');
-
-            break;
-
-        case 'SubmitRobotMedia':
-            $robotMedia = RobotMedia::withProperties($_POST);
-
-            if ($robotMedia->save())
-                $api->success($robotMedia->Id);
-            else
-                throw new Exception('Failed to save robot media');
-
-            break;
-        //endregion
-
         //region Getters
+        case 'GetServerConfig':
+            $response = array();
+
+            $response['ApiKey'] = API_KEY;
+            $response['TeamNumber'] = TEAM_NUMBER;
+            $response['TeamName'] = TEAM_NAME;
+
+            $api->success($response);
+
+            break;
+
         case 'GetUsers':
             $api->success(Users::getUsers());
 
@@ -110,10 +103,63 @@ try {
         case 'GetMatches':
             $eventId = filter_var($_POST['EventId'], FILTER_SANITIZE_STRING);
 
-            if (!empty($eventId))
-                $api->success(Matches::getMatches($eventId));
+            $event = Events::withId($eventId);
+
+            if (!empty($event))
+                $api->success(Matches::getMatches($event));
             else
                 throw new Exception('Invalid event id');
+
+            break;
+
+        case 'GetChecklistItems':
+            $api->success(ChecklistItems::getChecklistItems());
+            break;
+
+        case 'GetChecklistItemResults':
+            $api->success(ChecklistItemResults::getChecklistItemResults());
+            break;
+
+        //endregion
+
+        //region Setters
+        case 'SubmitScoutCard':
+            $scoutCard = ScoutCards::withProperties($_POST);
+
+            if ($scoutCard->save())
+                $api->success($scoutCard->Id);
+            else
+                throw new Exception('Failed to save scout card');
+
+            break;
+
+        case 'SubmitPitCard':
+            $pitCard = PitCards::withProperties($_POST);
+
+            if ($pitCard->save())
+                $api->success($pitCard->Id);
+            else
+                throw new Exception('Failed to save pit card');
+
+            break;
+
+        case 'SubmitRobotMedia':
+            $robotMedia = RobotMedia::withProperties($_POST);
+
+            if ($robotMedia->save())
+                $api->success($robotMedia->Id);
+            else
+                throw new Exception('Failed to save robot media');
+
+            break;
+
+        case 'SubmitChecklistItemResult':
+            $checklistItemResult = ChecklistItemResults::withProperties($_POST);
+
+            if ($checklistItemResult->save())
+                $api->success($checklistItemResult->Id);
+            else
+                throw new Exception('Failed to save checklist item result');
 
             break;
         //endregion
