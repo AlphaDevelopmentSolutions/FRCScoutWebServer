@@ -59,8 +59,8 @@ define('URL_PATH', ROOT_URL . ((coreLoggedIn()) ? '/' . getCoreAccount()->TeamId
  * MEDIA FILES
  */
 define('ROBOT_MEDIA_DIR', __DIR__ . '/html/assets/robot-media/');
-define('ROBOT_MEDIA_URL', URL_PATH . '/assets/robot-media/');
-define('YEAR_MEDIA_URL', URL_PATH . '/assets/year-media/');
+define('ROBOT_MEDIA_URL', '/assets/robot-media/');
+define('YEAR_MEDIA_URL', '/assets/year-media/');
 require_once(ROOT_DIR . "/classes/Header.php");
 require_once(ROOT_DIR . "/classes/NavBar.php");
 require_once(ROOT_DIR . "/classes/NavBarArray.php");
