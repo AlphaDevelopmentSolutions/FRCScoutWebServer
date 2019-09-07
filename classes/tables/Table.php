@@ -56,7 +56,7 @@ abstract class Table
         $cols[] = $columnName;
         $args[] = $id;
 
-        $rows = self::query($sql, $cols, $args);
+        $rows = self::queryRecords($sql, $cols, $args);
 
         foreach ($rows as $row)
         {
@@ -95,7 +95,7 @@ abstract class Table
                 if($key != 'Id' && property_exists($this, $key))
                 {
                     //only add to insert statement if value is not empty
-                    if(!empty($value))
+                    if(!empty($value) || $value == '0')
                     {
                         if(!empty($columnsString))
                             $columnsString .= ', ';
@@ -114,7 +114,7 @@ abstract class Table
 
             $sql .="$columnsString) VALUES ($valuesString)";
 
-            if($insertId = self::insertOrUpdate($sql, $cols, $args) > 0)
+            if($insertId = self::insertOrUpdateRecords($sql, $cols, $args) > -1)
             {
                 $this->Id = $insertId;
 
@@ -136,15 +136,19 @@ abstract class Table
                 //dont use Id in cols or vals
                 if($key != 'Id' && property_exists($this, $key))
                 {
-                    //only add to insert statement if value is not empty
-                    if(!empty($value))
-                    {
-                        if(!empty($updates))
-                            $updates .= ', ';
+                    if(!empty($updates))
+                        $updates .= ', ';
 
+                    if(!empty($value) || $value == '0')
+                    {
                         $updates .= ' ! = ?';
                         $cols[] = $key;
                         $args[] = $value;
+                    }
+                    else
+                    {
+                        $updates .= ' ! = NULL';
+                        $cols[] = $key;
                     }
                 }
             }
@@ -154,12 +158,9 @@ abstract class Table
             $args[] = $this->Id;
 
 
-            if($insertId = self::insertOrUpdate($sql, $cols, $args) > 0)
-            {
-                $this->Id = $insertId;
-
+            if($insertId = self::insertOrUpdateRecords($sql, $cols, $args) > -1)
                 return true;
-            }
+
             return false;
         }
     }
@@ -174,15 +175,11 @@ abstract class Table
             return false;
 
         $query = 'DELETE FROM ! WHERE ! = ?';
-        $cols[] = self::$TABLE_NAME;
+        $cols[] = $this::$TABLE_NAME;
         $cols[] = 'Id';
         $args[] = $this->Id;
 
-        $database = new Database();
-        $success = $database->delete($query, $cols, $args);
-        $database->close();
-
-        return $success;
+        return self::deleteRecords($query, $cols, $args);
     }
 
     /**
@@ -192,7 +189,7 @@ abstract class Table
      * @param string[] | int[] $args arguments that will replace ?
      * @return string[]
      */
-    protected static function query($query, $cols = array(), $args = array())
+    protected static function queryRecords($query, $cols = array(), $args = array())
     {
         $database = new Database();
         $results = $database->query($query, $cols, $args);
@@ -209,7 +206,7 @@ abstract class Table
      * @param string[] | int[] $args arguments that will replace ?
      * @return int
      */
-    private static function insertOrUpdate($query, $cols = array(), $args = array())
+    protected static function insertOrUpdateRecords($query, $cols = array(), $args = array())
     {
         $database = new Database();
         $id = $database->insertOrUpdate($query, $cols, $args);
@@ -218,22 +215,54 @@ abstract class Table
     }
 
     /**
+     * Deletes records from the database
+     * @param string $query to run
+     * @param string[] cols columns that will replace !
+     * @param string[] | int[] $args arguments that will replace ?
+     * @return bool
+     */
+    protected static function deleteRecords($query, $cols = array(), $args = array())
+    {
+        $database = new Database();
+        $success = $database->delete($query, $cols, $args);
+        $database->close();
+
+        return $success;
+
+    }
+
+    /**
      * Retrieves objects from the database
      * @param string $orderBy override if the order by column needs to be changed
+     * @param string $orderDirection override if the order direction needs to be changed
      * @return static[]
      */
-    public static function getObjects($orderBy = 'Id')
+    public static function getObjects($orderBy = 'Id', $orderDirection = 'DESC')
     {
-        $sql = 'SELECT * FROM ! ORDER BY ! DESC';
+        $sql = 'SELECT * FROM ! ORDER BY ! ' . $orderDirection;
         $cols[] = static::$TABLE_NAME;
         $cols[] = $orderBy;
 
-        $rows = self::query($sql, $cols);
+        $rows = self::queryRecords($sql, $cols);
 
         foreach($rows as $row)
             $response[] = self::withProperties($row);
 
         return $response;
+    }
+
+    /**
+     * Retrieves column names from the database
+     * @return string[] array of column names and types
+     */
+    public static function getColumns()
+    {
+        $sql = 'SHOW COLUMNS FROM !';
+        $cols[] = static::$TABLE_NAME;
+
+        $rows = self::queryRecords($sql, $cols);
+
+        return $rows;
     }
 
     abstract public function toString();

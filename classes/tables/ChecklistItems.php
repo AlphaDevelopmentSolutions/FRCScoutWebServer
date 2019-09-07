@@ -9,23 +9,28 @@ class ChecklistItems extends Table
     protected static $TABLE_NAME = 'checklist_items';
 
     /**
-     * Overrides parent::delete() method
-     * Attempts to delete checklist item completion records before deleting this record
+     * Override for the Table class delete function
+     * Ensures all records associated with this key are deleted before deletion
      * @return bool
      */
-    function delete()
+    public function delete()
     {
-        $resultDeleteSuccess = true;
+        if(!empty($this->Id))
+        {
+            require_once(ROOT_DIR . '/classes/tables/ChecklistItemResults.php');
 
-        //delete all results before deleting master record
-        foreach($this->getResults() as $checklistItemResult)
-            $resultDeleteSuccess = $checklistItemResult->delete();
+            //create the sql statement
+            $sql = "DELETE FROM ! WHERE ! = ?";
+            $cols[] = ChecklistItemResults::$TABLE_NAME;
 
+            //Where
+            $cols[] = 'ChecklistItemId';
+            $args[] = $this->Id;
 
-        if($resultDeleteSuccess)
-            return parent::delete();
+            self::deleteRecords($sql, $cols, $args);
+        }
 
-        return false;
+        return parent::delete();
     }
 
     /**
@@ -35,7 +40,9 @@ class ChecklistItems extends Table
      */
     public function getResults($match = null)
     {
-        require_once(ROOT_DIR . '/classes/ChecklistItemResults.php');
+        require_once(ROOT_DIR . '/classes/tables/ChecklistItemResults.php');
+
+        $response = array();
 
         //create the sql statement
         $sql = "SELECT * FROM ! WHERE ! = ?";
@@ -51,7 +58,7 @@ class ChecklistItems extends Table
             $args[] = $match->Key;
         }
 
-        $rows = self::query($sql, $cols, $args);
+        $rows = self::queryRecords($sql, $cols, $args);
 
         foreach ($rows as $row)
             $response[] = ChecklistItemResults::withProperties($row);

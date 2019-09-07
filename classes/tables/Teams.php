@@ -19,70 +19,57 @@ class Teams extends Table
 
     /**
      * Returns the URI of the teams profile image
+     * @param $year Years to get the image from
      * @return RobotMedia
      */
-    public function getProfileImage()
+    public function getProfileImage($year)
     {
-        require_once(ROOT_DIR . '/classes/RobotMedia.php');
+        require_once(ROOT_DIR . '/classes/tables/RobotMedia.php');
 
         //create the sql statement
-        $sql = "SELECT * FROM ! WHERE ! = ? ORDER BY ! DESC LIMIT 1";
+        $sql = "SELECT * FROM ! WHERE ! = ? AND ! = ? ORDER BY ! DESC LIMIT 1";
         $cols[] = RobotMedia::$TABLE_NAME;
         $cols[] = 'TeamId';
         $args[] = $this->Id;
+        $cols[] = 'YearId';
+        $args[] = $year->Id;
         $cols[] = 'Id';
 
-        $rows = self::query($sql, $cols, $args);
+        $rows = self::queryRecords($sql, $cols, $args);
 
         foreach ($rows as $row)
         {
-            require_once(ROOT_DIR . "/classes/RobotMedia.php");
+            require_once(ROOT_DIR . "/classes/tables/RobotMedia.php");
             return RobotMedia::withProperties($row);
         }
     }
 
     /**
-     * Gets pit cards for a team
-     * @param Events $event if specified, filters by event
-     * @return PitCards[]
-     */
-    public function getPitCards($event)
-    {
-        require_once(ROOT_DIR . '/classes/PitCards.php');
-
-        //create the sql statement
-        $sql = "SELECT * FROM ! WHERE ! = ? AND ! = ? ORDER BY ! DESC";
-        $cols[] = PitCards::$TABLE_NAME;
-        $cols[] = 'TeamId';
-        $args[] = $this->Id;
-        $cols[] = 'EventId';
-        $args[] = $event->BlueAllianceId;
-        $cols[] = 'Id';
-
-        $rows = self::query($sql, $cols, $args);
-
-        foreach ($rows as $row)
-            $response[] = PitCards::withProperties($row);
-
-        return $response;
-    }
-
-    /**
      * Gets all robot media for this team
+     * @param $year Years to get the image from
      * @return RobotMedia[]
      */
-    public function getRobotPhotos()
+    public function getRobotPhotos($year = null)
     {
-        require_once(ROOT_DIR . '/classes/RobotMedia.php');
+        require_once(ROOT_DIR . '/classes/tables/RobotMedia.php');
+
+        $response = array();
 
         //create the sql statement
-        $sql = "SELECT * FROM ! WHERE ! = ? ORDER BY ! DESC";
+        $sql = "SELECT * FROM ! WHERE ! = ? " . ((empty($year)) ? "" : "AND ! = ?") . " ORDER BY ! DESC";
         $cols[] = RobotMedia::$TABLE_NAME;
         $cols[] = 'TeamId';
         $args[] = $this->Id;
+
+        if(!empty($year))
+        {
+            $cols[] = 'YearId';
+            $args[] = $year->Id;
+        }
+
         $cols[] = 'Id';
 
-        $rows = self::query($sql, $cols, $args);
+        $rows = self::queryRecords($sql, $cols, $args);
 
         foreach ($rows as $row)
             $response[] = RobotMedia::withProperties($row);
@@ -97,18 +84,19 @@ class Teams extends Table
      */
     public function toHtml($event = null)
     {
-        require_once(ROOT_DIR . '/classes/Events.php');
+        require_once(ROOT_DIR . '/classes/tables/Events.php');
+        require_once(ROOT_DIR . "/classes/tables/Years.php");
 
         $html =
             '<section class="section--center mdl-grid mdl-grid--no-spacing mdl-shadow--2dp team-card">
                 <header class="section__play-btn mdl-cell mdl-cell--3-col-desktop mdl-cell--2-col-tablet mdl-cell--4-col-phone mdl-color--white mdl-color-text--white">';
 
-            $robotMedia = $this->getProfileImage();
+            $robotMedia = $this->getProfileImage(Years::withId($event->YearId));
 
             $html .=
                     '<div style="height: unset">' .
                     ((empty($robotMedia->FileURI)) ? '' : '<a href="/team-photos.php?eventId=' . $event->BlueAllianceId . '&teamId=' . $this->Id . '">') .
-                        '<div class="team-card-image" style="background-image: url(' . ((empty($robotMedia->FileURI)) ? 'http://scouting.wiredcats5885.ca/assets/robot-media/frc_logo.jpg' : ROBOT_MEDIA_URL . $robotMedia->FileURI) . ')"></div>' .
+                        '<div class="team-card-image" style="background-image: url(' . ((empty($robotMedia->FileURI)) ? ROBOT_MEDIA_URL . 'frc_logo.jpg' : ROBOT_MEDIA_URL . $robotMedia->FileURI) . ')"></div>' .
                     ((empty($robotMedia->FileURI)) ? '' : '</a>') .
                     '</div>';
 

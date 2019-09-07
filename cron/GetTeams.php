@@ -1,7 +1,7 @@
 <?php
 require_once('../config.php');
-require_once('../classes/Teams.php');
-require_once('../classes/EventTeamList.php');
+require_once('../classes/tables/Teams.php');
+require_once('../classes/tables/EventTeamList.php');
 
 $database = new Database();
 $events = $database->query("SELECT BlueAllianceId FROM events");

@@ -1,6 +1,6 @@
 <?php
 require_once('../config.php');
-require_once(ROOT_DIR . '/classes/Matches.php');
+require_once(ROOT_DIR . '/classes/tables/Matches.php');
 
 $database = new Database();
 $events = $database->query("SELECT BlueAllianceId FROM events");

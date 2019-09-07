@@ -12,7 +12,7 @@ class NavBarLink
      * @param string $Link
      * @param boolean $IsActive
      */
-    public function __construct($Title, $Link, $IsActive)
+    public function __construct($Title, $Link, $IsActive = false)
     {
         $this->Title = $Title;
         $this->Link = $Link;

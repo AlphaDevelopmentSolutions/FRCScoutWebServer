@@ -1,0 +1,1 @@
+<div class="version">Version <?php echo VERSION ?> </div>

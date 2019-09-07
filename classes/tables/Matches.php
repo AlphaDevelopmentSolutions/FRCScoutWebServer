@@ -37,19 +37,61 @@ class Matches extends Table
     }
 
     /**
+     * Gets and returns the color of the team specified in a match
+     * @param Teams $team
+     * @return string
+     */
+    public function getAllianceColor($team)
+    {
+       if($team->Id == $this->BlueAllianceTeamOneId
+            || $team->Id == $this->BlueAllianceTeamTwoId
+            || $team->Id == $this->BlueAllianceTeamThreeId)
+            return AllianceColors::BLUE;
+
+        else
+            return AllianceColors::RED;
+    }
+
+    /**
+     * Returns the amount of scout cards for a match
+     * A scout card is defined as 1 team being scouted with multiple entries in the scout_card_info database
+     * @return string
+     */
+    public function getScoutCardCount()
+    {
+        require_once(ROOT_DIR . '/interfaces/AllianceColors.php');
+
+        //create the sql statement
+        $sql = "SELECT * FROM ! WHERE ! = ? AND ! = ? GROUP BY !";
+        $cols[] = ScoutCardInfo::$TABLE_NAME;
+
+        $cols[] = 'EventId';
+        $args[] = $this->EventId;
+
+        $cols[] = 'MatchId';
+        $args[] = $this->Key;
+
+        $cols[] = 'TeamId';
+
+        return count(self::queryRecords($sql, $cols, $args));
+    }
+
+    /**
      * Gets scout cards for a specific match
      * @param null | Teams $team if specified, filters by team
-     * @param null | ScoutCards $scoutCard if specified, filters by scoutcard
-     * @return ScoutCards[]
+     * @return ScoutCardInfoArray[]
      */
-    public function getScoutCards($team = null, $scoutCard = null)
+    public function getScoutCards($team = null)
     {
-        require_once(ROOT_DIR . '/classes/ScoutCards.php');
-        require_once(ROOT_DIR . '/classes/Teams.php');
+        require_once(ROOT_DIR . '/classes/tables/ScoutCardInfo.php');
+        require_once(ROOT_DIR . '/classes/tables/ScoutCardInfoArray.php');
+
+        $response = new ScoutCardInfoArray();
+        $scoutCardInfoArray = array();
 
         //create the sql statement
         $sql = "SELECT * FROM ! WHERE ! = ?";
-        $cols[] = ScoutCards::$TABLE_NAME;
+        $cols[] = ScoutCardInfo::$TABLE_NAME;
         $cols[] = 'MatchId';
         $args[] = $this->Key;
 
@@ -62,24 +104,19 @@ class Matches extends Table
             $args[] = $team->Id;
         }
 
-        //if scoutcard specified, filter by scoutcard
-        if(!empty($scoutCard))
-        {
-            $sql .= " AND ! = ? ";
-
-            $cols[] = 'Id';
-            $args[] = $scoutCard->Id;
-        }
-
         $sql .= " ORDER BY ! DESC";
         $cols[] = 'Id';
 
-        $rows = self::query($sql, $cols, $args);
+        $rows = self::queryRecords($sql, $cols, $args);
 
         foreach ($rows as $row)
-            $response[] = ScoutCards::withProperties($row);
+            $response[] = ScoutCardInfo::withProperties($row);
 
-        return $response;
+        foreach($response as $key => $value)
+            $scoutCardInfoArray[$value->TeamId][] = $response[$key];
+
+
+        return $scoutCardInfoArray;
     }
 
     /**
@@ -93,7 +130,7 @@ class Matches extends Table
             switch($this->MatchType)
             {
                 case self::$MATCH_TYPE_QUALIFICATIONS:
-                    return 'Qualification';
+                    return 'Quals';
                     break;
 
                 case self::$MATCH_TYPE_QUARTER_FINALS:
@@ -115,7 +152,7 @@ class Matches extends Table
             }
         }
 
-        return 'Qualification';
+        return 'Quals';
     }
 
     /**

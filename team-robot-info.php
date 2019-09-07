@@ -3,25 +3,26 @@ require_once("config.php");
 require_once(ROOT_DIR . "/classes/tables/Teams.php");
 require_once(ROOT_DIR . "/classes/tables/Events.php");
 require_once(ROOT_DIR . "/classes/tables/Years.php");
+require_once(ROOT_DIR . "/classes/tables/RobotInfo.php");
+require_once(ROOT_DIR . "/classes/tables/RobotInfoKeys.php");
+require_once(ROOT_DIR . "/classes/tables/Matches.php");
+
 
 $eventId = $_GET['eventId'];
 $teamId = $_GET['teamId'];
 
 $team = Teams::withId($teamId);
 $event = Events::withId($eventId);
-
 ?>
 
 <!doctype html>
 <html lang="en">
 <head>
-
-    <title><?php echo $team->Id . ' - ' . $team->Name ?> - Matches</title>
+    <title><?php echo $team->Id . ' - ' . $team->Name ?> - Pits</title>
     <?php require_once('includes/meta.php') ?>
 </head>
 <body class="mdl-demo mdl-color--grey-100 mdl-color-text--grey-700 mdl-base">
 <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
-
     <?php
     $navBarArray = new NavBarArray();
 
@@ -32,8 +33,8 @@ $event = Events::withId($eventId);
     $navBarArray[] = new NavBar($navBarLinksArray);
 
     $navBarLinksArray = new NavBarLinkArray();
-    $navBarLinksArray[] = new NavBarLink('Matches', '/team-matches.php?eventId=' . $event->BlueAllianceId . '&teamId=' . $team->Id, true);
-    $navBarLinksArray[] = new NavBarLink('Robot Info', '/team-robot-info.php?eventId=' . $event->BlueAllianceId . '&teamId=' . $team->Id);
+    $navBarLinksArray[] = new NavBarLink('Matches', '/team-matches.php?eventId=' . $event->BlueAllianceId . '&teamId=' . $team->Id);
+    $navBarLinksArray[] = new NavBarLink('Robot Info', '/team-robot-info.php?eventId=' . $event->BlueAllianceId . '&teamId=' . $team->Id, true);
     $navBarLinksArray[] = new NavBarLink('Photos', '/team-photos.php?eventId=' . $event->BlueAllianceId . '&teamId=' . $team->Id);
     $navBarLinksArray[] = new NavBarLink('Stats', '/team-stats.php?eventId=' . $event->BlueAllianceId . '&teamId=' . $team->Id);
 
@@ -48,6 +49,7 @@ $event = Events::withId($eventId);
         $additionContent .=
             '<div style="height: unset" class="mdl-layout--large-screen-only mdl-layout__header-row">
                   <div class="circle-image" style="background-image: url(' . ROBOT_MEDIA_URL . $robotMedia->FileURI . ')">
+
                   </div>
                 </div>';
     }
@@ -127,27 +129,11 @@ $event = Events::withId($eventId);
 
     <main class="mdl-layout__content">
 
-        <?php if (loggedIn())
-        {
-            //temp disabled due to new table design
-//                  echo
-//                  '<button onclick="window.location = \'/scout-card.php?eventId=' . $event->BlueAllianceId . '&teamId=' . $team->Id .'\'" style="position: fixed; bottom: 0 !important; margin-bottom: 1em;" class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored mdl-shadow--4dp mdl-color--accent" id="add" data-upgraded=",MaterialButton,MaterialRipple">
-//                      <i class="material-icons" role="presentation">add</i>
-//                      <span class="visuallyhidden">Add</span>
-//                      <span class="mdl-button__ripple-container">
-//                            <span class="mdl-ripple is-animating" style="width: 160.392px; height: 160.392px; transform: translate(-50%, -50%) translate(37px, 28px);"></span>
-//                        </span>
-//                  </button>';
-        }
-
-        ?>
-
         <?php
 
-        foreach ($event->getMatches(null, $team) as $match)
-            echo $match->toHtml('/match-stats.php?eventId=' . $match->EventId . '&matchId=' . $match->Key . '&teamId=' . $team->Id, 'View Match Overview', $teamId);
+            $array = RobotInfo::forTeam(null, $event, $team);
 
-
+            echo $array->toHtml();
         ?>
 
         <?php require_once('includes/footer.php') ?>

@@ -1,6 +1,6 @@
 <?php
 require_once("config.php");
-require_once(ROOT_DIR . "/classes/Events.php");
+require_once(ROOT_DIR . "/classes/tables/Events.php");
 
 $eventId = $_GET['eventId'];
 
@@ -11,7 +11,7 @@ $event = Events::withId($eventId);
 <html lang="en">
 <head>
     <?php require_once('includes/meta.php') ?>
-    <title>Match Overview</title>
+    <title>Matches</title>
 </head>
 <body class="mdl-demo mdl-color--grey-100 mdl-color-text--grey-700 mdl-base">
 <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
@@ -21,7 +21,7 @@ $event = Events::withId($eventId);
 
     $navBar = new NavBar($navBarLinksArray);
 
-    $header = new Header($event->Name, null, $navBar, $event->BlueAllianceId);
+    $header = new Header($event->Name, null, $navBar, $event);
 
     echo $header->toHtml();
     ?>
@@ -30,9 +30,11 @@ $event = Events::withId($eventId);
         <?php
 
         foreach ($event->getMatches() as $match)
-            echo $match->toHtml('/match.php?eventId=' . $match->EventId . '&matchId=' . $match->Key . '&allianceColor=BLUE', 'View Match Overview');
+            echo $match->toHtml('/match-stats.php?eventId=' . $match->EventId . '&matchId=' . $match->Key, 'View Match Overview');
 
         ?>
+
+        <?php require_once('includes/footer.php') ?>
     </main>
 </div>
 <?php require_once('includes/bottom-scripts.php') ?>

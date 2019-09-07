@@ -1,26 +1,38 @@
+<?php
+    header("Content-type: text/css; charset: UTF-8");
+    require_once('../config.php');
+
+?>
+
+:root
+{
+  --color-primary: #<?php echo PRIMARY_COLOR ?>;
+  --color-primary-dark: #<?php echo PRIMARY_COLOR_DARK ?>;
+}
+
 /**
 Primary Colors
  */
 .mdl-color--primary
 {
-  background-color: #03A9F4 !important;
+  background-color: var(--color-primary) !important;
 }
 
 .mdl-color--primary-dark
 {
-  background-color: #0288D1 !important;
+  background-color: var(--color-primary-dark) !important;
 }
 
 .mdl-button--accent.mdl-button--accent.mdl-button--raised
 {
-  background-color: #03A9F4 !important;
+  background-color: var(--color-primary) !important;
 }
 
 /**
 Link Colors
  */
 .mdl-demo .mdl-card__actions a {
-  color: #03A9F4 !important;
+  color: var(--color-primary) !important;
 }
 
 /**
@@ -87,7 +99,7 @@ Overwrites disabled gray color
 .mdl-textfield > textarea[disabled] + .mdl-textfield__label,
 .mdl-textfield__label
 {
-  color: #0288D1 !important;
+  color: var(--color-primary-dark) !important;
 }
 
 /**

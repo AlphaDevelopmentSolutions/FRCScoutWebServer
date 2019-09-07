@@ -5,6 +5,9 @@ class Users extends Table
     public $Id;
     public $FirstName;
     public $LastName;
+    public $UserName;
+    public $Password;
+    public $IsAdmin;
 
     public static $TABLE_NAME = 'users';
 
@@ -17,22 +20,25 @@ class Users extends Table
     public function login($userName, $password)
     {
         //create the sql statement
-        $sql = "SELECT * FROM ! WHERE ! = ? AND ! = ?";
+        $sql = "SELECT * FROM ! WHERE ! = ? AND ! = ? LIMIT 1";
         $cols[] = self::$TABLE_NAME;
         $cols[] = 'UserName';
         $args[] = $userName;
         $cols[] = 'Password';
         $args[] = md5($password);
 
-        $rows = self::query($sql, $cols, $args);
+        $query = self::queryRecords($sql, $cols, $args);
 
+        if(!empty($query))
+        {
+            $response = self::withProperties($query[0]);
 
-        foreach ($rows as $row)
-            $response[] = self::withProperties($row);
+            $this->Id = $response->Id;
+            $this->FirstName = $response->FirstName;
+            $this->LastName = $response->LastName;
+            $this->IsAdmin = $response->IsAdmin;
+        }
 
-        $this->Id = $response[0]->Id;
-        $this->FirstName = $response[0]->FirstName;
-        $this->LastName = $response[0]->LastName;
 
         return (!empty($response));
     }

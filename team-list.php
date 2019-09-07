@@ -1,6 +1,6 @@
 <?php
 require_once("config.php");
-require_once(ROOT_DIR . "/classes/Events.php");
+require_once(ROOT_DIR . "/classes/tables/Events.php");
 
 $eventId = $_GET['eventId'];
 
@@ -10,7 +10,7 @@ $event = Events::withId($eventId);
 <!doctype html>
 <html lang="en">
 <head>
-    <title><?php echo $event->Name; ?></title>
+    <title>Teams</title>
     <?php require_once('includes/meta.php') ?>
 </head>
 <body class="mdl-demo mdl-color--grey-100 mdl-color-text--grey-700 mdl-base">
@@ -21,7 +21,7 @@ $event = Events::withId($eventId);
 
     $navBar = new NavBar($navBarLinksArray);
 
-    $header = new Header($event->Name, null, $navBar, $event->BlueAllianceId);
+    $header = new Header($event->Name, null, $navBar, $event);
 
     echo $header->toHtml();
     ?>
@@ -33,6 +33,8 @@ $event = Events::withId($eventId);
             echo $team->toHtml($event);
 
         ?>
+
+        <?php require_once('includes/footer.php') ?>
     </main>
 </div>
 <?php require_once('includes/bottom-scripts.php') ?>
