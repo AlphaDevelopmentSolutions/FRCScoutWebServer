@@ -64,7 +64,7 @@ class Years extends CoreTable
 
             $html .=
                     '<div style="height: unset">' .
-                        '<div class="team-card-image" style="background-image: url(' . ((empty($this->ImageUri)) ? ROBOT_MEDIA_URL . 'frc_logo.jpg' : YEAR_MEDIA_URL . $this->ImageUri) . ')"></div>' .
+                        '<div class="team-card-image" style="background-image: url(' . ((empty($this->ImageUri)) ? IMAGES_URL . 'frc_logo.jpg' : YEAR_MEDIA_URL . $this->ImageUri) . ')"></div>' .
                     '</div>';
 
             $html .=

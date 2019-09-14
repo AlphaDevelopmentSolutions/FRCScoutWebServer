@@ -48,7 +48,7 @@ $event = Events::withId($eventId);
     {
         $additionContent .=
             '<div style="height: unset" class="mdl-layout--large-screen-only mdl-layout__header-row">
-                  <div class="circle-image" style="background-image: url(' . ROBOT_MEDIA_URL . $robotMedia->FileURI . ')">
+                  <div class="circle-image" style="background-image: url(' . ROBOT_MEDIA_THUMBS_URL . $robotMedia->FileURI . ')">
 
                   </div>
                 </div>';

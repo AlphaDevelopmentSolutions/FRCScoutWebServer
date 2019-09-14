@@ -4,21 +4,22 @@ class RobotMedia extends LocalTable
 {
     public $Id;
     public $YearId;
+    public $EventId;
     public $TeamId;
     public $FileURI;
-    public $Base64Image;
 
     public static $TABLE_NAME = 'robot_media';
 
     /**
      * Overrides parent::save() method
      * Attempts to save the image before saving the record
+     * @param bool $bypassFileSave bypasses the file save to the system
      * @return bool
      */
-    public function save()
+    public function save($bypassFileSave = false)
     {
         if(!empty($this->Id))
-            if($this->saveImage())
+            if(!$bypassFileSave && $this->saveImage())
                 return parent::save();
 
         return false;
@@ -44,29 +45,70 @@ class RobotMedia extends LocalTable
      */
     private function saveImage()
     {
+        mt_srand(crc32(serialize([microtime(true), $_SERVER['HTTP_CLIENT_IP'], $_SERVER['HTTP_USER_AGENT']])));
+
         //create a unique id
-        $uid = uniqid();
+        $uuid = sprintf( '%04x%04x-%04x-%04x-%04x-%04x%04x%04x',
+            mt_rand( 0, 0xffff ),
+            mt_rand( 0, 0xffff ),
+            mt_rand( 0, 0xffff ),
+            mt_rand( 0, 0x0fff ) | 0x4000,
+            mt_rand( 0, 0x3fff ) | 0x8000,
+            mt_rand( 0, 0xffff ),
+            mt_rand( 0, 0xffff ),
+            mt_rand( 0, 0xffff ));
 
         //make sure the file doesn't already exist
-        while(file_exists($uid . '.jpeg'))
-            $uid = uniqid();
+        while(file_exists(ROBOT_MEDIA_DIR . $uuid . '.jpeg'))
+            $uuid = sprintf( '%04x%04x-%04x-%04x-%04x-%04x%04x%04x',
+                mt_rand( 0, 0xffff ),
+                mt_rand( 0, 0xffff ),
+                mt_rand( 0, 0xffff ),
+                mt_rand( 0, 0x0fff ) | 0x4000,
+                mt_rand( 0, 0x3fff ) | 0x8000,
+                mt_rand( 0, 0xffff ),
+                mt_rand( 0, 0xffff ),
+                mt_rand( 0, 0xffff ));
 
         //decode the base64 image
-        $image = base64_decode($this->Base64Image);
+        $image = imagecreatefromstring(base64_decode($this->FileURI));
+        $width = getimagesize($image);
+        $height = $width[1];
+        $width = $width[0];
 
-        //prep the file to be written to
-        $file = fopen("../assets/robot-media/$uid.jpeg", 'wb');
+        $ratio = $width / $height;
+        $targetWidth = 250;
+        $targetHeight = $targetWidth;
+        $targetWidth = floor($targetWidth * $ratio);
 
-        //store if write was successful
-        $success = fwrite($file, $image);
+        $thumb = imagecreatetruecolor($targetWidth, $targetHeight);
 
-        fclose($file);
+        imagecopyresampled(
+            $thumb,
+            $image,
+            0, 0, 0, 0,
+            $targetWidth, $targetHeight,
+            $width, $height
+        );
 
-        //if successful, store the file URI
-        if($success)
-            $this->FileURI = $uid . '.jpeg';
+        if(imagejpeg($thumb, ROBOT_MEDIA_THUMBS_DIR . "$uuid.jpeg"))
+        {
+            //prep the file to be written to
+            $file = fopen(ROBOT_MEDIA_DIR . "$uuid.jpeg", 'wb');
 
-        return $success;
+            //store if write was successful
+            $success = fwrite($file, base64_decode($this->FileURI));
+
+            fclose($file);
+
+            //if successful, store the file URI
+            if($success)
+                $this->FileURI = $uuid . '.jpeg';
+
+            return $success;
+        }
+
+        return false;
     }
 
     /**
@@ -76,14 +118,27 @@ class RobotMedia extends LocalTable
     private function deleteImage()
     {
         //prep the file to be deleted
-        $file = fopen("../assets/robot-media/$this->FileURI", 'wb');
+        $file = fopen(ROBOT_MEDIA_DIR . "$this->FileURI", 'wb');
 
         //store if delete was successful
         $success = unlink($file);
 
         fclose($file);
 
-        return $success;
+        if($success)
+        {
+            //prep the file to be deleted
+            $file = fopen(ROBOT_MEDIA_THUMBS_DIR . "$this->FileURI", 'wb');
+
+            //store if delete was successful
+            $success = unlink($file);
+
+            fclose($file);
+
+            return $success;
+        }
+
+        return false;
     }
 
     /**
