@@ -51,6 +51,26 @@ var graphData;
 
 $(document).ready(function ()
 {
+    //set the change listener for the search field
+    $('#teamSearch').change(function()
+    {
+        //filter the string and remove empty records
+        teamList = $(this).val().replace(/[^0-9,.]/g,'').split(',').filter(function (el)
+        {
+            return el != null && el != "";
+        });
+
+        downloadGraphData();
+    });
+
+    downloadGraphData();
+});
+
+/**
+ * Downloads graph data from the ajax script
+ */
+function downloadGraphData()
+{
     //get data from the ajax script
     $.post('/ajax/ajax.php',
         {
@@ -79,20 +99,8 @@ $(document).ready(function ()
             <?php
             }
             ?>
-
-            //set the change listener for the search field
-            $('#teamSearch').change(function()
-            {
-                //filter the string and remove empty records
-                teamList = $(this).val().replace(/[^0-9,.]/g,'').split(',').filter(function (el)
-                {
-                    return el != null && el != "";
-                });
-
-                updateGraphs();
-            });
         });
-});
+}
 
 /**
  * Updates all the graphs on the page with the default records
@@ -271,8 +279,8 @@ function createChart(context, jsonResponse, graphItem)
     var maxData2 = Math.max.apply(null, matchAveragData);
     var minData2 = Math.min.apply(null, matchAveragData);
 
-    maxData = ((maxData > maxData2) ? maxData : maxData2);
-    minData = ((minData < minData2) ? minData : minData2);
+    maxData = ((maxData > maxData2) ? ((maxData > average) ? maxData : average) : ((maxData2 > average) ? maxData2 : average));
+    minData = ((minData > minData2) ? ((minData > average) ? minData : average) : ((minData2 > average) ? minData2 : average));
 
     var lineGraph = matchAveragData.length > 0;
 
@@ -344,7 +352,7 @@ function createChart(context, jsonResponse, graphItem)
                         ticks: (lineGraph) ?
                             {
                                 beginAtZero: true,
-                                max: ((!graphItem.endsWith('Rating')) ? (maxData === 0) ? 1 : maxData * 1.1 : 5),
+                                max: (maxData === 0) ? 1 : maxData * 1.1,
                                 min: ((minData >= 0) ? 0 : minData * 1.5)
                             }
                             :
@@ -360,7 +368,7 @@ function createChart(context, jsonResponse, graphItem)
                             :
                             {
                                 beginAtZero: true,
-                                max: ((!graphItem.endsWith('Rating')) ? maxData * 1.05 : 5),
+                                max: maxData * 1.05,
                                 min: ((minData >= 0) ? 0 : minData * 1.1)
                             },
                         scaleLabel: {

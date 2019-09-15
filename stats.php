@@ -33,7 +33,6 @@ $event = Events::withId($eventId);
 
     echo $header->toHtml();
 
-
     ?>
 
     <main class="mdl-layout__content">
@@ -85,6 +84,6 @@ $event = Events::withId($eventId);
 
 </div>
 <?php require_once('includes/bottom-scripts.php') ?>
-<script defer src="<?php echo URL_PATH ?>/js/stat-charts.js.php?eventId=<?php echo $event->BlueAllianceId ?>"></script>
+<script defer src="<?php echo JS_URL ?>stat-charts.js.php?eventId=<?php echo $event->BlueAllianceId ?>"></script>
 </body>
 </html>
