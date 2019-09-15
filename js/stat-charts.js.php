@@ -236,11 +236,11 @@ function createChart(context, jsonResponse, graphItem)
             if(matchId === '')
             {
                 //if the average is more than double the event average, that's a good (green) stat
-                if (val > average * 1.45)
+                if (val > average * 1.20)
                     backgroundColors.push('#64FF62');
 
                 //if the average is less than double but still greater to or equal to the event average, that's a warning (yellow) stat
-                else if (val >= average)
+                else if (val >= average * .8)
                     backgroundColors.push('#FFD966');
 
                 //if the average is less than the event average, that's a bad (red) stat
