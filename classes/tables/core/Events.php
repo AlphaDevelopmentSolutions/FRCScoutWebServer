@@ -278,6 +278,62 @@ class Events extends CoreTable
     }
 
     /**
+     * Gets stats for the specified event
+     * @param $scoutCardInfoKeys ScoutCardInfoKeys[] to iterate through
+     * @param $scoutCardInfos ScoutCardInfo[] to iterate through
+     * @return array of data calculated
+     */
+    public function getStats($scoutCardInfoKeys, $scoutCardInfos)
+    {
+        $eventStatsArray = array();
+        $eventCardArray = array();
+
+        foreach ($scoutCardInfoKeys as $scoutCardInfoKey)
+        {
+            $arrayKey = $scoutCardInfoKey->KeyState . ' ' . $scoutCardInfoKey->KeyName;
+
+            if ($scoutCardInfoKey->IncludeInStats == '1')
+            {
+                if (!empty($scoutCardInfos))
+                {
+                    foreach ($scoutCardInfos as $scoutCardInfo)
+                    {
+                        if ($scoutCardInfo->PropertyKeyId == $scoutCardInfoKey->Id)
+                        {
+                            $eventStatsArray[$arrayKey] = ((!empty($eventStatsArray[$arrayKey])) ? $eventStatsArray[$arrayKey] + $scoutCardInfo->PropertyValue : $scoutCardInfo->PropertyValue);
+
+                            $tempCardTotal = ((!empty($eventCardArray[$arrayKey])) ? $eventCardArray[$arrayKey] : 0);
+                            $eventCardArray[$arrayKey] = (($scoutCardInfoKey->NullZeros == 1 && $scoutCardInfo->PropertyValue == 0) ? $tempCardTotal : $tempCardTotal + 1);
+                        }
+                    }
+
+                    if (empty($eventStatsArray[$arrayKey]))
+                    {
+                        $eventStatsArray[$arrayKey] = 0;
+
+                        $tempCardTotal = ((!empty($eventCardArray[$arrayKey])) ? $eventCardArray[$arrayKey] : 0);
+                        $eventCardArray[$arrayKey] = (($scoutCardInfoKey->NullZeros == 1) ? $tempCardTotal : $tempCardTotal + 1);
+                    }
+
+                } else
+                {
+                    $eventStatsArray[$arrayKey] = 0;
+                    $eventCardArray[$arrayKey] = 0;
+                }
+            }
+        }
+
+        foreach ($eventStatsArray as $key => $stat)
+        {
+            $tempCardCount = $eventCardArray[$key];
+
+            $eventStatsArray[$key] = (($tempCardCount != 0) ? round($stat / $tempCardCount, 2) : 0);
+        }
+
+        return $eventStatsArray;
+    }
+
+    /**
      * Returns the object once converted into HTML
      * @return string
      */

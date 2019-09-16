@@ -243,7 +243,7 @@ function createChart(context, jsonResponse, graphItem)
                 else if (val >= average * .8)
                     backgroundColors.push('#FFD966');
 
-                //if the average is less than the event average, that's a bad (red) stat
+                // bad = less than 20% lower
                 else
                     backgroundColors.push('#E67C73');
             }
@@ -268,19 +268,42 @@ function createChart(context, jsonResponse, graphItem)
         yAxesTitle = 'Teams';
     }
 
-
-
     xAxesTitle = xAxesTitle.toUpperCase();
     yAxesTitle = yAxesTitle.toUpperCase();
 
-    var maxData = Math.max.apply(null, graphData);
-    var minData = Math.min.apply(null, graphData);
+    var maxData = 0;
+    var minData = 0;
 
-    var maxData2 = Math.max.apply(null, matchAveragData);
-    var minData2 = Math.min.apply(null, matchAveragData);
+    $(graphData).each(function(index, element)
+    {
+        if(element > maxData)
+            maxData = element;
+        else if(element < minData)
+            minData = element;
+    });
 
-    maxData = ((maxData > maxData2) ? ((maxData > average) ? maxData : average) : ((maxData2 > average) ? maxData2 : average));
-    minData = ((minData > minData2) ? ((minData > average) ? minData : average) : ((minData2 > average) ? minData2 : average));
+    var maxData2 = 0;
+    var minData2 = 0;
+
+    $(matchAveragData).each(function(index, element)
+    {
+        if(element > maxData2)
+            maxData2 = element;
+        else if(element < minData2)
+            minData2 = element;
+    });
+
+    if(maxData2 > maxData)
+        maxData = maxData2;
+
+    if (average > maxData)
+        maxData = average;
+
+    if(minData2 < minData)
+        minData = minData2;
+
+    if (average < minData)
+        minData = average;
 
     var lineGraph = matchAveragData.length > 0;
 
@@ -389,7 +412,7 @@ function createChart(context, jsonResponse, graphItem)
                         borderDash: [7],
                         label: {
                             enabled: true,
-                            content: (matchId === '' ? 'Event ' : 'Match ') + 'Average ' + Math.round(average * 100.00) / 100.00
+                            content: 'Event Average ' + Math.round(average * 100.00) / 100.00
                         }
                     }]
                 }

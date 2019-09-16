@@ -156,6 +156,83 @@ class Matches extends CoreTable
     }
 
     /**
+     * Gets stats for the specified match
+     * @param $matches Matches[] to iterate through
+     * @param $scoutCardInfoKeys ScoutCardInfoKeys[] to iterate through
+     * @param $scoutCardInfos ScoutCardInfo[] to iterate through
+     * @return array of data calculated
+     */
+    public function getStats($matches, $scoutCardInfoKeys, $scoutCardInfos)
+    {
+        $matchTeamList = array();
+        $matchStatsArray = array();
+        $matchCardArray = array();
+
+        foreach ($matches as $storedMatch)
+        {
+            $matchTeamList[] = $storedMatch->BlueAllianceTeamOneId;
+            $matchTeamList[] = $storedMatch->BlueAllianceTeamTwoId;
+            $matchTeamList[] = $storedMatch->BlueAllianceTeamThreeId;
+
+            $matchTeamList[] = $storedMatch->RedAllianceTeamOneId;
+            $matchTeamList[] = $storedMatch->RedAllianceTeamTwoId;
+            $matchTeamList[] = $storedMatch->RedAllianceTeamThreeId;
+        }
+
+        $filteredScoutCardInfos = array();
+
+        foreach ($scoutCardInfos as $scoutCardInfo)
+        {
+            if ($scoutCardInfo->MatchId == $this->Key && in_array($scoutCardInfo->TeamId, $matchTeamList))
+                $filteredScoutCardInfos[] = $scoutCardInfo;
+        }
+
+        foreach ($scoutCardInfoKeys as $scoutCardInfoKey)
+        {
+            $arrayKey = $scoutCardInfoKey->KeyState . ' ' . $scoutCardInfoKey->KeyName;
+            
+            if ($scoutCardInfoKey->IncludeInStats == '1')
+            {
+                if (!empty($filteredScoutCardInfos))
+                {
+                    foreach ($filteredScoutCardInfos as $scoutCardInfo)
+                    {
+                        if ($scoutCardInfo->PropertyKeyId == $scoutCardInfoKey->Id)
+                        {
+                            $matchStatsArray[$arrayKey] = ((!empty($matchStatsArray[$arrayKey])) ? $matchStatsArray[$arrayKey] + $scoutCardInfo->PropertyValue : $scoutCardInfo->PropertyValue);
+
+                            $tempCardTotal = ((!empty($matchCardArray[$arrayKey])) ? $matchCardArray[$arrayKey] : 0);
+                            $matchCardArray[$arrayKey] = (($scoutCardInfoKey->NullZeros == 1 && $scoutCardInfo->PropertyValue == 0) ? $tempCardTotal : $tempCardTotal + 1);
+                        }
+                    }
+
+                    if (empty($matchStatsArray[$arrayKey]))
+                    {
+                        $matchStatsArray[$arrayKey] = 0;
+
+                        $tempCardTotal = ((!empty($matchCardArray[$arrayKey])) ? $matchCardArray[$arrayKey] : 0);
+                        $matchCardArray[$arrayKey] = (($scoutCardInfoKey->NullZeros == 1) ? $tempCardTotal : $tempCardTotal + 1);
+                    }
+
+                } else
+                {
+                    $matchStatsArray[$arrayKey] = 0;
+                    $matchCardArray[$arrayKey] = 0;
+                }
+            }
+        }
+
+        foreach ($matchStatsArray as $key => $stat)
+        {
+            $tempCardCount = $matchCardArray[$key];
+
+            $matchStatsArray[$key] = (($tempCardCount != 0) ? round($stat / $tempCardCount, 2) : 0);
+        }
+
+        return $matchStatsArray;
+    }
+
+    /**
      * Compiles the name of the object when displayed as a string
      * @return string
      */

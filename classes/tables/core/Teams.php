@@ -106,6 +106,54 @@ class Teams extends CoreTable
     }
 
     /**
+     * Gets stats for the specified match
+     * @param $matches Matches[] to iterate through
+     * @param $scoutCardInfoKeys ScoutCardInfoKeys[] to iterate through
+     * @param $scoutCardInfos ScoutCardInfo[] to iterate through
+     * @return array of data calculated
+     */
+    public function getStats($matches, $scoutCardInfoKeys, $scoutCardInfos)
+    {
+        foreach($matches as $match)
+        {
+            $tempStatArray = array();
+
+            $filteredScoutCardInfos = array();
+
+            foreach($scoutCardInfos as $scoutCardInfo)
+            {
+                if($scoutCardInfo->MatchId == $match->Key && $scoutCardInfo->TeamId == $this->Id)
+                    $filteredScoutCardInfos[] = $scoutCardInfo;
+            }
+
+            foreach ($scoutCardInfoKeys as $scoutCardInfoKey)
+            {
+                $arrayKey = $scoutCardInfoKey->KeyState . ' ' . $scoutCardInfoKey->KeyName;
+                
+                if($scoutCardInfoKey->IncludeInStats == '1')
+                {
+                    if(!empty($filteredScoutCardInfos))
+                    {
+                        foreach($filteredScoutCardInfos as $scoutCardInfo)
+                        {
+                            if($scoutCardInfo->PropertyKeyId == $scoutCardInfoKey->Id)
+                                $tempStatArray[$arrayKey] = $scoutCardInfo->PropertyValue;
+                        }
+
+                        if(empty($tempStatArray[$arrayKey]))
+                            $tempStatArray[$arrayKey] = 0;
+                    }
+                    else
+                        $tempStatArray[$arrayKey] = 0;
+                }
+            }
+            $teamStatArray[$match->MatchNumber] = $tempStatArray;
+        }
+
+        return $teamStatArray;
+    }
+
+    /**
      * Returns the object once converted into HTML
      * @param Events $event id of the event
      * @return string
