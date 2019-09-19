@@ -1,9 +1,7 @@
 <?php
 
-
 class Api
 {
-
     private $response;
 
     private $SUCCESS_STATUS_CODE = 'Success';
@@ -12,24 +10,21 @@ class Api
     private $STATUS_KEY = 'Status';
     private $RESPONSE_KEY = 'Response';
 
-    private $keyValid;
-
     function __construct($key)
     {
-        $this->keyValid = $key == API_KEY;
         $this->response = array();
     }
 
     /**
      * Echos a json encoded success response
-     * @param $message String | array message to display
+     * @param $message string | array message to display
      */
     function success($message)
     {
         $this->response[$this->STATUS_KEY] = $this->SUCCESS_STATUS_CODE;
         $this->response[$this->RESPONSE_KEY] = $message;
 
-        echo json_encode($this->response);
+        echo die(json_encode($this->response));
 
     }
 
@@ -42,16 +37,17 @@ class Api
         $this->response[$this->STATUS_KEY] = $this->ERROR_STATUS_CODE;
         $this->response[$this->RESPONSE_KEY] = $message;
 
-        echo json_encode($this->response);
+        echo die(json_encode($this->response));
     }
 
     /**
      * Returns if the key was valid when initializing the API
+     * @param $key string API key from web server
      * @return boolean
      */
-    public function getKeyValid()
+    public function isKeyValid($key)
     {
-        return $this->keyValid;
+        return $key == API_KEY;
     }
 
 
