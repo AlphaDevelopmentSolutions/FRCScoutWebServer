@@ -58,8 +58,8 @@ define('URL_PATH', ROOT_URL . ((coreLoggedIn()) ? '/' . getCoreAccount()->TeamId
 /**
  * MEDIA FILES
  */
-define('ROBOT_MEDIA_DIR', __DIR__ . '/html/assets/robot-media/originals/');
-define('ROBOT_MEDIA_THUMBS_DIR', __DIR__ . '/html/assets/robot-media/thumbs/');
+define('ROBOT_MEDIA_DIR', __DIR__ . '/assets/robot-media/originals/');
+define('ROBOT_MEDIA_THUMBS_DIR', __DIR__ . '/assets/robot-media/thumbs/');
 define('ROBOT_MEDIA_URL', '/assets/robot-media/originals/');
 define('ROBOT_MEDIA_THUMBS_URL', '/assets/robot-media/thumbs/');
 define('YEAR_MEDIA_URL', '/assets/year-media/');

@@ -32,7 +32,7 @@ if(!empty($matchId))
 
     $navBar = new NavBar($navBarLinksArray);
 
-    $header = new Header($event->Name, null, $navBar, $event, null, 'admin-year.php?yearId=' . $event->YearId;
+    $header = new Header($event->Name, null, $navBar, $event, null, 'admin-year.php?yearId=' . $event->YearId);
 
     echo $header->toHtml();
     ?>

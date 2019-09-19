@@ -18,11 +18,18 @@ class RobotMedia extends LocalTable
      */
     public function save($bypassFileSave = false)
     {
-        if(!empty($this->Id))
-            if(!$bypassFileSave && $this->saveImage())
+        if(empty($this->Id))
+        {
+            if($bypassFileSave)
                 return parent::save();
 
-        return false;
+            else if($this->saveImage())
+                return parent::save();
+
+            return false;
+        }
+
+        return parent::save();
     }
 
 
@@ -70,45 +77,40 @@ class RobotMedia extends LocalTable
                 mt_rand( 0, 0xffff ),
                 mt_rand( 0, 0xffff ));
 
-        //decode the base64 image
-        $image = imagecreatefromstring(base64_decode($this->FileURI));
-        $width = getimagesize($image);
-        $height = $width[1];
-        $width = $width[0];
+        $fileName = $uuid . '.jpeg';
 
-        $ratio = $width / $height;
-        $targetWidth = 250;
-        $targetHeight = $targetWidth;
-        $targetWidth = floor($targetWidth * $ratio);
+        $success = file_put_contents(ROBOT_MEDIA_DIR . $fileName, base64_decode($this->FileURI)) != false;
 
-        $thumb = imagecreatetruecolor($targetWidth, $targetHeight);
-
-        imagecopyresampled(
-            $thumb,
-            $image,
-            0, 0, 0, 0,
-            $targetWidth, $targetHeight,
-            $width, $height
-        );
-
-        if(imagejpeg($thumb, ROBOT_MEDIA_THUMBS_DIR . "$uuid.jpeg"))
+        //if successful, store the file URI
+        if($success)
         {
-            //prep the file to be written to
-            $file = fopen(ROBOT_MEDIA_DIR . "$uuid.jpeg", 'wb');
+            $this->FileURI = $fileName;
 
-            //store if write was successful
-            $success = fwrite($file, base64_decode($this->FileURI));
+            $image = imagecreatefromjpeg(ROBOT_MEDIA_DIR . $fileName);
 
-            fclose($file);
+            $width = getimagesize(ROBOT_MEDIA_DIR . $fileName);
+            $height = $width[1];
+            $width = $width[0];
 
-            //if successful, store the file URI
-            if($success)
-                $this->FileURI = $uuid . '.jpeg';
+            $ratio = $width / $height;
+            $targetWidth = 250;
+            $targetHeight = $targetWidth;
+            $targetWidth = floor($targetWidth * $ratio);
 
-            return $success;
+            $thumb = imagecreatetruecolor($targetWidth, $targetHeight);
+
+            imagecopyresampled(
+                $thumb,
+                $image,
+                0, 0, 0, 0,
+                $targetWidth, $targetHeight,
+                $width, $height
+            );
+
+            $success = imagejpeg($thumb, ROBOT_MEDIA_THUMBS_DIR . $fileName);
         }
 
-        return false;
+        return $success;
     }
 
     /**
