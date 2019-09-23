@@ -163,11 +163,14 @@ class ScoutCardInfoKeys extends LocalTable
     }
 
     /**
-     * @return static[]
+     * Override for the Table class getObjects method
+     * @param string $orderBy column to order objects by
+     * @param string $orderDirection direction to order objects by
+     * @return ScoutCardInfoKeys[]
      */
-    public static function getObjects()
+    public static function getObjects($orderBy = 'SortOrder', $orderDirection = 'ASC')
     {
-        return parent::getObjects('SortOrder', 'ASC');
+        return parent::getObjects($orderBy, $orderDirection);
     }
 
     public function toString()

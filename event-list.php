@@ -20,7 +20,7 @@ $team = Teams::withId(getCoreAccount()->TeamId)
   <body class="mdl-demo mdl-color--grey-100 mdl-color-text--grey-700 mdl-base">
     <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
         <?php
-        $header = new Header($year->toString(), null, null, null, $year, 'admin-year.php?yearId=' . $year->Id);
+        $header = new Header($year->toString(), null, null, null, $year, 'admin.php?yearId=' . $year->Id);
 
         echo $header->toHtml();
         ?>

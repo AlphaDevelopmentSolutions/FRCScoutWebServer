@@ -3,6 +3,7 @@
 class ChecklistItems extends LocalTable
 {
     public $Id;
+    public $YearId;
     public $Title;
     public $Description;
 

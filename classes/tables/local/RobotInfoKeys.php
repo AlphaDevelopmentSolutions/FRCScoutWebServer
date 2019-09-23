@@ -112,11 +112,13 @@ class RobotInfoKeys extends LocalTable
 
     /**
      * Override for the Table class getObjects method
+     * @param string $orderBy column to order objects by
+     * @param string $orderDirection direction to order objects by
      * @return RobotInfoKeys[]
      */
-    public static function getObjects()
+    public static function getObjects($orderBy = 'SortOrder', $orderDirection = 'ASC')
     {
-        return parent::getObjects('SortOrder', 'ASC');
+        return parent::getObjects($orderBy, $orderDirection);
     }
 
     public function toString()

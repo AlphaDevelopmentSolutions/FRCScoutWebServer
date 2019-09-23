@@ -10,7 +10,6 @@ $ajax = new Ajax();
 if(!getUser()->IsAdmin)
     $ajax->error('You must be logged in as an administrator to access this page.');
 
-
 switch ($_POST['action'])
 {
     case 'save':
@@ -24,19 +23,25 @@ switch ($_POST['action'])
         {
             case RobotInfoKeys::class:
 
-                $robotInfoKey = RobotInfoKeys::withProperties($_POST);
+                $robotInfoKey = RobotInfoKeys::withProperties($_POST['data']);
+
+                if(empty($scoutCardInfoKey->YearId))
+                    $ajax->error("Year cannot be empty.");
+
+                if(!ctype_digit($scoutCardInfoKey->YearId))
+                    $ajax->error("Year may only be numeric (0-9).");
 
                 if(empty($robotInfoKey->KeyState))
-                    $ajax->error("Key state cannot be empty.");
+                    $ajax->error("Game state cannot be empty.");
 
                 if(!validAlnum($robotInfoKey->KeyState))
-                    $ajax->error("Key state may only be alpha-numeric (A-Z 0-9).");
+                    $ajax->error("Game state may only be alpha-numeric (A-Z 0-9).");
 
                 if(empty($robotInfoKey->KeyName))
-                    $ajax->error("Key name cannot be empty.");
+                    $ajax->error("Info name cannot be empty.");
 
                 if(!validAlnum($robotInfoKey->KeyName))
-                    $ajax->error("Key name may only be alphanumeric (A-Z 0-9).");
+                    $ajax->error("Info name may only be alphanumeric (A-Z 0-9).");
 
                 if(empty($robotInfoKey->SortOrder))
                     $ajax->error("Sort order cannot be empty.");
@@ -54,19 +59,25 @@ switch ($_POST['action'])
 
             case ScoutCardInfoKeys::class:
 
-                $scoutCardInfoKey = ScoutCardInfoKeys::withProperties($_POST);
+                $scoutCardInfoKey = ScoutCardInfoKeys::withProperties($_POST['data']);
+
+                if(empty($scoutCardInfoKey->YearId))
+                    $ajax->error("Year cannot be empty.");
+
+                if(!ctype_digit($scoutCardInfoKey->YearId))
+                    $ajax->error("Year may only be numeric (0-9).");
 
                 if(empty($scoutCardInfoKey->KeyState))
-                    $ajax->error("Key state cannot be empty.");
+                    $ajax->error("Game state cannot be empty.");
 
                 if(!validAlnum($scoutCardInfoKey->KeyState))
-                    $ajax->error("Key state may only be alpha-numeric (A-Z 0-9).");
+                    $ajax->error("Game state may only be alpha-numeric (A-Z 0-9).");
 
                 if(empty($scoutCardInfoKey->KeyName))
-                    $ajax->error("Key name cannot be empty.");
+                    $ajax->error("Info name cannot be empty.");
 
                 if(!validAlnum($scoutCardInfoKey->KeyName))
-                    $ajax->error("Key name may only be alphanumeric (A-Z 0-9).");
+                    $ajax->error("Info name may only be alphanumeric (A-Z 0-9).");
 
                 if(empty($scoutCardInfoKey->SortOrder))
                     $ajax->error("Sort order cannot be empty.");
@@ -81,10 +92,10 @@ switch ($_POST['action'])
                     $ajax->error("Max value may only be numeric (0-9).");
 
                 if(!ctype_digit($scoutCardInfoKey->NullZeros))
-                    $ajax->error("Null zeros may only be 1 (Yes) or 0 (No).");
+                    $ajax->error("Nullify zeros may only be 1 (Yes) or 0 (No).");
 
                 if($scoutCardInfoKey->NullZeros != 0 && $scoutCardInfoKey->NullZeros != 1)
-                    $ajax->error("Null zeros may only be 1 (Yes) or 0 (No).");
+                    $ajax->error("Nullify zeros may only be 1 (Yes) or 0 (No).");
 
                 if(!ctype_digit($scoutCardInfoKey->IncludeInStats))
                     $ajax->error("Include in stats may only be 1 (Yes) or 0 (No).");
@@ -94,6 +105,26 @@ switch ($_POST['action'])
 
                 if(!ctype_alpha($scoutCardInfoKey->DataType))
                     $ajax->error("Datatype may only be alphanumeric (A-Z 0-9).");
+
+                $validDataType = false;
+
+                switch($scoutCardInfoKey->DataType)
+                {
+                    case DataTypes::BOOL:
+                        $validDataType = true;
+                        break;
+
+                    case DataTypes::TEXT:
+                        $validDataType = true;
+                        break;
+
+                    case DataTypes::INT:
+                        $validDataType = true;
+                        break;
+                }
+
+                if(!$validDataType)
+                    $ajax->error("Invalid datatype");
 
                 if($scoutCardInfoKey->save())
                     $ajax->success("Scout card info saved successfully.");
@@ -105,7 +136,13 @@ switch ($_POST['action'])
 
             case ChecklistItems::class:
 
-                $checklistItem = ChecklistItems::withProperties($_POST);
+                $checklistItem = ChecklistItems::withProperties($_POST['data']);
+
+                if(empty($scoutCardInfoKey->YearId))
+                    $ajax->error("Year cannot be empty.");
+
+                if(!ctype_digit($scoutCardInfoKey->YearId))
+                    $ajax->error("Year may only be numeric (0-9).");
 
                 if(empty($checklistItem->Title))
                     $ajax->error("Title cannot be empty.");
@@ -116,8 +153,8 @@ switch ($_POST['action'])
                 if(empty($checklistItem->Description))
                     $ajax->error("Description cannot be empty.");
 
-                if(!validAlnum($checklistItem->Description))
-                    $ajax->error("Description may only be alphanumeric (A-Z 0-9).");
+                if(!validDescription($checklistItem->Description))
+                    $ajax->error("Description contains invalid characters.");
 
                 if($checklistItem->save())
                     $ajax->success("Checklist info saved successfully.");
@@ -129,7 +166,7 @@ switch ($_POST['action'])
 
             case Users::class:
 
-                $user = Users::withProperties($_POST);
+                $user = Users::withProperties($_POST['data']);
 
                 if(empty($user->FirstName))
                     $ajax->error("First name cannot be empty.");
@@ -143,24 +180,29 @@ switch ($_POST['action'])
                 if(!validAlnum($user->LastName))
                     $ajax->error("Last name may only be alphanumeric (A-Z 0-9).");
 
-                if(empty($user->UserName))
-                    $ajax->error("Username cannot be empty.");
-
-                if(!validAlnum($user->UserName))
-                    $ajax->error("Username may only be alphanumeric (A-Z 0-9).");
-
-                if(!validAlnum($user->Password))
-                    $ajax->error("Password may only be alphanumeric (A-Z 0-9).");
-
-                if(empty($user->Id))
-                    $user->Password = md5($user->Password);
-
-                if($user->IsAdmin != 0 && $user->IsAdmin != 1)
+                if(!empty($user->IsAdmin) && $user->IsAdmin != 0 && $user->IsAdmin != 1)
                     $ajax->error("Admin flag may only be 1 (Yes) or 0 (No).");
 
-                if(!ctype_digit($user->IsAdmin))
-                    $ajax->error("Admin flag may only be numeric (0-9).");
+                if($user->IsAdmin == 1)
+                {
+                    if(empty($user->UserName))
+                        $ajax->error("Username may not be empty.");
 
+                    if(!validAlnum($user->UserName))
+                        $ajax->error("Username may only be alphanumeric (A-Z 0-9).");
+
+                    if(empty($user->Password))
+                        $ajax->error("Password may not be empty.");
+
+                    if(!validAlnum($user->Password))
+                        $ajax->error("Password may only be alphanumeric (A-Z 0-9).");
+                }
+
+                else
+                {
+                    $user->UserName == "";
+                    $user->Password = "";
+                }
 
                 if($user->save())
                     $ajax->success("User saved successfully.");
@@ -172,23 +214,42 @@ switch ($_POST['action'])
 
             case Config::class:
 
-                $config = Config::withProperties($_POST);
-                $prevConfig = Config::withId($config->Id);
+                $configs = Config::getObjects();
 
-                if($config->Key != $prevConfig->Key)
-                    $ajax->error("Key cannot be changed");
+                $data = $_POST['data'];
 
-                if(empty($config->Value))
-                    $ajax->error("Value name cannot be empty.");
+                foreach ($configs as $config)
+                {
+                    switch ($config->Key)
+                    {
+                        case "APP_NAME":
+                            $config->Value = $data['AppName'];
+                            break;
 
-                if(!validAlnum($config->Value))
-                    $ajax->error("Value may only be alpha-numeric (A-Z 0-9).");
+                        case "API_KEY":
+                            $config->Value = $data['ApiKey'];
+                            break;
 
-                if($config->save())
-                    $ajax->success("Config saved successfully.");
+                        case "PRIMARY_COLOR":
+                            $config->Value = $data['PrimaryColor'];
+                            break;
 
-                else
-                    $ajax->error("User failed to save.");
+                        case "PRIMARY_COLOR_CARK":
+                            $config->Value = $data['PrimaryColorDark'];
+                            break;
+                    }
+
+                    if (empty($config->Value))
+                        $ajax->error("Value name cannot be empty.");
+
+                    if (!validAlnum($config->Value))
+                        $ajax->error("Value may only be alpha-numeric (A-Z 0-9).");
+
+                    if (!$config->save())
+                        $ajax->error("User failed to save.");
+                }
+
+                $ajax->success("Config saved successfully.");
 
                 break;
         }
@@ -198,6 +259,7 @@ switch ($_POST['action'])
     case 'delete':
 
         $class = $_POST['class'];
+        $recordId = $_POST['recordId'];
 
         unset($_POST['action']);
         unset($_POST['class']);
@@ -206,7 +268,7 @@ switch ($_POST['action'])
         {
             case RobotInfoKeys::class:
 
-                $robotInfoKey = RobotInfoKeys::withProperties($_POST);
+                $robotInfoKey = RobotInfoKeys::withId($recordId);
 
                 if($robotInfoKey->delete())
                     $ajax->success("Robot info deleted successfully.");
@@ -218,7 +280,7 @@ switch ($_POST['action'])
 
             case ScoutCardInfoKeys::class:
 
-                $scoutCardInfoKey = ScoutCardInfoKeys::withProperties($_POST);
+                $scoutCardInfoKey = ScoutCardInfoKeys::withId($recordId);
 
                 if($scoutCardInfoKey->delete())
                     $ajax->success("Scout card info deleted successfully.");
@@ -230,7 +292,7 @@ switch ($_POST['action'])
 
             case ChecklistItems::class:
 
-                $checklistItem = ChecklistItems::withProperties($_POST);
+                $checklistItem = ChecklistItems::withId($recordId);
 
                 if($checklistItem->delete())
                     $ajax->success("Checklist info deleted successfully.");
@@ -242,7 +304,7 @@ switch ($_POST['action'])
 
             case Users::class:
 
-                $user = Users::withProperties($_POST);
+                $user = Users::withId($recordId);
 
                 if($user->delete())
                     $ajax->success("User deleted successfully.");
@@ -259,4 +321,14 @@ switch ($_POST['action'])
 function validAlnum($text)
 {
     return ctype_alnum(trim(str_replace(' ','', $text)));
+}
+
+function validDescription($text)
+{
+    $text = str_replace(' ','', $text);
+    $text = str_replace('.','', $text);
+    $text = str_replace(',','', $text);
+    $text = str_replace('?','', $text);
+    $text = str_replace('!','', $text);
+    return ctype_alnum(trim($text));
 }

@@ -61,7 +61,7 @@ class Header
                         <a style="color: white; text-decoration: none; margin: 10px;" href="' . URL_PATH . '/account.php">
                             <i class="fas fa-user-circle"></i>
                         </a>
-                        <a style="color: white; text-decoration: none" href="' . URL_PATH . '/' . ((empty($this->SettingsUrl)) ? 'admin-app.php' : $this->SettingsUrl) . '">
+                        <a style="color: white; text-decoration: none" href="' . URL_PATH . '/' . ((empty($this->SettingsUrl)) ? 'admin.php' : $this->SettingsUrl) . '">
                             <i class="fa fa-cog"></i>
                         </a>
                     </div>') .
