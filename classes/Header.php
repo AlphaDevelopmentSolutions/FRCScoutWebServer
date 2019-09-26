@@ -39,7 +39,7 @@ class Header
             '
             <header class="mdl-layout__header mdl-layout__header--scroll mdl-color--primary">
                 <div class="mdl-layout__header-row">
-                    <span class="mdl-layout-title header-title"><a style="text-decoration: none; color: white;" href="' . URL_PATH . '/">' . $this->Title . '</a></span>
+                    <span class="mdl-layout-title header-title"><a style="text-decoration: none; color: white;" href="/">' . $this->Title . '</a></span>
                     <div class="mdl-layout-spacer"></div>' .
             ((!loggedIn()) ?
                     '<form  action="/ajax/login.php" method="post" style="">
@@ -58,10 +58,10 @@ class Header
                         </form>'
                     :
                     '<div style="font-size: 25px;">
-                        <a style="color: white; text-decoration: none; margin: 10px;" href="' . URL_PATH . '/account.php">
+                        <a style="color: white; text-decoration: none; margin: 10px;" href="/account.php">
                             <i class="fas fa-user-circle"></i>
                         </a>
-                        <a style="color: white; text-decoration: none" href="' . URL_PATH . '/' . ((empty($this->SettingsUrl)) ? 'admin.php' : $this->SettingsUrl) . '">
+                        <a style="color: white; text-decoration: none" href="/' . ((empty($this->SettingsUrl)) ? 'admin.php' : $this->SettingsUrl) . '">
                             <i class="fa fa-cog"></i>
                         </a>
                     </div>') .
@@ -92,11 +92,11 @@ class Header
             $html .=
                 '<span class="mdl-layout-title">' . APP_NAME . '</span>
                     <nav class="mdl-navigation">
-                        <a href="' . URL_PATH . '/match-list.php?eventId=' . $this->Event->BlueAllianceId . '" class="mdl-navigation__link">Matches</a>
-                        <a href="' . URL_PATH . '/team-list.php?eventId=' . $this->Event->BlueAllianceId . '" class="mdl-navigation__link">Teams</a>
-                        <a href="' . URL_PATH . '/checklist-item-list.php?eventId=' . $this->Event->BlueAllianceId . '" class="mdl-navigation__link">Checklist</a>
-                        <a href="' . URL_PATH . '/stats.php?eventId=' . $this->Event->BlueAllianceId . '" class="mdl-navigation__link ">Stats</a>
-                        <a href="' . URL_PATH . '/event-list.php?yearId=' . $this->Event->YearId . '" class="mdl-navigation__link ">Events</a>
+                        <a href="/match-list.php?eventId=' . $this->Event->BlueAllianceId . '" class="mdl-navigation__link">Matches</a>
+                        <a href="/team-list.php?eventId=' . $this->Event->BlueAllianceId . '" class="mdl-navigation__link">Teams</a>
+                        <a href="/checklist-item-list.php?eventId=' . $this->Event->BlueAllianceId . '" class="mdl-navigation__link">Checklist</a>
+                        <a href="/stats.php?eventId=' . $this->Event->BlueAllianceId . '" class="mdl-navigation__link ">Stats</a>
+                        <a href="/event-list.php?yearId=' . $this->Event->YearId . '" class="mdl-navigation__link ">Events</a>
                     </nav>';
 
         //or if the year given, add nav drawer
@@ -104,15 +104,15 @@ class Header
             $html .=
                 '<span class="mdl-layout-title">' . APP_NAME . '</span>
                     <nav class="mdl-navigation">
-                        <a href="' . URL_PATH . '/event-list.php?yearId=' . $this->Year->Id . '" class="mdl-navigation__link">Events</a>
-                        <a href="' . URL_PATH . '/year-list.php" class="mdl-navigation__link">Years</a>
+                        <a href="/event-list.php?yearId=' . $this->Year->Id . '" class="mdl-navigation__link">Events</a>
+                        <a href="/year-list.php" class="mdl-navigation__link">Years</a>
                     </nav>';
 
         else
             $html .=
                 '<span class="mdl-layout-title">' . APP_NAME . '</span>
                     <nav class="mdl-navigation">
-                        <a href="' . URL_PATH . '/year-list.php" class="mdl-navigation__link">Years</a>
+                        <a href="/year-list.php" class="mdl-navigation__link">Years</a>
                     </nav>';
 
         $html .=

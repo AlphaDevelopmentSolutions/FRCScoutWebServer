@@ -171,7 +171,7 @@ class Teams extends CoreTable
 
             $html .=
                     '<div style="height: unset">' .
-                    ((empty($robotMedia->FileURI)) ? '' : '<a href="' . URL_PATH . '/team-photos.php?eventId=' . $event->BlueAllianceId . '&teamId=' . $this->Id . '">') .
+                    ((empty($robotMedia->FileURI)) ? '' : '<a href="/team-photos.php?eventId=' . $event->BlueAllianceId . '&teamId=' . $this->Id . '">') .
                         '<div class="team-card-image" style="background-image: url(' . ((empty($robotMedia->FileURI)) ? IMAGES_URL . 'frc_logo.jpg' : ROBOT_MEDIA_THUMBS_URL . $robotMedia->FileURI) . ')"></div>' .
                     ((empty($robotMedia->FileURI)) ? '' : '</a>') .
                     '</div>';
@@ -184,7 +184,7 @@ class Teams extends CoreTable
                             ' . $this->City . ', ' . $this->StateProvince . ', ' . $this->Country .
                         '</div>
                         <div class="mdl-card__actions">
-                            <a href="' . URL_PATH . '/team-matches.php?eventId=' . $event->BlueAllianceId . '&teamId=' . $this->Id . '" class="mdl-button">View</a>
+                            <a href="/team-matches.php?eventId=' . $event->BlueAllianceId . '&teamId=' . $this->Id . '" class="mdl-button">View</a>
                         </div>
                     </div>
                 </section>';

@@ -1,1 +1,1 @@
-<script src="<?php echo URL_PATH ?>/js/material.min.js"></script>
+<script src="<?php echo JS_URL ?>material.min.js"></script>

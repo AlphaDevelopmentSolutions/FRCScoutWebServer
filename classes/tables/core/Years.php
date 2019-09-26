@@ -75,7 +75,7 @@ class Years extends CoreTable
                             ' . date('F j, Y', strtotime($this->StartDate)) . ' - ' . date('F j, Y', strtotime($this->EndDate)) .
                         '</div>
                         <div class="mdl-card__actions">
-                            <a href="' . URL_PATH . '/event-list.php?yearId=' . $this->Id . '" class="mdl-button">View</a>
+                            <a href="/event-list.php?yearId=' . $this->Id . '" class="mdl-button">View</a>
                         </div>
                     </div>
                 </section>';

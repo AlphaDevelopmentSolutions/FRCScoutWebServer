@@ -349,7 +349,7 @@ class Events extends CoreTable
                             .  date('F j', strtotime($this->StartDate)) . ' to ' . date('F j', strtotime($this->EndDate)) .
                         '</div>
                         <div class="mdl-card__actions">
-                            <a href="' . URL_PATH . '/match-list.php?eventId=' . $this->BlueAllianceId . '" class="mdl-button">View</a>
+                            <a href="/match-list.php?eventId=' . $this->BlueAllianceId . '" class="mdl-button">View</a>
                         </div>
                     </div>
                 </section>

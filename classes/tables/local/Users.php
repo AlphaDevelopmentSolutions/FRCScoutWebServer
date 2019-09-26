@@ -53,7 +53,7 @@ class Users extends LocalTable
         $html = '<div style="width: 50%; margin: auto;">
             <div style="height: unset" class="mdl-layout__header-row">
                 <div>
-                    <h1>Hello,</h1>
+                    <h3>Hello,</h3>
                     <h3>' . $this->FirstName . '</h3>
                 </div>
                 <div class="circle-image" style="margin-left:auto; margin-right:0;">

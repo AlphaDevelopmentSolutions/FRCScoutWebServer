@@ -34,7 +34,7 @@ if(coreLoggedIn())
 <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
     <main class="mdl-layout__content homescreen">
         <div class="home-login">
-            <img src="<?php echo URL_PATH ?>/assets/images/app-icon.png" width="200">
+            <img src="<?php echo IMAGES_URL ?>app-icon.png" width="200">
             <div>
                 <form method="post" action="/">
                     <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">

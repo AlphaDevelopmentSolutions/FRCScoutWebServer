@@ -27,9 +27,9 @@ if(!empty($teamId))
     <title><?php echo $match->toString() ?> Overview</title>
     <?php require_once('includes/meta.php') ?>
 
-    <script src="<?php echo URL_PATH ?>/js/Chart.min.js"></script>
-    <link rel="stylesheet" href="<?php echo URL_PATH ?>/css/Chart.min.css">
-    <script src="<?php echo URL_PATH ?>/js/chartjs-plugin-annotation.min.js"></script>
+    <script src="<?php echo JS_URL ?>Chart.min.js"></script>
+    <link rel="stylesheet" href="<?php echo CSS_URL ?>Chart.min.css">
+    <script src="<?php echo JS_URL ?>chartjs-plugin-annotation.min.js"></script>
 </head>
 <body class="mdl-demo mdl-color--grey-100 mdl-color-text--grey-700 mdl-base">
 <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
@@ -105,6 +105,6 @@ if(!empty($teamId))
     </main>
 </div>
 <?php require_once('includes/bottom-scripts.php') ?>
-<script defer src="<?php echo URL_PATH ?>/js/stat-charts.js.php?eventId=<?php echo $event->BlueAllianceId ?>&matchId=<?php echo $match->Key ?>"></script>
+<script defer src="<?php echo JS_URL ?>stat-charts.js.php?eventId=<?php echo $event->BlueAllianceId ?>&matchId=<?php echo $match->Key ?>"></script>
 </body>
 </html>

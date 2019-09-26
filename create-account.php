@@ -7,7 +7,7 @@ require_once(ROOT_DIR . '/classes/Ajax.php');
 <head>
     <title>FRC Scout</title>
     <?php require_once('includes/meta.php') ?>
-    <script src="<?php URL_PATH ?>/js/jscolor.js"></script>
+    <script src="<?php JS_URL ?>/js/jscolor.js"></script>
 </head>
 <body class="mdl-demo mdl-color--grey-100 mdl-color-text--grey-700 mdl-base">
 <div id="demo-toast-example" class="mdl-js-snackbar mdl-snackbar">
@@ -143,7 +143,7 @@ require_once(ROOT_DIR . '/classes/Ajax.php');
     $(document).ready(function()
     {
         //get data from the ajax script
-        $.post('<?php echo ROOT_URL ?>/ajax/autocomplete.php',
+        $.post('/ajax/autocomplete.php',
             {
                 action: 'load_team_list',
                 number: $('#teamNumber').val()
@@ -179,7 +179,7 @@ require_once(ROOT_DIR . '/classes/Ajax.php');
     function createAccount()
     {
         //get data from the ajax script
-        $.post('<?php echo ROOT_URL ?>/ajax/create-account.php',
+        $.post('/ajax/create-account.php',
             {
                 action: 'create',
                 username : $('#username').val(),
