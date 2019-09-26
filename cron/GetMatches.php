@@ -7,7 +7,7 @@ set_time_limit(600);
 
 $database = new Database('core');
 $database->query("delete from matches;");
-$database->close();
+unset($database);
 
 foreach(Events::getObjects() as $event)
 {

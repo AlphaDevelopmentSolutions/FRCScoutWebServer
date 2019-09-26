@@ -8,7 +8,7 @@ set_time_limit(600);
 
 $database = new Database('core');
 $events = $database->query('DELETE FROM event_team_list');
-$database->close();
+unset($database);
 
 foreach(Events::getObjects() as $event)
 {

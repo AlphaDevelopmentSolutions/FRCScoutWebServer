@@ -10,7 +10,7 @@ class Api
     private $STATUS_KEY = 'Status';
     private $RESPONSE_KEY = 'Response';
 
-    function __construct($key)
+    function __construct()
     {
         $this->response = array();
     }

@@ -27,14 +27,6 @@ class Database extends PDO
     }
 
     /**
-     * Destroy this instance to close the database
-     */
-    function __destruct()
-    {
-        unset($this);
-    }
-
-    /**
      * Quotes a param with MySQL approved quotes
      * @param string $string to quote
      * @param int $parameter_type
@@ -53,14 +45,6 @@ class Database extends PDO
     function quoteColumn($column)
     {
         return '`' . $column . '`';
-    }
-
-    /**
-     * Destroys the current instance of this database
-     */
-    function close()
-    {
-        $this->__destruct();
     }
 
     /**

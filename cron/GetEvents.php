@@ -20,7 +20,7 @@ foreach (getEvents() as $eventJson)
 //cleanup duplicates
 $database = new Database();
 $database->query("DELETE event1 FROM events event1, events event2 WHERE event1.Id < event2.Id AND event1.BlueAllianceId = event2.BlueAllianceId;");
-$database->close();
+unset($database);
 
 //echo serialize(getEvents());
 

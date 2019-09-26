@@ -196,7 +196,7 @@ abstract class Table
     {
         $database = new Database((($db == null) ? static::$DB_NAME : $db));
         $results = $database->query($query, $cols, $args);
-        $database->close();
+        unset($database);
 
         return $results;
 
@@ -213,7 +213,7 @@ abstract class Table
     {
         $database = new Database(static::$DB_NAME);
         $id = $database->insertOrUpdate($query, $cols, $args);
-        $database->close();
+        unset($database);
         return $id;
     }
 
@@ -228,7 +228,7 @@ abstract class Table
     {
         $database = new Database(static::$DB_NAME);
         $success = $database->delete($query, $cols, $args);
-        $database->close();
+        unset($database);
 
         return $success;
 

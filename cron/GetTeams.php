@@ -8,7 +8,7 @@ set_time_limit(600);
 
 $database = new Database('core');
 $events = $database->query("DELETE FROM teams");
-$database->close();
+unset($database);
 
 $teamIds = array();
 

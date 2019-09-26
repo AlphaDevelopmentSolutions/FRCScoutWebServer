@@ -113,14 +113,14 @@ switch ($_POST['action'])
         //create the DB
         $db->query($query, $cols);
 
-        $db->close();
+        unset($db);
 
         $db = new Database($dbId);
 
         //create all required tables
         if(importSqlFile($db, '../databases/v' . VERSION . '.sql'))
         {
-            $db->close();
+            unset($db);
 
             define('DB_NAME', $dbId);
 
