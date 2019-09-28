@@ -149,7 +149,7 @@ switch ($_POST['action'])
             $user->FirstName = $adminFirstName;
             $user->LastName = $adminLastName;
             $user->UserName = $adminUsername;
-            $user->Password = md5($adminPassword);
+            $user->Password = password_hash($adminPassword, PASSWORD_ARGON2ID);
             $user->IsAdmin = 1;
             $user->save();
 
@@ -157,7 +157,7 @@ switch ($_POST['action'])
             $account->TeamId = $teamNumber;
             $account->Email = $email;
             $account->Username = $username;
-            $account->Password = sha1($password);
+            $account->Password = password_hash($password, PASSWORD_ARGON2ID);
             $account->DbId = $dbId;
             $account->save();
         }
@@ -173,8 +173,6 @@ switch ($_POST['action'])
  * Import SQL File
  * @param $pdo
  * @param $sqlFile
- * @param null $tablePrefix
- * @param null $InFilePath
  * @return bool
  */
 function importSqlFile($pdo, $sqlFile)

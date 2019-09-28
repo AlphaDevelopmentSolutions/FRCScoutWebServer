@@ -1,5 +1,4 @@
 <?php
-
 if(!empty($_GET))
 {
     if ($_GET['logout'] == 1)

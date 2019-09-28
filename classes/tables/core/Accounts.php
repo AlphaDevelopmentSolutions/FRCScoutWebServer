@@ -19,23 +19,18 @@ class Accounts extends CoreTable
     public static function login($username, $password)
     {
         //create the sql statement
-        $sql = "SELECT * FROM ! WHERE ! = ? AND ! = ? ";
+        $sql = "SELECT * FROM ! WHERE ! = ? LIMIT 1";
         $cols[] = self::$TABLE_NAME;
 
         $cols[] = 'Username';
         $args[] = $username;
 
-        $cols[] = 'Password';
-        $args[] = sha1($password);
-
-
-        $sql .= ' LIMIT 1';
-
         $rows = self::queryRecords($sql, $cols, $args);
 
         foreach ($rows as $row)
         {
-            return self::withProperties($row);
+            if(password_verify($password, $row['Password']))
+                return self::withProperties($row);
         }
     }
 

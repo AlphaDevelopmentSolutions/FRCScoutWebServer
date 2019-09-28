@@ -20,12 +20,10 @@ class Users extends LocalTable
     public function login($userName, $password)
     {
         //create the sql statement
-        $sql = "SELECT * FROM ! WHERE ! = ? AND ! = ? LIMIT 1";
+        $sql = "SELECT * FROM ! WHERE ! = ? LIMIT 1";
         $cols[] = self::$TABLE_NAME;
         $cols[] = 'UserName';
         $args[] = $userName;
-        $cols[] = 'Password';
-        $args[] = md5($password);
 
         $query = self::queryRecords($sql, $cols, $args);
 
@@ -40,8 +38,12 @@ class Users extends LocalTable
             $this->IsAdmin = $response->IsAdmin;
         }
 
+        $success = !empty($response);
 
-        return (!empty($response));
+        if($success)
+            $success = password_verify($password, $response->Password);
+
+        return ($success);
     }
 
     /**

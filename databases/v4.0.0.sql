@@ -20,6 +20,7 @@ CREATE TABLE `checklist_item_results` (
 DROP TABLE IF EXISTS `checklist_items`;
 CREATE TABLE `checklist_items` (
   `Id` int(11) NOT NULL,
+  `YearId` int(11) DEFAULT '2019',
   `Title` varchar(3000) DEFAULT '',
   `Description` varchar(3000) DEFAULT '',
   PRIMARY KEY (`Id`)
@@ -47,8 +48,6 @@ CREATE TABLE `robot_info` (
   `YearId` int(11) DEFAULT '2019',
   `EventId` varchar(45) DEFAULT '',
   `TeamId` int(11) DEFAULT '0',
-  `PropertyState` varchar(1000) DEFAULT '',
-  `PropertyKey` varchar(3000) DEFAULT '',
   `PropertyValue` varchar(3000) DEFAULT '',
   `PropertyKeyId` int(11) DEFAULT NULL,
   PRIMARY KEY (`Id`)
@@ -76,22 +75,11 @@ DROP TABLE IF EXISTS `robot_media`;
 CREATE TABLE `robot_media` (
   `Id` int(11) NOT NULL AUTO_INCREMENT,
   `YearId` int(11) DEFAULT '2019',
+  `EventId` int(11) DEFAULT '',
   `TeamId` int(11) DEFAULT '0',
   `FileURI` varchar(45) DEFAULT '',
   PRIMARY KEY (`Id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=utf8mb4;
-
---
--- Table structure for table `robots`
---
-
-DROP TABLE IF EXISTS `robots`;
-CREATE TABLE `robots` (
-  `Id` int(11) NOT NULL AUTO_INCREMENT,
-  `Name` varchar(45) DEFAULT '',
-  `TeamId` int(11) DEFAULT '0',
-  PRIMARY KEY (`Id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Table structure for table `scout_card_info`
@@ -123,8 +111,8 @@ CREATE TABLE `scout_card_info_keys` (
   `SortOrder` int(11) DEFAULT '1',
   `MinValue` int(11) DEFAULT NULL,
   `MaxValue` int(11) DEFAULT NULL,
-  `NullZeros` int(11) DEFAULT '0',
-  `IncludeInStats` int(11) DEFAULT '0',
+  `NullZeros` BIT(1) DEFAULT b'0',
+  `IncludeInStats` BIT(1) DEFAULT b'0',
   `DataType` enum('INT','BOOL','TEXT') DEFAULT 'INT',
   PRIMARY KEY (`Id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=utf8mb4;
@@ -139,7 +127,7 @@ CREATE TABLE `users` (
   `FirstName` varchar(45) DEFAULT '',
   `LastName` varchar(45) DEFAULT '',
   `UserName` varchar(45) DEFAULT '',
-  `Password` varchar(55) DEFAULT '',
-  `IsAdmin` int(11) DEFAULT '0',
+  `Password` varchar(200) DEFAULT '',
+  `IsAdmin` BIT(1) DEFAULT b'0',
   PRIMARY KEY (`Id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8mb4;

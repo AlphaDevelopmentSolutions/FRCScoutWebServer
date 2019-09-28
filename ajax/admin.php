@@ -196,6 +196,8 @@ switch ($_POST['action'])
 
                     if(!validAlnum($user->Password))
                         $ajax->error("Password may only be alphanumeric (A-Z 0-9).");
+
+                    $user->Password = password_hash($user->Password, PASSWORD_ARGON2ID);
                 }
 
                 else
