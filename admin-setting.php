@@ -343,7 +343,7 @@ interface AdminPanels
                         ApiKey: $('#API_KEY').val(),
                         PrimaryColor: $('#PRIMARY_COLOR').val(),
                         PrimaryColorDark: $('#PRIMARY_COLOR_DARK').val()
-                    }
+                    };
 
                 break;
 
@@ -356,7 +356,7 @@ interface AdminPanels
                         UserName: $('#UserName').val(),
                         Password: $('#Password').val(),
                         IsAdmin: $('#IsAdmin').prop("checked") ? "1" : "0"
-                    }
+                    };
                 break;
 
             case "<?php echo AdminPanels::ROBOT_INFO ?>":
@@ -367,7 +367,7 @@ interface AdminPanels
                         KeyState: $('#KeyState').val(),
                         KeyName: $('#KeyName').val(),
                         SortOrder: $('#SortOrder').val()
-                    }
+                    };
                 break;
 
             case "<?php echo AdminPanels::SCOUT_CARD_INFO ?>":
@@ -383,7 +383,7 @@ interface AdminPanels
                         NullZeros: $('#NullZeros').prop("checked") ? "1" : "0",
                         IncludeInStats: $('#IncludeInStats').prop("checked") ? "1" : "0",
                         DataType: $('#DataType').val()
-                    }
+                    };
                 break;
 
             case "<?php echo AdminPanels::CHECKLIST_INFO ?>":
@@ -393,7 +393,7 @@ interface AdminPanels
                         YearId: $('#YearId').val(),
                         Title: $('#Title').val(),
                         Description: $('#Description').val()
-                    }
+                    };
                 break;
         }
 

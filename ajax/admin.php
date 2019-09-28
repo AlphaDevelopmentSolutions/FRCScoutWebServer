@@ -236,7 +236,7 @@ switch ($_POST['action'])
                             $config->Value = $data['PrimaryColor'];
                             break;
 
-                        case "PRIMARY_COLOR_CARK":
+                        case "PRIMARY_COLOR_DARK":
                             $config->Value = $data['PrimaryColorDark'];
                             break;
                     }
