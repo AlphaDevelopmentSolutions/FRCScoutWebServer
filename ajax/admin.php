@@ -306,13 +306,22 @@ switch ($_POST['action'])
 
             case Users::class:
 
-                $user = Users::withId($recordId);
+                if(sizeof(Users::getObjects()) > 1)
+                {
+                    $user = Users::withId($recordId);
 
-                if($user->delete())
-                    $ajax->success("User deleted successfully.");
+                    if($user->Id == getUser()->Id)
+                        $ajax->error("You can't delete yourself.");
+
+                    if ($user->delete())
+                        $ajax->success("User deleted successfully.");
+
+                    else
+                        $ajax->error("User failed to delete.");
+                }
 
                 else
-                    $ajax->error("User failed to delete.");
+                    $ajax->error("You must have at least 1 user.");
 
                 break;
         }

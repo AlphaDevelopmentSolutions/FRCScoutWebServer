@@ -18,12 +18,16 @@ Primary Colors
   background-color: var(--color-primary) !important;
 }
 
-.mdl-color--primary-dark
+.mdl-color--primary-dark,
+.mdl-button--fab.mdl-button--colored,
+.mdl-switch__ripple-container .mdl-ripple,
+.mdl-switch.is-checked .mdl-switch__track
 {
   background-color: var(--color-primary-dark) !important;
 }
 
-.mdl-button--accent.mdl-button--accent.mdl-button--raised
+.mdl-button--accent.mdl-button--accent.mdl-button--raised,
+.mdl-switch.is-checked .mdl-switch__thumb
 {
   background-color: var(--color-primary) !important;
 }

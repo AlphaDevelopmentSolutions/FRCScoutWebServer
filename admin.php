@@ -96,20 +96,6 @@ $htmlMysqlDatatypes =
         </dialog>
 
         <script>
-            const ACTIONS =
-                {
-                    SAVE: 'SAVE',
-                    EDIT: 'EDIT',
-                    CANCEL: 'CANCEL',
-                    DELETE: 'DELETE'
-                };
-
-            const HTML_MYSQL_DATATYPES =
-                {
-                    varchar: 'text',
-                    int: 'number'
-                };
-
             var dialog;
 
             $(document).ready(function ()
@@ -154,9 +140,9 @@ $htmlMysqlDatatypes =
                         {
                             ?>
                             <tr>
-                                <td class="admin-table-data" changeable="changeable"><?php echo $obj->FirstName ?></td>
-                                <td class="admin-table-data" changeable="changeable"><?php echo $obj->LastName ?></td>
-                                <td class="admin-table-data" changeable="changeable"><?php echo $obj->UserName ?></td>
+                                <td class="admin-table-data"><?php echo $obj->FirstName ?></td>
+                                <td class="admin-table-data"><?php echo $obj->LastName ?></td>
+                                <td class="admin-table-data"><?php echo $obj->UserName ?></td>
                                 <td class="admin-table-data">
                                     <button onclick="deleteRecord($(this).parent().parent()[0], <?php echo $obj->Id ?>)"
                                             class="mdl-button mdl-js-button mdl-js-ripple-effect table-button delete">
@@ -191,9 +177,9 @@ $htmlMysqlDatatypes =
                 {
                     ?>
                     <tr>
-                        <td class="admin-table-data" changeable="changeable"><?php echo $obj->KeyState ?></td>
-                        <td class="admin-table-data" changeable="changeable"><?php echo $obj->KeyName ?></td>
-                        <td class="admin-table-data" changeable="changeable"><?php echo $obj->SortOrder ?></td>
+                        <td class="admin-table-data"><?php echo $obj->KeyState ?></td>
+                        <td class="admin-table-data"><?php echo $obj->KeyName ?></td>
+                        <td class="admin-table-data"><?php echo $obj->SortOrder ?></td>
                         <td class="admin-table-data">
                             <button onclick="deleteRecord($(this).parent().parent()[0], <?php echo $obj->Id ?>)"
                                     class="mdl-button mdl-js-button mdl-js-ripple-effect table-button delete">
@@ -228,9 +214,9 @@ $htmlMysqlDatatypes =
                     {
                         ?>
                         <tr>
-                            <td class="admin-table-data" changeable="changeable"><?php echo $obj->KeyState ?></td>
-                            <td class="admin-table-data" changeable="changeable"><?php echo $obj->KeyName ?></td>
-                            <td class="admin-table-data" changeable="changeable"><?php echo $obj->SortOrder ?></td>
+                            <td class="admin-table-data"><?php echo $obj->KeyState ?></td>
+                            <td class="admin-table-data"><?php echo $obj->KeyName ?></td>
+                            <td class="admin-table-data"><?php echo $obj->SortOrder ?></td>
                             <td class="admin-table-data">
                                 <button onclick="deleteRecord($(this).parent().parent()[0], <?php echo $obj->Id ?>)"
                                         class="mdl-button mdl-js-button mdl-js-ripple-effect table-button delete">
@@ -263,7 +249,7 @@ $htmlMysqlDatatypes =
                     {
                         ?>
                         <tr>
-                            <td class="admin-table-data" changeable="changeable"><?php echo $obj->Title ?></td>
+                            <td class="admin-table-data"><?php echo $obj->Title ?></td>
                             <td class="admin-table-data">
                                 <button onclick="deleteRecord($(this).parent().parent()[0], <?php echo $obj->Id ?>)"
                                         class="mdl-button mdl-js-button mdl-js-ripple-effect table-button delete">
@@ -313,7 +299,6 @@ $htmlMysqlDatatypes =
                         //check success status code
                         if (data['<?php echo Ajax::$STATUS_KEY ?>'] == '<?php echo Ajax::$SUCCESS_STATUS_CODE ?>')
                             $(row).remove();
-
 
                         //display response to screen
                         showToast(data['<?php echo Ajax::$RESPONSE_KEY ?>']);
