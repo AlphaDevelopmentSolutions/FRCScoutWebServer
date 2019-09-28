@@ -145,24 +145,27 @@ require_once(ROOT_DIR . '/classes/Ajax.php');
         //get data from the ajax script
         $.post('/ajax/autocomplete.php',
             {
-                action: 'load_team_list',
-                number: $('#teamNumber').val()
+                action: 'team_list'
             },
             function(data)
             {
-                $( "#teamNumber" ).autocomplete({
-                    source: JSON.parse(data),
-                    select: function( event, ui )
-                    {
-                        event.preventDefault();
-                        var selectedObj = ui.item;
-                        $("#teamNumber").val(selectedObj.number);
+                var parsedData = JSON.parse(data);
 
-                        if($('#appName').val() == "")
-                            $("#appName").val(selectedObj.name + " Scouting");
-                    }
-                });
+                if(parsedData['<?php echo Ajax::$STATUS_KEY ?>'] == '<?php echo Ajax::$SUCCESS_STATUS_CODE ?>')
+                {
+                    $( "#teamNumber" ).autocomplete({
+                        source: parsedData['<?php echo Ajax::$RESPONSE_KEY ?>'],
+                        select: function( event, ui )
+                        {
+                            event.preventDefault();
+                            var selectedObj = ui.item;
+                            $("#teamNumber").val(selectedObj.number);
 
+                            if($('#appName').val() == "")
+                                $("#appName").val(selectedObj.name + " Scouting");
+                        }
+                    });
+                }
             });
 
         //prevent form from submitting, but keep validations
@@ -185,11 +188,7 @@ require_once(ROOT_DIR . '/classes/Ajax.php');
             },
             function(data)
             {
-                console.log(data);
-
                 var parsedData = JSON.parse(data);
-
-                console.log(parsedData['<?php echo Ajax::$RESPONSE_KEY ?>']);
 
                 if(parsedData['<?php echo Ajax::$STATUS_KEY ?>'] == '<?php echo Ajax::$SUCCESS_STATUS_CODE ?>')
                     $(field).val(parsedData['<?php echo Ajax::$RESPONSE_KEY ?>']);

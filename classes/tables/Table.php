@@ -236,17 +236,34 @@ abstract class Table
 
     /**
      * Retrieves objects from the database
+     * @param string $whereStatement where statement to be used in the MySQL fetch
+     * @param array $whereCols cols for $whereStatement
+     * @param array $whereArgs args for $whereStatement
      * @param string $orderBy override if the order by column needs to be changed
      * @param string $orderDirection override if the order direction needs to be changed
      * @return static[]
      */
-    public static function getObjects($orderBy = 'Id', $orderDirection = 'DESC')
+    public static function getObjects($whereStatement = "", $whereCols = array(), $whereArgs = array(), $orderBy = 'Id', $orderDirection = 'DESC')
     {
-        $sql = 'SELECT * FROM ! ORDER BY ! ' . $orderDirection;
+        $sql = 'SELECT * FROM ! ';
         $cols[] = static::$TABLE_NAME;
+        $args = array();
+
+        //populate where args if specified
+        if(!empty($whereStatement))
+        {
+            $sql .= ' WHERE ' . $whereStatement;
+
+            foreach ($whereCols as $whereCol)
+                $cols[] = $whereCol;
+
+            foreach ($whereArgs as $whereArg)
+                $args[] = $whereArg;
+        }
+        $sql .= ' ORDER BY ! ' . $orderDirection;
         $cols[] = $orderBy;
 
-        $rows = self::queryRecords($sql, $cols);
+        $rows = self::queryRecords($sql, $cols, $args);
 
         $response = array();
 

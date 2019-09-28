@@ -51,20 +51,25 @@ var graphData;
 
 $(document).ready(function ()
 {
-    //set the change listener for the search field
-    $('#teamSearch').change(function()
-    {
-        //filter the string and remove empty records
-        teamList = $(this).val().replace(/[^0-9,.]/g,'').split(',').filter(function (el)
-        {
-            return el != null && el != "";
-        });
+    downloadGraphData();
+});
 
-        downloadGraphData();
+/**
+* Gathers teams from chips and searches for results
+ */
+function searchTeams()
+{
+    //reset teamlist array
+    teamList = []
+
+    //gather all id's from the chips
+    $($('#team-chips').children()).each(function(key, value)
+    {
+        teamList.push($(value).children(':first').html());
     });
 
     downloadGraphData();
-});
+}
 
 /**
  * Downloads graph data from the ajax script

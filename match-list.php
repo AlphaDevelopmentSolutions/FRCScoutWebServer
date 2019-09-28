@@ -1,4 +1,5 @@
 <?php
+
 require_once("config.php");
 require_once(ROOT_DIR . "/classes/tables/core/Events.php");
 

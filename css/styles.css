@@ -535,3 +535,8 @@ html, body {
   background-color: var(--default-color-primary);
   color: white;
 }
+
+.team-chip
+{
+  margin: 0 8px;
+}

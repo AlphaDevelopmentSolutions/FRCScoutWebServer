@@ -123,7 +123,7 @@ $htmlMysqlDatatypes =
             switch($panel)
             {
                 case AdminPanels::USERS:
-                    $users = Users::getObjects('FirstName', 'ASC');
+                    $users = Users::getObjects(null, null, null,'FirstName', 'ASC');
                 ?>
                         <tr>
                             <th class="admin-table-header">First Name</th>
@@ -234,7 +234,7 @@ $htmlMysqlDatatypes =
                     break;
 
                 case AdminPanels::CHECKLIST_INFO:
-                    $checklistItems = ChecklistItems::getObjects('Title', 'ASC');
+                    $checklistItems = ChecklistItems::getObjects(null, null, null,'Title', 'ASC');
                     ?>
                         <tr>
                             <th class="admin-table-header">Title</th>

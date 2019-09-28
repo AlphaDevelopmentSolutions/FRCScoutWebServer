@@ -31,7 +31,7 @@ class Events extends CoreTable
      */
     public static function getObjects()
     {
-        return parent::getObjects('StartDate');
+        return parent::getObjects(null, null, null, 'StartDate');
     }
 
     /**

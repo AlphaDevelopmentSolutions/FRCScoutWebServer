@@ -170,7 +170,7 @@ class ScoutCardInfoKeys extends LocalTable
      */
     public static function getObjects($orderBy = 'SortOrder', $orderDirection = 'ASC')
     {
-        return parent::getObjects($orderBy, $orderDirection);
+        return parent::getObjects(null, null, null, $orderBy, $orderDirection);
     }
 
     public function toString()

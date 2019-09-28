@@ -120,7 +120,7 @@ interface AdminPanels
                     <h4 style="padding-left: 40px;">Application Config</h4>
                     <div class="mdl-card__supporting-text">
                 <?php
-                    $configs = Config::getObjects("Id", "ASC");
+                    $configs = Config::getObjects(null, null, null,"Id", "ASC");
 
                     foreach ($configs as $config)
                     {
