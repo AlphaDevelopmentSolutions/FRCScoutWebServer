@@ -118,13 +118,17 @@ require_once(ROOT_DIR . '/classes/Ajax.php');
                         </div>
 
                         <div class="mdl-card__supporting-text" style="margin-bottom: 30px;">
-                            <button onclick="window.location.replace('<?php echo ROOT_URL ?>')" name="save" id="cancel" type="button" class="default-mat-button create-acc-button mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect">
+                            <button onclick="window.location.replace('<?php echo ROOT_URL ?>')" id="cancel" type="button" class="default-mat-button create-acc-button mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect">
                                 Cancel
                             </button>
 
                             <button name="save" id="save" type="submit" class="default-mat-button create-acc-button mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect">
                                 Save
                             </button>
+                            <span hidden id="loading">
+                                Creating account...
+                                <div class="mdl-spinner mdl-spinner--single-color mdl-js-spinner is-active"></div>
+                            </span>
                         </div>
                     </form>
                 </div>
@@ -133,6 +137,8 @@ require_once(ROOT_DIR . '/classes/Ajax.php');
     </main>
 </div>
 <script defer>
+
+    var accountBeingCreated = false;
 
     $(document).ready(function()
     {
@@ -164,11 +170,11 @@ require_once(ROOT_DIR . '/classes/Ajax.php');
         {
             e.preventDefault();
             createAccount();
-        })
+        });
     });
 
     /**
-     *
+     * Generates an API key and populates it into the given field
      */
     function generateApiKey(field)
     {
@@ -198,35 +204,50 @@ require_once(ROOT_DIR . '/classes/Ajax.php');
      */
     function createAccount()
     {
-        //get data from the ajax script
-        $.post('/ajax/signup.php',
-            {
-                action: 'create',
-                username : $('#username').val(),
-                email : $('#email').val(),
-                password : $('#password').val(),
-                retypePassword : $('#retypePassword').val(),
-                adminFirstName : $('#adminFirstName').val(),
-                adminLastName : $('#adminLastName').val(),
-                adminUsername : $('#adminUsername').val(),
-                adminPassword : $('#adminPassword').val(),
-                adminRetypePassword : $('#adminRetypePassword').val(),
-                teamNumber : $('#teamNumber').val(),
-                appName : $('#appName').val(),
-                apiKey : $('#apiKey').val(),
-                primaryColor : $('#primaryColor').val(),
-                secondaryColor : $('#secondaryColor').val()
-            },
-            function(data)
-            {
-                var parsedData = JSON.parse(data);
+        if(!accountBeingCreated)
+        {
+            $('#save').attr('disabled', 'disabled');
+            $('#cancel').attr('disabled', 'disabled');
+            $('#loading').removeAttr('hidden');
 
-                if(parsedData['<?php echo Ajax::$STATUS_KEY ?>'] == '<?php echo Ajax::$SUCCESS_STATUS_CODE ?>')
-                    window.location.replace("<?php echo ROOT_URL ?>?installSuccess=1");
+            accountBeingCreated = true;
 
-                else
-                    showToast(parsedData['<?php echo Ajax::$RESPONSE_KEY ?>']);
-            });
+            //get data from the ajax script
+            $.post('/ajax/signup.php',
+                {
+                    action: 'create',
+                    username : $('#username').val(),
+                    email : $('#email').val(),
+                    password : $('#password').val(),
+                    retypePassword : $('#retypePassword').val(),
+                    adminFirstName : $('#adminFirstName').val(),
+                    adminLastName : $('#adminLastName').val(),
+                    adminUsername : $('#adminUsername').val(),
+                    adminPassword : $('#adminPassword').val(),
+                    adminRetypePassword : $('#adminRetypePassword').val(),
+                    teamNumber : $('#teamNumber').val(),
+                    appName : $('#appName').val(),
+                    apiKey : $('#apiKey').val(),
+                    primaryColor : $('#primaryColor').val(),
+                    secondaryColor : $('#secondaryColor').val()
+                },
+                function(data)
+                {
+                    var parsedData = JSON.parse(data);
+
+                    if(parsedData['<?php echo Ajax::$STATUS_KEY ?>'] == '<?php echo Ajax::$SUCCESS_STATUS_CODE ?>')
+                        window.location.replace("<?php echo ROOT_URL ?>?installSuccess=1");
+
+                    else
+                        showToast(parsedData['<?php echo Ajax::$RESPONSE_KEY ?>']);
+
+                    $('#save').removeAttribute('disabled');
+                    $('#cancel').removeAttribute('disabled');
+                    $('#loading').attr('hidden', 'hidden');
+
+                    accountBeingCreated = false;
+                });
+        }
     }
 
     //remove red from required fields
