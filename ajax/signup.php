@@ -43,10 +43,10 @@ switch ($_POST['action'])
         }
 
         if (empty($password) || !validAlnum($password) || strlen($password) < 6)
-            $ajax->error('Password may only include A-Z 0-9 and must be at least 6 characters.');
+            $ajax->error('Main account passwords may only include A-Z 0-9 and must be at least 6 characters.');
 
         if ($password != $retypePassword)
-            $ajax->error('Passwords do not match.');
+            $ajax->error('Main account passwords do not match.');
 
         if (empty($adminFirstName) || !ctype_alpha($adminFirstName))
             $ajax->error('Admin first name may only include A-Z.');

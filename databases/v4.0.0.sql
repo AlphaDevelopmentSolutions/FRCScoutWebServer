@@ -75,7 +75,7 @@ DROP TABLE IF EXISTS `robot_media`;
 CREATE TABLE `robot_media` (
   `Id` int(11) NOT NULL AUTO_INCREMENT,
   `YearId` int(11) DEFAULT '2019',
-  `EventId` int(11) DEFAULT '',
+  `EventId` varchar(45) DEFAULT '',
   `TeamId` int(11) DEFAULT '0',
   `FileURI` varchar(45) DEFAULT '',
   PRIMARY KEY (`Id`)

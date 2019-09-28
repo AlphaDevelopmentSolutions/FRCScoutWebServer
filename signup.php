@@ -36,22 +36,22 @@ require_once(ROOT_DIR . '/classes/Ajax.php');
                         <strong class="card-section-header">Account Details</strong>
                         <div class="mdl-card__supporting-text">
                             <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                                <input required class="mdl-textfield__input" type="text" name="username" id="username" placeholder=" ">
+                                <input autocomplete="new-password" required class="mdl-textfield__input" type="text" name="username" id="username" placeholder=" ">
                                 <label class="mdl-textfield__label" >Username</label>
                             </div>
 
                             <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                                <input required class="mdl-textfield__input" type="email" name="email" id="email" placeholder=" ">
+                                <input autocomplete="new-password" required class="mdl-textfield__input" type="email" name="email" id="email" placeholder=" ">
                                 <label class="mdl-textfield__label" >Email</label>
                             </div>
 
                             <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                                <input required class="mdl-textfield__input" type="password" name="password" id="password" placeholder=" ">
+                                <input autocomplete="new-password" required class="mdl-textfield__input" type="password" name="password" id="password" placeholder=" ">
                                 <label class="mdl-textfield__label" >Password</label>
                             </div>
 
                             <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                                <input required class="mdl-textfield__input" type="password" name="retypePassword" id="retypePassword" placeholder=" ">
+                                <input autocomplete="new-password" required class="mdl-textfield__input" type="password" name="retypePassword" id="retypePassword" placeholder=" ">
                                 <label class="mdl-textfield__label" >Retype Password</label>
                             </div>
 
@@ -60,27 +60,27 @@ require_once(ROOT_DIR . '/classes/Ajax.php');
                         <strong class="card-section-header">App Admin Account</strong>
                         <div class="mdl-card__supporting-text">
                             <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                                <input required class="mdl-textfield__input" type="text" name="adminFirstName" id="adminFirstName" placeholder=" ">
+                                <input autocomplete="new-password" required class="mdl-textfield__input" type="text" name="adminFirstName" id="adminFirstName" placeholder=" ">
                                 <label class="mdl-textfield__label" >First Name</label>
                             </div>
 
                             <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                                <input required class="mdl-textfield__input" type="text" name="adminLastName" id="adminLastName" placeholder=" ">
+                                <input autocomplete="new-password" required class="mdl-textfield__input" type="text" name="adminLastName" id="adminLastName" placeholder=" ">
                                 <label class="mdl-textfield__label" >Last Name</label>
                             </div>
 
                             <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                                <input required class="mdl-textfield__input" type="text" name="adminUsername" id="adminUsername" placeholder=" ">
+                                <input autocomplete="new-password" required class="mdl-textfield__input" type="text" name="adminUsername" id="adminUsername" placeholder=" ">
                                 <label class="mdl-textfield__label" >Username</label>
                             </div>
 
                             <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                                <input required class="mdl-textfield__input" type="password" name="adminPassword" id="adminPassword" placeholder=" ">
+                                <input autocomplete="new-password" required class="mdl-textfield__input" type="password" name="adminPassword" id="adminPassword" placeholder=" ">
                                 <label class="mdl-textfield__label" >Password</label>
                             </div>
 
                             <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                                <input required class="mdl-textfield__input" type="password" name="adminRetypePassword" id="adminRetypePassword" placeholder=" ">
+                                <input autocomplete="new-password" required class="mdl-textfield__input" type="password" name="adminRetypePassword" id="adminRetypePassword" placeholder=" ">
                                 <label class="mdl-textfield__label" >Retype Password</label>
                             </div>
 
@@ -89,46 +89,40 @@ require_once(ROOT_DIR . '/classes/Ajax.php');
                         <strong class="card-section-header">App Details</strong>
                         <div class="mdl-card__supporting-text">
                             <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                                <input required class="mdl-textfield__input" type="text" name="teamNumber" id="teamNumber" placeholder=" ">
+                                <input  autocomplete="new-password" required class="mdl-textfield__input" type="text" name="teamNumber" id="teamNumber" placeholder=" ">
                                 <label class="mdl-textfield__label" >Team Number</label>
                             </div>
 
                             <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                                <input required class="mdl-textfield__input" type="text" id="appName" placeholder=" ">
+                                <input autocomplete="new-password" required class="mdl-textfield__input" type="text" id="appName" placeholder=" ">
                                 <label class="mdl-textfield__label" >App Name</label>
                             </div>
 
                             <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                                <input required  class="mdl-textfield__input" type="text" id="apiKey" value="<?php echo
-                                sprintf( '%04x%04x%04x%04x%04x%04x%04x%04x',
-                                    mt_rand( 0, 0xffff ),
-                                    mt_rand( 0, 0xffff ),
-                                    mt_rand( 0, 0xffff ),
-                                    mt_rand( 0, 0x0fff ) | 0x4000,
-                                    mt_rand( 0, 0x3fff ) | 0x8000,
-                                    mt_rand( 0, 0xffff ),
-                                    mt_rand( 0, 0xffff ),
-                                    mt_rand( 0, 0xffff )); ?>">
-                                <label class="mdl-textfield__label" >API Key</label>
-                            </div>
-
-                            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                                <input required  class="jscolor mdl-textfield__input" type="text" id="primaryColor" value="03A9F4">
+                                <input autocomplete="new-password" required  class="jscolor mdl-textfield__input" type="text" id="primaryColor" value="03A9F4">
                                 <label class="mdl-textfield__label" >Primary Color</label>
                             </div>
 
                             <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                                <input required  class="jscolor mdl-textfield__input" type="text" id="secondaryColor" value="0288D1">
+                                <input autocomplete="new-password" required  class="jscolor mdl-textfield__input" type="text" id="secondaryColor" value="0288D1">
                                 <label class="mdl-textfield__label" >Secondary Color</label>
                             </div>
+
+                            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label" style="width: 100%;">
+                                <input autocomplete="new-password" required  class="mdl-textfield__input" type="text" id="apiKey" placeholder=" ">
+                                <label class="mdl-textfield__label" >API Key</label>
+                            </div>
+                            <button onclick="generateApiKey($('#apiKey'));" id="generate-api-key" type="button" class="default-mat-button mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect">
+                                Generate Key
+                            </button>
                         </div>
 
                         <div class="mdl-card__supporting-text" style="margin-bottom: 30px;">
-                            <button onclick="window.location.replace('<?php echo ROOT_URL ?>')" name="save" id="save" type="button" class="create-acc-button mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect">
+                            <button onclick="window.location.replace('<?php echo ROOT_URL ?>')" name="save" id="cancel" type="button" class="default-mat-button create-acc-button mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect">
                                 Cancel
                             </button>
 
-                            <button name="save" id="save" type="submit" class="create-acc-button mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect">
+                            <button name="save" id="save" type="submit" class="default-mat-button create-acc-button mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect">
                                 Save
                             </button>
                         </div>
@@ -172,6 +166,32 @@ require_once(ROOT_DIR . '/classes/Ajax.php');
             createAccount();
         })
     });
+
+    /**
+     *
+     */
+    function generateApiKey(field)
+    {
+        //get data from the ajax script
+        $.post('/ajax/generate.php',
+            {
+                action: 'api_key'
+            },
+            function(data)
+            {
+                console.log(data);
+
+                var parsedData = JSON.parse(data);
+
+                console.log(parsedData['<?php echo Ajax::$RESPONSE_KEY ?>']);
+
+                if(parsedData['<?php echo Ajax::$STATUS_KEY ?>'] == '<?php echo Ajax::$SUCCESS_STATUS_CODE ?>')
+                    $(field).val(parsedData['<?php echo Ajax::$RESPONSE_KEY ?>']);
+
+                else
+                    showToast(parsedData['<?php echo Ajax::$RESPONSE_KEY ?>']);
+            });
+    }
 
     /**
      * Creates an account on the web server

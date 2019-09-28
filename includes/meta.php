@@ -11,14 +11,12 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
 <script src="https://code.jquery.com/ui/1.12.0/jquery-ui.min.js"></script>
-
-
+<script src="<?php echo JS_URL ?>material.min.js"></script>
 
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
 
-<link rel="stylesheet" href="<?php echo CSS_URL . 'styles.css'?>">
-<link rel="stylesheet" href="<?php echo CSS_URL . 'colors.css.php'?>">
-
+<link rel="stylesheet" type="text/css" href="<?php echo CSS_URL . 'styles.css'?>">
+<link rel="stylesheet" type="text/css" href="<?php echo CSS_URL . 'colors.css.php'?>">
 
 <link rel="shortcut icon" href="<?php echo IMAGES_URL . 'favicon.ico' ?>">
 <link rel="apple-touch-icon" sizes="180x180" href="<?php echo IMAGES_URL . 'apple-touch-icon.png'?>">
@@ -28,4 +26,5 @@
 <link rel="mask-icon" href="<?php echo IMAGES_URL . 'safari-pinned-tab.svg'?>" color="#5bbad5">
 <meta name="msapplication-TileColor" content="#da532c">
 <meta name="theme-color" content="#ffffff">
+
 

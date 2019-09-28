@@ -14,6 +14,12 @@
  * limitations under the License.
  */
 
+:root
+{
+  --default-color-primary: #03A9F4;
+  --default-color-primary-dark: #0288D1;
+}
+
 html, body {
   font-family: 'Roboto', 'Helvetica', sans-serif;
   margin: 0;
@@ -421,7 +427,7 @@ html, body {
 
 .homescreen
 {
-  background-color: #03A9F4;
+  background-color: var(--default-color-primary);
 }
 
 .home-login
@@ -449,17 +455,17 @@ html, body {
 
 .home-login .mdl-textfield__label:after
 {
-  background-color: #0288D1 !important;
+  background-color: var(--default-color-primary-dark) !important;
 }
 
 .home-login .mdl-textfield__label
 {
-  color: #0288D1 !important;
+  color: var(--default-color-primary-dark) !important;
 }
 
 .home-login button
 {
-  background-color: #0288D1 !important;
+  background-color: var(--default-color-primary-dark) !important;
   margin: 0 auto;
 }
 
@@ -477,10 +483,15 @@ html, body {
 .create-account a
 {
   font-size: 12px;
-  font-weight: 200;
+  font-weight: 300;
   text-decoration: none;
   color: white;
   margin-top: 8px;
+}
+
+.create-account a
+{
+  font-weight: 500;
 }
 
 .create-account a:hover
@@ -516,4 +527,11 @@ html, body {
   bottom: 24px;
   right: 24px;
   z-index: 2;
+}
+
+.default-mat-button,
+.default-mat-button:hover
+{
+  background-color: var(--default-color-primary);
+  color: white;
 }
