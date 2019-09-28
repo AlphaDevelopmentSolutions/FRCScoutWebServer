@@ -32,7 +32,7 @@ if(coreLoggedIn())
     define('DB_NAME', getCoreAccount()->DbId);
 else if($_SERVER['SCRIPT_NAME'] != '/index.php' &&
     $_SERVER['SCRIPT_NAME'] != '/api/api.php' &&
-    $_SERVER['SCRIPT_NAME'] != '/create-account.php' &&
+    $_SERVER['SCRIPT_NAME'] != '/signup.php' &&
     strpos($_SERVER['REQUEST_URI'], 'ajax') === false)
     header('Location: ' . '/');
 

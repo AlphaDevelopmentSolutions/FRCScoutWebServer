@@ -53,7 +53,7 @@ if(coreLoggedIn())
                 </form>
             </div>
             <p class="create-account">
-                New to the platform? <a href="<?php ROOT_URL ?>/create-account.php">Create your teams account!</a>
+                New to the platform? <a href="<?php ROOT_URL ?>/signup.php">Create your teams account!</a>
             </p>
 
         </div>

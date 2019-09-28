@@ -179,7 +179,7 @@ require_once(ROOT_DIR . '/classes/Ajax.php');
     function createAccount()
     {
         //get data from the ajax script
-        $.post('/ajax/create-account.php',
+        $.post('/ajax/signup.php',
             {
                 action: 'create',
                 username : $('#username').val(),
