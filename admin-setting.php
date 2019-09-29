@@ -4,7 +4,6 @@ require_once("config.php");
 if (!getUser()->IsAdmin)
     header('Location: ' . URL_PATH);
 
-require_once(ROOT_DIR . "/classes/Ajax.php");
 require_once(ROOT_DIR . "/classes/tables/core/Years.php");
 require_once(ROOT_DIR . "/classes/tables/local/RobotInfoKeys.php");
 require_once(ROOT_DIR . "/classes/tables/local/ScoutCardInfoKeys.php");
@@ -123,10 +122,11 @@ interface AdminPanels
                     <h4 style="padding-left: 40px;">Application Config</h4>
                     <div class="mdl-card__supporting-text">
                 <?php
-                    $obj = Config::getObjects(null, null, null,"Id", "ASC");
+                    $objs = Config::getObjects(null, null, null,"Id", "ASC");
+                    $obj = new Config();
 
                     $i = 0;
-                    foreach ($obj as $config)
+                    foreach ($objs as $config)
                     {
                         $i++;
                         $titleText = str_replace("_", " ", $config->Key);
@@ -562,10 +562,10 @@ interface AdminPanels
         }
         ?>
                     <div class="card-buttons">
-                        <button onclick="deleteRecord(<?php echo $obj->Id ?>)" class="mdl-button mdl-js-button mdl-js-ripple-effect table-button delete">
+                        <button onclick="deleteRecord('<?php echo get_class($obj); ?>', <?php echo $obj->Id ?>)" class="mdl-button mdl-js-button mdl-js-ripple-effect table-button delete">
                             <span class="button-text">Delete</span>
                         </button>
-                        <button style="width: 95px; margin: 24px;" onclick="saveRecord(<?php echo $obj->Id ?>)" class="center-div-horizontal-inner mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--raised mdl-button--accent">
+                        <button style="width: 95px; margin: 24px;" onclick="saveRecord('<?php echo get_class($obj); ?>', <?php echo $obj->Id ?>)" class="center-div-horizontal-inner mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--raised mdl-button--accent">
                             <span class="button-text">Save</span>
                         </button>
                     </div>
@@ -576,148 +576,31 @@ interface AdminPanels
     </main>
 </div>
 <?php require_once('includes/bottom-scripts.php') ?>
+<script src="<?php echo JS_URL ?>modify-record.js.php"></script>
 <script>
 
-    var href = "<?php echo URL_PATH . "/admin.php?yearId" . $yearId . "&adminPanel=" . $panel ?>"; //get the path to return to once saving is complete
 
-    /**
-     * Saves record to the database
-     * @param id int to use when saving, if -1 it will create a new record
-     */
-    function saveRecord(id)
+    function saveSuccessCallBack(message)
     {
-        var data;
-
-        //assign the data based on what panel we are viewing
-        <?php
-        switch ($panel)
-        {
-            case AdminPanels::CONFIG:
-            ?>
-            data =
-                {
-                    AppName: $('#APP_NAME').val(),
-                    ApiKey: $('#API_KEY').val(),
-                    PrimaryColor: $('#PRIMARY_COLOR').val(),
-                    PrimaryColorDark: $('#PRIMARY_COLOR_DARK').val()
-                };
-            <?php
-            break;
-
-            case AdminPanels::USERS:
-            ?>
-            data =
-                {
-                    Id: id,
-                    FirstName: $('#FirstName').val(),
-                    LastName: $('#LastName').val(),
-                    UserName: $('#UserName').val(),
-                    Password: $('#Password').val(),
-                    IsAdmin: $('#IsAdmin').prop("checked") ? "1" : "0"
-                };
-            <?php
-            break;
-
-            case AdminPanels::ROBOT_INFO_KEYS:
-            ?>
-            data =
-                {
-                    Id: id,
-                    YearId: $('#YearId').val(),
-                    KeyState: $('#KeyState').val(),
-                    KeyName: $('#KeyName').val(),
-                    SortOrder: $('#SortOrder').val()
-                };
-            <?php
-            break;
-
-            case AdminPanels::SCOUT_CARD_INFO_KEYS:
-            ?>
-            data =
-                {
-                    Id: id,
-                    YearId: $('#YearId').val(),
-                    KeyState: $('#KeyState').val(),
-                    KeyName: $('#KeyName').val(),
-                    SortOrder: $('#SortOrder').val(),
-                    MinValue: $('#MinValue').val(),
-                    MaxValue: $('#MaxValue').val(),
-                    NullZeros: $('#NullZeros').prop("checked") ? "1" : "0",
-                    IncludeInStats: $('#IncludeInStats').prop("checked") ? "1" : "0",
-                    DataType: plainTextToDataTypeArray[$('#DataType').val()]
-                };
-            <?php
-            break;
-
-            case AdminPanels::CHECKLIST_INFO:
-            ?>
-            data =
-                {
-                    Id: id,
-                    YearId: $('#YearId').val(),
-                    Title: $('#Title').val(),
-                    Description: $('#Description').val()
-                };
-            <?php
-            break;
-        }
-        ?>
-
-        //call the admin ajax script to modify the records in the database
-        $.post('/ajax/admin.php',
-            {
-                action: 'save',
-                class: '<?php echo $panel ?>',
-                data: data
-            },
-            function (data)
-            {
-                data = JSON.parse(data);
-
-                //check success status code
-                if (data['<?php echo Ajax::$STATUS_KEY ?>'] == '<?php echo Ajax::$SUCCESS_STATUS_CODE ?>' && id === undefined)
-                    location.href = href;
-
-
-                //display response to screen
-                showToast(data['<?php echo Ajax::$RESPONSE_KEY ?>']);
-            });
+        //display response to screen
+        showToast(message);
     }
 
-    /**
-     * Deletes record from database
-     * @param recordId int id of record to delete
-     */
-    function deleteRecord(recordId)
+    function saveFailCallBack(message)
     {
-        //update classes, onclick button and text for the edit button
-        $("#dialog-confirm")
-            .unbind('click')
-            .click(function ()
-            {
-                //call the admin ajax script to modify the records in the database
-                $.post('/ajax/admin.php',
-                    {
-                        action: 'delete',
-                        class: '<?php echo $panel ?>',
-                        recordId: recordId
-                    },
-                    function (data)
-                    {
-                        data = JSON.parse(data);
+        //display response to screen
+        showToast(message);
+    }
 
-                        //check success status code
-                        if (data['<?php echo Ajax::$STATUS_KEY ?>'] == '<?php echo Ajax::$SUCCESS_STATUS_CODE ?>')
-                            location.href = href;
+    function deleteSuccessCallBack(message)
+    {
+        location.href = "<?php echo URL_PATH . "/admin.php?yearId" . $yearId . "&adminPanel=" . $panel ?>";
+    }
 
-                        //display response to screen
-                        showToast(data['<?php echo Ajax::$RESPONSE_KEY ?>']);
-                    });
-
-                dialog.close();
-            });
-
-        dialog.showModal();
+    function deleteFailCallBack(message)
+    {
+        //display response to screen
+        showToast(message);
     }
 
     <?php if($panel == AdminPanels::USERS)
