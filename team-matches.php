@@ -26,16 +26,16 @@ $event = Events::withId($eventId);
     $navBarArray = new NavBarArray();
 
     $navBarLinksArray = new NavBarLinkArray();
-    $navBarLinksArray[] = new NavBarLink('Teams', '/team-list.php?eventId=' . $event->BlueAllianceId);
+    $navBarLinksArray[] = new NavBarLink('Teams', 'team-list.php?eventId=' . $event->BlueAllianceId);
     $navBarLinksArray[] = new NavBarLink('Team ' . $teamId, '', true);
 
     $navBarArray[] = new NavBar($navBarLinksArray);
 
     $navBarLinksArray = new NavBarLinkArray();
-    $navBarLinksArray[] = new NavBarLink('Matches', '/team-matches.php?eventId=' . $event->BlueAllianceId . '&teamId=' . $team->Id, true);
-    $navBarLinksArray[] = new NavBarLink('Robot Info', '/team-robot-info.php?eventId=' . $event->BlueAllianceId . '&teamId=' . $team->Id);
-    $navBarLinksArray[] = new NavBarLink('Photos', '/team-photos.php?eventId=' . $event->BlueAllianceId . '&teamId=' . $team->Id);
-    $navBarLinksArray[] = new NavBarLink('Stats', '/team-stats.php?eventId=' . $event->BlueAllianceId . '&teamId=' . $team->Id);
+    $navBarLinksArray[] = new NavBarLink('Matches', 'team-matches.php?eventId=' . $event->BlueAllianceId . '&teamId=' . $team->Id, true);
+    $navBarLinksArray[] = new NavBarLink('Robot Info', 'team-robot-info.php?eventId=' . $event->BlueAllianceId . '&teamId=' . $team->Id);
+    $navBarLinksArray[] = new NavBarLink('Photos', 'team-photos.php?eventId=' . $event->BlueAllianceId . '&teamId=' . $team->Id);
+    $navBarLinksArray[] = new NavBarLink('Stats', 'team-stats.php?eventId=' . $event->BlueAllianceId . '&teamId=' . $team->Id);
 
     $navBarArray[] = new NavBar($navBarLinksArray);
 
@@ -127,25 +127,10 @@ $event = Events::withId($eventId);
 
     <main class="mdl-layout__content">
 
-        <?php if (loggedIn())
-        {
-            //temp disabled due to new table design
-//                  echo
-//                  '<button onclick="window.location = \'/scout-card.php?eventId=' . $event->BlueAllianceId . '&teamId=' . $team->Id .'\'" style="position: fixed; bottom: 0 !important; margin-bottom: 1em;" class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored mdl-shadow--4dp mdl-color--accent" id="add" data-upgraded=",MaterialButton,MaterialRipple">
-//                      <i class="material-icons" role="presentation">add</i>
-//                      <span class="visuallyhidden">Add</span>
-//                      <span class="mdl-button__ripple-container">
-//                            <span class="mdl-ripple is-animating" style="width: 160.392px; height: 160.392px; transform: translate(-50%, -50%) translate(37px, 28px);"></span>
-//                        </span>
-//                  </button>';
-        }
-
-        ?>
-
         <?php
 
         foreach ($event->getMatches(null, $team) as $match)
-            echo $match->toHtml('/match-stats.php?eventId=' . $match->EventId . '&matchId=' . $match->Key . '&teamId=' . $team->Id, 'View Match Overview', $teamId);
+            echo $match->toHtml('match-stats.php?eventId=' . $match->EventId . '&matchId=' . $match->Key . '&teamId=' . $team->Id, 'View Match Overview', $teamId);
 
 
         ?>

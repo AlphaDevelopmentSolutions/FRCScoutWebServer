@@ -25,7 +25,7 @@ class Header
         $this->NavBar = $NavBar;
         $this->Event = $Event;
         $this->Year = $Year;
-        $this->SettingsUrl = $SettingsUrl;
+        $this->SettingsUrl = URL_PATH . $SettingsUrl;
     }
 
     /**
@@ -61,7 +61,7 @@ class Header
                         <a style="color: white; text-decoration: none; margin: 10px;" href="/account.php">
                             <i class="fas fa-user-circle"></i>
                         </a>
-                        <a style="color: white; text-decoration: none" href="/' . ((empty($this->SettingsUrl)) ? 'admin.php' : $this->SettingsUrl) . '">
+                        <a style="color: white; text-decoration: none" href="' . ((empty($this->SettingsUrl)) ? '/admin.php' : $this->SettingsUrl) . '">
                             <i class="fa fa-cog"></i>
                         </a>
                     </div>') .
@@ -92,11 +92,11 @@ class Header
             $html .=
                 '<span class="mdl-layout-title">' . APP_NAME . '</span>
                     <nav class="mdl-navigation">
-                        <a href="/match-list.php?eventId=' . $this->Event->BlueAllianceId . '" class="mdl-navigation__link">Matches</a>
-                        <a href="/team-list.php?eventId=' . $this->Event->BlueAllianceId . '" class="mdl-navigation__link">Teams</a>
-                        <a href="/checklist-item-list.php?eventId=' . $this->Event->BlueAllianceId . '" class="mdl-navigation__link">Checklist</a>
-                        <a href="/stats.php?eventId=' . $this->Event->BlueAllianceId . '" class="mdl-navigation__link ">Stats</a>
-                        <a href="/event-list.php?yearId=' . $this->Event->YearId . '" class="mdl-navigation__link ">Events</a>
+                        <a href="' . URL_PATH . 'match-list.php?eventId=' . $this->Event->BlueAllianceId . '" class="mdl-navigation__link">Matches</a>
+                        <a href="' . URL_PATH . 'team-list.php?eventId=' . $this->Event->BlueAllianceId . '" class="mdl-navigation__link">Teams</a>
+                        <a href="' . URL_PATH . 'checklist-item-list.php?eventId=' . $this->Event->BlueAllianceId . '" class="mdl-navigation__link">Checklist</a>
+                        <a href="' . URL_PATH . 'stats.php?eventId=' . $this->Event->BlueAllianceId . '" class="mdl-navigation__link ">Stats</a>
+                        <a href="' . URL_PATH . 'event-list.php?yearId=' . $this->Event->YearId . '" class="mdl-navigation__link ">Events</a>
                     </nav>';
 
         //or if the year given, add nav drawer
@@ -104,15 +104,15 @@ class Header
             $html .=
                 '<span class="mdl-layout-title">' . APP_NAME . '</span>
                     <nav class="mdl-navigation">
-                        <a href="/event-list.php?yearId=' . $this->Year->Id . '" class="mdl-navigation__link">Events</a>
-                        <a href="/year-list.php" class="mdl-navigation__link">Years</a>
+                        <a href="' . URL_PATH . 'event-list.php?yearId=' . $this->Year->Id . '" class="mdl-navigation__link">Events</a>
+                        <a href="' . URL_PATH . 'year-list.php" class="mdl-navigation__link">Years</a>
                     </nav>';
 
         else
             $html .=
                 '<span class="mdl-layout-title">' . APP_NAME . '</span>
                     <nav class="mdl-navigation">
-                        <a href="/year-list.php" class="mdl-navigation__link">Years</a>
+                        <a href="' . URL_PATH . 'year-list.php" class="mdl-navigation__link">Years</a>
                     </nav>';
 
         $html .=

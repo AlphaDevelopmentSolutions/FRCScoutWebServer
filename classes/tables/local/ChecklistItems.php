@@ -16,7 +16,7 @@ class ChecklistItems extends LocalTable
      * @param string $orderDirection direction to sort items by
      * @return ChecklistItems[]
      */
-    public static function getObjects($year = null, $orderBy = 'SortOrder', $orderDirection = 'ASC')
+    public static function getObjects($year = null, $orderBy = 'Title', $orderDirection = 'ASC')
     {
         $whereStatment = "";
         $cols = array();

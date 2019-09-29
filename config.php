@@ -51,7 +51,7 @@ foreach(CoreConfig::getObjects() as $config)
 }
 
 define('ROOT_URL', 'https://' . $_SERVER['SERVER_NAME']);
-define('URL_PATH', ROOT_URL . ((coreLoggedIn()) ? '/' . getCoreAccount()->TeamId : ''));
+define('URL_PATH', ((coreLoggedIn()) ? '/' . getCoreAccount()->TeamId . '/' : '/'));
 
 /**
  * MEDIA FILES
@@ -79,10 +79,11 @@ $user = getUser();
 if(false)
 {
     define('APP_NAME', '');
-    define('TEAM_NUMBER', '');
-    define('TEAM_NAME', '');
-    define('BLUE_ALLIANCE_KEY', '');
     define('API_KEY', '');
+    define('PRIMARY_COLOR', '');
+    define('PRIMARY_COLOR_DARK', '');
+
+    define('BLUE_ALLIANCE_KEY', '');
 }
 
 /**

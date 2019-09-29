@@ -28,7 +28,7 @@ interface AdminPanels
 }
 
 if(empty($panel) || empty($yearId))
-    header('Location: ' . URL_PATH . "/admin-setting.php?yearId=" . ((empty($yearId)) ? date('Y') : $yearId) . "&adminPanel=" . AdminPanels::CONFIG);
+    header('Location: ' . URL_PATH . "admin-setting.php?yearId=" . ((empty($yearId)) ? date('Y') : $yearId) . "&adminPanel=" . AdminPanels::CONFIG);
 
 $htmlMysqlDatatypes =
     [
@@ -47,11 +47,11 @@ $htmlMysqlDatatypes =
 <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header" style="min-width: 1200px !important;">
     <?php
     $navBarLinksArray = new NavBarLinkArray();
-    $navBarLinksArray[] = new NavBarLink('Application', '/admin-setting.php?yearId=' . $year->Id . '&adminPanel=' . AdminPanels::CONFIG, ($panel == AdminPanels::CONFIG || empty($panel)));
-    $navBarLinksArray[] = new NavBarLink('Users', '/admin.php?yearId=' . $year->Id . '&adminPanel=' . AdminPanels::USERS, ($panel == AdminPanels::USERS));
-    $navBarLinksArray[] = new NavBarLink('Robot Info', '/admin.php?yearId=' . $year->Id . '&adminPanel=' . AdminPanels::ROBOT_INFO_KEYS, ($panel == AdminPanels::ROBOT_INFO_KEYS));
-    $navBarLinksArray[] = new NavBarLink('Scout Card Info', '/admin.php?yearId=' . $year->Id . '&adminPanel=' . AdminPanels::SCOUT_CARD_INFO_KEYS, ($panel == AdminPanels::SCOUT_CARD_INFO_KEYS));
-    $navBarLinksArray[] = new NavBarLink('Checklist Info', '/admin.php?yearId=' . $year->Id . '&adminPanel=' . AdminPanels::CHECKLIST_INFO, ($panel == AdminPanels::CHECKLIST_INFO));
+    $navBarLinksArray[] = new NavBarLink('Application', 'admin-setting.php?yearId=' . $year->Id . '&adminPanel=' . AdminPanels::CONFIG, ($panel == AdminPanels::CONFIG || empty($panel)));
+    $navBarLinksArray[] = new NavBarLink('Users', 'admin.php?yearId=' . $year->Id . '&adminPanel=' . AdminPanels::USERS, ($panel == AdminPanels::USERS));
+    $navBarLinksArray[] = new NavBarLink('Robot Info', 'admin.php?yearId=' . $year->Id . '&adminPanel=' . AdminPanels::ROBOT_INFO_KEYS, ($panel == AdminPanels::ROBOT_INFO_KEYS));
+    $navBarLinksArray[] = new NavBarLink('Scout Card Info', 'admin.php?yearId=' . $year->Id . '&adminPanel=' . AdminPanels::SCOUT_CARD_INFO_KEYS, ($panel == AdminPanels::SCOUT_CARD_INFO_KEYS));
+    $navBarLinksArray[] = new NavBarLink('Checklist Info', 'admin.php?yearId=' . $year->Id . '&adminPanel=' . AdminPanels::CHECKLIST_INFO, ($panel == AdminPanels::CHECKLIST_INFO));
 
     $navBar = new NavBar($navBarLinksArray);
 

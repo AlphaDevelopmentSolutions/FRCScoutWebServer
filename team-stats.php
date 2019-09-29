@@ -28,16 +28,16 @@ $event = Events::withId($eventId);
     $navBarArray = new NavBarArray();
 
     $navBarLinksArray = new NavBarLinkArray();
-    $navBarLinksArray[] = new NavBarLink('Teams', '/team-list.php?eventId=' . $event->BlueAllianceId);
+    $navBarLinksArray[] = new NavBarLink('Teams', 'team-list.php?eventId=' . $event->BlueAllianceId);
     $navBarLinksArray[] = new NavBarLink('Team ' . $teamId, '', true);
 
     $navBarArray[] = new NavBar($navBarLinksArray);
 
     $navBarLinksArray = new NavBarLinkArray();
-    $navBarLinksArray[] = new NavBarLink('Matches', '/team-matches.php?eventId=' . $event->BlueAllianceId . '&teamId=' . $team->Id);
-    $navBarLinksArray[] = new NavBarLink('Robot Info', '/team-robot-info.php?eventId=' . $event->BlueAllianceId . '&teamId=' . $team->Id);
-    $navBarLinksArray[] = new NavBarLink('Photos', '/team-photos.php?eventId=' . $event->BlueAllianceId . '&teamId=' . $team->Id);
-    $navBarLinksArray[] = new NavBarLink('Stats', '/team-stats.php?eventId=' . $event->BlueAllianceId . '&teamId=' . $team->Id, true);
+    $navBarLinksArray[] = new NavBarLink('Matches', 'team-matches.php?eventId=' . $event->BlueAllianceId . '&teamId=' . $team->Id);
+    $navBarLinksArray[] = new NavBarLink('Robot Info', 'team-robot-info.php?eventId=' . $event->BlueAllianceId . '&teamId=' . $team->Id);
+    $navBarLinksArray[] = new NavBarLink('Photos', 'team-photos.php?eventId=' . $event->BlueAllianceId . '&teamId=' . $team->Id);
+    $navBarLinksArray[] = new NavBarLink('Stats', 'team-stats.php?eventId=' . $event->BlueAllianceId . '&teamId=' . $team->Id, true);
 
     $navBarArray[] = new NavBar($navBarLinksArray);
 

@@ -534,6 +534,44 @@ switch ($_POST['action'])
 
                 break;
 
+            case ChecklistItemResults::class:
+
+                $teamId = $_POST['extraArgs']['teamId'];
+                $eventId = $_POST['extraArgs']['eventId'];
+                $matchId = $_POST['extraArgs']['matchId'];
+
+                if(empty($teamId))
+                    $ajax->error("Team id cannot be empty.");
+
+                if(!ctype_digit($teamId))
+                    $ajax->error("Team id may only be numeric (0-9).");
+
+                if(empty($eventId))
+                    $ajax->error("Event id cannot be empty.");
+
+                if(!ctype_alnum($eventId))
+                    $ajax->error("Event id may only be alpha-numeric (A-Z 0-9).");
+
+                if(empty($matchId))
+                    $ajax->error("Match id cannot be empty.");
+
+                if(!ctype_alnum(str_replace("_", "", $matchId)))
+                    $ajax->error("Match id may only be alpha-numeric (A-Z 0-9).");
+
+                $success = true;
+
+                foreach(ScoutCardInfo::getObjects(null, null, Events::withId($eventId), Matches::withId($matchId), Teams::withId($teamId)) as $robotInfo)
+                    if(!$robotInfo->delete())
+                        $success = false;
+
+                if($success)
+                    $ajax->success("Robot info deleted successfully.");
+
+                else
+                    $ajax->error("Robot info failed to delete.");
+
+                break;
+
                 //endregion
         }
 

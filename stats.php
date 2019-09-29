@@ -26,7 +26,7 @@ $event = Events::withId($eventId);
 <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
     <?php
     $navBarLinksArray = new NavBarLinkArray();
-    $navBarLinksArray[] = new NavBarLink('Stats', '/stats.php?eventId=' . $event->BlueAllianceId, true);
+    $navBarLinksArray[] = new NavBarLink('Stats', 'stats.php?eventId=' . $event->BlueAllianceId, true);
 
     $navBar = new NavBar($navBarLinksArray);
 

@@ -12,6 +12,30 @@ class ChecklistItemResults extends LocalTable implements Status
     public static $TABLE_NAME = 'checklist_item_results';
 
     /**
+     * Retrieves objects from the database
+     * @param Matches | null $match if specified, filters by id
+     * @param string $orderBy order field to sort items by
+     * @param string $orderDirection direction to sort items by
+     * @return ChecklistItemResults[]
+     */
+    public static function getObjects($match = null, $orderBy = 'SortOrder', $orderDirection = 'ASC')
+    {
+        $whereStatment = "";
+        $cols = array();
+        $args = array();
+
+        //if year specified, filter by year
+        if(!empty($match))
+        {
+            $whereStatment .= ((empty($whereStatment)) ? "" : " AND ") . " ! = ? ";
+            $cols[] = 'MatchId';
+            $args[] = $match->Key;
+        }
+
+        return parent::getObjects($whereStatment, $cols, $args, $orderBy, $orderDirection);
+    }
+
+    /**
      * Returns the object once converted into HTML
      * @return string
      */
