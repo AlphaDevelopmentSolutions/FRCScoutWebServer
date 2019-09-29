@@ -87,11 +87,11 @@ function saveRecord(recordType, recordId)
             data = JSON.parse(data);
 
             //check success status code
-            if (data['<?php echo Ajax::$STATUS_KEY ?>'] == '<?php echo Ajax::$SUCCESS_STATUS_CODE ?>' && recordId === undefined)
-                saveSuccessCallBack(data['<?php echo Ajax::$RESPONSE_KEY ?>']);
+            if (data['<?php echo Ajax::$STATUS_KEY ?>'] == '<?php echo Ajax::$SUCCESS_STATUS_CODE ?>')
+                saveSuccessCallback(data['<?php echo Ajax::$RESPONSE_KEY ?>']);
 
             else
-                saveFailCallBack(data['<?php echo Ajax::$RESPONSE_KEY ?>']);
+                saveFailCallback(data['<?php echo Ajax::$RESPONSE_KEY ?>']);
         });
 }
 
@@ -99,8 +99,9 @@ function saveRecord(recordType, recordId)
  * Deletes record from database
  * @param recordType string record type name to save
  * @param recordId int id of record to delete
+ * @param extraArgs array extra args to feed to the admin ajax
  */
-function deleteRecord(recordType, recordId)
+function deleteRecord(recordType, recordId, extraArgs)
 {
     showDialog("Delete Record?", "All records in the database will be deleted. This action cannot be undone.", function ()
     {
@@ -109,18 +110,19 @@ function deleteRecord(recordType, recordId)
             {
                 action: 'delete',
                 class: recordType,
-                recordId: recordId
+                recordId: recordId,
+                extraArgs: extraArgs
             },
             function (data)
             {
                 data = JSON.parse(data);
 
                 //check success status code
-                if (data['<?php echo Ajax::$STATUS_KEY ?>'] == '<?php echo Ajax::$SUCCESS_STATUS_CODE ?>' && recordId === undefined)
-                    deleteSuccessCallBack(data['<?php echo Ajax::$RESPONSE_KEY ?>']);
+                if (data['<?php echo Ajax::$STATUS_KEY ?>'] == '<?php echo Ajax::$SUCCESS_STATUS_CODE ?>')
+                    deleteSuccessCallback(data['<?php echo Ajax::$RESPONSE_KEY ?>']);
 
                 else
-                    deleteFailCallBack(data['<?php echo Ajax::$RESPONSE_KEY ?>']);
+                    deleteFailCallback(data['<?php echo Ajax::$RESPONSE_KEY ?>']);
             });
 
         dialog.close();

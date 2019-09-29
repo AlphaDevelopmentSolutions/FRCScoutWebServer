@@ -232,7 +232,7 @@ $htmlMysqlDatatypes =
         deleteRecord(recordType, recordId);
     }
 
-    function deleteSuccessCallBack(message)
+    function deleteSuccessCallback(message)
     {
         if(pendingRowRemoval.length > 0)
             $(pendingRowRemoval[0]).remove();

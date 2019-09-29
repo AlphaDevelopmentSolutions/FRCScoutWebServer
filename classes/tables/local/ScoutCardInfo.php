@@ -25,8 +25,6 @@ class ScoutCardInfo extends LocalTable
      */
     public static function getObjects($scoutCardInfoKey = null, $year = null, $event = null, $match = null, $team = null, $asNormalArray = false)
     {
-        require_once(ROOT_DIR . '/classes/tables/local/ScoutCardInfoArray.php');
-
         $whereStatment = "";
         $cols = array();
         $args = array();
@@ -73,12 +71,13 @@ class ScoutCardInfo extends LocalTable
 
         $objs = parent::getObjects($whereStatment, $cols, $args);
 
-
         if($asNormalArray)
             return $objs;
 
         else
         {
+            require_once(ROOT_DIR . '/classes/tables/local/ScoutCardInfoArray.php');
+
             $returnArray = new ScoutCardInfoArray();
 
             foreach($objs as $obj)

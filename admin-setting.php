@@ -536,24 +536,24 @@ interface AdminPanels
 <script src="<?php echo JS_URL ?>modify-record.js.php"></script>
 <script>
 
-    function saveSuccessCallBack(message)
+    function saveSuccessCallback(message)
     {
         //display response to screen
         showToast(message);
     }
 
-    function saveFailCallBack(message)
+    function saveFailCallback(message)
     {
         //display response to screen
         showToast(message);
     }
 
-    function deleteSuccessCallBack(message)
+    function deleteSuccessCallback(message)
     {
         location.href = "<?php echo URL_PATH . "/admin.php?yearId" . $yearId . "&adminPanel=" . $panel ?>";
     }
 
-    function deleteFailCallBack(message)
+    function deleteFailCallback(message)
     {
         //display response to screen
         showToast(message);

@@ -1,27 +1,34 @@
 <?php
 require_once("../config.php");
 require_once(ROOT_DIR . "/classes/Ajax.php");
+require_once(ROOT_DIR . "/classes/tables/core/Teams.php");
+require_once(ROOT_DIR . "/classes/tables/core/Events.php");
 require_once(ROOT_DIR . "/classes/tables/local/RobotInfoKeys.php");
 require_once(ROOT_DIR . "/classes/tables/local/ScoutCardInfoKeys.php");
-require_once(ROOT_DIR . "/classes/tables/local/ScoutCardInfo.php");
 require_once(ROOT_DIR . "/classes/tables/local/ChecklistItems.php");
+require_once(ROOT_DIR . "/classes/tables/local/RobotInfo.php");
+require_once(ROOT_DIR . "/classes/tables/local/ScoutCardInfo.php");
+require_once(ROOT_DIR . "/classes/tables/local/ChecklistItemResults.php");
 
 $ajax = new Ajax();
 
 if(!getUser()->IsAdmin)
     $ajax->error('You must be logged in as an administrator to access this page.');
 
+$class = $_POST['class'];
+unset($_POST['class']);
+
+
 switch ($_POST['action'])
 {
     case 'save':
 
-        $class = $_POST['class'];
-
         unset($_POST['action']);
-        unset($_POST['class']);
 
         switch($class)
         {
+
+            //region Non Info Classes
             case RobotInfoKeys::class:
 
                 $robotInfoKey = RobotInfoKeys::withProperties($_POST['data']);
@@ -248,20 +255,154 @@ switch ($_POST['action'])
                 $ajax->success("Config saved successfully.");
 
                 break;
+            //endregion
+
+            //region Info Classes
+
+            case RobotInfo::class:
+
+                $robotInfo = RobotInfo::withProperties($_POST['data']);
+
+                if(empty($robotInfo->YearId))
+                    $ajax->error("Year cannot be empty.");
+
+                if(!ctype_digit($robotInfo->YearId))
+                    $ajax->error("Year may only be numeric (0-9).");
+
+                if(empty($robotInfo->EventId))
+                    $ajax->error("Event id cannot be empty.");
+
+                if(!ctype_alnum($robotInfo->EventId))
+                    $ajax->error("Event id may only be alpha-numeric (A-Z 0-9).");
+
+                if(empty($robotInfo->TeamId))
+                    $ajax->error("Team id cannot be empty.");
+
+                if(!ctype_digit($robotInfo->TeamId))
+                    $ajax->error("Team id may only be numeric (0-9).");
+
+                if(!validAlnum($robotInfo->PropertyValue))
+                    $ajax->error("Value may only be alphanumeric (A-Z 0-9).");
+
+                if(empty($robotInfo->PropertyKeyId))
+                    $ajax->error("Property key id cannot be empty.");
+
+                if(!ctype_digit($robotInfo->PropertyKeyId))
+                    $ajax->error("Property key id may only be numeric (0-9).");
+
+                if($robotInfo->save())
+                    $ajax->success("Robot info saved successfully.");
+
+                else
+                    $ajax->error("Robot info failed to save.");
+
+                break;
+
+            case ScoutCardInfo::class:
+
+                $scoutCardInfo = ScoutCardInfo::withProperties($_POST['data']);
+
+                if(empty($scoutCardInfo->YearId))
+                    $ajax->error("Year cannot be empty.");
+
+                if(!ctype_digit($scoutCardInfo->YearId))
+                    $ajax->error("Year may only be numeric (0-9).");
+
+                if(empty($scoutCardInfo->EventId))
+                    $ajax->error("Event id cannot be empty.");
+
+                if(!ctype_alnum($scoutCardInfo->EventId))
+                    $ajax->error("Event id may only be alpha-numeric (A-Z 0-9).");
+
+                if(empty($scoutCardInfo->MatchId))
+                    $ajax->error("Match id cannot be empty.");
+
+                if(!ctype_alnum($scoutCardInfo->MatchId))
+                    $ajax->error("Match id may only be alpha-numeric (A-Z 0-9).");
+
+                if(empty($scoutCardInfo->TeamId))
+                    $ajax->error("Team id cannot be empty.");
+
+                if(!ctype_digit($scoutCardInfo->TeamId))
+                    $ajax->error("Team id may only be numeric (0-9).");
+
+                if(!validAlnum($scoutCardInfo->CompletedBy))
+                    $ajax->error("Completed by name may only be alpha-numeric (A-Z 0-9).");
+
+                if(!validAlnum($scoutCardInfo->PropertyValue))
+                    $ajax->error("Value may only be alphanumeric (A-Z 0-9).");
+
+                if(empty($scoutCardInfo->PropertyKeyId))
+                    $ajax->error("Property key id cannot be empty.");
+
+                if(!ctype_digit($scoutCardInfo->PropertyKeyId))
+                    $ajax->error("Property key id may only be numeric (0-9).");
+
+                if($scoutCardInfo->save())
+                    $ajax->success("Scout card saved successfully.");
+
+                else
+                    $ajax->error("Scout card failed to save.");
+
+                break;
+
+            case ChecklistItemResults::class:
+
+                $checklistItemResult = ChecklistItemResults::withProperties($_POST['data']);
+
+                if(empty($checklistItemResult->ChecklistItemId))
+                    $ajax->error("Checklist item id cannot be empty.");
+
+                if(!ctype_digit($checklistItemResult->ChecklistItemId))
+                    $ajax->error("Checklist item id may only be numeric (0-9).");
+
+                if(empty($checklistItemResult->MatchId))
+                    $ajax->error("Match id cannot be empty.");
+
+                if(!validAlnum($checklistItemResult->MatchId))
+                    $ajax->error("Match id may only be alpha-numeric (A-Z 0-9).");
+
+                if(empty($checklistItemResult->Status))
+                    $ajax->error("Status cannot be empty.");
+
+                if(!validAlnum($checklistItemResult->Status))
+                    $ajax->error("Status may only be alpha-numeric (A-Z 0-9).");
+
+                if(empty($checklistItemResult->CompletedBy))
+                    $ajax->error("Completed by cannot be empty.");
+
+                if(!validAlnum($checklistItemResult->CompletedBy))
+                    $ajax->error("Completed by may only be alpha-numeric (A-Z 0-9).");
+
+                if(empty($checklistItemResult->CompletedDate))
+                    $ajax->error("Completed date cannot be empty.");
+
+                if(!validDate($checklistItemResult->CompletedDate))
+                    $ajax->error("Invalid Date.");
+
+                if($checklistItemResult->save())
+                    $ajax->success("Scout card saved successfully.");
+
+                else
+                    $ajax->error("Scout card failed to save.");
+
+                break;
+
+            //endregion
         }
 
         break;
 
     case 'delete':
 
-        $class = $_POST['class'];
-        $recordId = $_POST['recordId'];
 
+        $recordId = $_POST['recordId'];
         unset($_POST['action']);
-        unset($_POST['class']);
 
         switch($class)
         {
+            //region Non Info Classes
+
             case RobotInfoKeys::class:
 
                 $robotInfoKey = RobotInfoKeys::withId($recordId);
@@ -318,6 +459,42 @@ switch ($_POST['action'])
                     $ajax->error("You must have at least 1 user.");
 
                 break;
+
+                //endregion
+
+            //region Info Classes
+            case RobotInfo::class:
+
+                $teamId = $_POST['extraArgs']['teamId'];
+                $eventId = $_POST['extraArgs']['eventId'];
+
+                if(empty($teamId))
+                    $ajax->error("Team id cannot be empty.");
+
+                if(!ctype_digit($teamId))
+                    $ajax->error("Team id may only be numeric (0-9).");
+
+                if(empty($eventId))
+                    $ajax->error("Event id cannot be empty.");
+
+                if(!ctype_alnum($eventId))
+                    $ajax->error("Event id may only be alpha-numeric (A-Z 0-9).");
+
+                $success = true;
+
+                foreach(RobotInfo::getObjects(null, null, Events::withId($eventId), Teams::withId($teamId)) as $robotInfo)
+                    if(!$robotInfo->delete())
+                        $success = false;
+
+                if($success)
+                    $ajax->success("Robot info deleted successfully.");
+
+                else
+                    $ajax->error("Robot info failed to delete.");
+
+                break;
+
+                //endregion
         }
 
         break;
@@ -326,6 +503,15 @@ switch ($_POST['action'])
 function validAlnum($text)
 {
     return ctype_alnum(trim(str_replace(' ','', $text)));
+}
+
+function validDate($text)
+{
+    $text = str_replace(' ','', $text);
+    $text = str_replace('-','', $text);
+    $text = str_replace(':','', $text);
+
+    return ctype_alnum(trim($text));
 }
 
 function validDescription($text)

@@ -4,8 +4,7 @@ class RobotInfoArray extends \ArrayObject implements ArrayAccess
 {
 
     /**
-     * Returns the object once converted into HTML
-     * @return string
+     * Displays the object once converted into HTML
      */
     public function toHtml()
     {
@@ -49,51 +48,61 @@ class RobotInfoArray extends \ArrayObject implements ArrayAccess
         foreach($robotInfoArray as $yearInfo)
         {
             //then iterate through each event
-            foreach($yearInfo as $eventInfo)
+            foreach($yearInfo as $eventId => $eventInfo)
             {
                 //for each event, iterate through each team and add the html for a new card
                 foreach($eventInfo as $teamId => $teamInfo)
                 {
-                    $team = Teams::withId($teamId);
-
-                    $html = '
+                    ?>
                         <div class="mdl-layout__tab-panel is-active" id="overview">
                             <section class="section--center mdl-grid mdl-grid--no-spacing mdl-shadow--2dp">
                                 <div class="mdl-card mdl-cell mdl-cell--12-col">
-                                <h4 style="padding-left: 40px;">' . $team->toString() . '</h4>
-                                    <form method="post" action="' . $_SERVER['REQUEST_URI'] . '" id="scout-card-form">';
+                                    <form method="post" action="<?php echo $_SERVER['REQUEST_URI'] ?>">
+
+                    <?php
 
                     //for each of the robot info key states (pre game, post game, auto, teleop etc..) get the value from the team we are currently viewing
                     //and add a new field for it
                     foreach ($robotInfoKeyStates as $stateKey)
                     {
-                        $html .=
-                            '<strong style="padding-left: 40px;">' . $stateKey . '</strong>
-                            <div class="mdl-card__supporting-text">';
+                        ?>
+                                        <div class="mdl-card__supporting-text">
+                                            <h5><?php echo $stateKey ?></h5>
+                                            <hr>
+                        <?php
 
                         foreach (RobotInfoKeys::getKeys($year, null, $stateKey) as $robotInfoKey)
                         {
 
-                            $html .=
-                                '<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                                        <input disabled class="mdl-textfield__input" type="text" value="' . $teamInfo[$stateKey][$robotInfoKey->KeyName] . '" name="completedBy">
-                                        <label class="mdl-textfield__label" >' . $robotInfoKey->KeyName . '</label>
-                                    </div>';
+                            ?>
+                                            <strong class="setting-title"><?php echo $robotInfoKey->KeyName ?></strong>
+                                            <div class="setting-value mdl-textfield mdl-js-textfield mdl-textfield--floating-label" data-upgraded=",MaterialTextfield">
+                                                <input class="mdl-textfield__input" value="<?php echo $teamInfo[$stateKey][$robotInfoKey->KeyName] ?>">
+                                            </div>
+
+                            <?php
                         }
 
-                        $html .=
-                            '</div>';
+                        ?>
+                                        </div>
+                        <?php
                     }
-
-                    $html .=
-                                '</form>
-                                </div>
-                            </section>
-                        </div>';
+                    ?>
+                                    </form>
+                                    <div class="card-buttons">
+                                        <button onclick="deleteRecord('<?php echo RobotInfo::class ?>', -1, {teamId: <?php echo $teamId ?>, eventId: '<?php echo $eventId ?>'})" class="mdl-button mdl-js-button mdl-js-ripple-effect table-button delete">
+                                            <span class="button-text">Delete</span>
+                                        </button>
+                                        <button style="width: 95px; margin: 24px;" onclick="saveRecord('<?php echo RobotInfo::class ?>', <?php echo $teamId ?>)" class="center-div-horizontal-inner mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--raised mdl-button--accent">
+                                            <span class="button-text">Save</span>
+                                        </button>
+                                    </div>
+                                    </div>
+                                </section>
+                            </div>
+                    <?php
                 }
             }
         }
-
-        return $html;
     }
 }

@@ -131,14 +131,27 @@ $event = Events::withId($eventId);
 
         <?php
 
-            $array = RobotInfo::forTeam(null, $event, $team);
+            $array = RobotInfo::getObjects(null, null, $event, $team);
 
-            echo $array->toHtml();
+            $array->toHtml();
         ?>
 
         <?php require_once(INCLUDES_DIR . 'footer.php') ?>
     </main>
 </div>
 <?php require_once(INCLUDES_DIR . 'bottom-scripts.php') ?>
+<?php require_once(INCLUDES_DIR . 'modals.php'); ?>
+<script src="<?php echo JS_URL ?>modify-record.js.php"></script>
+<script>
+    function deleteFailCallback(message)
+    {
+        showToast(message);
+    }
+
+    function deleteSuccessCallback(message)
+    {
+        location.reload();
+    }
+</script>
 </body>
 </html>

@@ -13,52 +13,32 @@ class RobotInfo extends LocalTable
     public static $TABLE_NAME = 'robot_info';
 
     /**
-     * Gets all robot info for a specific team at an event, or in a year
-     * @param Years | null $year if specified, filters by year
-     * @param Events | null $event if specified, filters by event
-     * @param Teams | null $team if specified, filters by team
-     * @return RobotInfoArray
+     * Retrieves objects from the database
+     * @param null | RobotInfo $robotInfo if specified, filters by id
+     * @param Years | null $year if specified, filters by id
+     * @param Events | null $event if specified, filters by id
+     * @param Teams | null $team if specified, filters by id
+     * @param boolean $asNormalArray if true, uses [array] instead of [ScoutCardInfoArray]
+     * @return RobotInfoArray | ScoutCardInfo[]
      */
-    public static function forTeam($year = null, $event = null, $team = null)
+    public static function getObjects($robotInfo = null, $year = null, $event = null, $team = null, $asNormalArray = false)
     {
-        require_once(ROOT_DIR . '/classes/tables/local/RobotInfoKeys.php');
-        require_once(ROOT_DIR . '/classes/tables/local/RobotInfoArray.php');
+        $whereStatment = "";
+        $cols = array();
+        $args = array();
 
-        $robotInfoArray = new RobotInfoArray();
-
-        foreach(RobotInfoKeys::getKeys($year, $event) as $robotInfoKey)
+        //if scout card info key specified, filter by scout card info key
+        if(!empty($robotInfo))
         {
-            foreach(self::loadByTeam($year, $event, $team, $robotInfoKey) as $robotInfo)
-                $robotInfoArray[] = $robotInfo;
+            $whereStatment = "! = ?";
+            $cols[] = "Id";
+            $args[] = $robotInfo->Id;
         }
-
-
-        return $robotInfoArray;
-    }
-
-    /**
-     * Gets all robot info for a specific team at an event, or in a year
-     * @param Years | null $year if specified, filters by year
-     * @param Events | null $event if specified, filters by event
-     * @param Teams | null $team if specified, filters by team
-     * @param RobotInfoKeys $robotInfoKey robot info key to load
-     * @return RobotInfoArray
-     */
-    private static function loadByTeam($year = null, $event = null, $team = null, $robotInfoKey)
-    {
-
-        //create the sql statement
-        $sql = "SELECT * FROM ! WHERE ! = ?";
-        $cols[] = self::$TABLE_NAME;
-
-        $cols[] = 'PropertyKeyId';
-        $args[] = $robotInfoKey->Id;
 
         //if year specified, filter by year
         if(!empty($year))
         {
-            $sql .= " AND ! = ? ";
-
+            $whereStatment .= ((empty($whereStatment)) ? "" : " AND ") . " ! = ? ";
             $cols[] = 'YearId';
             $args[] = $year->Id;
         }
@@ -66,8 +46,7 @@ class RobotInfo extends LocalTable
         //if event specified, filter by event
         if(!empty($event))
         {
-            $sql .= " AND ! = ? ";
-
+            $whereStatment .= ((empty($whereStatment)) ? "" : " AND ") . " ! = ? ";
             $cols[] = 'EventId';
             $args[] = $event->BlueAllianceId;
         }
@@ -75,30 +54,29 @@ class RobotInfo extends LocalTable
         //if team specified, filter by team
         if(!empty($team))
         {
-            $sql .= " AND ! = ? ";
-
+            $whereStatment .= ((empty($whereStatment)) ? "" : " AND ") . " ! = ? ";
             $cols[] = 'TeamId';
             $args[] = $team->Id;
         }
 
-        $rows = self::queryRecords($sql, $cols, $args);
+        $objs = parent::getObjects($whereStatment, $cols, $args);
 
-        $robotInfoArray = new RobotInfoArray();
+        if($asNormalArray)
+            return $objs;
 
-        foreach ($rows as $row)
+        else
         {
-            $robotInfo = new RobotInfo();
-            foreach($row as $key => $value)
-            {
-                if(property_exists($robotInfo, $key))
-                    $robotInfo->$key = $value;
+            require_once(ROOT_DIR . '/classes/tables/local/RobotInfoArray.php');
 
+            $returnArray = new RobotInfoArray();
+
+            foreach($objs as $obj)
+            {
+                $returnArray[] = $obj;
             }
 
-            $robotInfoArray[] = $robotInfo;
+            return $returnArray;
         }
-
-        return $robotInfoArray;
     }
 
     /**
@@ -114,7 +92,7 @@ class RobotInfo extends LocalTable
             require_once(ROOT_DIR . '/classes/tables/core/Events.php');
             require_once(ROOT_DIR . '/classes/tables/core/Years.php');
 
-            $robotInfoArray = self::forTeam(Years::withId($this->YearId), Events::withId($this->EventId), Teams::withId($this->TeamId));
+            $robotInfoArray = self::getObjects(null, Years::withId($this->YearId), Events::withId($this->EventId), Teams::withId($this->TeamId));
 
             $updateRecord = false;
 
