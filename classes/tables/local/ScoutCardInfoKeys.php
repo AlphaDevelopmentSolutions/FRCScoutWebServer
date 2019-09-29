@@ -19,6 +19,30 @@ class ScoutCardInfoKeys extends LocalTable
     public $DataType;
 
     public static $TABLE_NAME = 'scout_card_info_keys';
+
+    /**
+     * Retrieves objects from the database
+     * @param Years | null $year if specified, filters by id
+     * @param string $orderBy order field to sort items by
+     * @param string $orderDirection direction to sort items by
+     * @return ScoutCardInfoKeys[]
+     */
+    public static function getObjects($year = null, $orderBy = 'SortOrder', $orderDirection = 'ASC')
+    {
+        $whereStatment = "";
+        $cols = array();
+        $args = array();
+
+        //if year specified, filter by year
+        if(!empty($year))
+        {
+            $whereStatment .= ((empty($whereStatment)) ? "" : " AND ") . " ! = ? ";
+            $cols[] = 'YearId';
+            $args[] = $year->Id;
+        }
+
+        return parent::getObjects($whereStatment, $cols, $args, $orderBy, $orderDirection);
+    }
     
     /**
      * Gets and returns all keys from the database
@@ -101,40 +125,6 @@ class ScoutCardInfoKeys extends LocalTable
     }
 
     /**
-     * Override for the Table class save function
-     * Ensures all records associated with this key are updated before saving
-     * @return bool
-     */
-    public function save()
-    {
-        if(!empty($this->Id))
-        {
-            require_once(ROOT_DIR . '/classes/tables/local/ScoutCardInfo.php');
-
-            $currScoutCardInfokey = RobotInfoKeys::withId($this->Id);
-
-            //create the sql statement
-            $sql = "UPDATE ! SET ! = ? WHERE ! = ? AND ! = ?";
-            $cols[] = ScoutCardInfo::$TABLE_NAME;
-
-            //Set
-            $cols[] = 'PropertyKeyId';
-            $args[] = $this->Id;
-
-            //Where
-            $cols[] = 'YearId';
-            $args[] = $currScoutCardInfokey->YearId;
-
-            $cols[] = 'PropertyKeyId';
-            $args[] = $currScoutCardInfokey->Id;
-
-            self::insertOrUpdateRecords($sql, $cols, $args);
-        }
-
-        return parent::save();
-    }
-
-    /**
      * Override for the Table class delete function
      * Ensures all records associated with this key are deleted before deletion
      * @return bool
@@ -160,17 +150,6 @@ class ScoutCardInfoKeys extends LocalTable
         }
 
         return parent::delete();
-    }
-
-    /**
-     * Override for the Table class getObjects method
-     * @param string $orderBy column to order objects by
-     * @param string $orderDirection direction to order objects by
-     * @return ScoutCardInfoKeys[]
-     */
-    public static function getObjects($orderBy = 'SortOrder', $orderDirection = 'ASC')
-    {
-        return parent::getObjects(null, null, null, $orderBy, $orderDirection);
     }
 
     public function toString()

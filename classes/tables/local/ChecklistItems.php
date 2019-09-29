@@ -10,6 +10,30 @@ class ChecklistItems extends LocalTable
     protected static $TABLE_NAME = 'checklist_items';
 
     /**
+     * Retrieves objects from the database
+     * @param Years | null $year if specified, filters by id
+     * @param string $orderBy order field to sort items by
+     * @param string $orderDirection direction to sort items by
+     * @return ChecklistItems[]
+     */
+    public static function getObjects($year = null, $orderBy = 'SortOrder', $orderDirection = 'ASC')
+    {
+        $whereStatment = "";
+        $cols = array();
+        $args = array();
+
+        //if year specified, filter by year
+        if(!empty($year))
+        {
+            $whereStatment .= ((empty($whereStatment)) ? "" : " AND ") . " ! = ? ";
+            $cols[] = 'YearId';
+            $args[] = $year->Id;
+        }
+
+        return parent::getObjects($whereStatment, $cols, $args, $orderBy, $orderDirection);
+    }
+
+    /**
      * Override for the Table class delete function
      * Ensures all records associated with this key are deleted before deletion
      * @return bool

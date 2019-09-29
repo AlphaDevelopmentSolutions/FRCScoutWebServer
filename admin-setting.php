@@ -141,12 +141,6 @@ interface AdminPanels
                     }
                     ?>
                     </div>
-
-                     <div style="text-align: right">
-                        <button style="width: 95px; margin: 24px;" onclick="saveRecord(-1)" class="center-div-inner mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--raised mdl-button--accent">
-                            <span class="button-text">Save</span>
-                        </button>
-                    </div>
                     <?php
                 break;
 
@@ -181,12 +175,6 @@ interface AdminPanels
                             </div>
                         </div>
                     </div>
-
-                    <div style="text-align: right">
-                        <button style="width: 95px; margin: 24px;" onclick="saveRecord(<?php echo $obj->Id ?>)" class="center-div-inner mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--raised mdl-button--accent">
-                            <span class="button-text">Save</span>
-                        </button>
-                    </div>
                 <?php
                 break;
 
@@ -211,12 +199,6 @@ interface AdminPanels
                         <div class="setting-value mdl-textfield mdl-js-textfield mdl-textfield--floating-label" data-upgraded=",MaterialTextfield">
                             <input class="mdl-textfield__input" type="number" value="<?php echo $obj->SortOrder ?>" name="SortOrder" id="SortOrder">
                         </div>
-                    </div>
-
-                    <div style="text-align: right">
-                        <button style="width: 95px; margin: 24px;" onclick="saveRecord(<?php echo $obj->Id ?>)" class="center-div-inner mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--raised mdl-button--accent">
-                            <span class="button-text">Save</span>
-                        </button>
                     </div>
                         <?php
                     break;
@@ -287,14 +269,6 @@ interface AdminPanels
                             </div>
                         </div>
                     </div>
-                    <div style="text-align: right">
-                        <button onclick="deleteRecord(<?php echo $obj->Id ?>)" class="mdl-button mdl-js-button mdl-js-ripple-effect table-button delete">
-                            <span class="button-text">Delete</span>
-                        </button>
-                        <button style="width: 95px; margin: 24px;" onclick="saveRecord(<?php echo $obj->Id ?>)" class="center-div-inner mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--raised mdl-button--accent">
-                            <span class="button-text">Save</span>
-                        </button>
-                    </div>
                         <?php
                     break;
 
@@ -317,16 +291,18 @@ interface AdminPanels
                                 <label class="mdl-textfield__label" for="Description"></label>
                             </div>
                         </div>
-                        <div style="text-align: right">
-                            <button style="width: 95px; margin: 24px;" onclick="saveRecord(<?php echo $obj->Id ?>)" class="center-div-inner mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--raised mdl-button--accent">
-                                <span class="button-text">Save</span>
-                            </button>
-                        </div>
                     <?php
                     break;
         }
-
         ?>
+                    <div style="text-align: right">
+                        <button onclick="deleteRecord(<?php echo $obj->Id ?>)" class="mdl-button mdl-js-button mdl-js-ripple-effect table-button delete">
+                            <span class="button-text">Delete</span>
+                        </button>
+                        <button style="width: 95px; margin: 24px;" onclick="saveRecord(<?php echo $obj->Id ?>)" class="center-div-inner mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--raised mdl-button--accent">
+                            <span class="button-text">Save</span>
+                        </button>
+                    </div>
                 </div>
             </section>
         </div>

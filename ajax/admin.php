@@ -26,10 +26,10 @@ switch ($_POST['action'])
 
                 $robotInfoKey = RobotInfoKeys::withProperties($_POST['data']);
 
-                if(empty($scoutCardInfoKey->YearId))
+                if(empty($robotInfoKey->YearId))
                     $ajax->error("Year cannot be empty.");
 
-                if(!ctype_digit($scoutCardInfoKey->YearId))
+                if(!ctype_digit($robotInfoKey->YearId))
                     $ajax->error("Year may only be numeric (0-9).");
 
                 if(empty($robotInfoKey->KeyState))
@@ -125,10 +125,10 @@ switch ($_POST['action'])
 
                 $checklistItem = ChecklistItems::withProperties($_POST['data']);
 
-                if(empty($scoutCardInfoKey->YearId))
+                if(empty($checklistItem->YearId))
                     $ajax->error("Year cannot be empty.");
 
-                if(!ctype_digit($scoutCardInfoKey->YearId))
+                if(!ctype_digit($checklistItem->YearId))
                     $ajax->error("Year may only be numeric (0-9).");
 
                 if(empty($checklistItem->Title))

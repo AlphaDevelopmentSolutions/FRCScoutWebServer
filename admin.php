@@ -122,7 +122,6 @@ $htmlMysqlDatatypes =
             switch($panel)
             {
                 case AdminPanels::USERS:
-                    $users = Users::getObjects(null, null, null,'FirstName', 'ASC');
                 ?>
                         <tr>
                             <th class="admin-table-header">First Name</th>
@@ -135,7 +134,7 @@ $htmlMysqlDatatypes =
                         <tbody>
 
                         <?php
-                        foreach ($users as $obj)
+                        foreach (Users::getObjects(null, null, null,'FirstName', 'ASC') as $obj)
                         {
                             ?>
                             <tr>
@@ -159,7 +158,6 @@ $htmlMysqlDatatypes =
                     break;
 
                 case AdminPanels::ROBOT_INFO_KEYS:
-                    $robotInfoKeys = RobotInfoKeys::getObjects('SortOrder', 'ASC');
                 ?>
                         <tr>
                             <th class="admin-table-header">Game State</th>
@@ -172,7 +170,7 @@ $htmlMysqlDatatypes =
                 <tbody>
 
                 <?php
-                foreach ($robotInfoKeys as $obj)
+                foreach (RobotInfoKeys::getObjects($year, 'SortOrder', 'ASC') as $obj)
                 {
                     ?>
                     <tr>
@@ -196,7 +194,6 @@ $htmlMysqlDatatypes =
                 break;
 
                 case AdminPanels::SCOUT_CARD_INFO_KEYS:
-                    $scoutCardInfos = ScoutCardInfoKeys::getObjects('SortOrder', 'ASC');
                     ?>
                     <tr>
                         <th class="admin-table-header">Game State</th>
@@ -209,7 +206,7 @@ $htmlMysqlDatatypes =
                     <tbody>
 
                     <?php
-                    foreach ($scoutCardInfos as $obj)
+                    foreach (ScoutCardInfoKeys::getObjects($year, 'SortOrder', 'ASC') as $obj)
                     {
                         ?>
                         <tr>
@@ -233,7 +230,7 @@ $htmlMysqlDatatypes =
                     break;
 
                 case AdminPanels::CHECKLIST_INFO:
-                    $checklistItems = ChecklistItems::getObjects(null, null, null,'Title', 'ASC');
+                    $checklistItems = ChecklistItems::getObjects($year, 'Title', 'ASC');
                     ?>
                         <tr>
                             <th class="admin-table-header">Title</th>
@@ -269,7 +266,7 @@ $htmlMysqlDatatypes =
                 </tbody>
             </table>
         </div>
-        <button onclick="location.href  = '<?php echo ROOT_URL ?>/admin-setting.php?yearId=2019&adminPanel=<?php echo $panel ?>&settingId=-1';" class="settings-fab mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored">
+        <button onclick="location.href  = '<?php echo ROOT_URL ?>/admin-setting.php?yearId=<?php echo $year->Id ?>&adminPanel=<?php echo $panel ?>&settingId=-1';" class="settings-fab mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored">
             <i class="material-icons">add</i>
         </button>
         <?php require_once('includes/footer.php') ?>

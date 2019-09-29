@@ -14,17 +14,17 @@ class ScoutCardInfo extends LocalTable
     public static $TABLE_NAME = 'scout_card_info';
 
     /**
+     * Retrieves objects from the database
      * @param null | ScoutCardInfoKeys $scoutCardInfoKey if specified, filters by id
      * @param Years | null $year if specified, filters by id
      * @param Events | null $event if specified, filters by id
      * @param Matches | null $match if specified, filters by id
      * @param Teams | null $team if specified, filters by id
      * @param boolean $asNormalArray if true, uses [array] instead of [ScoutCardInfoArray]
-     * @return ScoutCardInfoArray
+     * @return ScoutCardInfoArray | ScoutCardInfo[]
      */
     public static function getObjects($scoutCardInfoKey = null, $year = null, $event = null, $match = null, $team = null, $asNormalArray = false)
     {
-        require_once(ROOT_DIR . '/classes/tables/local/ScoutCardInfoKeys.php');
         require_once(ROOT_DIR . '/classes/tables/local/ScoutCardInfoArray.php');
 
         $whereStatment = "";
@@ -71,14 +71,23 @@ class ScoutCardInfo extends LocalTable
             $args[] = $team->Id;
         }
 
-        $scoutCardInfoArray = (($asNormalArray) ? array() : new ScoutCardInfoArray());
+        $objs = parent::getObjects($whereStatment, $cols, $args);
 
-        foreach(parent::getObjects($whereStatment, $cols, $args) as $scoutCardInfo)
+
+        if($asNormalArray)
+            return $objs;
+
+        else
         {
-            $scoutCardInfoArray[] = $scoutCardInfo;
-        }
+            $returnArray = new ScoutCardInfoArray();
 
-        return $scoutCardInfoArray;
+            foreach($objs as $obj)
+            {
+                $returnArray[] = $obj;
+            }
+
+            return $returnArray;
+        }
     }
 
     /**

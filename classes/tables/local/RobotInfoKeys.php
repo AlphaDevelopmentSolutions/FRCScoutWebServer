@@ -9,6 +9,30 @@ class RobotInfoKeys extends LocalTable
     public $SortOrder;
 
     public static $TABLE_NAME = 'robot_info_keys';
+
+    /**
+     * Retrieves objects from the database
+     * @param Years | null $year if specified, filters by id
+     * @param string $orderBy order field to sort items by
+     * @param string $orderDirection direction to sort items by
+     * @return RobotInfoKeys[]
+     */
+    public static function getObjects($year = null, $orderBy = 'SortOrder', $orderDirection = 'ASC')
+    {
+        $whereStatment = "";
+        $cols = array();
+        $args = array();
+
+        //if year specified, filter by year
+        if(!empty($year))
+        {
+            $whereStatment .= ((empty($whereStatment)) ? "" : " AND ") . " ! = ? ";
+            $cols[] = 'YearId';
+            $args[] = $year->Id;
+        }
+
+        return parent::getObjects($whereStatment, $cols, $args, $orderBy, $orderDirection);
+    }
     
     /**
      * Gets and returns all keys from the database
@@ -49,40 +73,6 @@ class RobotInfoKeys extends LocalTable
     }
 
     /**
-     * Override for the Table class save function
-     * Ensures all records associated with this key are updated before saving
-     * @return bool
-     */
-    public function save()
-    {
-        if(!empty($this->Id))
-        {
-            require_once(ROOT_DIR . '/classes/tables/local/RobotInfo.php');
-
-            $currRobotInfoKey = RobotInfoKeys::withId($this->Id);
-
-            //create the sql statement
-            $sql = "UPDATE ! SET ! = ? WHERE ! = ? AND ! = ?";
-            $cols[] = RobotInfo::$TABLE_NAME;
-
-            //Set
-            $cols[] = 'PropertyKeyId';
-            $args[] = $this->PropertyKeyId;
-
-            //Where
-            $cols[] = 'YearId';
-            $args[] = $currRobotInfoKey->YearId;
-
-            $cols[] = 'PropertyKeyId';
-            $args[] = $currRobotInfoKey->PropertyKeyId;
-
-            self::insertOrUpdateRecords($sql, $cols, $args);
-        }
-
-        return parent::save();
-    }
-
-    /**
      * Override for the Table class delete function
      * Ensures all records associated with this key are deleted before deletion
      * @return bool
@@ -108,17 +98,6 @@ class RobotInfoKeys extends LocalTable
         }
 
         return parent::delete();
-    }
-
-    /**
-     * Override for the Table class getObjects method
-     * @param string $orderBy column to order objects by
-     * @param string $orderDirection direction to order objects by
-     * @return RobotInfoKeys[]
-     */
-    public static function getObjects($orderBy = 'SortOrder', $orderDirection = 'ASC')
-    {
-        return parent::getObjects(null, null, null, $orderBy, $orderDirection);
     }
 
     public function toString()
