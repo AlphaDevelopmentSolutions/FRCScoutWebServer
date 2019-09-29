@@ -17,7 +17,7 @@ if(!empty($matchId))
 <!doctype html>
 <html lang="en">
 <head>
-    <?php require_once('includes/meta.php') ?>
+    <?php require_once(INCLUDES_DIR . 'meta.php') ?>
     <title>Checklist Item Results<?php echo ((!empty($match)) ? ' - ' . $match->toString() : '') ?></title>
 </head>
 <body class="mdl-demo mdl-color--grey-100 mdl-color-text--grey-700 mdl-base">
@@ -62,9 +62,9 @@ if(!empty($matchId))
 
         ?>
 
-        <?php require_once('includes/footer.php') ?>
+        <?php require_once(INCLUDES_DIR . 'footer.php') ?>
     </main>
 </div>
-<?php require_once('includes/bottom-scripts.php') ?>
+<?php require_once(INCLUDES_DIR . 'bottom-scripts.php') ?>
 </body>
 </html>

@@ -25,7 +25,7 @@ if(!empty($teamId))
 <head>
 
     <title><?php echo $match->toString() ?> Overview</title>
-    <?php require_once('includes/meta.php') ?>
+    <?php require_once(INCLUDES_DIR . 'meta.php') ?>
 
     <script src="<?php echo JS_URL ?>Chart.min.js"></script>
     <link rel="stylesheet" href="<?php echo CSS_URL ?>Chart.min.css">
@@ -101,10 +101,10 @@ if(!empty($teamId))
             ?>
         </div>
 
-        <?php require_once('includes/footer.php') ?>
+        <?php require_once(INCLUDES_DIR . 'footer.php') ?>
     </main>
 </div>
-<?php require_once('includes/bottom-scripts.php') ?>
+<?php require_once(INCLUDES_DIR . 'bottom-scripts.php') ?>
 <script defer src="<?php echo JS_URL ?>stat-charts.js.php?eventId=<?php echo $event->BlueAllianceId ?>&matchId=<?php echo $match->Key ?>"></script>
 </body>
 </html>

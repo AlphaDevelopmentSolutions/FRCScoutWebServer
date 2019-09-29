@@ -41,7 +41,7 @@ $htmlMysqlDatatypes =
 <html lang="en">
 <head>
     <title>Admin Page</title>
-    <?php require_once('includes/meta.php') ?>
+    <?php require_once(INCLUDES_DIR . 'meta.php') ?>
 </head>
 <body class="mdl-demo mdl-color--grey-100 mdl-color-text--grey-700 mdl-base">
 <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header" style="min-width: 1200px !important;">
@@ -61,59 +61,6 @@ $htmlMysqlDatatypes =
     ?>
 
     <main class="mdl-layout__content">
-
-        <div id="demo-toast-example" class="mdl-js-snackbar mdl-snackbar">
-            <div class="mdl-snackbar__text"></div>
-            <button class="mdl-snackbar__action" type="button"></button>
-        </div>
-
-        <script>
-            var snackbarContainer = document.querySelector('#demo-toast-example');
-
-
-            function showToast(message)
-            {
-                'use strict';
-                var data = {message: message};
-                snackbarContainer.MaterialSnackbar.showSnackbar(data);
-            }
-        </script>
-
-        <dialog class="mdl-dialog" style="width: 500px;">
-            <h3 class="mdl-dialog__title" style="font-size: 20px;">Delete Record?</h3>
-            <div class="mdl-dialog__content">
-                <p>
-                    All records in the database will be deleted. This action cannot be undone.
-                </p>
-            </div>
-            <div class="mdl-dialog__actions">
-                <button id="dialog-confirm" type="button" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--raised mdl-button--accent confirm">
-                    Delete
-                </button>
-                <button id="dialog-cancel" type="button" class="mdl-button">Cancel</button>
-            </div>
-        </dialog>
-
-        <script>
-            var dialog;
-
-            $(document).ready(function ()
-            {
-                dialog = document.querySelector('dialog');
-                if (!dialog.showModal)
-                {
-                    dialogPolyfill.registerDialog(dialog);
-                }
-
-                $('#dialog-cancel').click(function ()
-                {
-                    $('#dialog-confirm').unbind('click');
-                    dialog.close();
-                });
-
-            });
-        </script>
-
         <div class="admin-table-wrapper">
             <table width="95%" align="center" style="table-layout: fixed;  white-space: unset"
                    class="mdl-data-table mdl-js-data-table mdl-shadow--2dp">
@@ -142,7 +89,7 @@ $htmlMysqlDatatypes =
                                 <td class="admin-table-data"><?php echo $obj->LastName ?></td>
                                 <td class="admin-table-data"><?php echo $obj->UserName ?></td>
                                 <td class="admin-table-data">
-                                    <button onclick="deleteRecord($(this).parent().parent()[0], <?php echo $obj->Id ?>)"
+                                    <button onclick="deleteRecordOverride($(this).parent().parent()[0], '<?php echo get_class($obj) ?>', <?php echo $obj->Id ?>)"
                                             class="mdl-button mdl-js-button mdl-js-ripple-effect table-button delete">
                                         <span class="button-text">Delete</span>
                                     </button>
@@ -178,7 +125,7 @@ $htmlMysqlDatatypes =
                         <td class="admin-table-data"><?php echo $obj->KeyName ?></td>
                         <td class="admin-table-data"><?php echo $obj->SortOrder ?></td>
                         <td class="admin-table-data">
-                            <button onclick="deleteRecord($(this).parent().parent()[0], <?php echo $obj->Id ?>)"
+                            <button onclick="deleteRecordOverride($(this).parent().parent()[0], '<?php echo get_class($obj) ?>', <?php echo $obj->Id ?>)"
                                     class="mdl-button mdl-js-button mdl-js-ripple-effect table-button delete">
                                 <span class="button-text">Delete</span>
                             </button>
@@ -214,7 +161,7 @@ $htmlMysqlDatatypes =
                             <td class="admin-table-data"><?php echo $obj->KeyName ?></td>
                             <td class="admin-table-data"><?php echo $obj->SortOrder ?></td>
                             <td class="admin-table-data">
-                                <button onclick="deleteRecord($(this).parent().parent()[0], <?php echo $obj->Id ?>)"
+                                <button onclick="deleteRecordOverride($(this).parent().parent()[0], '<?php echo get_class($obj) ?>', <?php echo $obj->Id ?>)"
                                         class="mdl-button mdl-js-button mdl-js-ripple-effect table-button delete">
                                     <span class="button-text">Delete</span>
                                 </button>
@@ -247,7 +194,7 @@ $htmlMysqlDatatypes =
                         <tr>
                             <td class="admin-table-data"><?php echo $obj->Title ?></td>
                             <td class="admin-table-data">
-                                <button onclick="deleteRecord($(this).parent().parent()[0], <?php echo $obj->Id ?>)"
+                                <button onclick="deleteRecordOverride($(this).parent().parent()[0], '<?php echo get_class($obj) ?>', <?php echo $obj->Id ?>)"
                                         class="mdl-button mdl-js-button mdl-js-ripple-effect table-button delete">
                                     <span class="button-text">Delete</span>
                                 </button>
@@ -269,46 +216,28 @@ $htmlMysqlDatatypes =
         <button onclick="location.href  = '<?php echo ROOT_URL ?>/admin-setting.php?yearId=<?php echo $year->Id ?>&adminPanel=<?php echo $panel ?>&settingId=-1';" class="settings-fab mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored">
             <i class="material-icons">add</i>
         </button>
-        <?php require_once('includes/footer.php') ?>
+        <?php require_once(INCLUDES_DIR . 'footer.php') ?>
     </main>
 </div>
-<?php require_once('includes/bottom-scripts.php') ?>
+<?php require_once(INCLUDES_DIR . 'bottom-scripts.php') ?>
+<?php require_once(INCLUDES_DIR . 'modals.php'); ?>
+<script src="<?php echo JS_URL ?>modify-record.js.php"></script>
 <script>
 
-    /**
-     * Deletes record from database
-     * @param recordId int id of record to delete
-     */
-    function deleteRecord(row, recordId)
+    var pendingRowRemoval = [];
+
+    function deleteRecordOverride(row, recordType, recordId)
     {
-        //update classes, onclick button and text for the edit button
-        $("#dialog-confirm")
-            .unbind('click')
-            .click(function ()
-            {
-                //call the admin ajax script to modify the records in the database
-                $.post('/ajax/admin.php',
-                    {
-                        action: 'delete',
-                        class: '<?php echo $panel ?>',
-                        recordId: recordId
-                    },
-                    function (data)
-                    {
-                        data = JSON.parse(data);
+        pendingRowRemoval.push($(row));
+        deleteRecord(recordType, recordId);
+    }
 
-                        //check success status code
-                        if (data['<?php echo Ajax::$STATUS_KEY ?>'] == '<?php echo Ajax::$SUCCESS_STATUS_CODE ?>')
-                            $(row).remove();
+    function deleteSuccessCallBack(message)
+    {
+        if(pendingRowRemoval.length > 0)
+            $(pendingRowRemoval[0]).remove();
 
-                        //display response to screen
-                        showToast(data['<?php echo Ajax::$RESPONSE_KEY ?>']);
-                    });
-
-                dialog.close();
-            });
-
-        dialog.showModal();
+        showToast(message);
     }
 
 </script>

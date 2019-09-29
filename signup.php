@@ -6,26 +6,11 @@ require_once(ROOT_DIR . '/classes/Ajax.php');
 <html lang="en">
 <head>
     <title>FRC Scout</title>
-    <?php require_once('includes/meta.php') ?>
+    <?php require_once(INCLUDES_DIR . 'meta.php') ?>
     <script src="<?php JS_URL ?>/js/jscolor.js"></script>
 </head>
 <body class="mdl-demo mdl-color--grey-100 mdl-color-text--grey-700 mdl-base">
-<div id="demo-toast-example" class="mdl-js-snackbar mdl-snackbar">
-    <div class="mdl-snackbar__text"></div>
-    <button class="mdl-snackbar__action" type="button"></button>
-</div>
-
-<script>
-    var snackbarContainer = document.querySelector('#demo-toast-example');
-
-
-    function showToast(message)
-    {
-        'use strict';
-        var data = {message: message};
-        snackbarContainer.MaterialSnackbar.showSnackbar(data);
-    }
-</script>
+<?php require_once(INCLUDES_DIR . 'modals.php'); ?>
 <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
     <main class="mdl-layout__content homescreen">
         <div class="mdl-layout__tab-panel is-active" id="overview">
@@ -360,7 +345,7 @@ require_once(ROOT_DIR . '/classes/Ajax.php');
 
 </script>
 
-<?php require_once('includes/bottom-scripts.php') ?>
+<?php require_once(INCLUDES_DIR . 'bottom-scripts.php') ?>
 </body>
 </html>
 

@@ -11,7 +11,7 @@ $event = Events::withId($eventId);
 <!doctype html>
 <html lang="en">
 <head>
-    <?php require_once('includes/meta.php') ?>
+    <?php require_once(INCLUDES_DIR . 'meta.php') ?>
     <title>Matches</title>
 </head>
 <body class="mdl-demo mdl-color--grey-100 mdl-color-text--grey-700 mdl-base">
@@ -35,9 +35,9 @@ $event = Events::withId($eventId);
 
         ?>
 
-        <?php require_once('includes/footer.php') ?>
+        <?php require_once(INCLUDES_DIR . 'footer.php') ?>
     </main>
 </div>
-<?php require_once('includes/bottom-scripts.php') ?>
+<?php require_once(INCLUDES_DIR . 'bottom-scripts.php') ?>
 </body>
 </html>

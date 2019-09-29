@@ -30,7 +30,7 @@ interface AdminPanels
 <html lang="en">
 <head>
     <title>Admin Page</title>
-    <?php require_once('includes/meta.php') ?>
+    <?php require_once(INCLUDES_DIR . 'meta.php') ?>
 </head>
 <body class="mdl-demo mdl-color--grey-100 mdl-color-text--grey-700 mdl-base">
 <script>
@@ -55,58 +55,7 @@ interface AdminPanels
 
     <main class="mdl-layout__content">
 
-        <div id="demo-toast-example" class="mdl-js-snackbar mdl-snackbar">
-            <div class="mdl-snackbar__text"></div>
-            <button class="mdl-snackbar__action" type="button"></button>
-        </div>
-
-        <script>
-            var snackbarContainer = document.querySelector('#demo-toast-example');
-
-
-            function showToast(message)
-            {
-                'use strict';
-                var data = {message: message};
-                snackbarContainer.MaterialSnackbar.showSnackbar(data);
-            }
-        </script>
-
-        <dialog class="mdl-dialog" style="width: 500px;">
-            <h3 class="mdl-dialog__title" style="font-size: 20px;">Delete Record?</h3>
-            <div class="mdl-dialog__content">
-                <p>
-                    All records in the database will be deleted. This action cannot be undone.
-                </p>
-            </div>
-            <div class="mdl-dialog__actions">
-                <button id="dialog-confirm" type="button"
-                        class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--raised mdl-button--accent confirm">
-                    Delete
-                </button>
-                <button id="dialog-cancel" type="button" class="mdl-button">Cancel</button>
-            </div>
-        </dialog>
-
-        <script>
-
-            var dialog;
-
-            $(document).ready(function ()
-            {
-                dialog = document.querySelector('dialog');
-                if (!dialog.showModal)
-                {
-                    dialogPolyfill.registerDialog(dialog);
-                }
-
-                $('#dialog-cancel').click(function ()
-                {
-                    $('#dialog-confirm').unbind('click');
-                    dialog.close();
-                });
-            });
-        </script>
+        <?php require_once(INCLUDES_DIR . 'modals.php'); ?>
 
         <div class="mdl-layout__tab-panel is-active" id="overview" style="overflow: visible;">
             <section class="section--center mdl-grid mdl-grid--no-spacing mdl-shadow--2dp">
@@ -562,9 +511,17 @@ interface AdminPanels
         }
         ?>
                     <div class="card-buttons">
-                        <button onclick="deleteRecord('<?php echo get_class($obj); ?>', <?php echo $obj->Id ?>)" class="mdl-button mdl-js-button mdl-js-ripple-effect table-button delete">
-                            <span class="button-text">Delete</span>
-                        </button>
+                        <?php
+                        if(get_class($obj) != Config::class)
+                        {
+                            ?>
+                            <button onclick="deleteRecord('<?php echo get_class($obj); ?>', <?php echo $obj->Id ?>)"
+                                    class="mdl-button mdl-js-button mdl-js-ripple-effect table-button delete">
+                                <span class="button-text">Delete</span>
+                            </button>
+                            <?php
+                        }
+                        ?>
                         <button style="width: 95px; margin: 24px;" onclick="saveRecord('<?php echo get_class($obj); ?>', <?php echo $obj->Id ?>)" class="center-div-horizontal-inner mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--raised mdl-button--accent">
                             <span class="button-text">Save</span>
                         </button>
@@ -572,13 +529,12 @@ interface AdminPanels
                 </div>
             </section>
         </div>
-        <?php require_once('includes/footer.php') ?>
+        <?php require_once(INCLUDES_DIR . 'footer.php') ?>
     </main>
 </div>
-<?php require_once('includes/bottom-scripts.php') ?>
+<?php require_once(INCLUDES_DIR . 'bottom-scripts.php') ?>
 <script src="<?php echo JS_URL ?>modify-record.js.php"></script>
 <script>
-
 
     function saveSuccessCallBack(message)
     {

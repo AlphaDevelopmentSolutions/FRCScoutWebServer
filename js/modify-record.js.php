@@ -102,32 +102,27 @@ function saveRecord(recordType, recordId)
  */
 function deleteRecord(recordType, recordId)
 {
-    //update classes, onclick button and text for the edit button
-    $("#dialog-confirm")
-        .unbind('click')
-        .click(function ()
-        {
-            //call the admin ajax script to modify the records in the database
-            $.post('/ajax/admin.php',
-                {
-                    action: 'delete',
-                    class: recordType,
-                    recordId: recordId
-                },
-                function (data)
-                {
-                    data = JSON.parse(data);
+    showDialog("Delete Record?", "All records in the database will be deleted. This action cannot be undone.", function ()
+    {
+        //call the admin ajax script to modify the records in the database
+        $.post('/ajax/admin.php',
+            {
+                action: 'delete',
+                class: recordType,
+                recordId: recordId
+            },
+            function (data)
+            {
+                data = JSON.parse(data);
 
-                    //check success status code
-                    if (data['<?php echo Ajax::$STATUS_KEY ?>'] == '<?php echo Ajax::$SUCCESS_STATUS_CODE ?>' && recordId === undefined)
-                        deleteSuccessCallBack(data['<?php echo Ajax::$RESPONSE_KEY ?>']);
+                //check success status code
+                if (data['<?php echo Ajax::$STATUS_KEY ?>'] == '<?php echo Ajax::$SUCCESS_STATUS_CODE ?>' && recordId === undefined)
+                    deleteSuccessCallBack(data['<?php echo Ajax::$RESPONSE_KEY ?>']);
 
-                    else
-                        deleteFailCallBack(data['<?php echo Ajax::$RESPONSE_KEY ?>']);
-                });
+                else
+                    deleteFailCallBack(data['<?php echo Ajax::$RESPONSE_KEY ?>']);
+            });
 
-            dialog.close();
-        });
-
-    dialog.showModal();
+        dialog.close();
+    });
 }

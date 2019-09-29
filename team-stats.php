@@ -17,7 +17,7 @@ $event = Events::withId($eventId);
 <html lang="en">
 <head>
     <title><?php echo $team->Id . ' - ' . $team->Name ?> - Stats</title>
-    <?php require_once('includes/meta.php') ?>
+    <?php require_once(INCLUDES_DIR . 'meta.php') ?>
     <script src="<?php echo JS_URL ?>Chart.min.js"></script>
     <link rel="stylesheet" href="<?php echo CSS_URL ?>Chart.min.css">
     <script src="<?php echo JS_URL ?>chartjs-plugin-annotation.min.js"></script>
@@ -174,10 +174,10 @@ $event = Events::withId($eventId);
             </div>
         </div>
 
-        <?php require_once('includes/footer.php') ?>
+        <?php require_once(INCLUDES_DIR . 'footer.php') ?>
     </main>
 </div>
-<?php require_once('includes/bottom-scripts.php') ?>
+<?php require_once(INCLUDES_DIR . 'bottom-scripts.php') ?>
 <script defer src="<?php echo JS_URL ?>stat-charts.js.php?eventId=<?php echo $event->BlueAllianceId ?>"></script>
 <script defer src="<?php echo JS_URL ?>get-opr.js"></script>
 </body>

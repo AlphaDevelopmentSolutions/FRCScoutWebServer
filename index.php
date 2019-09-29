@@ -27,7 +27,7 @@ if(coreLoggedIn())
 <html lang="en">
 <head>
     <title>FRC Scout</title>
-    <?php require_once('includes/meta.php') ?>
+    <?php require_once(INCLUDES_DIR . 'meta.php') ?>
 </head>
 <body class="mdl-demo mdl-color--grey-100 mdl-color-text--grey-700 mdl-base">
 <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
@@ -65,21 +65,9 @@ if(!empty($_GET))
     if($_GET['installSuccess'] == 1)
     {
         ?>
-        <div id="demo-toast-example" class="mdl-js-snackbar mdl-snackbar">
-            <div class="mdl-snackbar__text"></div>
-            <button class="mdl-snackbar__action" type="button"></button>
-        </div>
+        <?php require_once(INCLUDES_DIR . 'modals.php'); ?>
 
         <script>
-            var snackbarContainer = document.querySelector('#demo-toast-example');
-
-            function showToast(message)
-            {
-                'use strict';
-                var data = {message: message};
-                snackbarContainer.MaterialSnackbar.showSnackbar(data);
-            }
-
             $(document).ready(function()
             {
                showToast('Install Successful. You may now login with your credentials.'); 
@@ -90,7 +78,7 @@ if(!empty($_GET))
 }
 
 ?>
-<?php require_once('includes/bottom-scripts.php') ?>
+<?php require_once(INCLUDES_DIR . 'bottom-scripts.php') ?>
 </body>
 </html>
 
