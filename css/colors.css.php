@@ -18,6 +18,11 @@ Primary Colors
   background-color: var(--color-primary) !important;
 }
 
+.mdl-button
+{
+    color: var(--color-primary);
+}
+
 .mdl-color--primary-dark,
 .mdl-button--fab.mdl-button--colored,
 .mdl-switch__ripple-container .mdl-ripple,

@@ -395,7 +395,6 @@ html, body {
 .table-button
 {
   font-weight: 600;
-  color: var(--color-primary-dark);
 }
 
 .admin-table-field

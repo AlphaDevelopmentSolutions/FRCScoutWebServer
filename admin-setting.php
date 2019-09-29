@@ -81,11 +81,11 @@ interface AdminPanels
                 </p>
             </div>
             <div class="mdl-dialog__actions">
-                <button id="dialog-cancel" type="button" class="mdl-button">Cancel</button>
                 <button id="dialog-confirm" type="button"
                         class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--raised mdl-button--accent confirm">
                     Delete
                 </button>
+                <button id="dialog-cancel" type="button" class="mdl-button">Cancel</button>
             </div>
         </dialog>
 
@@ -123,9 +123,9 @@ interface AdminPanels
                     <h4 style="padding-left: 40px;">Application Config</h4>
                     <div class="mdl-card__supporting-text">
                 <?php
-                    $configs = Config::getObjects(null, null, null,"Id", "ASC");
+                    $obj = Config::getObjects(null, null, null,"Id", "ASC");
 
-                    foreach ($configs as $config)
+                    foreach ($obj as $config)
                     {
                         $titleText = str_replace("_", " ", $config->Key);
                         $titleText = strtolower($titleText);
@@ -151,40 +151,39 @@ interface AdminPanels
                 break;
 
                 case AdminPanels::USERS:
-                    $user = Users::withId($settingId)
-
+                    $obj = Users::withId($settingId);
                 ?>
                     <h4 style="padding-left: 40px;">User Settings</h4>
                     <div class="mdl-card__supporting-text">
                         <strong class="setting-title">First Name</strong>
                         <div class="setting-value mdl-textfield mdl-js-textfield mdl-textfield--floating-label" data-upgraded=",MaterialTextfield">
-                            <input class="mdl-textfield__input" type="text" value="<?php echo $user->FirstName ?>" name="FirstName" id="FirstName">
+                            <input class="mdl-textfield__input" type="text" value="<?php echo $obj->FirstName ?>" name="FirstName" id="FirstName">
                         </div>
                         <strong class="setting-title">Last Name</strong>
                         <div class="setting-value mdl-textfield mdl-js-textfield mdl-textfield--floating-label" data-upgraded=",MaterialTextfield">
-                            <input class="mdl-textfield__input" type="text" value="<?php echo $user->LastName ?>" name="LastName" id="LastName">
+                            <input class="mdl-textfield__input" type="text" value="<?php echo $obj->LastName ?>" name="LastName" id="LastName">
                         </div>
                         <strong class="setting-title">Admin Account</strong>
                         <div class="setting-value mdl-textfield mdl-js-textfield mdl-textfield--floating-label" data-upgraded=",MaterialTextfield">
                             <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" for="IsAdmin">
-                                <input type="checkbox" name="IsAdmin" id="IsAdmin" class="mdl-switch__input" <?php if($user->IsAdmin == 1) echo "checked" ?>
+                                <input type="checkbox" name="IsAdmin" id="IsAdmin" class="mdl-switch__input" <?php if($obj->IsAdmin == 1) echo "checked" ?>
                                 <span class="mdl-switch__label"></span>
                             </label>
                         </div>
-                        <div id="hideable-data" <?php echo $user->IsAdmin == 1 ? "" : "hidden" ?>>
+                        <div id="hideable-data" <?php echo $obj->IsAdmin == 1 ? "" : "hidden" ?>>
                             <strong class="setting-title">Username</strong>
                             <div class="setting-value mdl-textfield mdl-js-textfield mdl-textfield--floating-label" data-upgraded=",MaterialTextfield">
-                                <input autocomplete="new-password" class="mdl-textfield__input" type="text" value="<?php echo $user->UserName ?>" name="UserName" id="UserName" <?php echo $user->IsAdmin == 1 ? "" : "disabled" ?>>
+                                <input autocomplete="new-password" class="mdl-textfield__input" type="text" value="<?php echo $obj->UserName ?>" name="UserName" id="UserName" <?php echo $obj->IsAdmin == 1 ? "" : "disabled" ?>>
                             </div>
                             <strong class="setting-title">Password</strong>
                             <div class="setting-value mdl-textfield mdl-js-textfield mdl-textfield--floating-label" data-upgraded=",MaterialTextfield">
-                                <input autocomplete="new-password"  class="mdl-textfield__input" type="password" value="<?php if(strlen($user->Password) > 0) echo "•••••••••••••••••" ?>" name="Password" id="Password" <?php echo $user->IsAdmin == 1 ? "" : "disabled" ?>>
+                                <input autocomplete="new-password" class="mdl-textfield__input" type="password" value="<?php if(strlen($obj->Password) > 0) echo "•••••••••••••••••" ?>" name="Password" id="Password" <?php echo $obj->IsAdmin == 1 ? "" : "disabled" ?>>
                             </div>
                         </div>
                     </div>
 
                     <div style="text-align: right">
-                        <button style="width: 95px; margin: 24px;" onclick="saveRecord(<?php echo $user->Id ?>)" class="center-div-inner mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--raised mdl-button--accent">
+                        <button style="width: 95px; margin: 24px;" onclick="saveRecord(<?php echo $obj->Id ?>)" class="center-div-inner mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--raised mdl-button--accent">
                             <span class="button-text">Save</span>
                         </button>
                     </div>
@@ -192,31 +191,30 @@ interface AdminPanels
                 break;
 
                 case AdminPanels::ROBOT_INFO_KEYS:
-                    $robotInfoKey = RobotInfoKeys::withId($settingId)
-
+                    $obj = RobotInfoKeys::withId($settingId);
                 ?>
                     <h4 style="padding-left: 40px;">Robot Info Settings</h4>
                     <div class="mdl-card__supporting-text">
                         <strong class="setting-title">Year</strong>
                         <div class="setting-value mdl-textfield mdl-js-textfield mdl-textfield--floating-label" data-upgraded=",MaterialTextfield">
-                            <input disabled class="mdl-textfield__input" type="number" value="<?php echo ((!empty($robotInfoKey->YearId)) ? $robotInfoKey->YearId : $year->Id) ?>" name="YearId" id="YearId">
+                            <input disabled class="mdl-textfield__input" type="number" value="<?php echo ((!empty($obj->YearId)) ? $obj->YearId : $year->Id) ?>" name="YearId" id="YearId">
                         </div>
                         <strong class="setting-title">Game State</strong>
                         <div class="setting-value mdl-textfield mdl-js-textfield mdl-textfield--floating-label" data-upgraded=",MaterialTextfield">
-                            <input class="mdl-textfield__input" type="text" value="<?php echo $robotInfoKey->KeyState ?>" name="KeyState" id="KeyState">
+                            <input class="mdl-textfield__input" type="text" value="<?php echo $obj->KeyState ?>" name="KeyState" id="KeyState">
                         </div>
                         <strong class="setting-title">Info Name</strong>
                         <div class="setting-value mdl-textfield mdl-js-textfield mdl-textfield--floating-label" data-upgraded=",MaterialTextfield">
-                            <input class="mdl-textfield__input" type="text" value="<?php echo $robotInfoKey->KeyName ?>" name="KeyName" id="KeyName">
+                            <input class="mdl-textfield__input" type="text" value="<?php echo $obj->KeyName ?>" name="KeyName" id="KeyName">
                         </div>
                         <strong class="setting-title">Sort Order</strong>
                         <div class="setting-value mdl-textfield mdl-js-textfield mdl-textfield--floating-label" data-upgraded=",MaterialTextfield">
-                            <input class="mdl-textfield__input" type="number" value="<?php echo $robotInfoKey->SortOrder ?>" name="SortOrder" id="SortOrder">
+                            <input class="mdl-textfield__input" type="number" value="<?php echo $obj->SortOrder ?>" name="SortOrder" id="SortOrder">
                         </div>
                     </div>
 
                     <div style="text-align: right">
-                        <button style="width: 95px; margin: 24px;" onclick="saveRecord(<?php echo $robotInfoKey->Id ?>)" class="center-div-inner mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--raised mdl-button--accent">
+                        <button style="width: 95px; margin: 24px;" onclick="saveRecord(<?php echo $obj->Id ?>)" class="center-div-inner mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--raised mdl-button--accent">
                             <span class="button-text">Save</span>
                         </button>
                     </div>
@@ -224,30 +222,29 @@ interface AdminPanels
                     break;
 
                 case AdminPanels::SCOUT_CARD_INFO_KEYS:
-                    $scoutCardInfoKey = ScoutCardInfoKeys::withId($settingId)
-
+                    $obj = ScoutCardInfoKeys::withId($settingId);
                     ?>
                     <h4 style="padding-left: 40px;">Scout Card Info Settings</h4>
                     <div class="mdl-card__supporting-text">
                         <strong class="setting-title">Year</strong>
                         <div class="setting-value mdl-textfield mdl-js-textfield mdl-textfield--floating-label" data-upgraded=",MaterialTextfield">
-                            <input disabled class="mdl-textfield__input" type="number" value="<?php echo ((!empty($robotInfoKey->YearId)) ? $robotInfoKey->YearId : $year->Id) ?>" name="YearId" id="YearId">
+                            <input disabled class="mdl-textfield__input" type="number" value="<?php echo ((!empty($obj->YearId)) ? $obj->YearId : $year->Id) ?>" name="YearId" id="YearId">
                         </div>
                         <strong class="setting-title">Game State</strong>
                         <div class="setting-value mdl-textfield mdl-js-textfield mdl-textfield--floating-label" data-upgraded=",MaterialTextfield">
-                            <input class="mdl-textfield__input" type="text" value="<?php echo $scoutCardInfoKey->KeyState ?>" name="KeyState" id="KeyState">
+                            <input class="mdl-textfield__input" type="text" value="<?php echo $obj->KeyState ?>" name="KeyState" id="KeyState">
                         </div>
                         <strong class="setting-title">Info Name</strong>
                         <div class="setting-value mdl-textfield mdl-js-textfield mdl-textfield--floating-label" data-upgraded=",MaterialTextfield">
-                            <input class="mdl-textfield__input" type="text" value="<?php echo $scoutCardInfoKey->KeyName ?>" name="KeyName" id="KeyName">
+                            <input class="mdl-textfield__input" type="text" value="<?php echo $obj->KeyName ?>" name="KeyName" id="KeyName">
                         </div>
                         <strong class="setting-title">Sort Order</strong>
                         <div class="setting-value mdl-textfield mdl-js-textfield mdl-textfield--floating-label" data-upgraded=",MaterialTextfield">
-                            <input class="mdl-textfield__input" type="number" value="<?php echo $scoutCardInfoKey->SortOrder ?>" name="SortOrder" id="SortOrder">
+                            <input class="mdl-textfield__input" type="number" value="<?php echo $obj->SortOrder ?>" name="SortOrder" id="SortOrder">
                         </div>
                         <strong class="setting-title">Data Type</strong>
                         <div class="setting-value mdl-textfield mdl-js-textfield mdl-textfield--floating-label" data-upgraded=",MaterialTextfield">
-                            <input id="DataType" class="mdl-textfield__input mdl-js-button" type="text" value="<?php echo DataTypes::DATATYPE_TO_PLAIN_TEXT_ARRAY[$scoutCardInfoKey->DataType] ?>" name="DataType" id="DataType"/>
+                            <input id="DataType" class="mdl-textfield__input mdl-js-button" type="text" value="<?php echo DataTypes::DATATYPE_TO_PLAIN_TEXT_ARRAY[$obj->DataType] ?>" name="DataType" id="DataType"/>
                             <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect" for="DataType">
                                 <?php
                                 foreach (DataTypes::DATATYPE_TO_PLAIN_TEXT_ARRAY as $key => $value)
@@ -259,39 +256,42 @@ interface AdminPanels
                                 ?>
                             </ul>
                         </div>
-                        <div id="min-value-div" <?php echo (($scoutCardInfoKey->DataType != DataTypes::INT) ? "hidden" : "") ?>>
+                        <div id="min-value-div" <?php echo (($obj->DataType != DataTypes::INT) ? "hidden" : "") ?>>
                             <strong class="setting-title">Minimum Value</strong>
                             <div class="setting-value mdl-textfield mdl-js-textfield mdl-textfield--floating-label" data-upgraded=",MaterialTextfield">
-                                <input class="mdl-textfield__input" type="number" value="<?php echo $scoutCardInfoKey->MinValue ?>" name="MinValue" id="MinValue" >
+                                <input class="mdl-textfield__input" type="number" value="<?php echo $obj->MinValue ?>" name="MinValue" id="MinValue" >
                             </div>
                         </div>
-                        <div id="max-value-div" <?php echo (($scoutCardInfoKey->DataType != DataTypes::INT) ? "hidden" : "") ?>>
+                        <div id="max-value-div" <?php echo (($obj->DataType != DataTypes::INT) ? "hidden" : "") ?>>
                             <strong class="setting-title">Maximum Value</strong>
                             <div class="setting-value mdl-textfield mdl-js-textfield mdl-textfield--floating-label" data-upgraded=",MaterialTextfield">
-                                <input class="mdl-textfield__input" type="number" value="<?php echo $scoutCardInfoKey->MaxValue ?>" name="MaxValue" id="MaxValue">
+                                <input class="mdl-textfield__input" type="number" value="<?php echo $obj->MaxValue ?>" name="MaxValue" id="MaxValue">
                             </div>
                         </div>
-                        <div id="null-zero-div" <?php echo (($scoutCardInfoKey->DataType != DataTypes::INT) ? "hidden" : "") ?>>
+                        <div id="null-zero-div" <?php echo (($obj->DataType != DataTypes::INT) ? "hidden" : "") ?>>
                             <strong class="setting-title">Nullify Zeros</strong>
                             <div class="setting-value mdl-textfield mdl-js-textfield mdl-textfield--floating-label" data-upgraded=",MaterialTextfield">
                                 <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" for="NullZeros">
-                                    <input type="checkbox" name="NullZeros" id="NullZeros" class="mdl-switch__input" <?php if($scoutCardInfoKey->NullZeros == 1) echo "checked" ?>
+                                    <input type="checkbox" name="NullZeros" id="NullZeros" class="mdl-switch__input" <?php if($obj->NullZeros == 1) echo "checked" ?>
                                     <span class="mdl-switch__label"></span>
                                 </label>
                             </div>
                         </div>
-                        <div id="include-in-stats-div" <?php echo (($scoutCardInfoKey->DataType != DataTypes::INT && $scoutCardInfoKey->DataType != DataTypes::BOOL) ? "hidden" : "") ?>>
+                        <div id="include-in-stats-div" <?php echo (($obj->DataType != DataTypes::INT && $obj->DataType != DataTypes::BOOL) ? "hidden" : "") ?>>
                             <strong class="setting-title">Include In Stats</strong>
                             <div class="setting-value mdl-textfield mdl-js-textfield mdl-textfield--floating-label" data-upgraded=",MaterialTextfield">
                                 <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" for="IncludeInStats">
-                                    <input type="checkbox" name="IncludeInStats" id="IncludeInStats" class="mdl-switch__input" <?php if($scoutCardInfoKey->IncludeInStats == 1) echo "checked" ?>
+                                    <input type="checkbox" name="IncludeInStats" id="IncludeInStats" class="mdl-switch__input" <?php if($obj->IncludeInStats == 1) echo "checked" ?>
                                     <span class="mdl-switch__label"></span>
                                 </label>
                             </div>
                         </div>
                     </div>
                     <div style="text-align: right">
-                        <button style="width: 95px; margin: 24px;" onclick="saveRecord(<?php echo $scoutCardInfoKey->Id ?>)" class="center-div-inner mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--raised mdl-button--accent">
+                        <button onclick="deleteRecord(<?php echo $obj->Id ?>)" class="mdl-button mdl-js-button mdl-js-ripple-effect table-button delete">
+                            <span class="button-text">Delete</span>
+                        </button>
+                        <button style="width: 95px; margin: 24px;" onclick="saveRecord(<?php echo $obj->Id ?>)" class="center-div-inner mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--raised mdl-button--accent">
                             <span class="button-text">Save</span>
                         </button>
                     </div>
@@ -299,27 +299,26 @@ interface AdminPanels
                     break;
 
                     case AdminPanels::CHECKLIST_INFO:
-                        $checklistItem = ChecklistItems::withId($settingId)
-
+                        $obj = ChecklistItems::withId($settingId);
                         ?>
                         <h4 style="padding-left: 40px;">Checlist Item Settings</h4>
                         <div class="mdl-card__supporting-text">
                             <strong class="setting-title">Year</strong>
                             <div class="setting-value mdl-textfield mdl-js-textfield mdl-textfield--floating-label" data-upgraded=",MaterialTextfield">
-                                <input disabled class="mdl-textfield__input" type="number" value="<?php echo ((!empty($robotInfoKey->YearId)) ? $robotInfoKey->YearId : $year->Id) ?>" name="YearId" id="YearId">
+                                <input disabled class="mdl-textfield__input" type="number" value="<?php echo ((!empty($obj->YearId)) ? $obj->YearId : $year->Id) ?>" name="YearId" id="YearId">
                             </div>
                             <strong class="setting-title">Title</strong>
                             <div class="setting-value mdl-textfield mdl-js-textfield mdl-textfield--floating-label" data-upgraded=",MaterialTextfield">
-                                <input class="mdl-textfield__input" type="text" value="<?php echo $checklistItem->Title ?>" name="Title" id="Title">
+                                <input class="mdl-textfield__input" type="text" value="<?php echo $obj->Title ?>" name="Title" id="Title">
                             </div>
                             <strong class="setting-title">Description</strong>
                             <div class="mdl-textfield mdl-js-textfield">
-                                <textarea class="mdl-textfield__input" type="text" rows= "4" id="Description" name="Description"><?php echo $checklistItem->Description ?></textarea>
+                                <textarea class="mdl-textfield__input" type="text" rows= "4" id="Description" name="Description"><?php echo $obj->Description ?></textarea>
                                 <label class="mdl-textfield__label" for="Description"></label>
                             </div>
                         </div>
                         <div style="text-align: right">
-                            <button style="width: 95px; margin: 24px;" onclick="saveRecord(<?php echo $checklistItem->Id ?>)" class="center-div-inner mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--raised mdl-button--accent">
+                            <button style="width: 95px; margin: 24px;" onclick="saveRecord(<?php echo $obj->Id ?>)" class="center-div-inner mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--raised mdl-button--accent">
                                 <span class="button-text">Save</span>
                             </button>
                         </div>
@@ -337,73 +336,90 @@ interface AdminPanels
 <?php require_once('includes/bottom-scripts.php') ?>
 <script>
 
+    var href = "<?php echo URL_PATH . "/admin.php?yearId" . $yearId . "&adminPanel=" . $panel ?>"; //get the path to return to once saving is complete
+
+    /**
+     * Saves record to the database
+     * @param id int to use when saving, if -1 it will create a new record
+     */
     function saveRecord(id)
     {
         var data;
-        var href = "<?php echo URL_PATH . "/admin.php?yearId" . $yearId . "&adminPanel=" . $panel ?>";
 
-        switch ("<?php echo $panel ?>")
+        //assign the data based on what panel we are viewing
+        <?php
+        switch ($panel)
         {
-            case "<?php echo AdminPanels::CONFIG ?>":
-                data =
-                    {
-                        AppName: $('#APP_NAME').val(),
-                        ApiKey: $('#API_KEY').val(),
-                        PrimaryColor: $('#PRIMARY_COLOR').val(),
-                        PrimaryColorDark: $('#PRIMARY_COLOR_DARK').val()
-                    };
+            case AdminPanels::CONFIG:
+            ?>
+            data =
+                {
+                    AppName: $('#APP_NAME').val(),
+                    ApiKey: $('#API_KEY').val(),
+                    PrimaryColor: $('#PRIMARY_COLOR').val(),
+                    PrimaryColorDark: $('#PRIMARY_COLOR_DARK').val()
+                };
+            <?php
+            break;
 
-                break;
+            case AdminPanels::USERS:
+            ?>
+            data =
+                {
+                    Id: id,
+                    FirstName: $('#FirstName').val(),
+                    LastName: $('#LastName').val(),
+                    UserName: $('#UserName').val(),
+                    Password: $('#Password').val(),
+                    IsAdmin: $('#IsAdmin').prop("checked") ? "1" : "0"
+                };
+            <?php
+            break;
 
-            case "<?php echo AdminPanels::USERS ?>":
-                data =
-                    {
-                        Id: id,
-                        FirstName: $('#FirstName').val(),
-                        LastName: $('#LastName').val(),
-                        UserName: $('#UserName').val(),
-                        Password: $('#Password').val(),
-                        IsAdmin: $('#IsAdmin').prop("checked") ? "1" : "0"
-                    };
-                break;
+            case AdminPanels::ROBOT_INFO_KEYS:
+            ?>
+            data =
+                {
+                    Id: id,
+                    YearId: $('#YearId').val(),
+                    KeyState: $('#KeyState').val(),
+                    KeyName: $('#KeyName').val(),
+                    SortOrder: $('#SortOrder').val()
+                };
+            <?php
+            break;
 
-            case "<?php echo AdminPanels::ROBOT_INFO_KEYS ?>":
-                data =
-                    {
-                        Id: id,
-                        YearId: $('#YearId').val(),
-                        KeyState: $('#KeyState').val(),
-                        KeyName: $('#KeyName').val(),
-                        SortOrder: $('#SortOrder').val()
-                    };
-                break;
+            case AdminPanels::SCOUT_CARD_INFO_KEYS:
+            ?>
+            data =
+                {
+                    Id: id,
+                    YearId: $('#YearId').val(),
+                    KeyState: $('#KeyState').val(),
+                    KeyName: $('#KeyName').val(),
+                    SortOrder: $('#SortOrder').val(),
+                    MinValue: $('#MinValue').val(),
+                    MaxValue: $('#MaxValue').val(),
+                    NullZeros: $('#NullZeros').prop("checked") ? "1" : "0",
+                    IncludeInStats: $('#IncludeInStats').prop("checked") ? "1" : "0",
+                    DataType: plainTextToDataTypeArray[$('#DataType').val()]
+                };
+            <?php
+            break;
 
-            case "<?php echo AdminPanels::SCOUT_CARD_INFO_KEYS ?>":
-                data =
-                    {
-                        Id: id,
-                        YearId: $('#YearId').val(),
-                        KeyState: $('#KeyState').val(),
-                        KeyName: $('#KeyName').val(),
-                        SortOrder: $('#SortOrder').val(),
-                        MinValue: $('#MinValue').val(),
-                        MaxValue: $('#MaxValue').val(),
-                        NullZeros: $('#NullZeros').prop("checked") ? "1" : "0",
-                        IncludeInStats: $('#IncludeInStats').prop("checked") ? "1" : "0",
-                        DataType: plainTextToDataTypeArray[$('#DataType').val()]
-                    };
-                break;
-
-            case "<?php echo AdminPanels::CHECKLIST_INFO ?>":
-                data =
-                    {
-                        Id: id,
-                        YearId: $('#YearId').val(),
-                        Title: $('#Title').val(),
-                        Description: $('#Description').val()
-                    };
-                break;
+            case AdminPanels::CHECKLIST_INFO:
+            ?>
+            data =
+                {
+                    Id: id,
+                    YearId: $('#YearId').val(),
+                    Title: $('#Title').val(),
+                    Description: $('#Description').val()
+                };
+            <?php
+            break;
         }
+        ?>
 
         //call the admin ajax script to modify the records in the database
         $.post('/ajax/admin.php',
@@ -424,6 +440,42 @@ interface AdminPanels
                 //display response to screen
                 showToast(data['<?php echo Ajax::$RESPONSE_KEY ?>']);
             });
+    }
+
+    /**
+     * Deletes record from database
+     * @param recordId int id of record to delete
+     */
+    function deleteRecord(recordId)
+    {
+        //update classes, onclick button and text for the edit button
+        $("#dialog-confirm")
+            .unbind('click')
+            .click(function ()
+            {
+                //call the admin ajax script to modify the records in the database
+                $.post('/ajax/admin.php',
+                    {
+                        action: 'delete',
+                        class: '<?php echo $panel ?>',
+                        recordId: recordId
+                    },
+                    function (data)
+                    {
+                        data = JSON.parse(data);
+
+                        //check success status code
+                        if (data['<?php echo Ajax::$STATUS_KEY ?>'] == '<?php echo Ajax::$SUCCESS_STATUS_CODE ?>')
+                            location.href = href;
+
+                        //display response to screen
+                        showToast(data['<?php echo Ajax::$RESPONSE_KEY ?>']);
+                    });
+
+                dialog.close();
+            });
+
+        dialog.showModal();
     }
 
     <?php if($panel == AdminPanels::USERS)

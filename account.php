@@ -27,7 +27,7 @@ if(!loggedIn())
 
     <main class="mdl-layout__content">
 
-        <?php echo $user->toHtml() ?>
+        <?php echo $obj->toHtml() ?>
         <?php require_once('includes/footer.php') ?>
     </main>
 </div>

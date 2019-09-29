@@ -87,11 +87,10 @@ $htmlMysqlDatatypes =
                 </p>
             </div>
             <div class="mdl-dialog__actions">
-                <button id="dialog-cancel" type="button" class="mdl-button">Cancel</button>
-                <button id="dialog-confirm" type="button"
-                        class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--raised mdl-button--accent confirm">
+                <button id="dialog-confirm" type="button" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--raised mdl-button--accent confirm">
                     Delete
                 </button>
+                <button id="dialog-cancel" type="button" class="mdl-button">Cancel</button>
             </div>
         </dialog>
 
@@ -278,6 +277,11 @@ $htmlMysqlDatatypes =
 </div>
 <?php require_once('includes/bottom-scripts.php') ?>
 <script>
+
+    /**
+     * Deletes record from database
+     * @param recordId int id of record to delete
+     */
     function deleteRecord(row, recordId)
     {
         //update classes, onclick button and text for the edit button
