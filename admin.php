@@ -239,7 +239,6 @@ $htmlMysqlDatatypes =
 
         showToast(message);
     }
-
 </script>
 </body>
 </html>

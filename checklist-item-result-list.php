@@ -4,6 +4,7 @@ require_once(ROOT_DIR . "/classes/tables/core/Teams.php");
 require_once(ROOT_DIR . "/classes/tables/core/Events.php");
 require_once(ROOT_DIR . "/classes/tables/core/Matches.php");
 require_once(ROOT_DIR . "/classes/tables/local/ChecklistItems.php");
+require_once(ROOT_DIR . "/classes/tables/local/ChecklistItemResults.php");
 
 $eventId = $_GET['eventId'];
 $matchId = $_GET['matchId'];
@@ -50,11 +51,9 @@ if(!empty($matchId))
         //match selected, show checklist item results for specified match
         else
         {
-            foreach(ChecklistItems::getObjects() as $checklistItem)
+            foreach(ChecklistItemResults::getObjects($match) as $checklistItemResult)
             {
-                foreach($checklistItem->getResults($match) as $checklistItemResult)
-                    echo $checklistItemResult->toHtml();
-
+                $checklistItemResult->toHtml();
             }
         }
 
@@ -66,5 +65,29 @@ if(!empty($matchId))
     </main>
 </div>
 <?php require_once(INCLUDES_DIR . 'bottom-scripts.php') ?>
+<?php
+if(!empty($match))
+{
+    require_once(INCLUDES_DIR . 'modals.php');
+    ?>
+<script src="<?php echo JS_URL ?>modify-record.js.php"></script>
+<script>
+
+    var pendingRowRemoval = [];
+
+    function deleteRecordOverride(row, recordType, recordId)
+    {
+        pendingRowRemoval.push($(row));
+        deleteRecord(recordType, recordId);
+    }
+
+    function deleteSuccessCallback(message)
+    {
+        location.reload();
+    }
+</script>
+<?php
+}
+?>
 </body>
 </html>
