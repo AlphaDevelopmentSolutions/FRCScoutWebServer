@@ -10,7 +10,6 @@ require_once(ROOT_DIR . '/classes/Ajax.php');
     <script src="<?php JS_URL ?>/js/jscolor.js"></script>
 </head>
 <body class="mdl-demo mdl-color--grey-100 mdl-color-text--grey-700 mdl-base">
-<?php require_once(INCLUDES_DIR . 'modals.php'); ?>
 <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
     <main class="mdl-layout__content homescreen">
         <div class="mdl-layout__tab-panel is-active" id="overview">
@@ -202,6 +201,7 @@ require_once(ROOT_DIR . '/classes/Ajax.php');
         </div>
     </main>
 </div>
+<?php require_once(INCLUDES_DIR . 'modals.php'); ?>
 <script defer>
 
     var accountBeingCreated = false;
