@@ -178,19 +178,26 @@ switch ($_POST['action'])
                     if(!validAlnum($user->UserName))
                         $ajax->error("Username may only be alphanumeric (A-Z 0-9).");
 
-                    if(empty($user->Password))
-                        $ajax->error("Password may not be empty.");
+                    //Password is new or empty,
+                    if(strpos($user->Password, "•") === false)
+                    {
+                        if(empty($user->Password))
+                            $ajax->error("Password may not be empty.");
 
-                    if(!validAlnum($user->Password))
-                        $ajax->error("Password may only be alphanumeric (A-Z 0-9).");
+                        if(!validAlnum($user->Password))
+                            $ajax->error("Password may only be alphanumeric (A-Z 0-9).");
 
-                    $user->Password = password_hash($user->Password, PASSWORD_ARGON2ID);
+                        $user->Password = password_hash($user->Password, PASSWORD_ARGON2ID);
+                    }
+
+                    //Password still has the default dots, set from previous hashed password
+                    else
+                        $user->Password = Users::withId($user->Id)->Password;
                 }
-
                 else
                 {
-                    $user->UserName == "";
-                    $user->Password = "";
+                    $user->UserName = null;
+                    $user->Password = null;
                 }
 
                 if($user->save())
