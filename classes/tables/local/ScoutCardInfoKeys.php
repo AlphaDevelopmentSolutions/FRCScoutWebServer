@@ -189,4 +189,24 @@ interface DataTypes
     const INT = 'INT';
     const BOOL = 'BOOL';
     const TEXT = 'TEXT';
+
+    const TEXT_PLAIN_TEXT = "Text";
+    const INT_PLAIN_TEXT = "Number";
+    const BOOL_PLAIN_TEXT = "True & False";
+
+    const DATA_TYPES = [self::INT, self::BOOL, self::TEXT];
+
+    const DATATYPE_TO_PLAIN_TEXT_ARRAY =
+        [
+            self::TEXT => self::TEXT_PLAIN_TEXT,
+            self::INT => self::INT_PLAIN_TEXT,
+            self::BOOL => self::BOOL_PLAIN_TEXT
+        ];
+
+    const PLAIN_TEXT_TO_DATATYPE_ARRAY =
+        [
+            self::TEXT_PLAIN_TEXT => self::TEXT,
+            self::INT_PLAIN_TEXT => self::INT,
+            self::BOOL_PLAIN_TEXT => self::BOOL
+        ];
 }

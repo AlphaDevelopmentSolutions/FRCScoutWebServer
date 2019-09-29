@@ -19,13 +19,12 @@ $settingId = $_GET['settingId'];
 
 interface AdminPanels
 {
-    const ROBOT_INFO = RobotInfoKeys::class;
-    const SCOUT_CARD_INFO = ScoutCardInfoKeys::class;
+    const ROBOT_INFO_KEYS = RobotInfoKeys::class;
+    const SCOUT_CARD_INFO_KEYS = ScoutCardInfoKeys::class;
     const CHECKLIST_INFO = ChecklistItems::class;
     const CONFIG = Config::class;
     const USERS = Users::class;
 }
-
 ?>
 
 <!doctype html>
@@ -35,13 +34,17 @@ interface AdminPanels
     <?php require_once('includes/meta.php') ?>
 </head>
 <body class="mdl-demo mdl-color--grey-100 mdl-color-text--grey-700 mdl-base">
+<script>
+    let datatypeToPlainTextArray = JSON.parse('<?php echo json_encode(DataTypes::DATATYPE_TO_PLAIN_TEXT_ARRAY); ?>');
+    let plainTextToDataTypeArray = JSON.parse('<?php echo json_encode(DataTypes::PLAIN_TEXT_TO_DATATYPE_ARRAY); ?>');
+</script>
 <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header" style="min-width: 1200px !important;">
     <?php
     $navBarLinksArray = new NavBarLinkArray();
     $navBarLinksArray[] = new NavBarLink('Application', '/admin-setting.php?yearId=' . $year->Id . '&adminPanel=' . AdminPanels::CONFIG, ($panel == AdminPanels::CONFIG || empty($panel)));
     $navBarLinksArray[] = new NavBarLink('Users', '/admin.php?yearId=' . $year->Id . '&adminPanel=' . AdminPanels::USERS, ($panel == AdminPanels::USERS));
-    $navBarLinksArray[] = new NavBarLink('Robot Info', '/admin.php?yearId=' . $year->Id . '&adminPanel=' . AdminPanels::ROBOT_INFO, ($panel == AdminPanels::ROBOT_INFO));
-    $navBarLinksArray[] = new NavBarLink('Scout Card Info', '/admin.php?yearId=' . $year->Id . '&adminPanel=' . AdminPanels::SCOUT_CARD_INFO, ($panel == AdminPanels::SCOUT_CARD_INFO));
+    $navBarLinksArray[] = new NavBarLink('Robot Info', '/admin.php?yearId=' . $year->Id . '&adminPanel=' . AdminPanels::ROBOT_INFO_KEYS, ($panel == AdminPanels::ROBOT_INFO_KEYS));
+    $navBarLinksArray[] = new NavBarLink('Scout Card Info', '/admin.php?yearId=' . $year->Id . '&adminPanel=' . AdminPanels::SCOUT_CARD_INFO_KEYS, ($panel == AdminPanels::SCOUT_CARD_INFO_KEYS));
     $navBarLinksArray[] = new NavBarLink('Checklist Info', '/admin.php?yearId=' . $year->Id . '&adminPanel=' . AdminPanels::CHECKLIST_INFO, ($panel == AdminPanels::CHECKLIST_INFO));
 
     $navBar = new NavBar($navBarLinksArray);
@@ -188,7 +191,7 @@ interface AdminPanels
                 <?php
                 break;
 
-                case AdminPanels::ROBOT_INFO:
+                case AdminPanels::ROBOT_INFO_KEYS:
                     $robotInfoKey = RobotInfoKeys::withId($settingId)
 
                 ?>
@@ -220,7 +223,7 @@ interface AdminPanels
                         <?php
                     break;
 
-                case AdminPanels::SCOUT_CARD_INFO:
+                case AdminPanels::SCOUT_CARD_INFO_KEYS:
                     $scoutCardInfoKey = ScoutCardInfoKeys::withId($settingId)
 
                     ?>
@@ -244,11 +247,16 @@ interface AdminPanels
                         </div>
                         <strong class="setting-title">Data Type</strong>
                         <div class="setting-value mdl-textfield mdl-js-textfield mdl-textfield--floating-label" data-upgraded=",MaterialTextfield">
-                            <input id="DataType" class="mdl-textfield__input mdl-js-button" type="text" value="<?php echo $scoutCardInfoKey->DataType ?>" name="DataType" id="DataType"/>
+                            <input id="DataType" class="mdl-textfield__input mdl-js-button" type="text" value="<?php echo DataTypes::DATATYPE_TO_PLAIN_TEXT_ARRAY[$scoutCardInfoKey->DataType] ?>" name="DataType" id="DataType"/>
                             <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect" for="DataType">
-                                <li class="mdl-menu__item datatype-menu-item" value="INT">INT</li>
-                                <li class="mdl-menu__item datatype-menu-item" value="BOOL">BOOL</li>
-                                <li class="mdl-menu__item datatype-menu-item" value="TEXT">TEXT</li>
+                                <?php
+                                foreach (DataTypes::DATATYPE_TO_PLAIN_TEXT_ARRAY as $key => $value)
+                                {
+                                    ?>
+                                        <li class="mdl-menu__item datatype-menu-item" value="<?php echo $key ?>"><?php echo $value ?></li>
+                                    <?php
+                                }
+                                ?>
                             </ul>
                         </div>
                         <div id="min-value-div" <?php echo (($scoutCardInfoKey->DataType != DataTypes::INT) ? "hidden" : "") ?>>
@@ -359,7 +367,7 @@ interface AdminPanels
                     };
                 break;
 
-            case "<?php echo AdminPanels::ROBOT_INFO ?>":
+            case "<?php echo AdminPanels::ROBOT_INFO_KEYS ?>":
                 data =
                     {
                         Id: id,
@@ -370,7 +378,7 @@ interface AdminPanels
                     };
                 break;
 
-            case "<?php echo AdminPanels::SCOUT_CARD_INFO ?>":
+            case "<?php echo AdminPanels::SCOUT_CARD_INFO_KEYS ?>":
                 data =
                     {
                         Id: id,
@@ -382,7 +390,7 @@ interface AdminPanels
                         MaxValue: $('#MaxValue').val(),
                         NullZeros: $('#NullZeros').prop("checked") ? "1" : "0",
                         IncludeInStats: $('#IncludeInStats').prop("checked") ? "1" : "0",
-                        DataType: $('#DataType').val()
+                        DataType: plainTextToDataTypeArray[$('#DataType').val()]
                     };
                 break;
 
@@ -444,7 +452,7 @@ interface AdminPanels
     }
     ?>
 
-    <?php if($panel == AdminPanels::SCOUT_CARD_INFO)
+    <?php if($panel == AdminPanels::SCOUT_CARD_INFO_KEYS)
     {
     ?>
     $(document).ready(function ()
@@ -453,7 +461,7 @@ interface AdminPanels
         {
             var value = $(this).attr("value");
 
-            $("#DataType").attr("value", value);
+            $("#DataType").attr("value", datatypeToPlainTextArray[value]);
 
             if (value == "<?php echo DataTypes::TEXT ?>")
             {

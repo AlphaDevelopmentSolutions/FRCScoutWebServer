@@ -106,25 +106,8 @@ switch ($_POST['action'])
                 if(!ctype_alpha($scoutCardInfoKey->DataType))
                     $ajax->error("Datatype may only be alphanumeric (A-Z 0-9).");
 
-                $validDataType = false;
-
-                switch($scoutCardInfoKey->DataType)
-                {
-                    case DataTypes::BOOL:
-                        $validDataType = true;
-                        break;
-
-                    case DataTypes::TEXT:
-                        $validDataType = true;
-                        break;
-
-                    case DataTypes::INT:
-                        $validDataType = true;
-                        break;
-                }
-
-                if(!$validDataType)
-                    $ajax->error("Invalid datatype");
+                if(!in_array($scoutCardInfoKey->DataType, DataTypes::DATA_TYPES))
+                    $ajax->error("Invalid datatype.");
 
                 if($scoutCardInfoKey->save())
                     $ajax->success("Scout card info saved successfully.");

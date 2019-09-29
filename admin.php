@@ -20,8 +20,8 @@ $panel = $_GET['adminPanel'];
 
 interface AdminPanels
 {
-    const ROBOT_INFO = RobotInfoKeys::class;
-    const SCOUT_CARD_INFO = ScoutCardInfoKeys::class;
+    const ROBOT_INFO_KEYS = RobotInfoKeys::class;
+    const SCOUT_CARD_INFO_KEYS = ScoutCardInfoKeys::class;
     const CHECKLIST_INFO = ChecklistItems::class;
     const CONFIG = Config::class;
     const USERS = Users::class;
@@ -49,8 +49,8 @@ $htmlMysqlDatatypes =
     $navBarLinksArray = new NavBarLinkArray();
     $navBarLinksArray[] = new NavBarLink('Application', '/admin-setting.php?yearId=' . $year->Id . '&adminPanel=' . AdminPanels::CONFIG, ($panel == AdminPanels::CONFIG || empty($panel)));
     $navBarLinksArray[] = new NavBarLink('Users', '/admin.php?yearId=' . $year->Id . '&adminPanel=' . AdminPanels::USERS, ($panel == AdminPanels::USERS));
-    $navBarLinksArray[] = new NavBarLink('Robot Info', '/admin.php?yearId=' . $year->Id . '&adminPanel=' . AdminPanels::ROBOT_INFO, ($panel == AdminPanels::ROBOT_INFO));
-    $navBarLinksArray[] = new NavBarLink('Scout Card Info', '/admin.php?yearId=' . $year->Id . '&adminPanel=' . AdminPanels::SCOUT_CARD_INFO, ($panel == AdminPanels::SCOUT_CARD_INFO));
+    $navBarLinksArray[] = new NavBarLink('Robot Info', '/admin.php?yearId=' . $year->Id . '&adminPanel=' . AdminPanels::ROBOT_INFO_KEYS, ($panel == AdminPanels::ROBOT_INFO_KEYS));
+    $navBarLinksArray[] = new NavBarLink('Scout Card Info', '/admin.php?yearId=' . $year->Id . '&adminPanel=' . AdminPanels::SCOUT_CARD_INFO_KEYS, ($panel == AdminPanels::SCOUT_CARD_INFO_KEYS));
     $navBarLinksArray[] = new NavBarLink('Checklist Info', '/admin.php?yearId=' . $year->Id . '&adminPanel=' . AdminPanels::CHECKLIST_INFO, ($panel == AdminPanels::CHECKLIST_INFO));
 
     $navBar = new NavBar($navBarLinksArray);
@@ -159,7 +159,7 @@ $htmlMysqlDatatypes =
                         }
                     break;
 
-                case AdminPanels::ROBOT_INFO:
+                case AdminPanels::ROBOT_INFO_KEYS:
                     $robotInfoKeys = RobotInfoKeys::getObjects('SortOrder', 'ASC');
                 ?>
                         <tr>
@@ -187,7 +187,7 @@ $htmlMysqlDatatypes =
                             </button>
                         </td>
                         <td class="admin-table-data">
-                            <button onclick="location.href  = '<?php echo ROOT_URL ?>/admin-setting.php?yearId=2019&adminPanel=<?php echo AdminPanels::ROBOT_INFO ?>&settingId=<?php echo $obj->Id ?>';" class="mdl-button mdl-js-button mdl-js-ripple-effect table-button edit">
+                            <button onclick="location.href  = '<?php echo ROOT_URL ?>/admin-setting.php?yearId=2019&adminPanel=<?php echo AdminPanels::ROBOT_INFO_KEYS ?>&settingId=<?php echo $obj->Id ?>';" class="mdl-button mdl-js-button mdl-js-ripple-effect table-button edit">
                                 <span class="button-text">Edit</span>
                             </button>
                         </td>
@@ -196,7 +196,7 @@ $htmlMysqlDatatypes =
                 }
                 break;
 
-                case AdminPanels::SCOUT_CARD_INFO:
+                case AdminPanels::SCOUT_CARD_INFO_KEYS:
                     $scoutCardInfos = ScoutCardInfoKeys::getObjects('SortOrder', 'ASC');
                     ?>
                     <tr>
@@ -224,7 +224,7 @@ $htmlMysqlDatatypes =
                                 </button>
                             </td>
                             <td class="admin-table-data">
-                                <button onclick="location.href  = '<?php echo ROOT_URL ?>/admin-setting.php?yearId=2019&adminPanel=<?php echo AdminPanels::SCOUT_CARD_INFO ?>&settingId=<?php echo $obj->Id ?>';" class="mdl-button mdl-js-button mdl-js-ripple-effect table-button edit">
+                                <button onclick="location.href  = '<?php echo ROOT_URL ?>/admin-setting.php?yearId=2019&adminPanel=<?php echo AdminPanels::SCOUT_CARD_INFO_KEYS ?>&settingId=<?php echo $obj->Id ?>';" class="mdl-button mdl-js-button mdl-js-ripple-effect table-button edit">
                                     <span class="button-text">Edit</span>
                                 </button>
                             </td>
