@@ -9,7 +9,7 @@ class EventTeamList extends CoreTable
     public static $TABLE_NAME = 'event_team_list';
 
     /**
-     * @param null | Events $event
+     * @param null | Events $event if specified, filters by id
      * @return EventTeamList[]
      */
     public static function getObjects($event = null)

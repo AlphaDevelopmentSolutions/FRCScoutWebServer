@@ -3,6 +3,7 @@ require_once("../config.php");
 require_once(ROOT_DIR . "/classes/Ajax.php");
 require_once(ROOT_DIR . "/classes/tables/local/RobotInfoKeys.php");
 require_once(ROOT_DIR . "/classes/tables/local/ScoutCardInfoKeys.php");
+require_once(ROOT_DIR . "/classes/tables/local/ScoutCardInfo.php");
 require_once(ROOT_DIR . "/classes/tables/local/ChecklistItems.php");
 
 $ajax = new Ajax();
@@ -108,6 +109,9 @@ switch ($_POST['action'])
 
                 if(!in_array($scoutCardInfoKey->DataType, DataTypes::DATA_TYPES))
                     $ajax->error("Invalid datatype.");
+
+                if($scoutCardInfoKey->DataType != ScoutCardInfoKeys::withId($scoutCardInfoKey->Id)->DataType && count(ScoutCardInfo::getObjects($scoutCardInfoKey)) > 0)
+                    $ajax->error("You can't change datatypes if you already have scout cards populated under this key.");
 
                 if($scoutCardInfoKey->save())
                     $ajax->success("Scout card info saved successfully.");

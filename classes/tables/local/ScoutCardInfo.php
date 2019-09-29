@@ -8,61 +8,41 @@ class ScoutCardInfo extends LocalTable
     public $MatchId;
     public $TeamId;
     public $CompletedBy;
-
     public $PropertyValue;
     public $PropertyKeyId;
 
     public static $TABLE_NAME = 'scout_card_info';
 
     /**
-     * Gets all robot info for a specific team at an event, or in a year
-     * @param Years | null $year if specified, filters by year
-     * @param Events | null $event if specified, filters by event
-     * @param Matches | null $match if specified, filters by match
-     * @param Teams | null $team if specified, filters by team
+     * @param null | ScoutCardInfoKeys $scoutCardInfoKey if specified, filters by id
+     * @param Years | null $year if specified, filters by id
+     * @param Events | null $event if specified, filters by id
+     * @param Matches | null $match if specified, filters by id
+     * @param Teams | null $team if specified, filters by id
+     * @param boolean $asNormalArray if true, uses [array] instead of [ScoutCardInfoArray]
      * @return ScoutCardInfoArray
      */
-    public static function forTeam($year = null, $event = null, $match = null, $team = null)
+    public static function getObjects($scoutCardInfoKey = null, $year = null, $event = null, $match = null, $team = null, $asNormalArray = false)
     {
         require_once(ROOT_DIR . '/classes/tables/local/ScoutCardInfoKeys.php');
         require_once(ROOT_DIR . '/classes/tables/local/ScoutCardInfoArray.php');
 
-        $scoutCardInfoArray = new ScoutCardInfoArray();
+        $whereStatment = "";
+        $cols = array();
+        $args = array();
 
-        foreach(ScoutCardInfoKeys::getKeys($year, $event) as $scoutCardInfoKey)
+        //if scout card info key specified, filter by scout card info key
+        if(!empty($scoutCardInfoKey))
         {
-            foreach(self::load($year, $event, $match, $team, $scoutCardInfoKey) as $scoutCardInfo)
-                $scoutCardInfoArray[] = $scoutCardInfo;
+            $whereStatment = "! = ?";
+            $cols[] = "PropertyKeyId";
+            $args[] = $scoutCardInfoKey->Id;
         }
-
-
-        return $scoutCardInfoArray;
-    }
-
-    /**
-     * Gets all robot info for a specific team at an event, or in a year
-     * @param Years | null $year if specified, filters by year
-     * @param Events | null $event if specified, filters by event
-     * @param Matches | null $match if specified, filters by match
-     * @param Teams | null $team if specified, filters by team
-     * @param ScoutCardInfoKeys $scoutCardInfoKey scout card info key to load
-     * @return ScoutCardInfoArray
-     */
-    private static function load($year = null, $event = null, $match = null, $team = null, $scoutCardInfoKey)
-    {
-
-        //create the sql statement
-        $sql = "SELECT * FROM ! WHERE ! = ?";
-        $cols[] = self::$TABLE_NAME;
-
-        $cols[] = 'PropertyKeyId';
-        $args[] = $scoutCardInfoKey->Id;
 
         //if year specified, filter by year
         if(!empty($year))
         {
-            $sql .= " AND ! = ? ";
-
+            $whereStatment .= ((empty($whereStatment)) ? "" : " AND ") . " ! = ? ";
             $cols[] = 'YearId';
             $args[] = $year->Id;
         }
@@ -70,8 +50,7 @@ class ScoutCardInfo extends LocalTable
         //if event specified, filter by event
         if(!empty($event))
         {
-            $sql .= " AND ! = ? ";
-
+            $whereStatment .= ((empty($whereStatment)) ? "" : " AND ") . " ! = ? ";
             $cols[] = 'EventId';
             $args[] = $event->BlueAllianceId;
         }
@@ -79,8 +58,7 @@ class ScoutCardInfo extends LocalTable
         //if event specified, filter by event
         if(!empty($match))
         {
-            $sql .= " AND ! = ? ";
-
+            $whereStatment .= ((empty($whereStatment)) ? "" : " AND ") . " ! = ? ";
             $cols[] = 'MatchId';
             $args[] = $match->Key;
         }
@@ -88,55 +66,19 @@ class ScoutCardInfo extends LocalTable
         //if team specified, filter by team
         if(!empty($team))
         {
-            $sql .= " AND ! = ? ";
-
+            $whereStatment .= ((empty($whereStatment)) ? "" : " AND ") . " ! = ? ";
             $cols[] = 'TeamId';
             $args[] = $team->Id;
         }
 
-        $sql .= ' ORDER BY ! DESC';
-        $cols[] = 'MatchId';
+        $scoutCardInfoArray = (($asNormalArray) ? array() : new ScoutCardInfoArray());
 
-        $rows = self::queryRecords($sql, $cols, $args);
-
-        $scoutCardInfoArray = new ScoutCardInfoArray();
-
-        foreach ($rows as $row)
+        foreach(parent::getObjects($whereStatment, $cols, $args) as $scoutCardInfo)
         {
-            $obj = new self();
-            foreach($row as $key => $value)
-            {
-                if(property_exists($obj, $key))
-                    $obj->$key = $value;
-
-            }
-
-            $scoutCardInfoArray[] = $obj;
+            $scoutCardInfoArray[] = $scoutCardInfo;
         }
 
         return $scoutCardInfoArray;
-    }
-
-    /**
-     * @param Events $event
-     * @param Teams $team
-     * @return int
-     */
-    public static function getMatchCount($event, $team)
-    {
-        //create the sql statement
-        $sql = "SELECT * FROM ! WHERE ! = ? AND ! = ?";
-        $cols[] = self::$TABLE_NAME;
-
-        $cols[] = 'EventId';
-        $args[] = $event->BlueAllianceId;
-        $cols[] = 'TeamId';
-        $args[] = $team->Id;
-
-        $sql .= ' GROUP BY ! ';
-        $cols[] = 'MatchId';
-
-        return count(self::queryRecords($sql, $cols, $args));
     }
 
     /**
