@@ -11,6 +11,7 @@ class ScoutCardInfoArray extends \ArrayObject implements ArrayAccess
     {
         $scoutCardInfoArray = array();
         $scoutCardInfoKeyStates = array();
+        $matchId = null;
 
         require_once(ROOT_DIR . "/classes/tables/core/Years.php");
         require_once(ROOT_DIR . "/classes/tables/local/ScoutCardInfoKeys.php");
@@ -28,6 +29,9 @@ class ScoutCardInfoArray extends \ArrayObject implements ArrayAccess
         //ex $array[2019][2019onwin][5885][PreGame][RobotWidth] = 5.3 feet
         foreach($this as $scoutCardInfo)
         {
+            if(empty($matchId))
+                $matchId = $scoutCardInfo->MatchId;
+
             $scoutCardInfoKey = null;
 
             for($i = 0; $i < sizeof($scoutCardInfoKeys) && empty($scoutCardInfoKey); $i++)
@@ -48,51 +52,58 @@ class ScoutCardInfoArray extends \ArrayObject implements ArrayAccess
         foreach($scoutCardInfoArray as $yearInfo)
         {
             //then iterate through each event
-            foreach($yearInfo as $eventInfo)
+            foreach($yearInfo as $eventId => $eventInfo)
             {
                 //for each event, iterate through each team and add the html for a new card
                 foreach($eventInfo as $teamId => $teamInfo)
                 {
-                    $team = Teams::withId($teamId);
-
-                    $html = '
-                        <div class="mdl-layout__tab-panel is-active" id="overview">
+                    ?>
+                        <div class="mdl-layout__tab-panel is-active">
                             <section class="section--center mdl-grid mdl-grid--no-spacing mdl-shadow--2dp">
                                 <div class="mdl-card mdl-cell mdl-cell--12-col">
-                                <h4 style="padding-left: 40px;">' . $team->toString() . '</h4>
-                                    <form method="post" action="' . $_SERVER['REQUEST_URI'] . '" id="scout-card-form">';
-
+                                    <h4 style="padding-left: 40px;"><?php echo Teams::withId($teamId)->toString() ?></h4>
+                    <?php
                     //for each of the scout card info key states (pre game, post game, auto, teleop etc..) get the value from the team we are currently viewing
                     //and add a new field for it
                     foreach ($scoutCardInfoKeyStates as $stateKey)
                     {
-                        $html .=
-                            '<strong style="padding-left: 40px;">' . $stateKey . '</strong>
-                            <div class="mdl-card__supporting-text">';
+                        ?>
+                                    <div class="mdl-card__supporting-text" style="margin: 0 40px !important;">
+                                        <h5><?php echo $stateKey ?></h5>
+                                        <hr>
+                        <?php
 
                         foreach (ScoutCardInfoKeys::getKeys($year, null, $stateKey) as $scoutCardInfoKey)
                         {
 
-                            $html .=
-                                '<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                                        <input disabled class="mdl-textfield__input" type="text" value="' . (($scoutCardInfoKey->DataType == DataTypes::BOOL) ? (($teamInfo[$stateKey][$scoutCardInfoKey->KeyName] == 1) ? 'Yes' : 'No') : $teamInfo[$stateKey][$scoutCardInfoKey->KeyName]) . '" name="completedBy">
-                                        <label class="mdl-textfield__label" >' . $scoutCardInfoKey->KeyName . '</label>
-                                    </div>';
+                            ?>
+                                        <strong class="setting-title"><?php echo $scoutCardInfoKey->KeyName ?></strong>
+                                        <div class="setting-value mdl-textfield mdl-js-textfield mdl-textfield--floating-label" data-upgraded=",MaterialTextfield">
+                                            <input class="mdl-textfield__input" value="<?php echo (($scoutCardInfoKey->DataType == DataTypes::BOOL) ? (($teamInfo[$stateKey][$scoutCardInfoKey->KeyName] == 1) ? 'Yes' : 'No') : $teamInfo[$stateKey][$scoutCardInfoKey->KeyName]) ?>">
+                                        </div>
+                            <?php
                         }
 
-                        $html .=
-                            '</div>';
+                        ?>
+                                    </div>
+                        <?php
                     }
 
-                    $html .=
-                                '</form>
+                    ?>
+                                    <div class="card-buttons">
+                                        <button onclick="deleteRecord('<?php echo ScoutCardInfo::class ?>', -1, {teamId: <?php echo $teamId ?>, eventId: '<?php echo $eventId ?>', matchId: '<?php echo $matchId ?>'})" class="mdl-button mdl-js-button mdl-js-ripple-effect table-button delete">
+                                            <span class="button-text">Delete</span>
+                                        </button>
+                                        <button style="width: 95px; margin: 24px;" onclick="saveRecord('<?php echo ScoutCardInfo::class ?>', <?php echo $teamId ?>)" class="center-div-horizontal-inner mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--raised mdl-button--accent">
+                                            <span class="button-text">Save</span>
+                                        </button>
+                                    </div>
                                 </div>
                             </section>
-                        </div>';
+                        </div>
+                    <?php
                 }
             }
         }
-
-        return $html;
     }
 }

@@ -54,41 +54,37 @@ class RobotInfoArray extends \ArrayObject implements ArrayAccess
                 foreach($eventInfo as $teamId => $teamInfo)
                 {
                     ?>
-                        <div class="mdl-layout__tab-panel is-active" id="overview">
+                        <div class="mdl-layout__tab-panel is-active">
                             <section class="section--center mdl-grid mdl-grid--no-spacing mdl-shadow--2dp">
                                 <div class="mdl-card mdl-cell mdl-cell--12-col">
-                                    <form method="post" action="<?php echo $_SERVER['REQUEST_URI'] ?>">
-
                     <?php
-
                     //for each of the robot info key states (pre game, post game, auto, teleop etc..) get the value from the team we are currently viewing
                     //and add a new field for it
                     foreach ($robotInfoKeyStates as $stateKey)
                     {
                         ?>
-                                        <div class="mdl-card__supporting-text">
-                                            <h5><?php echo $stateKey ?></h5>
-                                            <hr>
+                                    <div class="mdl-card__supporting-text" style="margin: 0 40px !important;">
+                                        <h5><?php echo $stateKey ?></h5>
+                                        <hr>
                         <?php
 
                         foreach (RobotInfoKeys::getKeys($year, null, $stateKey) as $robotInfoKey)
                         {
 
                             ?>
-                                            <strong class="setting-title"><?php echo $robotInfoKey->KeyName ?></strong>
-                                            <div class="setting-value mdl-textfield mdl-js-textfield mdl-textfield--floating-label" data-upgraded=",MaterialTextfield">
-                                                <input class="mdl-textfield__input" value="<?php echo $teamInfo[$stateKey][$robotInfoKey->KeyName] ?>">
-                                            </div>
+                                        <strong class="setting-title"><?php echo $robotInfoKey->KeyName ?></strong>
+                                        <div class="setting-value mdl-textfield mdl-js-textfield mdl-textfield--floating-label" data-upgraded=",MaterialTextfield">
+                                            <input class="mdl-textfield__input" value="<?php echo $teamInfo[$stateKey][$robotInfoKey->KeyName] ?>">
+                                        </div>
 
                             <?php
                         }
 
                         ?>
-                                        </div>
+                                    </div>
                         <?php
                     }
                     ?>
-                                    </form>
                                     <div class="card-buttons">
                                         <button onclick="deleteRecord('<?php echo RobotInfo::class ?>', -1, {teamId: <?php echo $teamId ?>, eventId: '<?php echo $eventId ?>'})" class="mdl-button mdl-js-button mdl-js-ripple-effect table-button delete">
                                             <span class="button-text">Delete</span>
@@ -97,9 +93,9 @@ class RobotInfoArray extends \ArrayObject implements ArrayAccess
                                             <span class="button-text">Save</span>
                                         </button>
                                     </div>
-                                    </div>
-                                </section>
-                            </div>
+                                </div>
+                            </section>
+                        </div>
                     <?php
                 }
             }

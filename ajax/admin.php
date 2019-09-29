@@ -3,6 +3,7 @@ require_once("../config.php");
 require_once(ROOT_DIR . "/classes/Ajax.php");
 require_once(ROOT_DIR . "/classes/tables/core/Teams.php");
 require_once(ROOT_DIR . "/classes/tables/core/Events.php");
+require_once(ROOT_DIR . "/classes/tables/core/Matches.php");
 require_once(ROOT_DIR . "/classes/tables/local/RobotInfoKeys.php");
 require_once(ROOT_DIR . "/classes/tables/local/ScoutCardInfoKeys.php");
 require_once(ROOT_DIR . "/classes/tables/local/ChecklistItems.php");
@@ -317,7 +318,7 @@ switch ($_POST['action'])
                 if(empty($scoutCardInfo->MatchId))
                     $ajax->error("Match id cannot be empty.");
 
-                if(!ctype_alnum($scoutCardInfo->MatchId))
+                if(!ctype_alnum(str_replace("_", "", $scoutCardInfo->MatchId)))
                     $ajax->error("Match id may only be alpha-numeric (A-Z 0-9).");
 
                 if(empty($scoutCardInfo->TeamId))
@@ -359,7 +360,7 @@ switch ($_POST['action'])
                 if(empty($checklistItemResult->MatchId))
                     $ajax->error("Match id cannot be empty.");
 
-                if(!validAlnum($checklistItemResult->MatchId))
+                if(!ctype_alnum(str_replace("_", "", $checklistItemResult->MatchId)))
                     $ajax->error("Match id may only be alpha-numeric (A-Z 0-9).");
 
                 if(empty($checklistItemResult->Status))
@@ -463,6 +464,7 @@ switch ($_POST['action'])
                 //endregion
 
             //region Info Classes
+
             case RobotInfo::class:
 
                 $teamId = $_POST['extraArgs']['teamId'];
@@ -483,6 +485,44 @@ switch ($_POST['action'])
                 $success = true;
 
                 foreach(RobotInfo::getObjects(null, null, Events::withId($eventId), Teams::withId($teamId)) as $robotInfo)
+                    if(!$robotInfo->delete())
+                        $success = false;
+
+                if($success)
+                    $ajax->success("Robot info deleted successfully.");
+
+                else
+                    $ajax->error("Robot info failed to delete.");
+
+                break;
+
+            case ScoutCardInfo::class:
+
+                $teamId = $_POST['extraArgs']['teamId'];
+                $eventId = $_POST['extraArgs']['eventId'];
+                $matchId = $_POST['extraArgs']['matchId'];
+
+                if(empty($teamId))
+                    $ajax->error("Team id cannot be empty.");
+
+                if(!ctype_digit($teamId))
+                    $ajax->error("Team id may only be numeric (0-9).");
+
+                if(empty($eventId))
+                    $ajax->error("Event id cannot be empty.");
+
+                if(!ctype_alnum($eventId))
+                    $ajax->error("Event id may only be alpha-numeric (A-Z 0-9).");
+
+                if(empty($matchId))
+                    $ajax->error("Match id cannot be empty.");
+
+                if(!ctype_alnum(str_replace("_", "", $matchId)))
+                    $ajax->error("Match id may only be alpha-numeric (A-Z 0-9).");
+
+                $success = true;
+
+                foreach(ScoutCardInfo::getObjects(null, null, Events::withId($eventId), Matches::withId($matchId), Teams::withId($teamId)) as $robotInfo)
                     if(!$robotInfo->delete())
                         $success = false;
 

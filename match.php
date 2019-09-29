@@ -71,7 +71,7 @@ if(!empty($teamId))
                 $arr[] = $testVal;
 
             if ($allianceColor == $match->getAllianceColor(Teams::withId($arr[0]->TeamId)))
-                echo $arr->toHtml();
+                $arr->toHtml();
         }
 
         ?>
@@ -80,5 +80,25 @@ if(!empty($teamId))
     </main>
 </div>
 <?php require_once(INCLUDES_DIR . 'bottom-scripts.php') ?>
+<?php
+if(!empty($allianceColor))
+{
+    require_once(INCLUDES_DIR . 'modals.php');
+    ?>
+    <script src="<?php echo JS_URL ?>modify-record.js.php"></script>
+    <script>
+        function deleteFailCallback(message)
+        {
+            showToast(message);
+        }
+
+        function deleteSuccessCallback(message)
+        {
+            location.reload();
+        }
+    </script>
+    <?php
+}
+?>
 </body>
 </html>
