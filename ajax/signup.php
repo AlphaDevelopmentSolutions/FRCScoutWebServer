@@ -42,8 +42,8 @@ switch ($_POST['action'])
                 $ajax->error('The email address provided is already in use.');
         }
 
-        if (empty($password) || !validAlnum($password) || strlen($password) < 6)
-            $ajax->error('Main account passwords may only include A-Z 0-9 and must be at least 6 characters.');
+        if (!validPassword($password))
+            $ajax->error('Main account password is invalid. Please review the password requirements.');
 
         if ($password != $retypePassword)
             $ajax->error('Main account passwords do not match.');
@@ -57,8 +57,8 @@ switch ($_POST['action'])
         if (empty($adminUsername) || !validAlnum($adminUsername) || strlen($adminUsername) < 6)
             $ajax->error('Admin username may only include A-Z 0-9 and must be at least 6 characters.');
 
-        if (empty($adminPassword) || !validAlnum($adminPassword) || strlen($adminPassword) < 6)
-            $ajax->error('Admin password may only include A-Z 0-9 and must be at least 6 characters.');
+        if (!validPassword($adminPassword))
+            $ajax->error('Admin password is invalid. Please review the password requirements.');
 
         if ($adminPassword != $adminRetypePassword)
             $ajax->error('Admin passwords do not match.');
@@ -219,7 +219,22 @@ function importSqlFile($pdo, $sqlFile)
     return true;
 }
 
+/**
+ * Checks if a string / text is a valid alnum including spaces
+ * @param $text
+ * @return bool
+ */
 function validAlnum($text)
 {
     return ctype_alnum(trim(str_replace(' ', '', $text)));
+}
+
+/**
+ * Checks if a password is valid based off password requirements
+ * @param $password
+ * @return bool
+ */
+function validPassword($password)
+{
+    return preg_match('^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{8,})', $password) == 1;
 }

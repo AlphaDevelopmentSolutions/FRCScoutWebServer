@@ -38,21 +38,51 @@ require_once(ROOT_DIR . '/classes/Ajax.php');
                             <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
                                 <input autocomplete="new-password" required class="mdl-textfield__input" type="text" name="username" id="username" placeholder=" ">
                                 <label class="mdl-textfield__label" >Username</label>
+                                <div class="mdl-tooltip mdl-tooltip--large" for="username">
+                                    Username that will be used to log into the landing page and main site.
+                                </div>
                             </div>
 
                             <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
                                 <input autocomplete="new-password" required class="mdl-textfield__input" type="email" name="email" id="email" placeholder=" ">
                                 <label class="mdl-textfield__label" >Email</label>
+                                <div class="mdl-tooltip mdl-tooltip--large" for="email">
+                                    Contact email for the team.
+                                </div>
                             </div>
 
                             <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
                                 <input autocomplete="new-password" required class="mdl-textfield__input" type="password" name="password" id="password" placeholder=" ">
                                 <label class="mdl-textfield__label" >Password</label>
+                                <div class="mdl-tooltip mdl-tooltip--large" for="password">
+                                    Password that will be used to log into the landing page and main site.
+                                    <br>
+                                    <br>
+                                    Password must contain at least:
+                                    <ul>
+                                        <li>1 lower case letter</li>
+                                        <li>1 upper case letter</li>
+                                        <li>1 number</li>
+                                        <li>8 characters</li>
+                                    </ul>
+                                </div>
                             </div>
 
                             <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
                                 <input autocomplete="new-password" required class="mdl-textfield__input" type="password" name="retypePassword" id="retypePassword" placeholder=" ">
                                 <label class="mdl-textfield__label" >Retype Password</label>
+                                <div class="mdl-tooltip mdl-tooltip--large" for="retypePassword">
+                                    Password that will be used to log into the landing page and main site.
+                                    <br>
+                                    <br>
+                                    Password must contain at least:
+                                    <ul>
+                                        <li>1 lower case letter</li>
+                                        <li>1 upper case letter</li>
+                                        <li>1 number</li>
+                                        <li>8 characters</li>
+                                    </ul>
+                                </div>
                             </div>
 
                         </div>
@@ -62,26 +92,59 @@ require_once(ROOT_DIR . '/classes/Ajax.php');
                             <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
                                 <input autocomplete="new-password" required class="mdl-textfield__input" type="text" name="adminFirstName" id="adminFirstName" placeholder=" ">
                                 <label class="mdl-textfield__label" >First Name</label>
+                                <div class="mdl-tooltip mdl-tooltip--large" for="adminFirstName">
+                                    First name for your teams admin account.
+                                </div>
                             </div>
 
                             <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
                                 <input autocomplete="new-password" required class="mdl-textfield__input" type="text" name="adminLastName" id="adminLastName" placeholder=" ">
                                 <label class="mdl-textfield__label" >Last Name</label>
+                                <div class="mdl-tooltip mdl-tooltip--large" for="adminLastName">
+                                    Last name for your teams admin account.
+                                </div>
                             </div>
 
                             <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
                                 <input autocomplete="new-password" required class="mdl-textfield__input" type="text" name="adminUsername" id="adminUsername" placeholder=" ">
                                 <label class="mdl-textfield__label" >Username</label>
+                                <div class="mdl-tooltip mdl-tooltip--large" for="adminUsername">
+                                    Username for your teams page admin account.
+                                </div>
                             </div>
 
                             <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
                                 <input autocomplete="new-password" required class="mdl-textfield__input" type="password" name="adminPassword" id="adminPassword" placeholder=" ">
                                 <label class="mdl-textfield__label" >Password</label>
+                                <div class="mdl-tooltip mdl-tooltip--large" for="adminPassword">
+                                    Password that will be used to log into the admin system on your teams page.
+                                    <br>
+                                    <br>
+                                    Password must contain at least:
+                                    <ul>
+                                        <li>1 lower case letter</li>
+                                        <li>1 upper case letter</li>
+                                        <li>1 number</li>
+                                        <li>8 characters</li>
+                                    </ul>
+                                </div>
                             </div>
 
                             <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
                                 <input autocomplete="new-password" required class="mdl-textfield__input" type="password" name="adminRetypePassword" id="adminRetypePassword" placeholder=" ">
                                 <label class="mdl-textfield__label" >Retype Password</label>
+                                <div class="mdl-tooltip mdl-tooltip--large" for="adminRetypePassword">
+                                    Password that will be used to log into the admin system on your teams page.
+                                    <br>
+                                    <br>
+                                    Password must contain at least:
+                                    <ul>
+                                        <li>1 lower case letter</li>
+                                        <li>1 upper case letter</li>
+                                        <li>1 number</li>
+                                        <li>8 characters</li>
+                                    </ul>
+                                </div>
                             </div>
 
                         </div>
@@ -91,35 +154,53 @@ require_once(ROOT_DIR . '/classes/Ajax.php');
                             <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
                                 <input  autocomplete="new-password" required class="mdl-textfield__input" type="text" name="teamNumber" id="teamNumber" placeholder=" ">
                                 <label class="mdl-textfield__label" >Team Number</label>
+                                <div class="mdl-tooltip mdl-tooltip--large" for="teamNumber">
+                                    Enter your team number and select it from the list.
+                                </div>
                             </div>
 
                             <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
                                 <input autocomplete="new-password" required class="mdl-textfield__input" type="text" id="appName" placeholder=" ">
                                 <label class="mdl-textfield__label" >App Name</label>
+                                <div class="mdl-tooltip mdl-tooltip--large" for="appName">
+                                    The name of your teams app.
+                                </div>
                             </div>
 
                             <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
                                 <input autocomplete="new-password" required  class="jscolor mdl-textfield__input" type="text" id="primaryColor" value="03A9F4">
                                 <label class="mdl-textfield__label" >Primary Color</label>
+                                <div class="mdl-tooltip mdl-tooltip--large" for="primaryColor">
+                                    Primary color for the web and mobile application.
+                                </div>
                             </div>
 
                             <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
                                 <input autocomplete="new-password" required  class="jscolor mdl-textfield__input" type="text" id="secondaryColor" value="0288D1">
                                 <label class="mdl-textfield__label" >Secondary Color</label>
+                                <div class="mdl-tooltip mdl-tooltip--large" for="secondaryColor">
+                                    Darker primary color, usually a color accent, for the web and mobile application
+                                </div>
                             </div>
 
                             <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label" style="width: 100%;">
                                 <input autocomplete="new-password" required  class="mdl-textfield__input" type="text" id="apiKey" placeholder=" ">
                                 <label class="mdl-textfield__label" >API Key</label>
+                                <div class="mdl-tooltip mdl-tooltip--large" for="apiKey">
+                                    API key used for the mobile app to communicate and access data.
+                                    <br>
+                                    <br>
+                                    If your would like one generated for you, click "Generate Key".
+                                </div>
                             </div>
                             <button onclick="generateApiKey($('#apiKey'));" id="generate-api-key" type="button" class="default-mat-button mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect">
                                 Generate Key
                             </button>
                         </div>
 
-                        <div class="mdl-card__supporting-text" style="margin-bottom: 30px;">
-                            <button onclick="window.location.replace('<?php echo ROOT_URL ?>')" id="cancel" type="button" class="default-mat-button create-acc-button mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect">
-                                Cancel
+                        <div class="mdl-card__supporting-text card-buttons" style="margin-bottom: 30px;">
+                            <button onclick="window.location.replace('<?php echo ROOT_URL ?>')" type="button" class="default-mat-text-button mdl-button mdl-js-button mdl-js-ripple-effect">
+                                <span class="button-text">Cancel</span>
                             </button>
 
                             <button name="save" id="save" type="submit" class="default-mat-button create-acc-button mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect">

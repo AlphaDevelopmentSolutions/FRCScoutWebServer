@@ -1,1 +1,1 @@
-<div class="version">Version <?php echo VERSION ?> </div>
+<div class="version material-top-bottom-padding">Version <?php echo VERSION ?> </div>

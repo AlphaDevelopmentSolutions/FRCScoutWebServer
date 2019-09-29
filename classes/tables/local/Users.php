@@ -69,13 +69,13 @@ class Users extends LocalTable
                     <label class="mdl-textfield__label" >Name</label>
                 </div>
                 <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                    <input disabled class="mdl-textfield__input" type="text" value="' . $this->UserName .'" name="completedBy">
+                    <input disabled class="mdl-textfield__input" type="text" value="' . $this->UserName . '" name="completedBy">
                     <label class="mdl-textfield__label" >Username</label>
                 </div>
               
             </div>
-            <div class="center-div-outer">
-                <form class="center-div-inner" action="/ajax/logout.php">
+            <div class="center-div-horizontal-outer">
+                <form class="center-div-horizontal-inner" action="/ajax/logout.php">
                     <button class="mdl-button mdl-js-button mdl-js-ripple-effect">Logout</button>
                 </form>
             </div>

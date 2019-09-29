@@ -125,14 +125,53 @@ interface AdminPanels
                 <?php
                     $obj = Config::getObjects(null, null, null,"Id", "ASC");
 
+                    $i = 0;
                     foreach ($obj as $config)
                     {
+                        $i++;
                         $titleText = str_replace("_", " ", $config->Key);
                         $titleText = strtolower($titleText);
                         $titleText = ucwords($titleText);
 
                         ?>
-                            <strong class="setting-title"><?php echo $titleText ?></strong>
+                            <span class="setting-title">
+                                <strong><?php echo $titleText ?></strong>
+                                <span class="center-div-vertical-outer">
+                                    <div id="desc<?php echo $i ?>" class="center-div-vertical-inner material-side-padding icon material-icons">help_outline</div>
+                                </span>
+                                <div class="mdl-tooltip mdl-tooltip--large" for="desc<?php echo $i ?>">
+                                    <?php
+
+                                    switch($config->Key)
+                                    {
+                                        case "APP_NAME":
+                                            ?>
+                                            The name of your teams app.
+                                            <?php
+                                            break;
+
+                                        case "API_KEY":
+                                            ?>
+                                            API key used for the mobile app to communicate and access data.
+                                            <?php
+                                            break;
+
+                                        case "PRIMARY_COLOR":
+                                            ?>
+                                            Primary color for the web and mobile application.
+                                            <?php
+                                            break;
+
+                                        case "PRIMARY_COLOR_DARK":
+                                            ?>
+                                            Darker primary color, usually a color accent, for the web and mobile application.
+                                            <?php
+                                            break;
+                                    }
+
+                                    ?>
+                                </div>
+                            </span>
                             <div class="setting-value mdl-textfield mdl-js-textfield mdl-textfield--floating-label" data-upgraded=",MaterialTextfield">
                                 <input class="<?php if(strpos(strtolower($titleText), "color")) echo "jscolor" ?> mdl-textfield__input" type="text" value="<?php echo $config->Value?>" name="<?php echo $config->Key ?>" id="<?php echo $config->Key ?>">
                             </div>
@@ -149,27 +188,72 @@ interface AdminPanels
                 ?>
                     <h4 style="padding-left: 40px;">User Settings</h4>
                     <div class="mdl-card__supporting-text">
-                        <strong class="setting-title">First Name</strong>
+                        <span class="setting-title">
+                            <strong>First Name</strong>
+                            <span class="center-div-vertical-outer">
+                                <div id="desc1" class="center-div-vertical-inner material-side-padding icon material-icons">help_outline</div>
+                            </span>
+                            <div class="mdl-tooltip mdl-tooltip--large" for="desc1">
+                                First name of the user.
+                            </div>
+                        </span>
                         <div class="setting-value mdl-textfield mdl-js-textfield mdl-textfield--floating-label" data-upgraded=",MaterialTextfield">
+
                             <input class="mdl-textfield__input" type="text" value="<?php echo $obj->FirstName ?>" name="FirstName" id="FirstName">
                         </div>
-                        <strong class="setting-title">Last Name</strong>
+
+                        <span class="setting-title">
+                            <strong>Last Name</strong>
+                            <span class="center-div-vertical-outer">
+                                <div id="desc2" class="center-div-vertical-inner material-side-padding icon material-icons">help_outline</div>
+                            </span>
+                            <div class="mdl-tooltip mdl-tooltip--large" for="desc2">
+                                Last name of the user.
+                            </div>
+                        </span>
                         <div class="setting-value mdl-textfield mdl-js-textfield mdl-textfield--floating-label" data-upgraded=",MaterialTextfield">
                             <input class="mdl-textfield__input" type="text" value="<?php echo $obj->LastName ?>" name="LastName" id="LastName">
                         </div>
-                        <strong class="setting-title">Admin Account</strong>
+
+                        <span class="setting-title">
+                            <strong>Admin Account</strong>
+                            <span class="center-div-vertical-outer">
+                                <div id="desc3" class="center-div-vertical-inner material-side-padding icon material-icons">help_outline</div>
+                            </span>
+                            <div class="mdl-tooltip mdl-tooltip--large" for="desc3">
+                                Does the user have admin privileges?
+                            </div>
+                        </span>
                         <div class="setting-value mdl-textfield mdl-js-textfield mdl-textfield--floating-label" data-upgraded=",MaterialTextfield">
                             <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" for="IsAdmin">
                                 <input type="checkbox" name="IsAdmin" id="IsAdmin" class="mdl-switch__input" <?php if($obj->IsAdmin == 1) echo "checked" ?>
                                 <span class="mdl-switch__label"></span>
                             </label>
                         </div>
+
                         <div id="hideable-data" <?php echo $obj->IsAdmin == 1 ? "" : "hidden" ?>>
-                            <strong class="setting-title">Username</strong>
+                           <span class="setting-title">
+                                <strong>Username</strong>
+                                <span class="center-div-vertical-outer">
+                                    <div id="desc4" class="center-div-vertical-inner material-side-padding icon material-icons">help_outline</div>
+                                </span>
+                                <div class="mdl-tooltip mdl-tooltip--large" for="desc4">
+                                    Username to log into the admin system.
+                                </div>
+                            </span>
                             <div class="setting-value mdl-textfield mdl-js-textfield mdl-textfield--floating-label" data-upgraded=",MaterialTextfield">
                                 <input autocomplete="new-password" class="mdl-textfield__input" type="text" value="<?php echo $obj->UserName ?>" name="UserName" id="UserName" <?php echo $obj->IsAdmin == 1 ? "" : "disabled" ?>>
                             </div>
-                            <strong class="setting-title">Password</strong>
+
+                            <span class="setting-title">
+                                <strong>Password</strong>
+                                <span class="center-div-vertical-outer">
+                                    <div id="desc5" class="center-div-vertical-inner material-side-padding icon material-icons">help_outline</div>
+                                </span>
+                                <div class="mdl-tooltip mdl-tooltip--large" for="desc5">
+                                    Password to log into the admin system.
+                                </div>
+                            </span>
                             <div class="setting-value mdl-textfield mdl-js-textfield mdl-textfield--floating-label" data-upgraded=",MaterialTextfield">
                                 <input autocomplete="new-password" class="mdl-textfield__input" type="password" value="<?php if(strlen($obj->Password) > 0) echo "•••••••••••••••••" ?>" name="Password" id="Password" <?php echo $obj->IsAdmin == 1 ? "" : "disabled" ?>>
                             </div>
@@ -183,19 +267,75 @@ interface AdminPanels
                 ?>
                     <h4 style="padding-left: 40px;">Robot Info Settings</h4>
                     <div class="mdl-card__supporting-text">
-                        <strong class="setting-title">Year</strong>
+                        <span class="setting-title">
+                            <strong>Year</strong>
+                            <span class="center-div-vertical-outer">
+                                <div id="desc1" class="center-div-vertical-inner material-side-padding icon material-icons">help_outline</div>
+                            </span>
+                            <div class="mdl-tooltip mdl-tooltip--large" for="desc1">
+                                The year this robot info key is stored under.
+                            </div>
+                        </span>
                         <div class="setting-value mdl-textfield mdl-js-textfield mdl-textfield--floating-label" data-upgraded=",MaterialTextfield">
                             <input disabled class="mdl-textfield__input" type="number" value="<?php echo ((!empty($obj->YearId)) ? $obj->YearId : $year->Id) ?>" name="YearId" id="YearId">
                         </div>
-                        <strong class="setting-title">Game State</strong>
+
+                        <span class="setting-title">
+                            <strong>Game State</strong>
+                            <span class="center-div-vertical-outer">
+                                <div id="desc2" class="center-div-vertical-inner material-side-padding icon material-icons">help_outline</div>
+                            </span>
+                            <div class="mdl-tooltip mdl-tooltip--large" for="desc2">
+                                The state of the game to gather information for.
+                                <br>
+                                <br>
+                                Examples:
+                                <ul>
+                                    <li>Pre Game</li>
+                                    <li>Autonomous</li>
+                                    <li>Teleop</li>
+                                    <li>End Game</li>
+                                    <li>Post Game</li>
+                                </ul>
+                            </div>
+                        </span>
                         <div class="setting-value mdl-textfield mdl-js-textfield mdl-textfield--floating-label" data-upgraded=",MaterialTextfield">
                             <input class="mdl-textfield__input" type="text" value="<?php echo $obj->KeyState ?>" name="KeyState" id="KeyState">
                         </div>
-                        <strong class="setting-title">Info Name</strong>
+
+                        <span class="setting-title">
+                            <strong>Info Name</strong>
+                            <span class="center-div-vertical-outer">
+                                <div id="desc3" class="center-div-vertical-inner material-side-padding icon material-icons">help_outline</div>
+                            </span>
+                            <div class="mdl-tooltip mdl-tooltip--large" for="desc3">
+                                Information you will be gathering.
+                                <br>
+                                <br>
+                                Examples:
+                                <ul>
+                                    <li>Drivetrain</li>
+                                    <li>Weight</li>
+                                    <li>Width</li>
+                                    <li>Height</li>
+                                    <li>Climb Time</li>
+                                    <li>Notes</li>
+                                </ul>
+                            </div>
+                        </span>
                         <div class="setting-value mdl-textfield mdl-js-textfield mdl-textfield--floating-label" data-upgraded=",MaterialTextfield">
                             <input class="mdl-textfield__input" type="text" value="<?php echo $obj->KeyName ?>" name="KeyName" id="KeyName">
                         </div>
-                        <strong class="setting-title">Sort Order</strong>
+
+                        <span class="setting-title">
+                            <strong>Sort Order</strong>
+                            <span class="center-div-vertical-outer">
+                                <div id="desc4" class="center-div-vertical-inner material-side-padding icon material-icons">help_outline</div>
+                            </span>
+                            <div class="mdl-tooltip mdl-tooltip--large" for="desc4">
+                                Order number when sorting it into a list.
+                            </div>
+                        </span>
                         <div class="setting-value mdl-textfield mdl-js-textfield mdl-textfield--floating-label" data-upgraded=",MaterialTextfield">
                             <input class="mdl-textfield__input" type="number" value="<?php echo $obj->SortOrder ?>" name="SortOrder" id="SortOrder">
                         </div>
@@ -208,23 +348,91 @@ interface AdminPanels
                     ?>
                     <h4 style="padding-left: 40px;">Scout Card Info Settings</h4>
                     <div class="mdl-card__supporting-text">
-                        <strong class="setting-title">Year</strong>
+                        <span class="setting-title">
+                            <strong>Year</strong>
+                            <span class="center-div-vertical-outer">
+                                <div id="desc1" class="center-div-vertical-inner material-side-padding icon material-icons">help_outline</div>
+                            </span>
+                            <div class="mdl-tooltip mdl-tooltip--large" for="desc1">
+                                The year this robot info key is stored under.
+                            </div>
+                        </span>
                         <div class="setting-value mdl-textfield mdl-js-textfield mdl-textfield--floating-label" data-upgraded=",MaterialTextfield">
                             <input disabled class="mdl-textfield__input" type="number" value="<?php echo ((!empty($obj->YearId)) ? $obj->YearId : $year->Id) ?>" name="YearId" id="YearId">
                         </div>
-                        <strong class="setting-title">Game State</strong>
+
+                        <span class="setting-title">
+                            <strong>Game State</strong>
+                            <span class="center-div-vertical-outer">
+                                <div id="desc2" class="center-div-vertical-inner material-side-padding icon material-icons">help_outline</div>
+                            </span>
+                            <div class="mdl-tooltip mdl-tooltip--large" for="desc2">
+                                The state of the game to gather information for.
+                                <br>
+                                <br>
+                                Examples:
+                                <ul>
+                                    <li>Pre Game</li>
+                                    <li>Autonomous</li>
+                                    <li>Teleop</li>
+                                    <li>End Game</li>
+                                    <li>Post Game</li>
+                                </ul>
+                            </div>
+                        </span>
                         <div class="setting-value mdl-textfield mdl-js-textfield mdl-textfield--floating-label" data-upgraded=",MaterialTextfield">
                             <input class="mdl-textfield__input" type="text" value="<?php echo $obj->KeyState ?>" name="KeyState" id="KeyState">
                         </div>
-                        <strong class="setting-title">Info Name</strong>
+
+                        <span class="setting-title">
+                            <strong>Info Name</strong>
+                            <span class="center-div-vertical-outer">
+                                <div id="desc3" class="center-div-vertical-inner material-side-padding icon material-icons">help_outline</div>
+                            </span>
+                            <div class="mdl-tooltip mdl-tooltip--large" for="desc3">
+                                Information you will be gathering.
+                                <br>
+                                <br>
+                                Examples:
+                                <ul>
+                                    <li>Drivetrain</li>
+                                    <li>Weight</li>
+                                    <li>Width</li>
+                                    <li>Height</li>
+                                    <li>Climb Time</li>
+                                    <li>Notes</li>
+                                </ul>
+                            </div>
+                        </span>
                         <div class="setting-value mdl-textfield mdl-js-textfield mdl-textfield--floating-label" data-upgraded=",MaterialTextfield">
                             <input class="mdl-textfield__input" type="text" value="<?php echo $obj->KeyName ?>" name="KeyName" id="KeyName">
                         </div>
-                        <strong class="setting-title">Sort Order</strong>
+
+                        <span class="setting-title">
+                            <strong>Sort Order</strong>
+                            <span class="center-div-vertical-outer">
+                                <div id="desc4" class="center-div-vertical-inner material-side-padding icon material-icons">help_outline</div>
+                            </span>
+                            <div class="mdl-tooltip mdl-tooltip--large" for="desc4">
+                                Order number when sorting it into a list.
+                            </div>
+                        </span>
                         <div class="setting-value mdl-textfield mdl-js-textfield mdl-textfield--floating-label" data-upgraded=",MaterialTextfield">
                             <input class="mdl-textfield__input" type="number" value="<?php echo $obj->SortOrder ?>" name="SortOrder" id="SortOrder">
                         </div>
-                        <strong class="setting-title">Data Type</strong>
+
+                        <span class="setting-title">
+                            <strong>Data Type</strong>
+                            <span class="center-div-vertical-outer">
+                                <div id="desc5" class="center-div-vertical-inner material-side-padding icon material-icons">help_outline</div>
+                            </span>
+                            <div class="mdl-tooltip mdl-tooltip--large" for="desc5">
+                                Type of data being collected.
+                                <br>
+                                <br>
+                                <i>Note: <?php echo DataTypes::TEXT_PLAIN_TEXT ?> data types can't be used when displaying statistics.</i>
+                            </div>
+                        </span>
                         <div class="setting-value mdl-textfield mdl-js-textfield mdl-textfield--floating-label" data-upgraded=",MaterialTextfield">
                             <input id="DataType" class="mdl-textfield__input mdl-js-button" type="text" value="<?php echo DataTypes::DATATYPE_TO_PLAIN_TEXT_ARRAY[$obj->DataType] ?>" name="DataType" id="DataType"/>
                             <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect" for="DataType">
@@ -239,19 +447,43 @@ interface AdminPanels
                             </ul>
                         </div>
                         <div id="min-value-div" <?php echo (($obj->DataType != DataTypes::INT) ? "hidden" : "") ?>>
-                            <strong class="setting-title">Minimum Value</strong>
+                            <span class="setting-title">
+                                <strong>Minimum Value</strong>
+                                <span class="center-div-vertical-outer">
+                                    <div id="desc6" class="center-div-vertical-inner material-side-padding icon material-icons">help_outline</div>
+                                </span>
+                                <div class="mdl-tooltip mdl-tooltip--large" for="desc6">
+                                    Minimum value when entering data.
+                                </div>
+                            </span>
                             <div class="setting-value mdl-textfield mdl-js-textfield mdl-textfield--floating-label" data-upgraded=",MaterialTextfield">
                                 <input class="mdl-textfield__input" type="number" value="<?php echo $obj->MinValue ?>" name="MinValue" id="MinValue" >
                             </div>
                         </div>
                         <div id="max-value-div" <?php echo (($obj->DataType != DataTypes::INT) ? "hidden" : "") ?>>
-                            <strong class="setting-title">Maximum Value</strong>
+                            <span class="setting-title">
+                                <strong>Maximum Value</strong>
+                                <span class="center-div-vertical-outer">
+                                    <div id="desc7" class="center-div-vertical-inner material-side-padding icon material-icons">help_outline</div>
+                                </span>
+                                <div class="mdl-tooltip mdl-tooltip--large" for="desc7">
+                                    Maximum value when entering data.
+                                </div>
+                            </span>
                             <div class="setting-value mdl-textfield mdl-js-textfield mdl-textfield--floating-label" data-upgraded=",MaterialTextfield">
                                 <input class="mdl-textfield__input" type="number" value="<?php echo $obj->MaxValue ?>" name="MaxValue" id="MaxValue">
                             </div>
                         </div>
                         <div id="null-zero-div" <?php echo (($obj->DataType != DataTypes::INT) ? "hidden" : "") ?>>
-                            <strong class="setting-title">Nullify Zeros</strong>
+                            <span class="setting-title">
+                                <strong>Nullify Zeros</strong>
+                                <span class="center-div-vertical-outer">
+                                    <div id="desc8" class="center-div-vertical-inner material-side-padding icon material-icons">help_outline</div>
+                                </span>
+                                <div class="mdl-tooltip mdl-tooltip--large" for="desc8">
+                                    Should zero (0) values be ignored when calculating statistics?
+                                </div>
+                            </span>
                             <div class="setting-value mdl-textfield mdl-js-textfield mdl-textfield--floating-label" data-upgraded=",MaterialTextfield">
                                 <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" for="NullZeros">
                                     <input type="checkbox" name="NullZeros" id="NullZeros" class="mdl-switch__input" <?php if($obj->NullZeros == 1) echo "checked" ?>
@@ -260,7 +492,15 @@ interface AdminPanels
                             </div>
                         </div>
                         <div id="include-in-stats-div" <?php echo (($obj->DataType != DataTypes::INT && $obj->DataType != DataTypes::BOOL) ? "hidden" : "") ?>>
-                            <strong class="setting-title">Include In Stats</strong>
+                            <span class="setting-title">
+                                <strong>Include In Stats</strong>
+                                <span class="center-div-vertical-outer">
+                                    <div id="desc9" class="center-div-vertical-inner material-side-padding icon material-icons">help_outline</div>
+                                </span>
+                                <div class="mdl-tooltip mdl-tooltip--large" for="desc9">
+                                    Should this info be included in statistics?
+                                </div>
+                            </span>
                             <div class="setting-value mdl-textfield mdl-js-textfield mdl-textfield--floating-label" data-upgraded=",MaterialTextfield">
                                 <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" for="IncludeInStats">
                                     <input type="checkbox" name="IncludeInStats" id="IncludeInStats" class="mdl-switch__input" <?php if($obj->IncludeInStats == 1) echo "checked" ?>
@@ -277,15 +517,41 @@ interface AdminPanels
                         ?>
                         <h4 style="padding-left: 40px;">Checlist Item Settings</h4>
                         <div class="mdl-card__supporting-text">
-                            <strong class="setting-title">Year</strong>
+                            <span class="setting-title">
+                                <strong>Year</strong>
+                                <span class="center-div-vertical-outer">
+                                    <div id="desc1" class="center-div-vertical-inner material-side-padding icon material-icons">help_outline</div>
+                                </span>
+                                <div class="mdl-tooltip mdl-tooltip--large" for="desc1">
+                                    The year this robot info key is stored under
+                                </div>
+                            </span>
                             <div class="setting-value mdl-textfield mdl-js-textfield mdl-textfield--floating-label" data-upgraded=",MaterialTextfield">
                                 <input disabled class="mdl-textfield__input" type="number" value="<?php echo ((!empty($obj->YearId)) ? $obj->YearId : $year->Id) ?>" name="YearId" id="YearId">
                             </div>
-                            <strong class="setting-title">Title</strong>
+
+                            <span class="setting-title">
+                                <strong>Title</strong>
+                                <span class="center-div-vertical-outer">
+                                    <div id="desc2" class="center-div-vertical-inner material-side-padding icon material-icons">help_outline</div>
+                                </span>
+                                <div class="mdl-tooltip mdl-tooltip--large" for="desc2">
+                                    Title of the checklist item.
+                                </div>
+                            </span>
                             <div class="setting-value mdl-textfield mdl-js-textfield mdl-textfield--floating-label" data-upgraded=",MaterialTextfield">
                                 <input class="mdl-textfield__input" type="text" value="<?php echo $obj->Title ?>" name="Title" id="Title">
                             </div>
-                            <strong class="setting-title">Description</strong>
+
+                            <span class="setting-title">
+                                <strong>Description</strong>
+                                <span class="center-div-vertical-outer">
+                                    <div id="desc3" class="center-div-vertical-inner material-side-padding icon material-icons">help_outline</div>
+                                </span>
+                                <div class="mdl-tooltip mdl-tooltip--large" for="desc3">
+                                    Brief description of what should be done when completing this item.
+                                </div>
+                            </span>
                             <div class="mdl-textfield mdl-js-textfield">
                                 <textarea class="mdl-textfield__input" type="text" rows= "4" id="Description" name="Description"><?php echo $obj->Description ?></textarea>
                                 <label class="mdl-textfield__label" for="Description"></label>
@@ -295,11 +561,11 @@ interface AdminPanels
                     break;
         }
         ?>
-                    <div style="text-align: right">
+                    <div class="card-buttons">
                         <button onclick="deleteRecord(<?php echo $obj->Id ?>)" class="mdl-button mdl-js-button mdl-js-ripple-effect table-button delete">
                             <span class="button-text">Delete</span>
                         </button>
-                        <button style="width: 95px; margin: 24px;" onclick="saveRecord(<?php echo $obj->Id ?>)" class="center-div-inner mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--raised mdl-button--accent">
+                        <button style="width: 95px; margin: 24px;" onclick="saveRecord(<?php echo $obj->Id ?>)" class="center-div-horizontal-inner mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--raised mdl-button--accent">
                             <span class="button-text">Save</span>
                         </button>
                     </div>

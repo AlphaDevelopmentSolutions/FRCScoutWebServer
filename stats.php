@@ -128,7 +128,7 @@ $event = Events::withId($eventId);
     function createTeamChip(teamNumber)
     {
         return "" +
-            "<span class=\"team-chip mdl-chip mdl-chip--deletable\">" +
+            "<span class=\"material-side-padding mdl-chip mdl-chip--deletable\">" +
             "   <span class=\"mdl-chip__text\">" + teamNumber + "</span>" +
             "   <button onclick=\"console.log($(this).parent().remove()); searchTeams();\" type=\"button\" class=\"mdl-chip__action\"><i class=\"material-icons\">cancel</i></button>" +
             "</span>";

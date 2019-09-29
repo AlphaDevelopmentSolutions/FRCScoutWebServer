@@ -271,7 +271,6 @@ html, body {
   text-align: center;
   width: 100%;
   color: rgba(0, 0, 0, .25);
-  padding: 8px 0;
 }
 
 .circle-image
@@ -468,14 +467,26 @@ html, body {
   margin: 0 auto;
 }
 
-.center-div-outer
+.center-div-horizontal-outer
 {
   text-align: center;
 }
 
-.center-div-inner
+.center-div-horizontal-inner
 {
   display: inline-block;
+}
+
+.center-div-vertical-outer
+{
+  position: relative;
+}
+
+.center-div-vertical-inner
+{
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
 }
 
 .create-account,
@@ -535,7 +546,27 @@ html, body {
   color: white;
 }
 
-.team-chip
+.default-mat-text-button
+{
+  color: var(--default-color-primary);
+}
+
+.material-top-bottom-padding
+{
+  margin: 8px 0;
+}
+
+.material-side-padding
 {
   margin: 0 8px;
+}
+
+.material-padding
+{
+  margin: 8px;
+}
+
+.card-buttons
+{
+  text-align: right;
 }
