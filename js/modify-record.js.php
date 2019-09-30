@@ -73,6 +73,16 @@ function saveRecord(recordType, recordId)
                     Description: $('#Description').val()
                 };
             break;
+
+        case "<?php echo ChecklistItemResults::class ?>":
+            data =
+                {
+                    Id: recordId,
+                    Status: $('#Status').val(),
+                    CompletedBy: $('#CompletedBy').val(),
+                    CompletedDate: $('#CompletedDate').val()
+                };
+            break;
     }
 
     //call the admin ajax script to modify the records in the database

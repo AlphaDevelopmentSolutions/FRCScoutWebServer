@@ -45,28 +45,29 @@ class ChecklistItemResults extends LocalTable implements Status
         //get the checklist item
         $checklistItem = ChecklistItems::withId($this->ChecklistItemId);
 
-        //create the status html with colors
-        if($this->Status == Status::COMPLETE)
-            $statusHtml = '<span class="good" style="font-weight: bold">' . Status::COMPLETE . '</span>';
-
-        else if($this->Status == Status::INCOMPLETE)
-            $statusHtml = '<span class="bad" style="font-weight: bold">' . Status::INCOMPLETE . '</span>';
-
         ?>
         <div class="mdl-layout__tab-panel is-active" id="overview">
             <section class="section--center mdl-grid mdl-grid--no-spacing mdl-shadow--2dp">
                 <div class="mdl-card mdl-cell mdl-cell--12-col">
                     <div class="mdl-card__supporting-text">
                         <h4><?php echo $checklistItem->Title ?></h4>
-                        Current Status - <?php echo $statusHtml ?><br><br>
+                        Current Status -
+                        <div class="setting-value mdl-textfield mdl-js-textfield mdl-textfield--floating-label" data-upgraded=",MaterialTextfield">
+                            <input id="Status" class="mdl-textfield__input mdl-js-button <?php echo (($this->Status == Status::COMPLETE) ? 'good' : 'bad') ?>" style="font-weight: bold; width: unset;" type="text" value="<?php echo $this->Status ?>" name="DataType" id="DataType"/>
+                            <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect" for="Status">
+                                <li class="mdl-menu__item datatype-menu-item" value="<?php echo Status::COMPLETE ?>"><span class="good" style="font-weight: bold"><?php echo Status::COMPLETE ?></span></li>
+                                <li class="mdl-menu__item datatype-menu-item" value="<?php echo Status::INCOMPLETE ?>"><span class="bad" style="font-weight: bold"><?php echo Status::INCOMPLETE ?></span></li>
+                            </ul>
+                        </div>
+                        <br><br>
                         <?php echo $checklistItem->Description ?><br><br>
                         <strong class="setting-title">Completed By</strong>
                         <div class="setting-value mdl-textfield mdl-js-textfield mdl-textfield--floating-label" data-upgraded=",MaterialTextfield">
-                            <input class="mdl-textfield__input" value="<?php echo $this->CompletedBy ?>">
+                            <input class="mdl-textfield__input" value="<?php echo $this->CompletedBy ?>" id="CompletedBy">
                         </div>
                         <strong class="setting-title">Completed On</strong>
                         <div class="setting-value mdl-textfield mdl-js-textfield mdl-textfield--floating-label" data-upgraded=",MaterialTextfield">
-                            <input class="mdl-textfield__input" value="<?php echo $this->CompletedDate ?>">
+                            <input class="mdl-textfield__input" value="<?php echo $this->CompletedDate ?>" id="CompletedDate">
                         </div>
                     </div>
                     <div class="card-buttons">

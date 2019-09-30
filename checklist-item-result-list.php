@@ -85,6 +85,38 @@ if(!empty($match))
     {
         location.reload();
     }
+
+    function saveSuccessCallback(message)
+    {
+        showToast(message);
+    }
+
+    function saveFailCallback(message)
+    {
+        showToast(message);
+    }
+
+    $(document).ready(function ()
+    {
+        $(".datatype-menu-item").click(function ()
+        {
+            var value = $(this).attr("value");
+
+            $("#Status").attr("value", value);
+
+            if (value == "<?php echo Status::COMPLETE ?>")
+            {
+                $("#Status").addClass("good");
+                $("#Status").removeClass("bad");
+            }
+
+            else if (value == "<?php echo Status::INCOMPLETE ?>")
+            {
+                $("#Status").addClass("bad");
+                $("#Status").removeClass("good");
+            }
+        });
+    });
 </script>
 <?php
 }
