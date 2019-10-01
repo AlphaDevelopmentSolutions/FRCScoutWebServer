@@ -1,15 +1,35 @@
 <?php
 require_once("config.php");
+require_once(ROOT_DIR . "/classes/Ajax.php");
 require_once(ROOT_DIR . "/classes/tables/core/Teams.php");
 require_once(ROOT_DIR . "/classes/tables/core/Events.php");
 require_once(ROOT_DIR . "/classes/tables/core/Years.php");
-
+require_once(ROOT_DIR . "/classes/tables/local/RobotMedia.php");
 
 $eventId = $_GET['eventId'];
 $teamId = $_GET['teamId'];
 
 $team = Teams::withId($teamId);
 $event = Events::withId($eventId);
+
+//robot media submission
+if(isPostBack() && !empty($_FILES))
+{
+    $file = $_FILES['RobotMedia'];
+
+    //verify the image is the correct type
+    if($file['type'] == 'image/jpeg')
+    {
+        //create and save the robot media
+        $robotMedia = new RobotMedia();
+        $robotMedia->YearId = $event->YearId;
+        $robotMedia->EventId = $event->BlueAllianceId;
+        $robotMedia->TeamId = $team->Id;
+        $robotMedia->FileURI = base64_encode(file_get_contents($file['tmp_name']));
+
+        $robotMedia->save();
+    }
+}
 ?>
 
 <!doctype html>
@@ -17,6 +37,11 @@ $event = Events::withId($eventId);
 <head>
     <title><?php echo $team->Id . ' - ' . $team->Name ?> - Photos</title>
     <?php require_once(INCLUDES_DIR . 'meta.php') ?>
+    <script>
+        if ( window.history.replaceState ) {
+            window.history.replaceState( null, null, window.location.href );
+        }
+    </script>
 </head>
 <body class="mdl-demo mdl-color--grey-100 mdl-color-text--grey-700 mdl-base">
 <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
@@ -126,13 +151,17 @@ $event = Events::withId($eventId);
     <main class="mdl-layout__content">
 
         <?php
-
         foreach(RobotMedia::getObjects(null, $event, $team) as $robotMedia)
             $robotMedia->toHtml()
-
         ?>
-
         <?php require_once(INCLUDES_DIR . 'footer.php') ?>
+        <button onclick="$('#RobotMedia').trigger('click');" class="settings-fab mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored">
+            <i class="material-icons">add</i>
+        </button>
+
+        <form id="robot-media-form" method="post" action="" class="hide" enctype="multipart/form-data">
+            <input onchange="uploadImage(this)" type="file" name="RobotMedia" id="RobotMedia" accept="image/jpeg">
+        </form>
     </main>
 </div>
 <?php require_once(INCLUDES_DIR . 'bottom-scripts.php') ?>
@@ -149,6 +178,24 @@ $event = Events::withId($eventId);
     {
         showToast(message);
     }
+
+    /**
+     * Uploads image to server
+     */
+    function uploadImage(file)
+    {
+        if(file.files && file.files[0] && file.files[0].type === 'image/jpeg')
+        {
+            showDialog("Upload image?", "Are you sure you would like to upload this robot media?", function()
+            {
+                $('#robot-media-form').submit();
+            });
+        }
+
+        else
+            showToast('Robot media must be a .JPG or .JPEG.')
+    }
+
 </script>
 </body>
 </html>

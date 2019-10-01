@@ -10,6 +10,7 @@ require_once(ROOT_DIR . "/classes/tables/local/ChecklistItems.php");
 require_once(ROOT_DIR . "/classes/tables/local/RobotInfo.php");
 require_once(ROOT_DIR . "/classes/tables/local/ScoutCardInfo.php");
 require_once(ROOT_DIR . "/classes/tables/local/ChecklistItemResults.php");
+require_once(ROOT_DIR . "/classes/tables/local/RobotMedia.php");
 
 $ajax = new Ajax();
 

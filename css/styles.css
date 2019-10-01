@@ -570,3 +570,8 @@ html, body {
 {
   text-align: right;
 }
+
+.hide
+{
+  display: none;
+}

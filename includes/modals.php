@@ -10,7 +10,7 @@
     </div>
     <div class="mdl-dialog__actions">
         <button id="dialog-confirm" type="button" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--raised mdl-button--accent confirm">
-            Delete
+            Confirm
         </button>
         <button id="dialog-cancel" type="button" class="mdl-button">Cancel</button>
     </div>

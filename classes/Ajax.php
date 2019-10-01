@@ -26,7 +26,7 @@ class Ajax
         $this->response[self::$STATUS_KEY] = self::$SUCCESS_STATUS_CODE;
         $this->response[self::$RESPONSE_KEY] = $message;
 
-        echo json_encode($this->response);
+        die(json_encode($this->response));
 
     }
 

@@ -15,7 +15,6 @@ class RobotMedia extends LocalTable
      * @param Years | null $year if specified, filters by id
      * @param Events | null $event if specified, filters by id
      * @param Teams | null $team if specified, filters by id
-     * @param boolean $asNormalArray if true, uses [array] instead of [ScoutCardInfoArray]
      * @return ScoutCardInfoArray | ScoutCardInfo[]
      */
     public static function getObjects($year = null, $event = null, $team = null)
@@ -160,26 +159,8 @@ class RobotMedia extends LocalTable
      */
     private function deleteImage()
     {
-        //prep the file to be deleted
-        $file = fopen(ROBOT_MEDIA_DIR . "$this->FileURI", 'wb');
-
-        //store if delete was successful
-        $success = unlink($file);
-
-        fclose($file);
-
-        if($success)
-        {
-            //prep the file to be deleted
-            $file = fopen(ROBOT_MEDIA_THUMBS_DIR . "$this->FileURI", 'wb');
-
-            //store if delete was successful
-            $success = unlink($file);
-
-            fclose($file);
-
-            return $success;
-        }
+        if(unlink(ROBOT_MEDIA_DIR . "$this->FileURI"))
+            return unlink(ROBOT_MEDIA_THUMBS_DIR . "$this->FileURI");
 
         return false;
     }

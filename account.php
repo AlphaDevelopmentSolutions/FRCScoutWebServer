@@ -8,11 +8,9 @@ if(!loggedIn())
     header('Location: ' . URL_PATH);
 
 ?>
-
 <!doctype html>
 <html lang="en">
 <head>
-
     <title>Account</title>
     <?php require_once(INCLUDES_DIR . 'meta.php') ?>
 </head>
@@ -26,8 +24,7 @@ if(!loggedIn())
     ?>
 
     <main class="mdl-layout__content">
-
-        <?php echo $obj->toHtml() ?>
+        <a href="/ajax/logout.php">Logout</a>
         <?php require_once(INCLUDES_DIR . 'footer.php') ?>
     </main>
 </div>
