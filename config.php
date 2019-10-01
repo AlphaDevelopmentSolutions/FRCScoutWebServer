@@ -65,6 +65,7 @@ define('YEAR_MEDIA_URL', '/assets/year-media/');
 define('IMAGES_URL', '/assets/images/');
 define('CSS_URL', '/css/');
 define('JS_URL', '/js/');
+define('AJAX_URL', '/ajax/');
 require_once(ROOT_DIR . "/classes/Header.php");
 require_once(ROOT_DIR . "/classes/NavBar.php");
 require_once(ROOT_DIR . "/classes/NavBarArray.php");

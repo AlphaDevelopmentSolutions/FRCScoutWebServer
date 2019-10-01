@@ -209,7 +209,7 @@ require_once(ROOT_DIR . '/classes/Ajax.php');
     $(document).ready(function()
     {
         //get data from the ajax script
-        $.post('/ajax/autocomplete.php',
+        $.post('<?php echo AJAX_URL ?>autocomplete.php',
             {
                 action: 'team_list'
             },
@@ -248,7 +248,7 @@ require_once(ROOT_DIR . '/classes/Ajax.php');
     function generateApiKey(field)
     {
         //get data from the ajax script
-        $.post('/ajax/generate.php',
+        $.post('<?php echo AJAX_URL ?>generate.php',
             {
                 action: 'api_key'
             },
@@ -278,7 +278,7 @@ require_once(ROOT_DIR . '/classes/Ajax.php');
             accountBeingCreated = true;
 
             //get data from the ajax script
-            $.post('/ajax/signup.php',
+            $.post('<?php echo AJAX_URL ?>signup.php',
                 {
                     action: 'create',
                     username : $('#username').val(),

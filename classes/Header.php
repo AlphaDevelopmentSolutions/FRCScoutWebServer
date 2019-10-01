@@ -42,7 +42,7 @@ class Header
                     <span class="mdl-layout-title header-title"><a style="text-decoration: none; color: white;" href="/">' . $this->Title . '</a></span>
                     <div class="mdl-layout-spacer"></div>' .
             ((!loggedIn()) ?
-                    '<form  action="/ajax/login.php" method="post" style="">
+                    '<form  action="<?php echo AJAX_URL ?>login.php" method="post" style="">
                             <div class="mdl-textfield mdl-js-textfield login-field-wrapper">
                                 <input class="mdl-textfield__input login-field" type="text" name="username" style="background-color: white !important; color: black; ">
                                 <label class="mdl-textfield__label" for="username" style="padding-left: .5em; padding-right: .5em; ">Username</label>

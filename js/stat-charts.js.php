@@ -77,7 +77,7 @@ function searchTeams()
 function downloadGraphData()
 {
     //get data from the ajax script
-    $.post('/ajax/ajax.php',
+    $.post('<?php echo AJAX_URL ?>ajax.php',
         {
             action: 'load_stats',
             eventId: '<?php echo $event->BlueAllianceId ?>',

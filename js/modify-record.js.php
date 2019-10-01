@@ -86,7 +86,7 @@ function saveRecord(recordType, recordId)
     }
 
     //call the admin ajax script to modify the records in the database
-    $.post('/ajax/admin.php',
+    $.post('<?php echo AJAX_URL ?>admin.php',
         {
             action: 'save',
             class: recordType,
@@ -116,7 +116,7 @@ function deleteRecord(recordType, recordId, extraArgs)
     showDialog("Delete Record?", "All records in the database will be deleted. This action cannot be undone.", function ()
     {
         //call the admin ajax script to modify the records in the database
-        $.post('/ajax/admin.php',
+        $.post('<?php echo AJAX_URL ?>admin.php',
             {
                 action: 'delete',
                 class: recordType,

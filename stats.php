@@ -97,7 +97,7 @@ $event = Events::withId($eventId);
     $(document).ready(function()
     {
         //get data from the ajax script
-        $.post('/ajax/autocomplete.php',
+        $.post('<?php echo AJAX_URL ?>autocomplete.php',
             {
                 action: 'event_team_list',
                 eventId: '<?php echo $event->BlueAllianceId ?>'
