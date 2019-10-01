@@ -33,26 +33,26 @@ if(!empty($teamId))
     if(!empty($team))
     {
         $navBarLinksArray = new NavBarLinkArray();
-        $navBarLinksArray[] = new NavBarLink('Teams', TEAMS_URL . 'list.php?eventId=' . $event->BlueAllianceId);
-        $navBarLinksArray[] = new NavBarLink('Team ' . $teamId, TEAMS_URL . 'matches.php?eventId=' . $event->BlueAllianceId . '&teamId=' . $team->Id, true);
+        $navBarLinksArray[] = new NavBarLink('Teams', TEAMS_URL . 'list?eventId=' . $event->BlueAllianceId);
+        $navBarLinksArray[] = new NavBarLink('Team ' . $teamId, TEAMS_URL . 'match-list?eventId=' . $event->BlueAllianceId . '&teamId=' . $team->Id, true);
         $navBarArray[] = new NavBar($navBarLinksArray);
     }
 
     $navBarLinksArray = new NavBarLinkArray();
     if(empty($team))
-        $navBarLinksArray[] = new NavBarLink('Matches', MATCHES_URL . 'list.php?eventId=' . $event->BlueAllianceId);
+        $navBarLinksArray[] = new NavBarLink('Matches', MATCHES_URL . 'list?eventId=' . $event->BlueAllianceId);
     $navBarLinksArray[] = new NavBarLink($match->toString(), '', true);
 
     $navBarArray[] = new NavBar($navBarLinksArray);
 
     $navBarLinksArray = new NavBarLinkArray();
-    $navBarLinksArray[] = new NavBarLink('Stats', MATCHES_URL . 'stats.php?eventId=' . $event->BlueAllianceId . '&matchId=' . $match->Key . ((!empty($team)) ? '&teamId=' . $team->Id : ''));
-    $navBarLinksArray[] = new NavBarLink('Blue Alliance', MATCHES_URL . 'match.php?eventId=' . $event->BlueAllianceId . '&matchId=' . $match->Key . '&allianceColor=BLUE' . ((!empty($team)) ? '&teamId=' . $team->Id : ''), ($allianceColor == 'BLUE'));
-    $navBarLinksArray[] = new NavBarLink('Red Alliance', MATCHES_URL . 'match.php?eventId=' . $event->BlueAllianceId . '&matchId=' . $match->Key . '&allianceColor=RED' . ((!empty($team)) ? '&teamId=' . $team->Id : ''), ($allianceColor == 'RED'));
+    $navBarLinksArray[] = new NavBarLink('Stats', MATCHES_URL . 'stats?eventId=' . $event->BlueAllianceId . '&matchId=' . $match->Key . ((!empty($team)) ? '&teamId=' . $team->Id : ''));
+    $navBarLinksArray[] = new NavBarLink('Blue Alliance', MATCHES_URL . 'match?eventId=' . $event->BlueAllianceId . '&matchId=' . $match->Key . '&allianceColor=BLUE' . ((!empty($team)) ? '&teamId=' . $team->Id : ''), ($allianceColor == 'BLUE'));
+    $navBarLinksArray[] = new NavBarLink('Red Alliance', MATCHES_URL . 'match?eventId=' . $event->BlueAllianceId . '&matchId=' . $match->Key . '&allianceColor=RED' . ((!empty($team)) ? '&teamId=' . $team->Id : ''), ($allianceColor == 'RED'));
 
     $navBarArray[] = new NavBar($navBarLinksArray);
 
-    $header = new Header($event->Name, $additionContent, $navBarArray, $event, null, ADMIN_URL . 'list.php?yearId=' . $event->YearId);
+    $header = new Header($event->Name, $additionContent, $navBarArray, $event, null, ADMIN_URL . 'list?yearId=' . $event->YearId);
 
     echo $header->toHtml();
 

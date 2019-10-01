@@ -49,16 +49,16 @@ if(isPostBack() && !empty($_FILES))
     $navBarArray = new NavBarArray();
 
     $navBarLinksArray = new NavBarLinkArray();
-    $navBarLinksArray[] = new NavBarLink('Teams', TEAMS_URL . 'list.php?eventId=' . $event->BlueAllianceId);
+    $navBarLinksArray[] = new NavBarLink('Teams', TEAMS_URL . 'list?eventId=' . $event->BlueAllianceId);
     $navBarLinksArray[] = new NavBarLink('Team ' . $teamId, '', true);
 
     $navBarArray[] = new NavBar($navBarLinksArray);
 
     $navBarLinksArray = new NavBarLinkArray();
-    $navBarLinksArray[] = new NavBarLink('Matches', TEAMS_URL . 'matches.php?eventId=' . $event->BlueAllianceId . '&teamId=' . $team->Id);
-    $navBarLinksArray[] = new NavBarLink('Robot Info', TEAMS_URL . 'robot-info.php?eventId=' . $event->BlueAllianceId . '&teamId=' . $team->Id);
-    $navBarLinksArray[] = new NavBarLink('Photos', TEAMS_URL . 'photos.php?eventId=' . $event->BlueAllianceId . '&teamId=' . $team->Id, true);
-    $navBarLinksArray[] = new NavBarLink('Stats', TEAMS_URL . 'stats.php?eventId=' . $event->BlueAllianceId . '&teamId=' . $team->Id);
+    $navBarLinksArray[] = new NavBarLink('Matches', TEAMS_URL . 'match-list?eventId=' . $event->BlueAllianceId . '&teamId=' . $team->Id);
+    $navBarLinksArray[] = new NavBarLink('Robot Info', TEAMS_URL . 'robot-info?eventId=' . $event->BlueAllianceId . '&teamId=' . $team->Id);
+    $navBarLinksArray[] = new NavBarLink('Photos', TEAMS_URL . 'photos?eventId=' . $event->BlueAllianceId . '&teamId=' . $team->Id, true);
+    $navBarLinksArray[] = new NavBarLink('Stats', TEAMS_URL . 'stats?eventId=' . $event->BlueAllianceId . '&teamId=' . $team->Id);
 
     $navBarArray[] = new NavBar($navBarLinksArray);
 
@@ -140,7 +140,7 @@ if(isPostBack() && !empty($_FILES))
     $additionContent .=
         '</div>';
 
-    $header = new Header($event->Name, $additionContent, $navBarArray, $event, null, ADMIN_URL . 'list.php?yearId=' . $event->YearId);
+    $header = new Header($event->Name, $additionContent, $navBarArray, $event, null, ADMIN_URL . 'list?yearId=' . $event->YearId);
 
     echo $header->toHtml();
 

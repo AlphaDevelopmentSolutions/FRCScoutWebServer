@@ -26,11 +26,11 @@ $event = Events::withId($eventId);
 <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
     <?php
     $navBarLinksArray = new NavBarLinkArray();
-    $navBarLinksArray[] = new NavBarLink('Stats', STATS_URL . 'stats.php?eventId=' . $event->BlueAllianceId, true);
+    $navBarLinksArray[] = new NavBarLink('Stats', STATS_URL . 'stats?eventId=' . $event->BlueAllianceId, true);
 
     $navBar = new NavBar($navBarLinksArray);
 
-    $header = new Header($event->Name, null, $navBar, $event, null, ADMIN_URL . 'list.php?yearId=' . $event->YearId);
+    $header = new Header($event->Name, null, $navBar, $event, null, ADMIN_URL . 'list?yearId=' . $event->YearId);
 
     echo $header->toHtml();
 

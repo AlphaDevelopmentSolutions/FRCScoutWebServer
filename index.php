@@ -21,7 +21,7 @@ if(isPostBack())
 }
 
 if(coreLoggedIn())
-    header('Location: '. ROOT_URL . '/' . getCoreAccount()->TeamId . EVENTS_URL . 'list.php?yearId=' . date('Y'));
+    header('Location: '. ROOT_URL . '/' . getCoreAccount()->TeamId . EVENTS_URL . 'list?yearId=' . date('Y'));
 ?>
 <!doctype html>
 <html lang="en">

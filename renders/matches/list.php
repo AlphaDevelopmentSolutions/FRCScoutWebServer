@@ -18,11 +18,11 @@ $event = Events::withId($eventId);
 <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
     <?php
     $navBarLinksArray = new NavBarLinkArray();
-    $navBarLinksArray[] = new NavBarLink('Matches', MATCHES_URL . 'list.php?eventId=' . $event->BlueAllianceId, true);
+    $navBarLinksArray[] = new NavBarLink('Matches', MATCHES_URL . 'list?eventId=' . $event->BlueAllianceId, true);
 
     $navBar = new NavBar($navBarLinksArray);
 
-    $header = new Header($event->Name, null, $navBar, $event, null, ADMIN_URL . 'list.php?yearId=' . $event->YearId);
+    $header = new Header($event->Name, null, $navBar, $event, null, ADMIN_URL . 'list?yearId=' . $event->YearId);
 
     echo $header->toHtml();
     ?>
@@ -31,7 +31,7 @@ $event = Events::withId($eventId);
         <?php
 
         foreach ($event->getMatches() as $match)
-            echo $match->toHtml(MATCHES_URL . 'stats.php?eventId=' . $match->EventId . '&matchId=' . $match->Key, 'View Match Overview');
+            echo $match->toHtml(MATCHES_URL . 'stats?eventId=' . $match->EventId . '&matchId=' . $match->Key, 'View Match Overview');
 
         ?>
 

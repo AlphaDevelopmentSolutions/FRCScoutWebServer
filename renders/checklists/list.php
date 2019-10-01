@@ -19,11 +19,11 @@ $event = Events::withId($eventId);
     <?php
     $navBarLinksArray = new NavBarLinkArray();
     $navBarLinksArray[] = new NavBarLink('Checklist Items', '', true);
-    $navBarLinksArray[] = new NavBarLink('Completed Checklist Items', CHECKLISTS_URL . 'result-list.php?eventId=' . $event->BlueAllianceId);
+    $navBarLinksArray[] = new NavBarLink('Completed Checklist Items', CHECKLISTS_URL . 'result-list?eventId=' . $event->BlueAllianceId);
 
     $navBar = new NavBar($navBarLinksArray);
 
-    $header = new Header($event->Name, null, $navBar, $event, null, ADMIN_URL . 'list.php?yearId=' . $event->YearId);
+    $header = new Header($event->Name, null, $navBar, $event, null, ADMIN_URL . 'list?yearId=' . $event->YearId);
 
     echo $header->toHtml();
     ?>

@@ -28,7 +28,7 @@ interface AdminPanels
 }
 
 if(empty($panel) || empty($yearId))
-    header('Location: ' . URL_PATH . ADMIN_URL . "settings.php?yearId=" . ((empty($yearId)) ? date('Y') : $yearId) . "&adminPanel=" . AdminPanels::CONFIG);
+    header('Location: ' . URL_PATH . ADMIN_URL . "settings?yearId=" . ((empty($yearId)) ? date('Y') : $yearId) . "&adminPanel=" . AdminPanels::CONFIG);
 
 $htmlMysqlDatatypes =
     [
@@ -47,15 +47,15 @@ $htmlMysqlDatatypes =
 <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header" style="min-width: 1200px !important;">
     <?php
     $navBarLinksArray = new NavBarLinkArray();
-    $navBarLinksArray[] = new NavBarLink('Application', ADMIN_URL . 'settings.php?yearId=' . $year->Id . '&adminPanel=' . AdminPanels::CONFIG, ($panel == AdminPanels::CONFIG || empty($panel)));
-    $navBarLinksArray[] = new NavBarLink('Users', ADMIN_URL . 'list.php?yearId=' . $year->Id . '&adminPanel=' . AdminPanels::USERS, ($panel == AdminPanels::USERS));
-    $navBarLinksArray[] = new NavBarLink('Robot Info', ADMIN_URL . 'list.php?yearId=' . $year->Id . '&adminPanel=' . AdminPanels::ROBOT_INFO_KEYS, ($panel == AdminPanels::ROBOT_INFO_KEYS));
-    $navBarLinksArray[] = new NavBarLink('Scout Card Info', ADMIN_URL . 'list.php?yearId=' . $year->Id . '&adminPanel=' . AdminPanels::SCOUT_CARD_INFO_KEYS, ($panel == AdminPanels::SCOUT_CARD_INFO_KEYS));
-    $navBarLinksArray[] = new NavBarLink('Checklist Info', ADMIN_URL . 'list.php?yearId=' . $year->Id . '&adminPanel=' . AdminPanels::CHECKLIST_INFO, ($panel == AdminPanels::CHECKLIST_INFO));
+    $navBarLinksArray[] = new NavBarLink('Application', ADMIN_URL . 'settings?yearId=' . $year->Id . '&adminPanel=' . AdminPanels::CONFIG, ($panel == AdminPanels::CONFIG || empty($panel)));
+    $navBarLinksArray[] = new NavBarLink('Users', ADMIN_URL . 'list?yearId=' . $year->Id . '&adminPanel=' . AdminPanels::USERS, ($panel == AdminPanels::USERS));
+    $navBarLinksArray[] = new NavBarLink('Robot Info', ADMIN_URL . 'list?yearId=' . $year->Id . '&adminPanel=' . AdminPanels::ROBOT_INFO_KEYS, ($panel == AdminPanels::ROBOT_INFO_KEYS));
+    $navBarLinksArray[] = new NavBarLink('Scout Card Info', ADMIN_URL . 'list?yearId=' . $year->Id . '&adminPanel=' . AdminPanels::SCOUT_CARD_INFO_KEYS, ($panel == AdminPanels::SCOUT_CARD_INFO_KEYS));
+    $navBarLinksArray[] = new NavBarLink('Checklist Info', ADMIN_URL . 'list?yearId=' . $year->Id . '&adminPanel=' . AdminPanels::CHECKLIST_INFO, ($panel == AdminPanels::CHECKLIST_INFO));
 
     $navBar = new NavBar($navBarLinksArray);
 
-    $header = new Header('Admin Panel', null, $navBar, null, $year, ADMIN_URL . 'list.php?yearId=' . $year->Id);
+    $header = new Header('Admin Panel', null, $navBar, null, $year, ADMIN_URL . 'list?yearId=' . $year->Id);
 
     echo $header->toHtml();
     ?>
@@ -95,7 +95,7 @@ $htmlMysqlDatatypes =
                                     </button>
                                 </td>
                                 <td class="admin-table-data">
-                                    <button onclick="location.href  = '<?php echo ROOT_URL . ADMIN_URL ?>settings.php?yearId=2019&adminPanel=<?php echo AdminPanels::USERS ?>&settingId=<?php echo $obj->Id ?>';" class="mdl-button mdl-js-button mdl-js-ripple-effect table-button edit">
+                                    <button onclick="location.href  = '<?php echo ROOT_URL . ADMIN_URL ?>settings?yearId=2019&adminPanel=<?php echo AdminPanels::USERS ?>&settingId=<?php echo $obj->Id ?>';" class="mdl-button mdl-js-button mdl-js-ripple-effect table-button edit">
                                         <span class="button-text">Edit</span>
                                     </button>
                                 </td>
@@ -131,7 +131,7 @@ $htmlMysqlDatatypes =
                             </button>
                         </td>
                         <td class="admin-table-data">
-                            <button onclick="location.href  = '<?php echo ROOT_URL . ADMIN_URL ?>settings.php?yearId=2019&adminPanel=<?php echo AdminPanels::ROBOT_INFO_KEYS ?>&settingId=<?php echo $obj->Id ?>';" class="mdl-button mdl-js-button mdl-js-ripple-effect table-button edit">
+                            <button onclick="location.href  = '<?php echo ROOT_URL . ADMIN_URL ?>settings?yearId=2019&adminPanel=<?php echo AdminPanels::ROBOT_INFO_KEYS ?>&settingId=<?php echo $obj->Id ?>';" class="mdl-button mdl-js-button mdl-js-ripple-effect table-button edit">
                                 <span class="button-text">Edit</span>
                             </button>
                         </td>
@@ -167,7 +167,7 @@ $htmlMysqlDatatypes =
                                 </button>
                             </td>
                             <td class="admin-table-data">
-                                <button onclick="location.href  = '<?php echo ROOT_URL . ADMIN_URL ?>settings.php?yearId=2019&adminPanel=<?php echo AdminPanels::SCOUT_CARD_INFO_KEYS ?>&settingId=<?php echo $obj->Id ?>';" class="mdl-button mdl-js-button mdl-js-ripple-effect table-button edit">
+                                <button onclick="location.href  = '<?php echo ROOT_URL . ADMIN_URL ?>settings?yearId=2019&adminPanel=<?php echo AdminPanels::SCOUT_CARD_INFO_KEYS ?>&settingId=<?php echo $obj->Id ?>';" class="mdl-button mdl-js-button mdl-js-ripple-effect table-button edit">
                                     <span class="button-text">Edit</span>
                                 </button>
                             </td>
@@ -200,7 +200,7 @@ $htmlMysqlDatatypes =
                                 </button>
                             </td>
                             <td class="admin-table-data">
-                                <button onclick="location.href  = '<?php echo ROOT_URL . ADMIN_URL ?>settings.php?yearId=2019&adminPanel=<?php echo AdminPanels::CHECKLIST_INFO ?>&settingId=<?php echo $obj->Id ?>';" class="mdl-button mdl-js-button mdl-js-ripple-effect table-button edit">
+                                <button onclick="location.href  = '<?php echo ROOT_URL . ADMIN_URL ?>settings?yearId=2019&adminPanel=<?php echo AdminPanels::CHECKLIST_INFO ?>&settingId=<?php echo $obj->Id ?>';" class="mdl-button mdl-js-button mdl-js-ripple-effect table-button edit">
                                     <span class="button-text">Edit</span>
                                 </button>
                             </td>
@@ -213,7 +213,7 @@ $htmlMysqlDatatypes =
                 </tbody>
             </table>
         </div>
-        <button onclick="location.href  = '<?php echo ROOT_URL . ADMIN_URL ?>settings.php?yearId=<?php echo $year->Id ?>&adminPanel=<?php echo $panel ?>&settingId=-1';" class="settings-fab mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored">
+        <button onclick="location.href  = '<?php echo ROOT_URL . ADMIN_URL ?>settings?yearId=<?php echo $year->Id ?>&adminPanel=<?php echo $panel ?>&settingId=-1';" class="settings-fab mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored">
             <i class="material-icons">add</i>
         </button>
         <?php require_once(INCLUDES_DIR . 'footer.php') ?>
