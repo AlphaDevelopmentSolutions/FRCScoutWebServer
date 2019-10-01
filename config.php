@@ -71,7 +71,7 @@ define('JS_URL', '/js/');
 define('AJAX_URL', '/ajax/');
 
 
-define('RENDERS_URL', '/renders/');
+define('RENDERS_URL', URL_PATH . '/renders/');
 define('ADMIN_URL', RENDERS_URL . 'admin/');
 define('CHECKLISTS_URL', RENDERS_URL . 'checklists/');
 define('EVENTS_URL', RENDERS_URL . 'events/');

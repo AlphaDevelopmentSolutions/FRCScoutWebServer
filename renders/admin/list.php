@@ -28,7 +28,7 @@ interface AdminPanels
 }
 
 if(empty($panel) || empty($yearId))
-    header('Location: ' . URL_PATH . ADMIN_URL . "settings?yearId=" . ((empty($yearId)) ? date('Y') : $yearId) . "&adminPanel=" . AdminPanels::CONFIG);
+    header('Location: ' . ADMIN_URL . "settings?yearId=" . ((empty($yearId)) ? date('Y') : $yearId) . "&adminPanel=" . AdminPanels::CONFIG);
 
 $htmlMysqlDatatypes =
     [

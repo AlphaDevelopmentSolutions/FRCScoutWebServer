@@ -550,7 +550,7 @@ interface AdminPanels
 
     function deleteSuccessCallback(message)
     {
-        location.href = "<?php echo URL_PATH . ADMIN_URL . "?yearId" . $yearId . "&adminPanel=" . $panel ?>";
+        location.href = "<?php echo ADMIN_URL . "?yearId" . $yearId . "&adminPanel=" . $panel ?>";
     }
 
     function deleteFailCallback(message)
