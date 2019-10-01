@@ -127,8 +127,8 @@ $event = Events::withId($eventId);
 
         <?php
 
-        foreach ($team->getRobotPhotos(Years::withId($event->YearId)) as $robotMedia)
-            echo $robotMedia->toHtml();
+        foreach(RobotMedia::getObjects(null, $event, $team) as $robotMedia)
+            $robotMedia->toHtml()
 
         ?>
 
@@ -136,5 +136,19 @@ $event = Events::withId($eventId);
     </main>
 </div>
 <?php require_once(INCLUDES_DIR . 'bottom-scripts.php') ?>
+<?php require_once(INCLUDES_DIR . 'bottom-scripts.php') ?>
+<?php require_once(INCLUDES_DIR . 'modals.php'); ?>
+<script src="<?php echo JS_URL ?>modify-record.js.php"></script>
+<script>
+    function deleteSuccessCallback(message)
+    {
+        location.reload();
+    }
+
+    function deleteFailCallback(message)
+    {
+        showToast(message);
+    }
+</script>
 </body>
 </html>

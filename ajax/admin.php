@@ -394,13 +394,16 @@ switch ($_POST['action'])
 
                 break;
 
+            default:
+                $ajax->error("Invalid action.");
+                break;
+
             //endregion
         }
 
         break;
 
     case 'delete':
-
 
         $recordId = $_POST['recordId'];
         unset($_POST['action']);
@@ -551,17 +554,47 @@ switch ($_POST['action'])
 
                 break;
 
+            case RobotMedia::class:
+
+                $robotMedia = RobotMedia::withId($recordId);
+
+                if($robotMedia->delete())
+                    $ajax->success("Robot media deleted successfully.");
+
+                else
+                    $ajax->error("Robot media failed to delete.");
+
+                break;
+
+            default:
+                $ajax->error("Invalid action.");
+                break;
+
                 //endregion
         }
 
         break;
+
+    default:
+        $ajax->error("Invalid action.");
+        break;
 }
 
+/**
+ * Checks if text is valid alpha numeric value, including spaces
+ * @param string $text to check if valid alpha numeric
+ * @return bool
+ */
 function validAlnum($text)
 {
     return ctype_alnum(trim(str_replace(' ','', $text)));
 }
 
+/**
+ * Checks if text is valid date string. Ex: 1997-08-22 19:45:36
+ * @param string $text to check if valid date
+ * @return bool
+ */
 function validDate($text)
 {
     $text = str_replace(' ','', $text);
@@ -571,6 +604,11 @@ function validDate($text)
     return ctype_alnum(trim($text));
 }
 
+/**
+ * Checks if text is valid description
+ * @param string $text to check if valid description
+ * @return bool
+ */
 function validDescription($text)
 {
     $text = str_replace(' ','', $text);

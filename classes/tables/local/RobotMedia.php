@@ -11,6 +11,47 @@ class RobotMedia extends LocalTable
     public static $TABLE_NAME = 'robot_media';
 
     /**
+     * Retrieves objects from the database
+     * @param Years | null $year if specified, filters by id
+     * @param Events | null $event if specified, filters by id
+     * @param Teams | null $team if specified, filters by id
+     * @param boolean $asNormalArray if true, uses [array] instead of [ScoutCardInfoArray]
+     * @return ScoutCardInfoArray | ScoutCardInfo[]
+     */
+    public static function getObjects($year = null, $event = null, $team = null)
+    {
+        $whereStatment = "";
+        $cols = array();
+        $args = array();
+
+        //if year specified, filter by year
+        if(!empty($year))
+        {
+            $whereStatment .= ((empty($whereStatment)) ? "" : " AND ") . " ! = ? ";
+            $cols[] = 'YearId';
+            $args[] = $year->Id;
+        }
+
+        //if event specified, filter by event
+        if(!empty($event))
+        {
+            $whereStatment .= ((empty($whereStatment)) ? "" : " AND ") . " ! = ? ";
+            $cols[] = 'EventId';
+            $args[] = $event->BlueAllianceId;
+        }
+
+        //if team specified, filter by team
+        if(!empty($team))
+        {
+            $whereStatment .= ((empty($whereStatment)) ? "" : " AND ") . " ! = ? ";
+            $cols[] = 'TeamId';
+            $args[] = $team->Id;
+        }
+
+        return parent::getObjects($whereStatment, $cols, $args);
+    }
+
+    /**
      * Overrides parent::save() method
      * Attempts to save the image before saving the record
      * @param bool $bypassFileSave bypasses the file save to the system
@@ -144,26 +185,29 @@ class RobotMedia extends LocalTable
     }
 
     /**
-     * Returns the object once converted into HTML
-     * @return string
+     * Prints the object once converted into HTML
      */
     public function toHtml()
     {
-        $html =
-            '<div class="mdl-layout__tab-panel is-active" id="overview">
+        ?>
+            <div class="mdl-layout__tab-panel is-active" id="overview">
                 <section class="section--center mdl-grid mdl-grid--no-spacing mdl-shadow--2dp">
                     <div class="mdl-card mdl-cell mdl-cell--12-col">
                         <div class="mdl-card__supporting-text">
-                            <img class="robot-media" src="' . ROBOT_MEDIA_URL . $this->FileURI . '"  height="350"/>
+                            <img class="robot-media" src="<?php echo ROBOT_MEDIA_URL . $this->FileURI ?>"  height="350"/>
                         </div>
                         <div class="mdl-card__actions">
-                            <a target="_blank" href="' . ROBOT_MEDIA_URL . $this->FileURI . '" class="mdl-button">View</a>
+                            <a target="_blank" href="<?php echo ROBOT_MEDIA_URL . $this->FileURI ?>" class="mdl-button mdl-js-button mdl-js-ripple-effect table-button delete">
+                                <span class="button-text">View</span>
+                            </a>
+                            <button onclick="deleteRecord('<?php echo self::class ?>', <?php echo $this->Id ?>)" class="mdl-button mdl-js-button mdl-js-ripple-effect table-button delete">
+                                <span class="button-text">Delete</span>
+                            </button>
                         </div>
                     </div>
                 </section>
-            </div>';
-
-        return $html;
+            </div>
+    <?php
     }
 
     /**
@@ -174,8 +218,5 @@ class RobotMedia extends LocalTable
     {
         return $this->TeamId . ' Robot Media';
     }
-
-
 }
-
 ?>
