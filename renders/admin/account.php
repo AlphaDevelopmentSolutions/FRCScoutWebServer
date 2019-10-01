@@ -1,5 +1,5 @@
 <?php
-require_once("config.php");
+require_once("../../config.php");
 require_once(ROOT_DIR . "/classes/tables/core/Teams.php");
 require_once(ROOT_DIR . "/classes/tables/core/Events.php");
 require_once(ROOT_DIR . "/classes/tables/core/Years.php");

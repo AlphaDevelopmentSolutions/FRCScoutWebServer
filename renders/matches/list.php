@@ -1,5 +1,6 @@
 <?php
-require_once("config.php");
+
+require_once("../../config.php");
 require_once(ROOT_DIR . "/classes/tables/core/Events.php");
 
 $eventId = $_GET['eventId'];
@@ -10,18 +11,18 @@ $event = Events::withId($eventId);
 <!doctype html>
 <html lang="en">
 <head>
-    <title>Teams</title>
     <?php require_once(INCLUDES_DIR . 'meta.php') ?>
+    <title>Matches</title>
 </head>
 <body class="mdl-demo mdl-color--grey-100 mdl-color-text--grey-700 mdl-base">
 <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
     <?php
     $navBarLinksArray = new NavBarLinkArray();
-    $navBarLinksArray[] = new NavBarLink('Teams', 'team-list.php?eventId=' . $event->BlueAllianceId, true);
+    $navBarLinksArray[] = new NavBarLink('Matches', MATCHES_URL . 'list.php?eventId=' . $event->BlueAllianceId, true);
 
     $navBar = new NavBar($navBarLinksArray);
 
-    $header = new Header($event->Name, null, $navBar, $event, null, 'admin.php?yearId=' . $event->YearId);
+    $header = new Header($event->Name, null, $navBar, $event, null, ADMIN_URL . 'list.php?yearId=' . $event->YearId);
 
     echo $header->toHtml();
     ?>
@@ -29,8 +30,8 @@ $event = Events::withId($eventId);
 
         <?php
 
-        foreach ($event->getTeams() as $team)
-            echo $team->toHtml($event);
+        foreach ($event->getMatches() as $match)
+            echo $match->toHtml(MATCHES_URL . 'stats.php?eventId=' . $match->EventId . '&matchId=' . $match->Key, 'View Match Overview');
 
         ?>
 

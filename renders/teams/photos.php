@@ -1,25 +1,47 @@
 <?php
-require_once("config.php");
+require_once("../../config.php");
+require_once(ROOT_DIR . "/classes/Ajax.php");
 require_once(ROOT_DIR . "/classes/tables/core/Teams.php");
 require_once(ROOT_DIR . "/classes/tables/core/Events.php");
 require_once(ROOT_DIR . "/classes/tables/core/Years.php");
-require_once(ROOT_DIR . "/classes/tables/local/RobotInfo.php");
-require_once(ROOT_DIR . "/classes/tables/local/RobotInfoKeys.php");
-require_once(ROOT_DIR . "/classes/tables/core/Matches.php");
-
+require_once(ROOT_DIR . "/classes/tables/local/RobotMedia.php");
 
 $eventId = $_GET['eventId'];
 $teamId = $_GET['teamId'];
 
 $team = Teams::withId($teamId);
 $event = Events::withId($eventId);
+
+//robot media submission
+if(isPostBack() && !empty($_FILES))
+{
+    $file = $_FILES['RobotMedia'];
+
+    //verify the image is the correct type
+    if($file['type'] == 'image/jpeg')
+    {
+        //create and save the robot media
+        $robotMedia = new RobotMedia();
+        $robotMedia->YearId = $event->YearId;
+        $robotMedia->EventId = $event->BlueAllianceId;
+        $robotMedia->TeamId = $team->Id;
+        $robotMedia->FileURI = base64_encode(file_get_contents($file['tmp_name']));
+
+        $robotMedia->save();
+    }
+}
 ?>
 
 <!doctype html>
 <html lang="en">
 <head>
-    <title><?php echo $team->Id . ' - ' . $team->Name ?> - Pits</title>
+    <title><?php echo $team->Id . ' - ' . $team->Name ?> - Photos</title>
     <?php require_once(INCLUDES_DIR . 'meta.php') ?>
+    <script>
+        if ( window.history.replaceState ) {
+            window.history.replaceState( null, null, window.location.href );
+        }
+    </script>
 </head>
 <body class="mdl-demo mdl-color--grey-100 mdl-color-text--grey-700 mdl-base">
 <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
@@ -27,28 +49,28 @@ $event = Events::withId($eventId);
     $navBarArray = new NavBarArray();
 
     $navBarLinksArray = new NavBarLinkArray();
-    $navBarLinksArray[] = new NavBarLink('Teams', 'team-list.php?eventId=' . $event->BlueAllianceId);
+    $navBarLinksArray[] = new NavBarLink('Teams', TEAMS_URL . 'list.php?eventId=' . $event->BlueAllianceId);
     $navBarLinksArray[] = new NavBarLink('Team ' . $teamId, '', true);
 
     $navBarArray[] = new NavBar($navBarLinksArray);
 
     $navBarLinksArray = new NavBarLinkArray();
-    $navBarLinksArray[] = new NavBarLink('Matches', 'team-matches.php?eventId=' . $event->BlueAllianceId . '&teamId=' . $team->Id);
-    $navBarLinksArray[] = new NavBarLink('Robot Info', 'team-robot-info.php?eventId=' . $event->BlueAllianceId . '&teamId=' . $team->Id, true);
-    $navBarLinksArray[] = new NavBarLink('Photos', 'team-photos.php?eventId=' . $event->BlueAllianceId . '&teamId=' . $team->Id);
-    $navBarLinksArray[] = new NavBarLink('Stats', 'team-stats.php?eventId=' . $event->BlueAllianceId . '&teamId=' . $team->Id);
+    $navBarLinksArray[] = new NavBarLink('Matches', TEAMS_URL . 'matches.php?eventId=' . $event->BlueAllianceId . '&teamId=' . $team->Id);
+    $navBarLinksArray[] = new NavBarLink('Robot Info', TEAMS_URL . 'robot-info.php?eventId=' . $event->BlueAllianceId . '&teamId=' . $team->Id);
+    $navBarLinksArray[] = new NavBarLink('Photos', TEAMS_URL . 'photos.php?eventId=' . $event->BlueAllianceId . '&teamId=' . $team->Id, true);
+    $navBarLinksArray[] = new NavBarLink('Stats', TEAMS_URL . 'stats.php?eventId=' . $event->BlueAllianceId . '&teamId=' . $team->Id);
 
     $navBarArray[] = new NavBar($navBarLinksArray);
 
     $additionContent = '';
 
-    $robotMedia = $team->getProfileImage(Years::withId($event->YearId));
+    $profileMedia = $team->getProfileImage(Years::withId($event->YearId));
 
-    if (!empty($robotMedia->FileURI))
+    if (!empty($profileMedia->FileURI))
     {
         $additionContent .=
             '<div style="height: unset" class="mdl-layout--large-screen-only mdl-layout__header-row">
-                  <div class="circle-image" style="background-image: url(' . ROBOT_MEDIA_THUMBS_URL . $robotMedia->FileURI . ')">
+                  <div class="circle-image" style="background-image: url(' . ROBOT_MEDIA_THUMBS_URL . $profileMedia->FileURI . ')">
 
                   </div>
                 </div>';
@@ -118,40 +140,62 @@ $event = Events::withId($eventId);
     $additionContent .=
         '</div>';
 
-    $header = new Header($event->Name, $additionContent, $navBarArray, $event, null, 'admin.php?yearId=' . $event->YearId);
+    $header = new Header($event->Name, $additionContent, $navBarArray, $event, null, ADMIN_URL . 'list.php?yearId=' . $event->YearId);
 
     echo $header->toHtml();
 
     ?>
-
     <input id="eventId" hidden disabled value="<?php echo $event->BlueAllianceId ?>">
     <input id="teamId" hidden disabled value="<?php echo $team->Id ?>">
 
     <main class="mdl-layout__content">
 
         <?php
-
-            $array = RobotInfo::getObjects(null, null, $event, $team);
-
-            $array->toHtml();
+        foreach(RobotMedia::getObjects(null, $event, $team) as $robotMedia)
+            $robotMedia->toHtml()
         ?>
-
         <?php require_once(INCLUDES_DIR . 'footer.php') ?>
+        <button onclick="$('#RobotMedia').trigger('click');" class="settings-fab mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored">
+            <i class="material-icons">add</i>
+        </button>
+
+        <form id="robot-media-form" method="post" action="" class="hide" enctype="multipart/form-data">
+            <input onchange="uploadImage(this)" type="file" name="RobotMedia" id="RobotMedia" accept="image/jpeg">
+        </form>
     </main>
 </div>
+<?php require_once(INCLUDES_DIR . 'bottom-scripts.php') ?>
 <?php require_once(INCLUDES_DIR . 'bottom-scripts.php') ?>
 <?php require_once(INCLUDES_DIR . 'modals.php'); ?>
 <script src="<?php echo JS_URL ?>modify-record.js.php"></script>
 <script>
+    function deleteSuccessCallback(message)
+    {
+        location.reload();
+    }
+
     function deleteFailCallback(message)
     {
         showToast(message);
     }
 
-    function deleteSuccessCallback(message)
+    /**
+     * Uploads image to server
+     */
+    function uploadImage(file)
     {
-        location.reload();
+        if(file.files && file.files[0] && file.files[0].type === 'image/jpeg')
+        {
+            showDialog("Upload image?", "Are you sure you would like to upload this robot media?", function()
+            {
+                $('#robot-media-form').submit();
+            });
+        }
+
+        else
+            showToast('Robot media must be a .JPG or .JPEG.')
     }
+
 </script>
 </body>
 </html>

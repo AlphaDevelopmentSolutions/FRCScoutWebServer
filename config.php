@@ -51,7 +51,7 @@ foreach(CoreConfig::getObjects() as $config)
 }
 
 define('ROOT_URL', 'https://' . $_SERVER['SERVER_NAME']);
-define('URL_PATH', ((coreLoggedIn()) ? '/' . getCoreAccount()->TeamId . '/' : '/'));
+define('URL_PATH', ((coreLoggedIn()) ? '/' . getCoreAccount()->TeamId . '' : ''));
 
 /**
  * MEDIA FILES
@@ -59,13 +59,27 @@ define('URL_PATH', ((coreLoggedIn()) ? '/' . getCoreAccount()->TeamId . '/' : '/
 define('ROBOT_MEDIA_DIR', ROOT_DIR . '/assets/robot-media/originals/');
 define('ROBOT_MEDIA_THUMBS_DIR', ROOT_DIR . '/assets/robot-media/thumbs/');
 define('INCLUDES_DIR', ROOT_DIR . '/includes/');
+
 define('ROBOT_MEDIA_URL', '/assets/robot-media/originals/');
 define('ROBOT_MEDIA_THUMBS_URL', '/assets/robot-media/thumbs/');
+
 define('YEAR_MEDIA_URL', '/assets/year-media/');
 define('IMAGES_URL', '/assets/images/');
+
 define('CSS_URL', '/css/');
 define('JS_URL', '/js/');
 define('AJAX_URL', '/ajax/');
+
+
+define('RENDERS_URL', '/renders/');
+define('ADMIN_URL', RENDERS_URL . 'admin/');
+define('CHECKLISTS_URL', RENDERS_URL . 'checklists/');
+define('EVENTS_URL', RENDERS_URL . 'events/');
+define('MATCHES_URL', RENDERS_URL . 'matches/');
+define('STATS_URL', RENDERS_URL . 'stats/');
+define('TEAMS_URL', RENDERS_URL . 'teams/');
+define('YEARS_URL', RENDERS_URL . 'years/');
+
 require_once(ROOT_DIR . "/classes/Header.php");
 require_once(ROOT_DIR . "/classes/NavBar.php");
 require_once(ROOT_DIR . "/classes/NavBarArray.php");

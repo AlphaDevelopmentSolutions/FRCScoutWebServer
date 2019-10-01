@@ -1,5 +1,5 @@
 <?php
-require_once("config.php");
+require_once("../../config.php");
 require_once(ROOT_DIR . "/classes/tables/core/Teams.php");
 require_once(ROOT_DIR . "/classes/tables/core/Events.php");
 require_once(ROOT_DIR . "/classes/tables/core/Matches.php");
@@ -25,15 +25,15 @@ if(!empty($matchId))
 <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
     <?php
     $navBarLinksArray = new NavBarLinkArray();
-    $navBarLinksArray[] = new NavBarLink('Checklist Items', 'checklist-item-list.php?eventId=' . $event->BlueAllianceId);
-    $navBarLinksArray[] = new NavBarLink('Completed Checklist Items', 'checklist-item-result-list.php?eventId=' . $event->BlueAllianceId, ((empty($match)) ? true : false));
+    $navBarLinksArray[] = new NavBarLink('Checklist Items', CHECKLISTS_URL . 'list.php?eventId=' . $event->BlueAllianceId);
+    $navBarLinksArray[] = new NavBarLink('Completed Checklist Items', CHECKLISTS_URL . 'result-list.php?eventId=' . $event->BlueAllianceId, ((empty($match)) ? true : false));
 
     if(!empty($match))
         $navBarLinksArray[] = new NavBarLink('Completed Checklist Items - ' . $match->toString(), '', true);
 
     $navBar = new NavBar($navBarLinksArray);
 
-    $header = new Header($event->Name, null, $navBar, $event, null, 'admin.php?yearId=' . $event->YearId);
+    $header = new Header($event->Name, null, $navBar, $event, null, ADMIN_URL . 'list.php?yearId=' . $event->YearId);
 
     echo $header->toHtml();
     ?>
@@ -45,7 +45,7 @@ if(!empty($matchId))
         if(empty($match))
         {
             foreach ($event->getMatches(null, Teams::withId(getCoreAccount()->TeamId)) as $match)
-                echo $match->toHtml('checklist-item-result-list.php?eventId=' . $event->BlueAllianceId . '&matchId=' . $match->Key, 'View Completed Checklist Items', getCoreAccount()->TeamId);
+                echo $match->toHtml(CHECKLISTS_URL . 'result-list.php?eventId=' . $event->BlueAllianceId . '&matchId=' . $match->Key, 'View Completed Checklist Items', getCoreAccount()->TeamId);
         }
 
         //match selected, show checklist item results for specified match

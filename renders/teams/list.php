@@ -1,7 +1,6 @@
 <?php
-require_once("config.php");
+require_once("../../config.php");
 require_once(ROOT_DIR . "/classes/tables/core/Events.php");
-require_once(ROOT_DIR . "/classes/tables/local/ChecklistItems.php");
 
 $eventId = $_GET['eventId'];
 
@@ -11,19 +10,18 @@ $event = Events::withId($eventId);
 <!doctype html>
 <html lang="en">
 <head>
+    <title>Teams</title>
     <?php require_once(INCLUDES_DIR . 'meta.php') ?>
-    <title>Checklist Items</title>
 </head>
 <body class="mdl-demo mdl-color--grey-100 mdl-color-text--grey-700 mdl-base">
 <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
     <?php
     $navBarLinksArray = new NavBarLinkArray();
-    $navBarLinksArray[] = new NavBarLink('Checklist Items', '', true);
-    $navBarLinksArray[] = new NavBarLink('Completed Checklist Items', 'checklist-item-result-list.php?eventId=' . $event->BlueAllianceId);
+    $navBarLinksArray[] = new NavBarLink('Teams', TEAMS_URL . 'list.php?eventId=' . $event->BlueAllianceId, true);
 
     $navBar = new NavBar($navBarLinksArray);
 
-    $header = new Header($event->Name, null, $navBar, $event, null, 'admin.php?yearId=' . $event->YearId);
+    $header = new Header($event->Name, null, $navBar, $event, null, ADMIN_URL . 'list.php?yearId=' . $event->YearId);
 
     echo $header->toHtml();
     ?>
@@ -31,10 +29,8 @@ $event = Events::withId($eventId);
 
         <?php
 
-        foreach(ChecklistItems::getObjects() as $checklistItem)
-        {
-           echo $checklistItem->toHtml();
-        }
+        foreach ($event->getTeams() as $team)
+            echo $team->toHtml($event);
 
         ?>
 

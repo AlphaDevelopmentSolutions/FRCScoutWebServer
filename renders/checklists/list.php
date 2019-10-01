@@ -1,7 +1,7 @@
 <?php
-
-require_once("config.php");
+require_once("../../config.php");
 require_once(ROOT_DIR . "/classes/tables/core/Events.php");
+require_once(ROOT_DIR . "/classes/tables/local/ChecklistItems.php");
 
 $eventId = $_GET['eventId'];
 
@@ -12,17 +12,18 @@ $event = Events::withId($eventId);
 <html lang="en">
 <head>
     <?php require_once(INCLUDES_DIR . 'meta.php') ?>
-    <title>Matches</title>
+    <title>Checklist Items</title>
 </head>
 <body class="mdl-demo mdl-color--grey-100 mdl-color-text--grey-700 mdl-base">
 <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
     <?php
     $navBarLinksArray = new NavBarLinkArray();
-    $navBarLinksArray[] = new NavBarLink('Matches', 'match-list.php?eventId=' . $event->BlueAllianceId, true);
+    $navBarLinksArray[] = new NavBarLink('Checklist Items', '', true);
+    $navBarLinksArray[] = new NavBarLink('Completed Checklist Items', CHECKLISTS_URL . 'result-list.php?eventId=' . $event->BlueAllianceId);
 
     $navBar = new NavBar($navBarLinksArray);
 
-    $header = new Header($event->Name, null, $navBar, $event, null, 'admin.php?yearId=' . $event->YearId);
+    $header = new Header($event->Name, null, $navBar, $event, null, ADMIN_URL . 'list.php?yearId=' . $event->YearId);
 
     echo $header->toHtml();
     ?>
@@ -30,8 +31,10 @@ $event = Events::withId($eventId);
 
         <?php
 
-        foreach ($event->getMatches() as $match)
-            echo $match->toHtml('match-stats.php?eventId=' . $match->EventId . '&matchId=' . $match->Key, 'View Match Overview');
+        foreach(ChecklistItems::getObjects() as $checklistItem)
+        {
+           echo $checklistItem->toHtml();
+        }
 
         ?>
 

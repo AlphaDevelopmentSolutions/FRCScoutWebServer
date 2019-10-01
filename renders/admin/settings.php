@@ -1,5 +1,5 @@
 <?php
-require_once("config.php");
+require_once("../../config.php");
 
 if (!getUser()->IsAdmin)
     header('Location: ' . URL_PATH);
@@ -40,15 +40,15 @@ interface AdminPanels
 <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header" style="min-width: 1200px !important;">
     <?php
     $navBarLinksArray = new NavBarLinkArray();
-    $navBarLinksArray[] = new NavBarLink('Application', 'admin-setting.php?yearId=' . $year->Id . '&adminPanel=' . AdminPanels::CONFIG, ($panel == AdminPanels::CONFIG || empty($panel)));
-    $navBarLinksArray[] = new NavBarLink('Users', 'admin.php?yearId=' . $year->Id . '&adminPanel=' . AdminPanels::USERS, ($panel == AdminPanels::USERS));
-    $navBarLinksArray[] = new NavBarLink('Robot Info', 'admin.php?yearId=' . $year->Id . '&adminPanel=' . AdminPanels::ROBOT_INFO_KEYS, ($panel == AdminPanels::ROBOT_INFO_KEYS));
-    $navBarLinksArray[] = new NavBarLink('Scout Card Info', 'admin.php?yearId=' . $year->Id . '&adminPanel=' . AdminPanels::SCOUT_CARD_INFO_KEYS, ($panel == AdminPanels::SCOUT_CARD_INFO_KEYS));
-    $navBarLinksArray[] = new NavBarLink('Checklist Info', 'admin.php?yearId=' . $year->Id . '&adminPanel=' . AdminPanels::CHECKLIST_INFO, ($panel == AdminPanels::CHECKLIST_INFO));
+    $navBarLinksArray[] = new NavBarLink('Application', ADMIN_URL . 'settings.php?yearId=' . $year->Id . '&adminPanel=' . AdminPanels::CONFIG, ($panel == AdminPanels::CONFIG || empty($panel)));
+    $navBarLinksArray[] = new NavBarLink('Users', ADMIN_URL . 'list.php?yearId=' . $year->Id . '&adminPanel=' . AdminPanels::USERS, ($panel == AdminPanels::USERS));
+    $navBarLinksArray[] = new NavBarLink('Robot Info', ADMIN_URL . 'list.php?yearId=' . $year->Id . '&adminPanel=' . AdminPanels::ROBOT_INFO_KEYS, ($panel == AdminPanels::ROBOT_INFO_KEYS));
+    $navBarLinksArray[] = new NavBarLink('Scout Card Info', ADMIN_URL . 'list.php?yearId=' . $year->Id . '&adminPanel=' . AdminPanels::SCOUT_CARD_INFO_KEYS, ($panel == AdminPanels::SCOUT_CARD_INFO_KEYS));
+    $navBarLinksArray[] = new NavBarLink('Checklist Info', ADMIN_URL . 'list.php?yearId=' . $year->Id . '&adminPanel=' . AdminPanels::CHECKLIST_INFO, ($panel == AdminPanels::CHECKLIST_INFO));
 
     $navBar = new NavBar($navBarLinksArray);
 
-    $header = new Header('Admin Panel', null, $navBar, null, $year, 'admin.php?yearId=' . $year->Id);
+    $header = new Header('Admin Panel', null, $navBar, null, $year, ADMIN_URL . 'list.php?yearId=' . $year->Id);
 
     echo $header->toHtml();
     ?>
@@ -550,7 +550,7 @@ interface AdminPanels
 
     function deleteSuccessCallback(message)
     {
-        location.href = "<?php echo URL_PATH . "admin.php?yearId" . $yearId . "&adminPanel=" . $panel ?>";
+        location.href = "<?php echo URL_PATH . ADMIN_URL . "?yearId" . $yearId . "&adminPanel=" . $panel ?>";
     }
 
     function deleteFailCallback(message)
