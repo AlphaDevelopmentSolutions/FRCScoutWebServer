@@ -281,9 +281,9 @@ function createChart(context, jsonResponse, graphItem)
 
     $(graphData).each(function(index, element)
     {
-        if(element > maxData)
+        if(parseInt(element) > maxData)
             maxData = element;
-        else if(element < minData)
+        else if(parseInt(element) < minData)
             minData = element;
     });
 
@@ -292,9 +292,9 @@ function createChart(context, jsonResponse, graphItem)
 
     $(matchAveragData).each(function(index, element)
     {
-        if(element > maxData2)
+        if(parseInt(element) > maxData2)
             maxData2 = element;
-        else if(element < minData2)
+        else if(parseInt(element) < minData2)
             minData2 = element;
     });
 
@@ -380,8 +380,8 @@ function createChart(context, jsonResponse, graphItem)
                         ticks: (lineGraph) ?
                             {
                                 beginAtZero: true,
-                                max: (maxData === 0) ? 1 : maxData * 1.1,
-                                min: ((minData >= 0) ? 0 : minData * 1.5)
+                                max: (maxData === 0) ? 1 : Math.round((maxData * 1.1) * 100.00) / 100.00,
+                                min: ((minData >= 0) ? 0 : Math.round((minData * 1.5) * 100.00) / 100.00)
                             }
                             :
                             {},
@@ -397,7 +397,7 @@ function createChart(context, jsonResponse, graphItem)
                             {
                                 beginAtZero: true,
                                 max: maxData * 1.05,
-                                min: ((minData >= 0) ? 0 : minData * 1.1)
+                                min: ((minData >= 0) ? 0 : Math.round((minData * 1.1) * 100.00) / 100.00)
                             },
                         scaleLabel: {
                             display: true,
