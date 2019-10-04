@@ -212,14 +212,54 @@ class ScoutCardInfoKeys extends LocalTable
                                 <strong class="setting-title"><?php echo $scoutCardInfoKey->KeyName ?></strong>
                                 <div class="setting-value mdl-textfield mdl-js-textfield mdl-textfield--floating-label"
                                      data-upgraded=",MaterialTextfield">
-                                    <input class="mdl-textfield__input scout-card-info-field"
-                                           info-id="<?php echo((!empty($scoutCardInfoArray[$scoutCardInfoKey->KeyState][$scoutCardInfoKey->KeyName]->Id)) ? $scoutCardInfoArray[$scoutCardInfoKey->KeyState][$scoutCardInfoKey->KeyName]->Id : -1) ?>"
-                                           year-id="<?php echo $year->Id ?>"
-                                           event-id="<?php echo $event->BlueAllianceId ?>"
-                                           match-id="<?php echo $match->Key ?>"
-                                           team-id="<?php echo $team->Id ?>"
-                                           info-key-id="<?php echo $scoutCardInfoKey->Id ?>"
-                                           value="<?php echo $scoutCardInfoArray[$scoutCardInfoKey->KeyState][$scoutCardInfoKey->KeyName]->PropertyValue ?>">
+                                    <?php
+                                        switch($scoutCardInfoKey->DataType)
+                                        {
+                                            case DataTypes::BOOL:
+                                                ?>
+                                                <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect">
+                                                    <input type="checkbox" class="mdl-switch__input scout-card-info-field"
+                                                           info-id="<?php echo((!empty($scoutCardInfoArray[$scoutCardInfoKey->KeyState][$scoutCardInfoKey->KeyName]->Id)) ? $scoutCardInfoArray[$scoutCardInfoKey->KeyState][$scoutCardInfoKey->KeyName]->Id : -1) ?>"
+                                                           year-id="<?php echo $year->Id ?>"
+                                                           event-id="<?php echo $event->BlueAllianceId ?>"
+                                                           match-id="<?php echo $match->Key ?>"
+                                                           team-id="<?php echo $team->Id ?>"
+                                                           info-key-id="<?php echo $scoutCardInfoKey->Id ?>"
+                                                           datatype="<?php echo $scoutCardInfoKey->DataType ?>"
+                                                           <?php if($scoutCardInfoArray[$scoutCardInfoKey->KeyState][$scoutCardInfoKey->KeyName]->PropertyValue == 1) echo "checked" ?>>
+                                                </label>
+                                                <?php
+                                                break;
+
+                                            case DataTypes::INT:
+                                                ?>
+                                                <input type="number" class="mdl-textfield__input scout-card-info-field"
+                                                       info-id="<?php echo((!empty($scoutCardInfoArray[$scoutCardInfoKey->KeyState][$scoutCardInfoKey->KeyName]->Id)) ? $scoutCardInfoArray[$scoutCardInfoKey->KeyState][$scoutCardInfoKey->KeyName]->Id : -1) ?>"
+                                                       year-id="<?php echo $year->Id ?>"
+                                                       event-id="<?php echo $event->BlueAllianceId ?>"
+                                                       match-id="<?php echo $match->Key ?>"
+                                                       team-id="<?php echo $team->Id ?>"
+                                                       info-key-id="<?php echo $scoutCardInfoKey->Id ?>"
+                                                       datatype="<?php echo $scoutCardInfoKey->DataType ?>"
+                                                       value="<?php echo $scoutCardInfoArray[$scoutCardInfoKey->KeyState][$scoutCardInfoKey->KeyName]->PropertyValue ?>">
+                                                <?php
+                                                break;
+
+                                            case DataTypes::TEXT:
+                                                ?>
+                                                <input type="text" class="mdl-textfield__input scout-card-info-field"
+                                                       info-id="<?php echo((!empty($scoutCardInfoArray[$scoutCardInfoKey->KeyState][$scoutCardInfoKey->KeyName]->Id)) ? $scoutCardInfoArray[$scoutCardInfoKey->KeyState][$scoutCardInfoKey->KeyName]->Id : -1) ?>"
+                                                       year-id="<?php echo $year->Id ?>"
+                                                       event-id="<?php echo $event->BlueAllianceId ?>"
+                                                       match-id="<?php echo $match->Key ?>"
+                                                       team-id="<?php echo $team->Id ?>"
+                                                       info-key-id="<?php echo $scoutCardInfoKey->Id ?>"
+                                                       datatype="<?php echo $scoutCardInfoKey->DataType ?>"
+                                                       value="<?php echo $scoutCardInfoArray[$scoutCardInfoKey->KeyState][$scoutCardInfoKey->KeyName]->PropertyValue ?>">
+                                                <?php
+                                                break;
+                                        }
+                                    ?>
                                 </div>
                                 <?php
                             }

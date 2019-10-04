@@ -175,7 +175,7 @@ interface AdminPanels
                         </span>
                         <div class="setting-value mdl-textfield mdl-js-textfield mdl-textfield--floating-label" data-upgraded=",MaterialTextfield">
                             <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" for="IsAdmin">
-                                <input type="checkbox" name="IsAdmin" id="IsAdmin" class="mdl-switch__input" <?php if($obj->IsAdmin == 1) echo "checked" ?>
+                                <input type="checkbox" name="IsAdmin" id="IsAdmin" class="mdl-switch__input" <?php if($obj->IsAdmin == 1) echo "checked" ?>>
                                 <span class="mdl-switch__label"></span>
                             </label>
                         </div>

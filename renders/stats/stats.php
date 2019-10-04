@@ -130,7 +130,7 @@ $event = Events::withId($eventId);
         return "" +
             "<span class=\"material-side-padding mdl-chip mdl-chip--deletable\">" +
             "   <span class=\"mdl-chip__text\">" + teamNumber + "</span>" +
-            "   <button onclick=\"console.log($(this).parent().remove()); searchTeams();\" type=\"button\" class=\"mdl-chip__action\"><i class=\"material-icons\">cancel</i></button>" +
+            "   <button onclick=\"$(this).parent().remove(); searchTeams();\" type=\"button\" class=\"mdl-chip__action\"><i class=\"material-icons\">cancel</i></button>" +
             "</span>";
     }
 </script>

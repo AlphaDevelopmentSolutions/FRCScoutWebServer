@@ -142,7 +142,6 @@ if(!empty($allianceColor))
 
                 //save each saveable record
                 $(saveableRecords).each(function () {
-                    console.log(this);
                     //prevent blank items from being created
                     saveRecord(recordType, recordId, this);
                 });
@@ -184,13 +183,13 @@ if(!empty($allianceColor))
         {
             if(modifiedElements === $(saveableRecords).length)
             {
-                // //if any of the elements are new elements with -1 id's, reload the page
-                // //this fixes any issues with the id not saving and duplicates being created
-                // $(saveableRecords).each(function ()
-                // {
-                //     if($(this).attr('info-id') == -1 && $(this).val() !== "")
-                //         location.reload();
-                // });
+                //if any of the elements are new elements with -1 id's, reload the page
+                //this fixes any issues with the id not saving and duplicates being created
+                $(saveableRecords).each(function ()
+                {
+                    if($(this).attr('info-id') == -1 && $(this).val() !== "")
+                        location.reload();
+                });
 
                 $('#save').removeAttr('disabled');
                 $('#delete').removeAttr('disabled');

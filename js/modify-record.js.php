@@ -1,6 +1,7 @@
 <?php
 require_once('../config.php');
 require_once(ROOT_DIR . "/classes/Ajax.php");
+require_once(ROOT_DIR . "/classes/tables/local/ScoutCardInfoKeys.php");
 ?>
 
 /**
@@ -85,8 +86,7 @@ function saveRecord(recordType, recordId, record = undefined)
                     EventId: $(record).attr('event-id'),
                     MatchId: $(record).attr('match-id'),
                     TeamId: $(record).attr('team-id'),
-                    CompletedBy: "",
-                    PropertyValue: $(record).val(),
+                    PropertyValue: (($(record).attr('datatype') == '<?php echo DataTypes::BOOL ?>') ? (($(record).prop('checked')) ? '1' : '0') : $(record).val()),
                     PropertyKeyId: $(record).attr('info-key-id')
                 };
             break;
