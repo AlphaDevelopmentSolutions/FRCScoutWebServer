@@ -15,35 +15,24 @@ class Users extends LocalTable
      * Attempts to login with the provided username and password
      * @param $userName
      * @param $password
-     * @return boolean
+     * @return Users
      */
     public function login($userName, $password)
     {
         //create the sql statement
         $sql = "SELECT * FROM ! WHERE ! = ? LIMIT 1";
         $cols[] = self::$TABLE_NAME;
-        $cols[] = 'UserName';
+
+        $cols[] = 'Username';
         $args[] = $userName;
 
-        $query = self::queryRecords($sql, $cols, $args);
+        $rows = self::queryRecords($sql, $cols, $args);
 
-        if(!empty($query))
+        foreach ($rows as $row)
         {
-            $response = self::withProperties($query[0]);
-
-            $this->Id = $response->Id;
-            $this->FirstName = $response->FirstName;
-            $this->LastName = $response->LastName;
-            $this->UserName = $response->UserName;
-            $this->IsAdmin = $response->IsAdmin;
+            if(password_verify($password, $row['Password']))
+                return self::withProperties($row);
         }
-
-        $success = !empty($response);
-
-        if($success)
-            $success = password_verify($password, $response->Password);
-
-        return ($success);
     }
 
     /**
@@ -75,7 +64,7 @@ class Users extends LocalTable
               
             </div>
             <div class="center-div-horizontal-outer">
-                <form id="core-sign-out-form" class="center-div-horizontal-inner" action="">
+                <form id="user-sign-out-form" class="center-div-horizontal-inner" action="">
                     <button type="submit" class="mdl-button mdl-js-button mdl-js-ripple-effect">Logout</button>
                 </form>
             </div>

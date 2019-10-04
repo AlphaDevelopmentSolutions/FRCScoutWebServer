@@ -24,7 +24,7 @@ if(!loggedIn())
     ?>
 
     <main class="mdl-layout__content">
-        <a href="<?php echo AJAX_URL ?>account.php">Logout</a>
+        <?php echo getUser()->toHtml(); ?>
         <?php require_once(INCLUDES_DIR . 'footer.php') ?>
     </main>
 </div>

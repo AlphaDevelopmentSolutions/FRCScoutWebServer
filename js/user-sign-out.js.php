@@ -5,22 +5,22 @@ require_once(ROOT_DIR . "/classes/Ajax.php");
 $(document).ready(function ()
 {
     //prevent form from submitting, but keep validations
-    $('#core-sign-out-form').submit(function(e)
+    $('#user-sign-out-form').submit(function(e)
     {
         e.preventDefault();
-        logoutCore();
+        logoutUser();
     });
 });
 
 /**
- * Logs out of the core account
+ * Logs out of the user account
  */
-function logoutCore()
+function logoutUser()
 {
     //get data from the ajax script
     $.post('<?php echo AJAX_URL ?>account.php',
         {
-            action: 'logout_core'
+            action: 'logout_user'
         },
         function(data)
         {

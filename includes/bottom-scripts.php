@@ -5,6 +5,12 @@ if(!loggedIn())
 <script src="<?php echo JS_URL ?>user-sign-in.js.php"></script>
 <?php
 }
+else
+{
+?>
+<script src="<?php echo JS_URL ?>user-sign-out.js.php"></script>
+<?php
+}
 ?>
 
 <?php require_once(INCLUDES_DIR . 'modals.php'); ?>
