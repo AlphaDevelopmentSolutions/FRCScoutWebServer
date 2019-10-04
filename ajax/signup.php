@@ -8,163 +8,178 @@ switch ($_POST['action'])
 {
     case 'create':
 
-        $username = $_POST['username'];
-        $email = $_POST['email'];
-        $password = $_POST['password'];
-        $retypePassword = $_POST['retypePassword'];
+        $captchaKey = $_POST['captchaKey'];
 
-        $adminFirstName = $_POST['adminFirstName'];
-        $adminLastName = $_POST['adminLastName'];
-        $adminUsername = $_POST['adminUsername'];
-        $adminPassword = $_POST['adminPassword'];
-        $adminRetypePassword = $_POST['adminRetypePassword'];
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL,"https://www.google.com/recaptcha/api/siteverify");
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS,
+            "secret=" . CAPTCHA_SERVER_SECRET . "&response=$captchaKey&remoteip=" . $_SERVER['HTTP_CLIENT_IP']);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        $response = curl_exec($ch);
+        curl_close ($ch);
 
-        $teamNumber = $_POST['teamNumber'];
-        $appName = $_POST['appName'];
-        $apiKey = $_POST['apiKey'];
-        $primaryColor = $_POST['primaryColor'];
-        $secondaryColor = $_POST['secondaryColor'];
+        $response = json_decode($response, true);
 
-        if (empty($username) || !validAlnum($username) || strlen($username) < 6)
-            $ajax->error('Username may only include A-Z 0-9 and must be at least 6 characters.');
-
-        if (empty($email))
-            $ajax->error('Email must not be empty.');
-
-        //check if any of the accounts details are already taken
-        $accounts = Accounts::getObjects();
-        foreach($accounts as $account)
+        if($response['success'])
         {
-            if($account->Username == $username)
-                $ajax->error('The username provided is already in use.');
+            $username = $_POST['username'];
+            $email = $_POST['email'];
+            $password = $_POST['password'];
+            $retypePassword = $_POST['retypePassword'];
 
-            if($account->Email == $email)
-                $ajax->error('The email address provided is already in use.');
-        }
+            $adminFirstName = $_POST['adminFirstName'];
+            $adminLastName = $_POST['adminLastName'];
+            $adminUsername = $_POST['adminUsername'];
+            $adminPassword = $_POST['adminPassword'];
+            $adminRetypePassword = $_POST['adminRetypePassword'];
 
-        if (!validPassword($password))
-            $ajax->error('Main account password is invalid. Please review the password requirements.');
+            $teamNumber = $_POST['teamNumber'];
+            $appName = $_POST['appName'];
+            $apiKey = $_POST['apiKey'];
+            $primaryColor = $_POST['primaryColor'];
+            $secondaryColor = $_POST['secondaryColor'];
 
-        if ($password != $retypePassword)
-            $ajax->error('Main account passwords do not match.');
 
-        if (empty($adminFirstName) || !ctype_alpha($adminFirstName))
-            $ajax->error('Admin first name may only include A-Z.');
+            if (empty($username) || !validAlnum($username) || strlen($username) < 6)
+                $ajax->error('Username may only include A-Z 0-9 and must be at least 6 characters.');
 
-        if (empty($adminLastName) || !ctype_alpha($adminLastName))
-            $ajax->error('Admin last name may only include A-Z.');
+            if (empty($email))
+                $ajax->error('Email must not be empty.');
 
-        if (empty($adminUsername) || !validAlnum($adminUsername) || strlen($adminUsername) < 6)
-            $ajax->error('Admin username may only include A-Z 0-9 and must be at least 6 characters.');
+            //check if any of the accounts details are already taken
+            $accounts = Accounts::getObjects();
+            foreach ($accounts as $account) {
+                if ($account->Username == $username)
+                    $ajax->error('The username provided is already in use.');
 
-        if (!validPassword($adminPassword))
-            $ajax->error('Admin password is invalid. Please review the password requirements.');
+                if ($account->Email == $email)
+                    $ajax->error('The email address provided is already in use.');
+            }
 
-        if ($adminPassword != $adminRetypePassword)
-            $ajax->error('Admin passwords do not match.');
+            if (!validPassword($password))
+                $ajax->error('Main account password is invalid. Please review the password requirements.');
 
-        if (empty($teamNumber) || !ctype_digit($teamNumber))
-            $ajax->error('Team number may only be 0-9.');
+            if ($password != $retypePassword)
+                $ajax->error('Main account passwords do not match.');
 
-        if (empty($appName) || !validAlnum($appName) || strlen($appName) < 6)
-            $ajax->error('App Name may only include A-Z 0-9 and must be at least 6 characters.');
+            if (empty($adminFirstName) || !ctype_alpha($adminFirstName))
+                $ajax->error('Admin first name may only include A-Z.');
 
-        if (empty($primaryColor) || !validAlnum($primaryColor) || strlen($primaryColor) != 6)
-            $ajax->error('Username may only include A-F 0-9 and must be 6 characters.');
+            if (empty($adminLastName) || !ctype_alpha($adminLastName))
+                $ajax->error('Admin last name may only include A-Z.');
 
-        if (empty($secondaryColor) || !validAlnum($secondaryColor) || strlen($secondaryColor) != 6)
-            $ajax->error('Username may only include A-F 0-9 and must be 6 characters.');
+            if (empty($adminUsername) || !validAlnum($adminUsername) || strlen($adminUsername) < 6)
+                $ajax->error('Admin username may only include A-Z 0-9 and must be at least 6 characters.');
 
-        $db = new Database();
-        $uidSuccess = false;
-        $dbId = "";
+            if (!validPassword($adminPassword))
+                $ajax->error('Admin password is invalid. Please review the password requirements.');
 
-        do
-        {
-            //create uuid for the database name
-            $dbId = sprintf('%04x%04x-%04x-%04x-%04x-%04x%04x%04x',
-                mt_rand(0, 0xffff), mt_rand(0, 0xffff),
-                mt_rand(0, 0xffff),
-                mt_rand(0, 0x0fff) | 0x4000,
-                mt_rand(0, 0x3fff) | 0x8000,
-                mt_rand(0, 0xffff), mt_rand(0, 0xffff), mt_rand(0, 0xffff));
+            if ($adminPassword != $adminRetypePassword)
+                $ajax->error('Admin passwords do not match.');
 
-            $query = "SELECT ! FROM !.! WHERE ! = ?";
-            $cols[] = 'SCHEMA_NAME';
-            $cols[] = 'INFORMATION_SCHEMA';
-            $cols[] = 'SCHEMATA';
-            $cols[] = 'SCHEMA_NAME';
+            if (empty($teamNumber) || !ctype_digit($teamNumber))
+                $ajax->error('Team number may only be 0-9.');
 
-            $args[] = $dbId;
+            if (empty($appName) || !validAlnum($appName) || strlen($appName) < 6)
+                $ajax->error('App Name may only include A-Z 0-9 and must be at least 6 characters.');
 
-            //query to see if that db name is taken
-            $results = $db->query($query, $cols, $args);
+            if (empty($primaryColor) || !validAlnum($primaryColor) || strlen($primaryColor) != 6)
+                $ajax->error('Username may only include A-F 0-9 and must be 6 characters.');
 
-            //if taken, re-run script
-            if (sizeof($results) == 0)
-                $uidSuccess = true;
+            if (empty($secondaryColor) || !validAlnum($secondaryColor) || strlen($secondaryColor) != 6)
+                $ajax->error('Username may only include A-F 0-9 and must be 6 characters.');
 
-        } while (!$uidSuccess);
+            $db = new Database();
+            $uidSuccess = false;
+            $dbId = "";
 
-        $query = "CREATE SCHEMA !";
-        $cols = array();
-        $cols[] = $dbId;
+            do {
+                //create uuid for the database name
+                $dbId = sprintf('%04x%04x-%04x-%04x-%04x-%04x%04x%04x',
+                    mt_rand(0, 0xffff), mt_rand(0, 0xffff),
+                    mt_rand(0, 0xffff),
+                    mt_rand(0, 0x0fff) | 0x4000,
+                    mt_rand(0, 0x3fff) | 0x8000,
+                    mt_rand(0, 0xffff), mt_rand(0, 0xffff), mt_rand(0, 0xffff));
 
-        //create the DB
-        $db->query($query, $cols);
+                $query = "SELECT ! FROM !.! WHERE ! = ?";
+                $cols[] = 'SCHEMA_NAME';
+                $cols[] = 'INFORMATION_SCHEMA';
+                $cols[] = 'SCHEMATA';
+                $cols[] = 'SCHEMA_NAME';
 
-        unset($db);
+                $args[] = $dbId;
 
-        $db = new Database($dbId);
+                //query to see if that db name is taken
+                $results = $db->query($query, $cols, $args);
 
-        //create all required tables
-        if(importSqlFile($db, '../databases/v' . VERSION . '.sql'))
-        {
+                //if taken, re-run script
+                if (sizeof($results) == 0)
+                    $uidSuccess = true;
+
+            } while (!$uidSuccess);
+
+            $query = "CREATE SCHEMA !";
+            $cols = array();
+            $cols[] = $dbId;
+
+            //create the DB
+            $db->query($query, $cols);
+
             unset($db);
 
-            define('DB_NAME', $dbId);
+            $db = new Database($dbId);
 
-            //add all the configs to the DB
-            $conf = new Config();
-            $conf->Key = 'APP_NAME';
-            $conf->Value = $appName;
-            $conf->save();
+            //create all required tables
+            if (importSqlFile($db, '../databases/v' . VERSION . '.sql')) {
+                unset($db);
 
-            $conf = new Config();
-            $conf->Key = 'API_KEY';
-            $conf->Value = $apiKey;
-            $conf->save();
+                define('DB_NAME', $dbId);
 
-            $conf = new Config();
-            $conf->Key = 'PRIMARY_COLOR';
-            $conf->Value = $primaryColor;
-            $conf->save();
+                //add all the configs to the DB
+                $conf = new Config();
+                $conf->Key = 'APP_NAME';
+                $conf->Value = $appName;
+                $conf->save();
 
-            $conf = new Config();
-            $conf->Key = 'PRIMARY_COLOR_DARK';
-            $conf->Value = $secondaryColor;
-            $conf->save();
+                $conf = new Config();
+                $conf->Key = 'API_KEY';
+                $conf->Value = $apiKey;
+                $conf->save();
 
-            $user = new Users();
-            $user->FirstName = $adminFirstName;
-            $user->LastName = $adminLastName;
-            $user->UserName = $adminUsername;
-            $user->Password = password_hash($adminPassword, PASSWORD_ARGON2ID);
-            $user->IsAdmin = 1;
-            $user->save();
+                $conf = new Config();
+                $conf->Key = 'PRIMARY_COLOR';
+                $conf->Value = $primaryColor;
+                $conf->save();
 
-            $account = new Accounts();
-            $account->TeamId = $teamNumber;
-            $account->Email = $email;
-            $account->Username = $username;
-            $account->Password = password_hash($password, PASSWORD_ARGON2ID);
-            $account->DbId = $dbId;
-            $account->save();
+                $conf = new Config();
+                $conf->Key = 'PRIMARY_COLOR_DARK';
+                $conf->Value = $secondaryColor;
+                $conf->save();
+
+                $user = new Users();
+                $user->FirstName = $adminFirstName;
+                $user->LastName = $adminLastName;
+                $user->UserName = $adminUsername;
+                $user->Password = password_hash($adminPassword, PASSWORD_ARGON2ID);
+                $user->IsAdmin = 1;
+                $user->save();
+
+                $account = new Accounts();
+                $account->TeamId = $teamNumber;
+                $account->Email = $email;
+                $account->Username = $username;
+                $account->Password = password_hash($password, PASSWORD_ARGON2ID);
+                $account->DbId = $dbId;
+                $account->save();
+            } else
+                $ajax->error('Error importing SQL tables.');
+
+            $ajax->success('Account created successfully!');
         }
         else
-            $ajax->error('Error importing SQL tables.');
-
-        $ajax->success('Account created successfully!');
+            $ajax->error('Captcha invalid. Please try again.');
 
         break;
 }

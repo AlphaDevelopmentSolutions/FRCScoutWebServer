@@ -8,6 +8,7 @@ require_once(ROOT_DIR . '/classes/Ajax.php');
     <title>FRC Scout</title>
     <?php require_once(INCLUDES_DIR . 'meta.php') ?>
     <script src="<?php JS_URL ?>/js/jscolor.js"></script>
+    <script src='https://www.google.com/recaptcha/api.js'></script>
 </head>
 <body class="mdl-demo mdl-color--grey-100 mdl-color-text--grey-700 mdl-base">
 <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
@@ -194,6 +195,7 @@ require_once(ROOT_DIR . '/classes/Ajax.php');
                                 Creating account...
                                 <div class="mdl-spinner mdl-spinner--single-color mdl-js-spinner is-active"></div>
                             </span>
+                            <div class="g-recaptcha" data-sitekey="6Lfx2bsUAAAAAOUWzZjeIs1X7ASb43js5-LKB3rp"></div>
                         </div>
                     </form>
                 </div>
@@ -238,7 +240,11 @@ require_once(ROOT_DIR . '/classes/Ajax.php');
         $('#install-form').submit(function(e)
         {
             e.preventDefault();
-            createAccount();
+
+            if(grecaptcha.getResponse().length == 0)
+                showToast("Please verify the CAPTCHA.");
+            else
+                createAccount();
         });
     });
 
@@ -294,7 +300,8 @@ require_once(ROOT_DIR . '/classes/Ajax.php');
                     appName : $('#appName').val(),
                     apiKey : $('#apiKey').val(),
                     primaryColor : $('#primaryColor').val(),
-                    secondaryColor : $('#secondaryColor').val()
+                    secondaryColor : $('#secondaryColor').val(),
+                    captchaKey: grecaptcha.getResponse()
                 },
                 function(data)
                 {
@@ -306,8 +313,8 @@ require_once(ROOT_DIR . '/classes/Ajax.php');
                     else
                         showToast(parsedData['<?php echo Ajax::$RESPONSE_KEY ?>']);
 
-                    $('#save').removeAttribute('disabled');
-                    $('#cancel').removeAttribute('disabled');
+                    $('#save').removeAttr('disabled');
+                    $('#cancel').removeAttr('disabled');
                     $('#loading').attr('hidden', 'hidden');
 
                     accountBeingCreated = false;
