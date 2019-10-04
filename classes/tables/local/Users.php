@@ -75,8 +75,8 @@ class Users extends LocalTable
               
             </div>
             <div class="center-div-horizontal-outer">
-                <form class="center-div-horizontal-inner" action="' . AJAX_URL . 'account.php">
-                    <button class="mdl-button mdl-js-button mdl-js-ripple-effect">Logout</button>
+                <form id="core-sign-out-form" class="center-div-horizontal-inner" action="">
+                    <button type="submit" class="mdl-button mdl-js-button mdl-js-ripple-effect">Logout</button>
                 </form>
             </div>
         </div>';

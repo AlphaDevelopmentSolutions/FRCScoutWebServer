@@ -42,13 +42,13 @@ class Header
                     <span class="mdl-layout-title header-title"><a style="text-decoration: none; color: white;" href="/">' . $this->Title . '</a></span>
                     <div class="mdl-layout-spacer"></div>' .
             ((!loggedIn()) ?
-                    '<form  action="' . AJAX_URL . 'account.php" method="post" style="">
+                    '<form id="user-sign-in-form"  action="" method="post">
                             <div class="mdl-textfield mdl-js-textfield login-field-wrapper">
-                                <input class="mdl-textfield__input login-field" type="text" name="username" style="background-color: white !important; color: black; ">
+                                <input class="mdl-textfield__input login-field" type="text" id="user-password" style="background-color: white !important; color: black; ">
                                 <label class="mdl-textfield__label" for="username" style="padding-left: .5em; padding-right: .5em; ">Username</label>
                             </div>
                             <div class="mdl-textfield mdl-js-textfield login-field-wrapper">
-                                <input class="mdl-textfield__input login-field" type="password" name="password" style="background-color: white !important; color: black;">
+                                <input class="mdl-textfield__input login-field" id="user-username" type="password" style="background-color: white !important; color: black;">
                                 <label class="mdl-textfield__label" for="password" style="padding-left: .5em; padding-right: .5em; ">Password</label>
                             </div>
                             <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" style="background-color: var(--color-primary-dark) !important;">
@@ -116,9 +116,11 @@ class Header
                     </nav>';
 
         $html .=
-                '<a href="' . ROOT_URL . '?logout=1' . '" class="mdl-button mdl-js-button mdl-js-ripple-effect" style="margin: 1.5em; position: absolute !important; bottom: 0 !important; width: 167px;" >
+                '<form id="core-sign-out-form" action="">
+                    <button type="submit" class="mdl-button mdl-js-button mdl-js-ripple-effect" style="margin: 1.5em; position: absolute !important; bottom: 0 !important; width: 167px;" >
                     Logout
-                </a>
+                    </button>
+                </form>
             </div>';
 
         return $html;

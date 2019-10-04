@@ -1,3 +1,15 @@
+<?php
+if(!loggedIn())
+{
+?>
+<script src="<?php echo JS_URL ?>user-sign-in.js.php"></script>
+<?php
+}
+?>
+
+<?php require_once(INCLUDES_DIR . 'modals.php'); ?>
+
+<script defer src="<?php echo JS_URL ?>core-sign-out.js.php"></script>
 
 <!-- The core Firebase JS SDK is always required and must be listed first -->
 <script src="https://www.gstatic.com/firebasejs/7.0.0/firebase-app.js"></script>
