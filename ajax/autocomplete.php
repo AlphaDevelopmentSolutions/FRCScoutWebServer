@@ -15,7 +15,7 @@ switch ($_POST['action'])
     case 'team_list':
         $return_array = array();
 
-        foreach(Teams::getObjects(null, null, null,'Id', 'DESC') as $team)
+        foreach(Teams::getObjects(null, null,'Id', 'DESC') as $team)
         {
             $return_array[] = [
                 "label" => "$team->Id - $team->Name",
@@ -43,7 +43,7 @@ switch ($_POST['action'])
             $teamIds[] = $eventTeamListItem->TeamId;
         }
 
-        foreach(Teams::getObjects(null, null, null, 'Id', 'DESC') as $team)
+        foreach(Teams::getObjects(null, null, 'Id', 'DESC') as $team)
         {
             if(in_array($team->Id, $teamIds))
                 $return_array[] = [

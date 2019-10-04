@@ -579,3 +579,9 @@ html, body {
 {
   display: none;
 }
+
+.link
+{
+  text-decoration: none;
+  color: rgba(0,0,0,.54);
+}

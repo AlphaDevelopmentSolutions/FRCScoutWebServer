@@ -15,7 +15,7 @@ class RobotMedia extends LocalTable
      * @param Years | null $year if specified, filters by id
      * @param Events | null $event if specified, filters by id
      * @param Teams | null $team if specified, filters by id
-     * @return ScoutCardInfoArray | ScoutCardInfo[]
+     * @return RobotMedia[]
      */
     public static function getObjects($year = null, $event = null, $team = null)
     {

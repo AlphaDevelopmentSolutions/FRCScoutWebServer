@@ -77,6 +77,20 @@ function saveRecord(recordType, recordId, record = undefined)
                 };
             break;
 
+        case "<?php echo ScoutCardInfo::class ?>":
+            data =
+                {
+                    Id: $(record).attr('info-id'),
+                    YearId: $(record).attr('year-id'),
+                    EventId: $(record).attr('event-id'),
+                    MatchId: $(record).attr('match-id'),
+                    TeamId: $(record).attr('team-id'),
+                    CompletedBy: "",
+                    PropertyValue: $(record).val(),
+                    PropertyKeyId: $(record).attr('info-key-id')
+                };
+            break;
+
         case "<?php echo ChecklistItems::class ?>":
             data =
                 {

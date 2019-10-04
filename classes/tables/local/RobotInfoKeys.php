@@ -114,12 +114,11 @@ class RobotInfoKeys extends LocalTable
      */
     public static function toCard($event, $team)
     {
+        require_once(ROOT_DIR . "/classes/tables/core/Years.php");
+
         $robotInfoArray = array();
         $robotInfoKeyStates = array();
         $year = Years::withId($event->YearId);
-
-        require_once(ROOT_DIR . "/classes/tables/core/Years.php");
-
         $robotInfoKeys = self::getObjects($year);
         $robotInfos = RobotInfo::getObjects(null, null, $event, $team, $robotInfoKeys);
 
@@ -151,7 +150,7 @@ class RobotInfoKeys extends LocalTable
                             <h5><?php echo $robotInfoKeyState ?></h5>
                             <hr>
                             <?php
-                            foreach (RobotInfoKeys::getKeys($year, null, $robotInfoKeyState) as $robotInfoKey) {
+                            foreach (self::getKeys($year, null, $robotInfoKeyState) as $robotInfoKey) {
                                 ?>
                                 <strong class="setting-title"><?php echo $robotInfoKey->KeyName ?></strong>
                                 <div class="setting-value mdl-textfield mdl-js-textfield mdl-textfield--floating-label"

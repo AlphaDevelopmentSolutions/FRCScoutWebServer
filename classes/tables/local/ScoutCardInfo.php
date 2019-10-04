@@ -20,10 +20,9 @@ class ScoutCardInfo extends LocalTable
      * @param Events | null $event if specified, filters by id
      * @param Matches | null $match if specified, filters by id
      * @param Teams | null $team if specified, filters by id
-     * @param boolean $asNormalArray if true, uses [array] instead of [ScoutCardInfoArray]
-     * @return ScoutCardInfoArray | ScoutCardInfo[]
+     * @return ScoutCardInfo[]
      */
-    public static function getObjects($scoutCardInfoKey = null, $year = null, $event = null, $match = null, $team = null, $asNormalArray = false)
+    public static function getObjects($scoutCardInfoKey = null, $year = null, $event = null, $match = null, $team = null)
     {
         $whereStatment = "";
         $cols = array();
@@ -69,24 +68,7 @@ class ScoutCardInfo extends LocalTable
             $args[] = $team->Id;
         }
 
-        $objs = parent::getObjects($whereStatment, $cols, $args);
-
-        if($asNormalArray)
-            return $objs;
-
-        else
-        {
-            require_once(ROOT_DIR . '/classes/tables/local/ScoutCardInfoArray.php');
-
-            $returnArray = new ScoutCardInfoArray();
-
-            foreach($objs as $obj)
-            {
-                $returnArray[] = $obj;
-            }
-
-            return $returnArray;
-        }
+        return parent::getObjects($whereStatment, $cols, $args);
     }
 
     /**

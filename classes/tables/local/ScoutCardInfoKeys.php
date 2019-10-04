@@ -161,6 +161,94 @@ class ScoutCardInfoKeys extends LocalTable
     {
         return '';
     }
+
+    /**
+     * Displays the object once converted into HTML
+     * @param $event Events
+     * @param $match Matches
+     * @param $team Teams
+     */
+    public static function toCard($event, $match, $team)
+    {
+        require_once(ROOT_DIR . "/classes/tables/core/Years.php");
+
+        $scoutCardInfoArray = array();
+        $scoutCardInfoKeyStates = array();
+        $year = Years::withId($event->YearId);
+        $scoutCardInfoKeys = self::getObjects($year);
+        $scoutCardInfos = ScoutCardInfo::getObjects(null, null, $event, $match, $team, $scoutCardInfoKeys);
+
+        foreach ($scoutCardInfos as $scoutCardInfo) {
+            $scoutCardInfoKey = null;
+
+            for ($i = 0; $i < sizeof($scoutCardInfoKeys) && empty($scoutCardInfoKey); $i++) {
+                if ($scoutCardInfo->PropertyKeyId == $scoutCardInfoKeys[$i]->Id)
+                    $scoutCardInfoKey = $scoutCardInfoKeys[$i];
+            }
+
+            $scoutCardInfoArray[$scoutCardInfoKey->KeyState][$scoutCardInfoKey->KeyName] = $scoutCardInfo;
+        }
+
+        //get the keys for the specified year and store the states for sections
+        foreach ($scoutCardInfoKeys as $scoutCardInfoKey)
+            $scoutCardInfoKeyStates[] = $scoutCardInfoKey->KeyState;
+        $scoutCardInfoKeyStates = array_unique($scoutCardInfoKeyStates);
+
+        ?>
+        <div class="mdl-layout__tab-panel is-active">
+            <section class="section--center mdl-grid mdl-grid--no-spacing mdl-shadow--2dp">
+                <div class="mdl-card mdl-cell mdl-cell--12-col">
+                    <h4 style="padding-left: 40px;"><a class="link" href="<?php echo TEAMS_URL . 'match-list?teamId=' . $team->Id . '&eventId=' . $event->BlueAllianceId ?>"><?php echo $team->toString() ?></a></h4>
+                    <?php
+
+                    foreach ($scoutCardInfoKeyStates as $scoutCardInfoKeyState) {
+                        ?>
+                        <div class="mdl-card__supporting-text" style="margin: 0 40px !important;">
+                            <h5><?php echo $scoutCardInfoKeyState ?></h5>
+                            <hr>
+                            <?php
+                            foreach (self::getKeys($year, null, $scoutCardInfoKeyState) as $scoutCardInfoKey) {
+                                ?>
+                                <strong class="setting-title"><?php echo $scoutCardInfoKey->KeyName ?></strong>
+                                <div class="setting-value mdl-textfield mdl-js-textfield mdl-textfield--floating-label"
+                                     data-upgraded=",MaterialTextfield">
+                                    <input class="mdl-textfield__input scout-card-info-field"
+                                           info-id="<?php echo((!empty($scoutCardInfoArray[$scoutCardInfoKey->KeyState][$scoutCardInfoKey->KeyName]->Id)) ? $scoutCardInfoArray[$scoutCardInfoKey->KeyState][$scoutCardInfoKey->KeyName]->Id : -1) ?>"
+                                           year-id="<?php echo $year->Id ?>"
+                                           event-id="<?php echo $event->BlueAllianceId ?>"
+                                           match-id="<?php echo $match->Key ?>"
+                                           team-id="<?php echo $team->Id ?>"
+                                           info-key-id="<?php echo $scoutCardInfoKey->Id ?>"
+                                           value="<?php echo $scoutCardInfoArray[$scoutCardInfoKey->KeyState][$scoutCardInfoKey->KeyName]->PropertyValue ?>">
+                                </div>
+                                <?php
+                            }
+
+                            ?>
+                        </div>
+                        <?php
+                    }
+                    ?>
+                    <div class="card-buttons">
+                        <button id="delete"
+                                onclick="deleteRecord('<?php echo ScoutCardInfo::class ?>', -1, {teamId: <?php echo $team->Id ?>, eventId: '<?php echo $event->BlueAllianceId ?>', matchId: '<?php echo $match->Key ?>'})"
+                                class="mdl-button mdl-js-button mdl-js-ripple-effect">
+                            <span class="button-text">Delete</span>
+                        </button>
+                        <button id="save" onclick="saveRecordOverride('<?php echo ScoutCardInfo::class ?>', -1, $(this).parent().parent())"
+                                class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--raised mdl-button--accent">
+                            <span class="button-text">Save</span>
+                        </button>
+                        <span hidden id="loading">
+                                Saving Robot Info...
+                                <div class="mdl-spinner mdl-spinner--single-color mdl-js-spinner is-active"></div>
+                            </span>
+                    </div>
+                </div>
+            </section>
+        </div>
+        <?php
+    }
 }
 
 interface DataTypes

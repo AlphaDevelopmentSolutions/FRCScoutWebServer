@@ -161,7 +161,6 @@ $event = Events::withId($eventId);
         if (modifiedElements === $(saveableRecords).length)
             recordBeingModified = false;
 
-
         //check if record is currently being modifid
         if (!recordBeingModified)
         {
@@ -174,7 +173,6 @@ $event = Events::withId($eventId);
                     saveableRecords.push(this);
             });
             modifiedElements = 0;
-            modifyCallbackRan = false;
             hasErrors = false;
             $('#save').attr('disabled', 'disabled');
             $('#delete').attr('disabled', 'disabled');

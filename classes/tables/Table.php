@@ -82,7 +82,7 @@ abstract class Table
      */
     function save()
     {
-        if(empty($this->Id))
+        if(empty($this->Id) || $this->Id == -1)
         {
             //create the sql statement
             $sql = "INSERT INTO ! (";

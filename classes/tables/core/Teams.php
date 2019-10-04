@@ -18,6 +18,47 @@ class Teams extends CoreTable
     public static $TABLE_NAME = 'teams';
 
     /**
+     * Retrieves objects from the database
+     * @param Events | null $event if specified, filters by id
+     * @param Matches | null $match if specified, filters by id
+     * @param string $orderBy order field to sort items by
+     * @param string $orderDirection direction to sort items by
+     * @return Teams[]
+     */
+    public static function getObjects($event = null, $match = null, $orderBy = 'Id', $orderDirection = 'DESC')
+    {
+        $whereStatment = "";
+        $cols = array();
+        $args = array();
+
+        //if obj specified, filter by id
+        if(!empty($event))
+        {
+            $whereStatment .= ((empty($whereStatment)) ? "" : " AND ") . " ? IN (SELECT ! FROM ! WHERE ! = ?) ";
+            $cols[] = 'Id';
+            $cols[] = 'TeamId';
+            $cols[] = EventTeamList::$DB_NAME;
+            $cols[] = 'EventId';
+            $args[] = $event->BlueAllianceId;
+        }
+
+        //if obj specified, filter by id
+        if(!empty($match))
+        {
+            $whereStatment .= ((empty($whereStatment)) ? "" : " AND ") . " ! IN (?, ?, ?, ?, ?, ?) ";
+            $cols[] = 'Id';
+            $args[] = $match->BlueAllianceTeamOneId;
+            $args[] = $match->BlueAllianceTeamTwoId;
+            $args[] = $match->BlueAllianceTeamThreeId;
+            $args[] = $match->RedAllianceTeamOneId;
+            $args[] = $match->RedAllianceTeamTwoId;
+            $args[] = $match->RedAllianceTeamThreeId;
+        }
+
+        return parent::getObjects($whereStatment, $cols, $args, $orderBy, $orderDirection);
+    }
+
+    /**
      * Returns the URI of the teams profile image
      * @param $year Years to get the image from
      * @return RobotMedia

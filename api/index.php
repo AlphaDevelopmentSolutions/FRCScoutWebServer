@@ -124,7 +124,7 @@ switch ($action)
             $event = Events::withId($eventId);
             $api->success($event->getScoutCardInfo());
         } else
-            $api->success(ScoutCardInfo::getObjects(null, null, null, null, null, true));
+            $api->success(ScoutCardInfo::getObjects());
 
         break;
 
