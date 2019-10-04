@@ -7,8 +7,9 @@ require_once(ROOT_DIR . "/classes/Ajax.php");
  * Saves record to the database
  * @param recordType string record type name to save
  * @param recordId int to use when saving, if -1 it will create a new record
+ * @param record mainly used for scout cards info and robot info fields, stores the row to save
  */
-function saveRecord(recordType, recordId)
+function saveRecord(recordType, recordId, record = undefined)
 {
     var data;
 
@@ -45,6 +46,18 @@ function saveRecord(recordType, recordId)
                     KeyState: $('#KeyState').val(),
                     KeyName: $('#KeyName').val(),
                     SortOrder: $('#SortOrder').val()
+                };
+            break;
+
+        case "<?php echo RobotInfo::class ?>":
+            data =
+                {
+                    Id: $(record).attr('info-id'),
+                    YearId: $(record).attr('year-id'),
+                    EventId: $(record).attr('event-id'),
+                    TeamId: $(record).attr('team-id'),
+                    PropertyValue: $(record).val(),
+                    PropertyKeyId: $(record).attr('info-key-id')
                 };
             break;
 

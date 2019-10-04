@@ -166,7 +166,7 @@ switch ($action)
 
             $api->success($event->getRobotInfo());
         } else
-            $api->success(RobotInfo::getObjects(null, null, null, null, true));
+            $api->success(RobotInfo::getObjects());
 
         break;
 

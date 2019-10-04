@@ -6,7 +6,6 @@ class RobotInfo extends LocalTable
     public $YearId;
     public $EventId;
     public $TeamId;
-
     public $PropertyValue;
     public $PropertyKeyId;
 
@@ -18,10 +17,10 @@ class RobotInfo extends LocalTable
      * @param Years | null $year if specified, filters by id
      * @param Events | null $event if specified, filters by id
      * @param Teams | null $team if specified, filters by id
-     * @param boolean $asNormalArray if true, uses [array] instead of [ScoutCardInfoArray]
-     * @return RobotInfoArray | ScoutCardInfo[]
+     * @param RobotInfoKeys[] | array $robotInfoKeys if specified, filters by robot info keys
+     * @return RobotInfo[]
      */
-    public static function getObjects($robotInfo = null, $year = null, $event = null, $team = null, $asNormalArray = false)
+    public static function getObjects($robotInfo = null, $year = null, $event = null, $team = null, $robotInfoKeys = array())
     {
         $whereStatment = "";
         $cols = array();
@@ -59,24 +58,28 @@ class RobotInfo extends LocalTable
             $args[] = $team->Id;
         }
 
-        $objs = parent::getObjects($whereStatment, $cols, $args);
-
-        if($asNormalArray)
-            return $objs;
-
-        else
+        if(!empty($robotInfoKeys))
         {
-            require_once(ROOT_DIR . '/classes/tables/local/RobotInfoArray.php');
+            $whereStatment .= ((empty($whereStatment)) ? "" : " AND ") . " ! IN (";
+            $cols[] = 'PropertyKeyId';
 
-            $returnArray = new RobotInfoArray();
 
-            foreach($objs as $obj)
+            $appendString = "";
+
+            foreach($robotInfoKeys as $robotInfoKey)
             {
-                $returnArray[] = $obj;
+                if(!empty($appendString))
+                    $appendString .= ", ";
+
+                $appendString .= "?";
+
+                $args[] = $robotInfoKey->Id;
             }
 
-            return $returnArray;
+            $whereStatment .= $appendString . ")";
         }
+
+        return parent::getObjects($whereStatment, $cols, $args);
     }
 
     /**

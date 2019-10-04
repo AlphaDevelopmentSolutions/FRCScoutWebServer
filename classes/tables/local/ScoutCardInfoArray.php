@@ -91,10 +91,10 @@ class ScoutCardInfoArray extends \ArrayObject implements ArrayAccess
 
                     ?>
                                     <div class="card-buttons">
-                                        <button onclick="deleteRecord('<?php echo ScoutCardInfo::class ?>', -1, {teamId: <?php echo $teamId ?>, eventId: '<?php echo $eventId ?>', matchId: '<?php echo $matchId ?>'})" class="mdl-button mdl-js-button mdl-js-ripple-effect table-button delete">
+                                        <button onclick="deleteRecord('<?php echo ScoutCardInfo::class ?>', -1, {teamId: <?php echo $teamId ?>, eventId: '<?php echo $eventId ?>', matchId: '<?php echo $matchId ?>'})" class="mdl-button mdl-js-button mdl-js-ripple-effect">
                                             <span class="button-text">Delete</span>
                                         </button>
-                                        <button style="width: 95px; margin: 24px;" onclick="saveRecord('<?php echo ScoutCardInfo::class ?>', <?php echo $teamId ?>)" class="center-div-horizontal-inner mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--raised mdl-button--accent">
+                                        <button onclick="saveRecord('<?php echo ScoutCardInfo::class ?>', <?php echo $teamId ?>)" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--raised mdl-button--accent">
                                             <span class="button-text">Save</span>
                                         </button>
                                     </div>

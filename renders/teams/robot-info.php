@@ -130,10 +130,7 @@ $event = Events::withId($eventId);
     <main class="mdl-layout__content">
 
         <?php
-
-            $array = RobotInfo::getObjects(null, null, $event, $team);
-
-            $array->toHtml();
+            RobotInfoKeys::toCard($event, $team);
         ?>
 
         <?php require_once(INCLUDES_DIR . 'footer.php') ?>
@@ -143,6 +140,11 @@ $event = Events::withId($eventId);
 <?php require_once(INCLUDES_DIR . 'modals.php'); ?>
 <script src="<?php echo JS_URL ?>modify-record.js.php"></script>
 <script>
+    var recordBeingModified = false;
+    var saveableRecords = [];
+    var modifiedElements = 0;
+    var hasErrors = false;
+
     function deleteFailCallback(message)
     {
         showToast(message);
@@ -151,6 +153,88 @@ $event = Events::withId($eventId);
     function deleteSuccessCallback(message)
     {
         location.reload();
+    }
+
+    function saveRecordOverride(recordType, recordId)
+    {
+        //check if the elements that have been modified are the total of elements to be modified
+        if (modifiedElements === $(saveableRecords).length)
+            recordBeingModified = false;
+
+
+        //check if record is currently being modifid
+        if (!recordBeingModified)
+        {
+            //reset vars
+            saveableRecords = [];
+            $('.robot-info-field').each(function ()
+            {
+                //prevent blank items from being created
+                if($(this).val() !== "")
+                    saveableRecords.push(this);
+            });
+            modifiedElements = 0;
+            modifyCallbackRan = false;
+            hasErrors = false;
+            $('#save').attr('disabled', 'disabled');
+            $('#delete').attr('disabled', 'disabled');
+            $('#loading').removeAttr('hidden');
+
+            //save each saveable record
+            $(saveableRecords).each(function () {
+                //prevent blank items from being created
+                saveRecord(recordType, recordId, this);
+            });
+        }
+
+        recordBeingModified = true;
+    }
+
+    function saveSuccessCallback(message)
+    {
+        //add count to modified elements
+        modifiedElements++;
+
+        //only show success toast on last element, and no errors
+        if(modifiedElements === $(saveableRecords).length && !hasErrors)
+            showToast(message);
+
+        isFinished();
+    }
+
+    function saveFailCallback(message)
+    {
+        //specify there was errors and don't show save success
+        hasErrors = true;
+
+        //add count to modified elements
+        modifiedElements++;
+
+        //always show errors
+        showToast(message);
+
+        isFinished();
+    }
+
+    /**
+     * Checks if the total elements to be modified have finished being modified
+     */
+    function isFinished()
+    {
+        if(modifiedElements === $(saveableRecords).length)
+        {
+            //if any of the elements are new elements with -1 id's, reload the page
+            //this fixes any issues with the id not saving and duplicates being created
+            $(saveableRecords).each(function ()
+            {
+                if($(this).attr('info-id') == -1 && $(this).val() !== "")
+                    location.reload();
+            });
+
+            $('#save').removeAttr('disabled');
+            $('#delete').removeAttr('disabled');
+            $('#loading').attr('hidden', 'hidden');
+        }
     }
 </script>
 </body>

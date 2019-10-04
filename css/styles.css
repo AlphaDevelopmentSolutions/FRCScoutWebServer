@@ -212,9 +212,7 @@ html, body {
 .mdl-demo .mdl-card .mdl-card__supporting-text > h3:first-child {
   margin-bottom: 24px;
 }
-.mdl-demo .mdl-layout__tab-panel:not(#overview) {
-  background-color: white;
-}
+
 .mdl-demo #teams section {
   margin-bottom: 72px;
 }
@@ -569,6 +567,12 @@ html, body {
 .card-buttons
 {
   text-align: right;
+  margin: 24px;
+}
+
+.card-buttons button
+{
+  font-weight: 600;
 }
 
 .hide

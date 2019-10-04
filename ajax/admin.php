@@ -8,6 +8,7 @@ require_once(ROOT_DIR . "/classes/tables/local/RobotInfoKeys.php");
 require_once(ROOT_DIR . "/classes/tables/local/ScoutCardInfoKeys.php");
 require_once(ROOT_DIR . "/classes/tables/local/ChecklistItems.php");
 require_once(ROOT_DIR . "/classes/tables/local/RobotInfo.php");
+require_once(ROOT_DIR . "/classes/tables/local/RobotInfoKeys.php");
 require_once(ROOT_DIR . "/classes/tables/local/ScoutCardInfo.php");
 require_once(ROOT_DIR . "/classes/tables/local/ChecklistItemResults.php");
 require_once(ROOT_DIR . "/classes/tables/local/RobotMedia.php");
@@ -44,14 +45,8 @@ switch ($_POST['action'])
                 if(empty($robotInfoKey->KeyState))
                     $ajax->error("Game state cannot be empty.");
 
-                if(!validAlnum($robotInfoKey->KeyState))
-                    $ajax->error("Game state may only be alpha-numeric (A-Z 0-9).");
-
                 if(empty($robotInfoKey->KeyName))
                     $ajax->error("Info name cannot be empty.");
-
-                if(!validAlnum($robotInfoKey->KeyName))
-                    $ajax->error("Info name may only be alphanumeric (A-Z 0-9).");
 
                 if(empty($robotInfoKey->SortOrder))
                     $ajax->error("Sort order cannot be empty.");
@@ -80,14 +75,8 @@ switch ($_POST['action'])
                 if(empty($scoutCardInfoKey->KeyState))
                     $ajax->error("Game state cannot be empty.");
 
-                if(!validAlnum($scoutCardInfoKey->KeyState))
-                    $ajax->error("Game state may only be alpha-numeric (A-Z 0-9).");
-
                 if(empty($scoutCardInfoKey->KeyName))
                     $ajax->error("Info name cannot be empty.");
-
-                if(!validAlnum($scoutCardInfoKey->KeyName))
-                    $ajax->error("Info name may only be alphanumeric (A-Z 0-9).");
 
                 if(empty($scoutCardInfoKey->SortOrder))
                     $ajax->error("Sort order cannot be empty.");
@@ -143,14 +132,8 @@ switch ($_POST['action'])
                 if(empty($checklistItem->Title))
                     $ajax->error("Title cannot be empty.");
 
-                if(!validAlnum($checklistItem->Title))
-                    $ajax->error("Title may only be alpha-numeric (A-Z 0-9).");
-
                 if(empty($checklistItem->Description))
                     $ajax->error("Description cannot be empty.");
-
-                if(!validDescription($checklistItem->Description))
-                    $ajax->error("Description contains invalid characters.");
 
                 if($checklistItem->save())
                     $ajax->success("Checklist info saved successfully.");
@@ -167,14 +150,8 @@ switch ($_POST['action'])
                 if(empty($user->FirstName))
                     $ajax->error("First name cannot be empty.");
 
-                if(!validAlnum($user->FirstName))
-                    $ajax->error("First name may only be alpha-numeric (A-Z 0-9).");
-
                 if(empty($user->LastName))
                     $ajax->error("Last name cannot be empty.");
-
-                if(!validAlnum($user->LastName))
-                    $ajax->error("Last name may only be alphanumeric (A-Z 0-9).");
 
                 if(!empty($user->IsAdmin) && $user->IsAdmin != 0 && $user->IsAdmin != 1)
                     $ajax->error("Admin flag may only be 1 (Yes) or 0 (No).");
@@ -247,9 +224,6 @@ switch ($_POST['action'])
                     if (empty($config->Value))
                         $ajax->error("Value name cannot be empty.");
 
-                    if (!validAlnum($config->Value))
-                        $ajax->error("Value may only be alpha-numeric (A-Z 0-9).");
-
                     if (!$config->save())
                         $ajax->error("User failed to save.");
                 }
@@ -282,9 +256,6 @@ switch ($_POST['action'])
 
                 if(!ctype_digit($robotInfo->TeamId))
                     $ajax->error("Team id may only be numeric (0-9).");
-
-                if(!validAlnum($robotInfo->PropertyValue))
-                    $ajax->error("Value may only be alphanumeric (A-Z 0-9).");
 
                 if(empty($robotInfo->PropertyKeyId))
                     $ajax->error("Property key id cannot be empty.");
@@ -328,12 +299,6 @@ switch ($_POST['action'])
                 if(!ctype_digit($scoutCardInfo->TeamId))
                     $ajax->error("Team id may only be numeric (0-9).");
 
-                if(!validAlnum($scoutCardInfo->CompletedBy))
-                    $ajax->error("Completed by name may only be alpha-numeric (A-Z 0-9).");
-
-                if(!validAlnum($scoutCardInfo->PropertyValue))
-                    $ajax->error("Value may only be alphanumeric (A-Z 0-9).");
-
                 if(empty($scoutCardInfo->PropertyKeyId))
                     $ajax->error("Property key id cannot be empty.");
 
@@ -368,14 +333,8 @@ switch ($_POST['action'])
                 if(empty($checklistItemResult->Status))
                     $ajax->error("Status cannot be empty.");
 
-                if(!validAlnum($checklistItemResult->Status))
-                    $ajax->error("Status may only be alpha-numeric (A-Z 0-9).");
-
                 if(empty($checklistItemResult->CompletedBy))
                     $ajax->error("Completed by cannot be empty.");
-
-                if(!validAlnum($checklistItemResult->CompletedBy))
-                    $ajax->error("Completed by may only be alpha-numeric (A-Z 0-9).");
 
                 if(empty($checklistItemResult->CompletedDate))
                     $ajax->error("Completed date cannot be empty.");
@@ -588,7 +547,10 @@ switch ($_POST['action'])
  */
 function validAlnum($text)
 {
-    return ctype_alnum(trim(str_replace(' ','', $text)));
+    $text = str_replace(' ','', $text);
+    $text = str_replace('.','', $text);
+
+    return ctype_alnum(trim($text)) || empty($text);
 }
 
 /**
