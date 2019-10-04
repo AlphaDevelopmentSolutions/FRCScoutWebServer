@@ -123,8 +123,6 @@ class RobotInfoKeys extends LocalTable
         $robotInfoKeys = self::getObjects($year);
         $robotInfos = RobotInfo::getObjects(null, null, $event, $team, $robotInfoKeys);
 
-        //array format is $array[YEAR][EVENT][TEAM][STATE][NAME] = value
-        //ex $array[2019][2019onwin][5885][PreGame][RobotWidth] = 5.3 feet
         foreach ($robotInfos as $robotInfo) {
             $robotInfoKey = null;
 
