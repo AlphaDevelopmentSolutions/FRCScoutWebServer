@@ -284,7 +284,7 @@ require_once(ROOT_DIR . '/classes/Ajax.php');
             accountBeingCreated = true;
 
             //get data from the ajax script
-            $.post('<?php echo AJAX_URL ?>signup.php',
+            $.post('<?php echo AJAX_URL ?>account.php',
                 {
                     action: 'create',
                     username : $('#username').val(),
@@ -305,6 +305,8 @@ require_once(ROOT_DIR . '/classes/Ajax.php');
                 },
                 function(data)
                 {
+                    grecaptcha.reset();
+
                     var parsedData = JSON.parse(data);
 
                     if(parsedData['<?php echo Ajax::$STATUS_KEY ?>'] == '<?php echo Ajax::$SUCCESS_STATUS_CODE ?>')

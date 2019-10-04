@@ -1,12 +1,62 @@
 <?php
 require_once("../config.php");
 require_once(ROOT_DIR . "/classes/Ajax.php");
+require_once(ROOT_DIR . "/classes/tables/local/Users.php");
+require_once(ROOT_DIR . "/classes/tables/core/Accounts.php");
 
 $ajax = new Ajax();
 
 switch ($_POST['action'])
 {
-    case 'create':
+    case 'login_user':
+        $username = $_POST['username'];
+        $password = $_POST['password'];
+        $redirectUrl = $_POST['url'];
+
+        if(!empty($username) && !empty($password))
+        {
+            $user = new Users();
+            $user = $user->login($username, $password);
+            if(!empty($user))
+            {
+                $_SESSION['user'] = serialize($user);
+                $ajax->success('Successfully logged in.');
+            }
+        }
+
+        $ajax->error('Invalid username or password');
+        break;
+
+    case 'logout_user':
+        unset($_SESSION['user']);
+        $ajax->success('Successfully logged out.');
+        break;
+
+    case 'login_core':
+        $username = $_POST['username'];
+        $password = $_POST['password'];
+
+        if(!empty($username) && !empty($password))
+        {
+            $user = new Accounts();
+            $user = $user->login($username, $password);
+            if(!empty($user))
+            {
+                $_SESSION['coreAccount'] = serialize($user);
+                $ajax->success('Successfully logged in.');
+            }
+        }
+
+        $ajax->error('Invalid username or password');
+        break;
+
+    case 'logout_core':
+        unset($_SESSION);
+        session_destroy();
+        $ajax->success('Successfully logged out.');
+        break;
+
+    case 'create_core':
         $username = $_POST['username'];
         $email = $_POST['email'];
         $password = $_POST['password'];
@@ -253,3 +303,4 @@ function validPassword($password)
 {
     return preg_match('~^[a-zA-Z0-9]{8,}~', $password) == 1;
 }
+?>

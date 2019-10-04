@@ -1,24 +1,7 @@
 <?php
-if(!empty($_GET))
-{
-    if ($_GET['logout'] == 1)
-    {
-        session_start();
-        unset($_SESSION);
-        session_destroy();
-    }
-}
-
 require_once("config.php");
 require_once(ROOT_DIR . '/classes/tables/core/Accounts.php');
-
-if(isPostBack())
-{
-    $coreAccount = Accounts::login($_POST['username'], $_POST['password']);
-
-    if(!empty($coreAccount))
-        $_SESSION['coreAccount'] = serialize($coreAccount);
-}
+require_once(ROOT_DIR . '/classes/Ajax.php');
 
 if(coreLoggedIn())
     header('Location: '. EVENTS_URL . 'list?yearId=' . date('Y'));
@@ -28,6 +11,7 @@ if(coreLoggedIn())
 <head>
     <title>FRC Scout</title>
     <?php require_once(INCLUDES_DIR . 'meta.php') ?>
+    <script defer src='https://www.google.com/recaptcha/api.js'></script>
 </head>
 <body class="mdl-demo mdl-color--grey-100 mdl-color-text--grey-700 mdl-base">
 <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
@@ -35,20 +19,21 @@ if(coreLoggedIn())
         <div class="home-login">
             <img src="<?php echo IMAGES_URL ?>app-icon.png" width="200">
             <div>
-                <form method="post" action="/">
+                <form method="post" action="" id="login-form">
                     <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                        <input class="mdl-textfield__input" type="text" name="username">
+                        <input class="mdl-textfield__input" type="text" id="username" name="username">
                         <label class="mdl-textfield__label" >Username</label>
                     </div>
                     <br>
                     <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                        <input class="mdl-textfield__input" type="password" name="password">
+                        <input class="mdl-textfield__input" type="password" id="password" name="password">
                         <label class="mdl-textfield__label" >Password</label>
                     </div>
                     <br>
                     <button type="submit" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
                         Login
                     </button>
+                    <div class="g-recaptcha material-top-bottom-padding" data-sitekey="6Lfx2bsUAAAAAOUWzZjeIs1X7ASb43js5-LKB3rp"></div>
                 </form>
             </div>
             <p class="create-account">
@@ -58,6 +43,49 @@ if(coreLoggedIn())
         </div>
     </main>
 </div>
+<?php require_once(INCLUDES_DIR . 'modals.php'); ?>
+<script>
+    $(document).ready(function ()
+    {
+        //prevent form from submitting, but keep validations
+        $('#login-form').submit(function(e)
+        {
+            e.preventDefault();
+
+            if(grecaptcha.getResponse().length == 0)
+                showToast("Please verify the CAPTCHA.");
+            else
+                login();
+        });
+    });
+
+    /**
+     * Attempts to login to server
+     */
+    function login()
+    {
+        //get data from the ajax script
+        $.post('<?php echo AJAX_URL ?>account.php',
+            {
+                action: 'login_core',
+                username: $('#username').val(),
+                password: $('#password').val(),
+                captchaKey: grecaptcha.getResponse()
+            },
+            function(data)
+            {
+                grecaptcha.reset();
+
+                var parsedData = JSON.parse(data);
+
+                if(parsedData['<?php echo Ajax::$STATUS_KEY ?>'] == '<?php echo Ajax::$SUCCESS_STATUS_CODE ?>')
+                    location.href = '<?php echo EVENTS_URL . 'list?yearId=' . date('Y') ?>';
+
+                else
+                    showToast(parsedData['<?php echo Ajax::$RESPONSE_KEY ?>']);
+            });
+    }
+</script>
 <?php
 
 if(!empty($_GET))
@@ -65,12 +93,11 @@ if(!empty($_GET))
     if($_GET['installSuccess'] == 1)
     {
         ?>
-        <?php require_once(INCLUDES_DIR . 'modals.php'); ?>
 
         <script>
             $(document).ready(function()
             {
-               showToast('Install Successful. You may now login with your credentials.'); 
+                showDialog('Account Created', 'Your account has been created. Please log in using the details previously entered.', function () {dialog.close()});
             });
         </script>
 <?php
