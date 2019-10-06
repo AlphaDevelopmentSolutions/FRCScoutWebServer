@@ -70,6 +70,10 @@ class ChecklistItemResults extends LocalTable implements Status
                             <input class="mdl-textfield__input" value="<?php echo $this->CompletedDate ?>" id="CompletedDate">
                         </div>
                     </div>
+                    <?php
+                    if(getUser()->IsAdmin == 1)
+                    {
+                    ?>
                     <div class="card-buttons">
                         <button onclick="deleteRecord('<?php echo self::class ?>', <?php echo $this->Id ?>)" class="mdl-button mdl-js-button mdl-js-ripple-effect">
                             <span class="button-text">Delete</span>
@@ -78,6 +82,9 @@ class ChecklistItemResults extends LocalTable implements Status
                             <span class="button-text">Save</span>
                         </button>
                     </div>
+                    <?php
+                    }
+                    ?>
                 </div>
             </section>
         </div>

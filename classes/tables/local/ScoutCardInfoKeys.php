@@ -268,22 +268,27 @@ class ScoutCardInfoKeys extends LocalTable
                         </div>
                         <?php
                     }
-                    ?>
-                    <div class="card-buttons">
-                        <button id="delete"
-                                onclick="deleteRecord('<?php echo ScoutCardInfo::class ?>', -1, {teamId: <?php echo $team->Id ?>, eventId: '<?php echo $event->BlueAllianceId ?>', matchId: '<?php echo $match->Key ?>'})"
-                                class="mdl-button mdl-js-button mdl-js-ripple-effect">
-                            <span class="button-text">Delete</span>
-                        </button>
-                        <button id="save" onclick="saveRecordOverride('<?php echo ScoutCardInfo::class ?>', -1, $(this).parent().parent())"
-                                class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--raised mdl-button--accent">
-                            <span class="button-text">Save</span>
-                        </button>
-                        <span hidden id="loading">
+                    if(getUser()->IsAdmin == 1) {
+                        ?>
+                        <div class="card-buttons">
+                            <button id="delete"
+                                    onclick="deleteRecord('<?php echo ScoutCardInfo::class ?>', -1, {teamId: <?php echo $team->Id ?>, eventId: '<?php echo $event->BlueAllianceId ?>', matchId: '<?php echo $match->Key ?>'})"
+                                    class="mdl-button mdl-js-button mdl-js-ripple-effect">
+                                <span class="button-text">Delete</span>
+                            </button>
+                            <button id="save"
+                                    onclick="saveRecordOverride('<?php echo ScoutCardInfo::class ?>', -1, $(this).parent().parent())"
+                                    class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--raised mdl-button--accent">
+                                <span class="button-text">Save</span>
+                            </button>
+                            <span hidden id="loading">
                                 Saving Robot Info...
                                 <div class="mdl-spinner mdl-spinner--single-color mdl-js-spinner is-active"></div>
                             </span>
-                    </div>
+                        </div>
+                        <?php
+                    }
+                        ?>
                 </div>
             </section>
         </div>

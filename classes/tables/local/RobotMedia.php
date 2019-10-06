@@ -181,9 +181,16 @@ class RobotMedia extends LocalTable
                             <a target="_blank" href="<?php echo ROBOT_MEDIA_URL . $this->FileURI ?>" class="mdl-button mdl-js-button mdl-js-ripple-effect table-button delete">
                                 <span class="button-text">View</span>
                             </a>
-                            <button onclick="deleteRecord('<?php echo self::class ?>', <?php echo $this->Id ?>)" class="mdl-button mdl-js-button mdl-js-ripple-effect table-button delete">
+                        <?php
+                        if(getUser()->IsAdmin == 1) {
+                            ?>
+                            <button onclick="deleteRecord('<?php echo self::class ?>', <?php echo $this->Id ?>)"
+                                    class="mdl-button mdl-js-button mdl-js-ripple-effect table-button delete">
                                 <span class="button-text">Delete</span>
                             </button>
+                            <?php
+                        }
+                            ?>
                         </div>
                     </div>
                 </section>
