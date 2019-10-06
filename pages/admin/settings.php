@@ -538,8 +538,21 @@ interface AdminPanels
 
     function saveSuccessCallback(message)
     {
+        <?php
+        if(empty($obj->Id) || $obj->Id == -1)
+        {
+        ?>
+        location.href = '<?php echo ADMIN_URL . 'list?yearId=' . $year->Id . '&adminPanel=' . $panel ?>';
+        <?php
+        }
+        else
+        {
+        ?>
         //display response to screen
         showToast(message);
+        <?php
+        }
+        ?>
     }
 
     function saveFailCallback(message)
