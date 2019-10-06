@@ -71,14 +71,14 @@ define('JS_URL', '/js/');
 define('AJAX_URL', '/ajax/');
 
 
-define('RENDERS_URL', URL_PATH . '/renders/');
-define('ADMIN_URL', RENDERS_URL . 'admin/');
-define('CHECKLISTS_URL', RENDERS_URL . 'checklists/');
-define('EVENTS_URL', RENDERS_URL . 'events/');
-define('MATCHES_URL', RENDERS_URL . 'matches/');
-define('STATS_URL', RENDERS_URL . 'stats/');
-define('TEAMS_URL', RENDERS_URL . 'teams/');
-define('YEARS_URL', RENDERS_URL . 'years/');
+define('PAGES_URL', URL_PATH . '/pages/');
+define('ADMIN_URL', PAGES_URL . 'admin/');
+define('CHECKLISTS_URL', PAGES_URL . 'checklists/');
+define('EVENTS_URL', PAGES_URL . 'events/');
+define('MATCHES_URL', PAGES_URL . 'matches/');
+define('STATS_URL', PAGES_URL . 'stats/');
+define('TEAMS_URL', PAGES_URL . 'teams/');
+define('YEARS_URL', PAGES_URL . 'years/');
 
 require_once(ROOT_DIR . "/classes/Header.php");
 require_once(ROOT_DIR . "/classes/NavBar.php");
