@@ -51,9 +51,13 @@ class Header
                                 <input class="mdl-textfield__input login-field" id="user-username" type="password" style="background-color: white !important; color: black;">
                                 <label class="mdl-textfield__label" for="password" style="padding-left: .5em; padding-right: .5em; ">Password</label>
                             </div>
-                            <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" style="background-color: var(--color-primary-dark) !important;">
+                            <button id="user-sign-in-button" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" style="background-color: var(--color-primary-dark) !important;">
                                 Login
                             </button>
+                            <span hidden id="user-sign-in-loading-div">
+                                <div class="mdl-spinner mdl-spinner--single-color mdl-js-spinner is-active"></div>
+                                Logging In...
+                            </span>
                             <input type="hidden" name="url" value="' . $_SERVER['REQUEST_URI'] . '">
                         </form>'
                     :

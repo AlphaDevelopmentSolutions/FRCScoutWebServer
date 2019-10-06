@@ -8,6 +8,8 @@ $(document).ready(function ()
     $('#user-sign-in-form').submit(function(e)
     {
         e.preventDefault();
+        $('#user-sign-in-loading-div').removeAttr('hidden');
+        $('#user-sign-in-button').attr('disabled', 'disabled');
         loginUser();
     });
 });
@@ -33,5 +35,8 @@ function loginUser()
 
             else
                 showToast(parsedData['<?php echo Ajax::$RESPONSE_KEY ?>']);
+
+            $('#user-sign-in-loading-div').attr('hidden', 'hidden');
+            $('#user-sign-in-button').removeAttr('disabled');
         });
 }
