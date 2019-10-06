@@ -13,7 +13,7 @@ $team = Teams::withId($teamId);
 $event = Events::withId($eventId);
 
 //robot media submission
-if(isPostBack() && !empty($_FILES))
+if(isPostBack() && !empty($_FILES) && !empty(getUser()))
 {
     $file = $_FILES['RobotMedia'];
 
@@ -155,13 +155,21 @@ if(isPostBack() && !empty($_FILES))
             $robotMedia->toHtml()
         ?>
         <?php require_once(INCLUDES_DIR . 'footer.php') ?>
-        <button onclick="$('#RobotMedia').trigger('click');" class="settings-fab mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored">
-            <i class="material-icons">add</i>
-        </button>
 
-        <form id="robot-media-form" method="post" action="" class="hide" enctype="multipart/form-data">
-            <input onchange="uploadImage(this)" type="file" name="RobotMedia" id="RobotMedia" accept="image/jpeg">
-        </form>
+        <?php
+        if(!empty(getUser())) {
+            ?>
+            <button onclick="$('#RobotMedia').trigger('click');"
+                    class="settings-fab mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored">
+                <i class="material-icons">add</i>
+            </button>
+
+            <form id="robot-media-form" method="post" action="" class="hide" enctype="multipart/form-data">
+                <input onchange="uploadImage(this)" type="file" name="RobotMedia" id="RobotMedia" accept="image/jpeg">
+            </form>
+            <?php
+        }
+        ?>
     </main>
 </div>
 <?php require_once(INCLUDES_DIR . 'bottom-scripts.php') ?>
@@ -179,15 +187,15 @@ if(isPostBack() && !empty($_FILES))
         showToast(message);
     }
 
+    <?php
+    if(!empty(getUser())) {
+    ?>
     /**
      * Uploads image to server
      */
-    function uploadImage(file)
-    {
-        if(file.files && file.files[0] && file.files[0].type === 'image/jpeg')
-        {
-            showDialog("Upload image?", "Are you sure you would like to upload this robot media?", function()
-            {
+    function uploadImage(file) {
+        if (file.files && file.files[0] && file.files[0].type === 'image/jpeg') {
+            showDialog("Upload image?", "Are you sure you would like to upload this robot media?", function () {
                 $('#robot-media-form').submit();
             });
         }
@@ -195,7 +203,9 @@ if(isPostBack() && !empty($_FILES))
         else
             showToast('Robot media must be a .JPG or .JPEG.')
     }
-
+    <?php
+    }
+    ?>
 </script>
 </body>
 </html>
