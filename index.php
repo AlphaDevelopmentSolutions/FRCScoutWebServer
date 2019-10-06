@@ -30,10 +30,15 @@ if(coreLoggedIn())
                         <label class="mdl-textfield__label" >Password</label>
                     </div>
                     <br>
-                    <button type="submit" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
+                    <button id="core-sign-in-button" type="submit" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent material-padding">
                         Login
                     </button>
+                    <br>
                     <div class="g-recaptcha material-top-bottom-padding" data-sitekey="6Lfx2bsUAAAAAOUWzZjeIs1X7ASb43js5-LKB3rp"></div>
+                    <span hidden id="core-sign-in-loading-div">
+                        <div class="mdl-spinner mdl-spinner--single-color mdl-js-spinner is-active"></div>
+                        Logging In...
+                    </span>
                 </form>
             </div>
             <p class="create-account">
@@ -64,6 +69,9 @@ if(coreLoggedIn())
      */
     function login()
     {
+        $('#core-sign-in-loading-div').removeAttr('hidden');
+        $('#core-sign-in-button').attr('disabled', 'disabled');
+
         //get data from the ajax script
         $.post('<?php echo AJAX_URL ?>account.php',
             {
@@ -75,6 +83,8 @@ if(coreLoggedIn())
             function(data)
             {
                 grecaptcha.reset();
+                $('#core-sign-in-loading-div').attr('hidden', 'hidden');
+                $('#core-sign-in-button').removeAttr('disabled');
 
                 var parsedData = JSON.parse(data);
 
