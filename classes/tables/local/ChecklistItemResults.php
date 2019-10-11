@@ -53,21 +53,28 @@ class ChecklistItemResults extends LocalTable implements Status
                         <h4><?php echo $checklistItem->Title ?></h4>
                         Current Status -
                         <div class="setting-value mdl-textfield mdl-js-textfield mdl-textfield--floating-label" data-upgraded=",MaterialTextfield">
-                            <input id="Status" class="mdl-textfield__input mdl-js-button <?php echo (($this->Status == Status::COMPLETE) ? 'good' : 'bad') ?>" style="font-weight: bold; width: unset;" type="text" value="<?php echo $this->Status ?>" name="DataType" id="DataType"/>
-                            <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect" for="Status">
+                            <input id="Status<?php echo $this->Id ?>" class="mdl-textfield__input mdl-js-button <?php echo (($this->Status == Status::COMPLETE) ? 'good' : 'bad') ?>" style="font-weight: bold; width: unset;" type="text" value="<?php echo $this->Status ?>"/>
+                            <?php
+                            if(getUser()->IsAdmin == 1)
+                            {
+                            ?>
+                            <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect" for="Status<?php echo $this->Id ?>">
                                 <li class="mdl-menu__item datatype-menu-item" value="<?php echo Status::COMPLETE ?>"><span class="good" style="font-weight: bold"><?php echo Status::COMPLETE ?></span></li>
                                 <li class="mdl-menu__item datatype-menu-item" value="<?php echo Status::INCOMPLETE ?>"><span class="bad" style="font-weight: bold"><?php echo Status::INCOMPLETE ?></span></li>
                             </ul>
+                            <?php
+                            }
+                            ?>
                         </div>
                         <br><br>
                         <?php echo $checklistItem->Description ?><br><br>
                         <strong class="setting-title">Completed By</strong>
                         <div class="setting-value mdl-textfield mdl-js-textfield mdl-textfield--floating-label" data-upgraded=",MaterialTextfield">
-                            <input class="mdl-textfield__input" value="<?php echo $this->CompletedBy ?>" id="CompletedBy">
+                            <input class="mdl-textfield__input" value="<?php echo $this->CompletedBy ?>" id="CompletedBy<?php echo $this->Id ?>">
                         </div>
                         <strong class="setting-title">Completed On</strong>
                         <div class="setting-value mdl-textfield mdl-js-textfield mdl-textfield--floating-label" data-upgraded=",MaterialTextfield">
-                            <input class="mdl-textfield__input" value="<?php echo $this->CompletedDate ?>" id="CompletedDate">
+                            <input class="mdl-textfield__input" value="<?php echo $this->CompletedDate ?>" id="CompletedDate<?php echo $this->Id ?>">
                         </div>
                     </div>
                     <?php

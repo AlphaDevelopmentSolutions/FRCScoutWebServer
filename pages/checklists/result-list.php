@@ -56,21 +56,22 @@ if(!empty($matchId))
                 $checklistItemResult->toHtml();
             }
         }
-
-
-
         ?>
 
         <?php require_once(INCLUDES_DIR . 'footer.php') ?>
     </main>
 </div>
-<?php require_once(INCLUDES_DIR . 'bottom-scripts.php') ?>
-<?php
+<?php require_once(INCLUDES_DIR . 'bottom-scripts.php');
 if(!empty($match))
 {
     require_once(INCLUDES_DIR . 'modals.php');
+    if(getUser()->IsAdmin == 1)
+    {
     ?>
-<script src="<?php echo JS_URL ?>modify-record.js.php"></script>
+    <script src="<?php echo JS_URL ?>modify-record.js.php"></script>
+    <?php
+    }
+?>
 <script>
 
     var pendingRowRemoval = [];
@@ -96,27 +97,35 @@ if(!empty($match))
         showToast(message);
     }
 
+    <?php
+    if(getUser()->IsAdmin == 1)
+    {
+    ?>
     $(document).ready(function ()
     {
         $(".datatype-menu-item").click(function ()
         {
             var value = $(this).attr("value");
+            var inputField = $(this).parent().parent().parent().find('input')[0];
 
-            $("#Status").attr("value", value);
+            $(inputField).attr("value", value);
 
             if (value == "<?php echo Status::COMPLETE ?>")
             {
-                $("#Status").addClass("good");
-                $("#Status").removeClass("bad");
+                $(inputField).addClass("good");
+                $(inputField).removeClass("bad");
             }
 
             else if (value == "<?php echo Status::INCOMPLETE ?>")
             {
-                $("#Status").addClass("bad");
-                $("#Status").removeClass("good");
+                $(inputField).addClass("bad");
+                $(inputField).removeClass("good");
             }
         });
     });
+    <?php
+    }
+    ?>
 </script>
 <?php
 }

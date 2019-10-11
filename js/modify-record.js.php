@@ -105,9 +105,9 @@ function saveRecord(recordType, recordId, record = undefined)
             data =
                 {
                     Id: recordId,
-                    Status: $('#Status').val(),
-                    CompletedBy: $('#CompletedBy').val(),
-                    CompletedDate: $('#CompletedDate').val()
+                    Status: $('#Status' + recordId).val(),
+                    CompletedBy: $('#CompletedBy' + recordId).val(),
+                    CompletedDate: $('#CompletedDate' + recordId).val()
                 };
             break;
     }
