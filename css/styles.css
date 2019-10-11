@@ -47,6 +47,7 @@ html, body {
 .mdl-demo .mdl-layout__tab-bar {
   padding: 0;
   padding-left: 16px;
+  -webkit-box-sizing: border-box;
   box-sizing: border-box;
   height: 100%;
   width: 100%;
@@ -66,21 +67,22 @@ html, body {
 }
 .mdl-demo .mdl-card {
   height: auto;
-  display: -webkit-flex;
   display: -ms-flexbox;
+  display: -webkit-box;
   display: flex;
-  -webkit-flex-direction: column;
-      -ms-flex-direction: column;
-          flex-direction: column;
+  -ms-flex-direction: column;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  flex-direction: column;
 }
 .mdl-demo .mdl-card > * {
   height: auto;
 }
 .mdl-demo .mdl-card .mdl-card__supporting-text {
   margin: 40px;
-  -webkit-flex-grow: 1;
-      -ms-flex-positive: 1;
-          flex-grow: 1;
+  -ms-flex-positive: 1;
+  -webkit-box-flex: 1;
+  flex-grow: 1;
   padding: 0;
   color: inherit;
   width: calc(100% - 80px);
@@ -128,15 +130,15 @@ html, body {
 }
 
 .mdl-demo section > header{
-  display: -webkit-flex;
   display: -ms-flexbox;
+  display: -webkit-box;
   display: flex;
-  -webkit-align-items: center;
-      -ms-flex-align: center;
-          align-items: center;
-  -webkit-justify-content: center;
-      -ms-flex-pack: center;
-          justify-content: center;
+  -ms-flex-align: center;
+  -webkit-box-align: center;
+  align-items: center;
+  -ms-flex-pack: center;
+  -webkit-box-pack: center;
+  justify-content: center;
 }
 .mdl-demo section > .section__play-btn {
   min-height: 200px;
@@ -151,29 +153,27 @@ html, body {
   right: 8px;
 }
 .mdl-demo section .section__circle {
-  display: -webkit-flex;
   display: -ms-flexbox;
+  display: -webkit-box;
   display: flex;
-  -webkit-align-items: center;
-      -ms-flex-align: center;
-          align-items: center;
-  -webkit-justify-content: flex-start;
-      -ms-flex-pack: start;
-          justify-content: flex-start;
-  -webkit-flex-grow: 0;
-      -ms-flex-positive: 0;
-          flex-grow: 0;
-  -webkit-flex-shrink: 1;
-      -ms-flex-negative: 1;
-          flex-shrink: 1;
+  -ms-flex-align: center;
+  -webkit-box-align: center;
+  align-items: center;
+  -ms-flex-pack: start;
+  -webkit-box-pack: start;
+  justify-content: flex-start;
+  -ms-flex-positive: 0;
+  -webkit-box-flex: 0;
+  flex-grow: 0;
+  -ms-flex-negative: 1;
+  flex-shrink: 1;
 }
 .mdl-demo section .section__text {
-  -webkit-flex-grow: 1;
-      -ms-flex-positive: 1;
-          flex-grow: 1;
-  -webkit-flex-shrink: 0;
-      -ms-flex-negative: 0;
-          flex-shrink: 0;
+  -ms-flex-positive: 1;
+  -webkit-box-flex: 1;
+  flex-grow: 1;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
   padding-top: 8px;
 }
 .mdl-demo section .section__text h5 {
@@ -224,12 +224,13 @@ html, body {
   margin: 24px;
   padding: 0;
   padding-left: 8px;
-  display: -webkit-flex;
   display: -ms-flexbox;
+  display: -webkit-box;
   display: flex;
-  -webkit-flex-direction: column;
-      -ms-flex-direction: column;
-          flex-direction: column;
+  -ms-flex-direction: column;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  flex-direction: column;
 }
 .mdl-demo .toc h4 {
   font-size: 0.9rem;
@@ -401,7 +402,7 @@ html, body {
 
 .admin-table-data
 {
-    text-align: center !important;
+  text-align: center !important;
 }
 
 .admin-table-wrapper
@@ -412,8 +413,8 @@ html, body {
 
 .admin-table-header
 {
-    font-size: 15px !important;
-    text-align: center !important;
+  font-size: 15px !important;
+  text-align: center !important;
 }
 
 .login-field-wrapper
@@ -433,6 +434,8 @@ html, body {
   position: absolute;
   left: 50%;
   top: 50%;
+  -webkit-transform: translate(-50%, -60%);
+  -ms-transform: translate(-50%, -60%);
   transform: translate(-50%, -60%);
 }
 
@@ -441,6 +444,7 @@ html, body {
   padding: 20px;
   background-color: white;
   border-radius: 4px;
+  -webkit-box-shadow: 0 0 5px;
   box-shadow: 0 0 5px;
 }
 
@@ -484,6 +488,8 @@ html, body {
 {
   position: absolute;
   top: 50%;
+  -webkit-transform: translateY(-50%);
+  -ms-transform: translateY(-50%);
   transform: translateY(-50%);
 }
 
