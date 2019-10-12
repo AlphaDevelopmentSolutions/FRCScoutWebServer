@@ -5,7 +5,7 @@ require_once(ROOT_DIR . '/classes/tables/core/Accounts.php');
 require_once(ROOT_DIR . '/classes/Ajax.php');
 
 if(coreLoggedIn())
-    header('Location: '. EVENTS_URL . 'list?yearId=' . date('Y'));
+    redirect(EVENTS_URL . 'list?yearId=' . date('Y'));
 ?>
 <!doctype html>
 <html lang="en">

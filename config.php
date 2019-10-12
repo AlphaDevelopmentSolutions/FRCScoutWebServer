@@ -31,7 +31,7 @@ require_once(ROOT_DIR . '/interfaces/AllianceColors.php');
 if(coreLoggedIn())
     define('DB_NAME', getCoreAccount()->DbId);
 else if($bypassCoreCheck != true)
-    header('Location: ' . '/');
+    redirect('/');
 
 if(coreLoggedIn())
 {
@@ -140,5 +140,15 @@ function getCoreAccount()
 function getUser()
 {
     return !empty($_SESSION['user']) ? unserialize($_SESSION['user']) : null;
+}
+
+/**
+ * Redirects to specified url
+ * @param $url string path to redirect to
+ */
+function redirect($url)
+{
+    header('Location: ' . $url);
+    die();
 }
 ?>

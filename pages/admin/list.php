@@ -2,7 +2,7 @@
 require_once("../../config.php");
 
 if (!getUser()->IsAdmin)
-    header('Location: ' . URL_PATH);
+    redirect(URL_PATH);
 
 require_once(ROOT_DIR . "/classes/Ajax.php");
 require_once(ROOT_DIR . "/classes/tables/core/Years.php");
@@ -28,7 +28,7 @@ interface AdminPanels
 }
 
 if(empty($panel) || empty($yearId))
-    header('Location: ' . ADMIN_URL . "settings?yearId=" . ((empty($yearId)) ? date('Y') : $yearId) . "&adminPanel=" . AdminPanels::CONFIG);
+    redirect(ADMIN_URL . "settings?yearId=" . ((empty($yearId)) ? date('Y') : $yearId) . "&adminPanel=" . AdminPanels::CONFIG);
 
 $htmlMysqlDatatypes =
     [

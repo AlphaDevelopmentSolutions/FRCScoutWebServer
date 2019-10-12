@@ -2,7 +2,7 @@
 require_once("../../config.php");
 
 if (!getUser()->IsAdmin)
-    header('Location: ' . URL_PATH);
+    redirect(URL_PATH);
 
 require_once(ROOT_DIR . "/classes/tables/core/Years.php");
 require_once(ROOT_DIR . "/classes/tables/local/RobotInfoKeys.php");
