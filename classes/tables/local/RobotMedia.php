@@ -92,6 +92,13 @@ class RobotMedia extends LocalTable
      */
     private function saveImage()
     {
+        if(!is_dir(ROBOT_MEDIA_DIR))
+            mkdir(ROBOT_MEDIA_DIR);
+
+        if(!is_dir(ROBOT_MEDIA_THUMBS_DIR))
+            mkdir(ROBOT_MEDIA_THUMBS_DIR);
+
+
         mt_srand(crc32(serialize([microtime(true), $_SERVER['HTTP_CLIENT_IP'], $_SERVER['HTTP_USER_AGENT']])));
 
         //create a unique id
@@ -126,29 +133,43 @@ class RobotMedia extends LocalTable
         {
             $this->FileURI = $fileName;
 
-            $image = imagecreatefromjpeg(ROBOT_MEDIA_DIR . $fileName);
+            $dimens = getimagesize(ROBOT_MEDIA_DIR . $fileName);
+            $fileType = strtolower($dimens['mime']);
+            $height = $dimens[1];
+            $width = $dimens[0];
 
-            $width = getimagesize(ROBOT_MEDIA_DIR . $fileName);
-            $height = $width[1];
-            $width = $width[0];
+            if($fileType == 'image/jpeg' || $fileType == 'image/png')
+            {
+                if($fileType == 'image/jpeg')
+                    $image = imagecreatefromjpeg(ROBOT_MEDIA_DIR . $fileName);
+                else if ($fileType == 'image/png')
+                    $image = imagecreatefrompng(ROBOT_MEDIA_DIR . $fileName);
 
-            $ratio = $width / $height;
-            $targetWidth = 250;
-            $targetHeight = $targetWidth;
-            $targetWidth = floor($targetWidth * $ratio);
+                $ratio = $width / $height;
+                $targetWidth = 250;
+                $targetHeight = $targetWidth;
+                $targetWidth = floor($targetWidth * $ratio);
 
-            $thumb = imagecreatetruecolor($targetWidth, $targetHeight);
+                $thumb = imagecreatetruecolor($targetWidth, $targetHeight);
 
-            imagecopyresampled(
-                $thumb,
-                $image,
-                0, 0, 0, 0,
-                $targetWidth, $targetHeight,
-                $width, $height
-            );
+                imagecopyresampled(
+                    $thumb,
+                    $image,
+                    0, 0, 0, 0,
+                    $targetWidth, $targetHeight,
+                    $width, $height
+                );
 
-            $success = imagejpeg($thumb, ROBOT_MEDIA_THUMBS_DIR . $fileName);
+                $success = imagejpeg($thumb, ROBOT_MEDIA_THUMBS_DIR . $fileName);
+            }
+            else
+                $success = false;
+
+
         }
+
+        if($success == false)
+            unlink(ROBOT_MEDIA_DIR . $fileName);
 
         return $success;
     }

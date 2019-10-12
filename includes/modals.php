@@ -25,9 +25,16 @@
 
     function showToast(message)
     {
-        'use strict';
-        var data = {message: message};
-        snackbarContainer.MaterialSnackbar.showSnackbar(data);
+        $(document).ready(function()
+        {
+            //ensures snackbar was loaded correctly
+            setTimeout(function()
+            {
+                'use strict';
+                var data = {message: message};
+                snackbarContainer.MaterialSnackbar.showSnackbar(data);
+            }, 100);
+        });
     }
 
     $(document).ready(function ()

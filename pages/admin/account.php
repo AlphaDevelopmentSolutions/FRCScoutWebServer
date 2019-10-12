@@ -5,7 +5,7 @@ require_once(ROOT_DIR . "/classes/tables/core/Events.php");
 require_once(ROOT_DIR . "/classes/tables/core/Years.php");
 
 if(!loggedIn())
-    hearedirect(URL_PATH);
+    redirect(URL_PATH);
 
 ?>
 <!doctype html>

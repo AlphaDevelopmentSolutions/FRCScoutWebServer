@@ -52,12 +52,12 @@ define('URL_PATH', ((coreLoggedIn()) ? '/' . getCoreAccount()->TeamId . '' : '')
 /**
  * MEDIA FILES
  */
-define('ROBOT_MEDIA_DIR', ROOT_DIR . '/assets/robot-media/originals/');
-define('ROBOT_MEDIA_THUMBS_DIR', ROOT_DIR . '/assets/robot-media/thumbs/');
+define('ROBOT_MEDIA_DIR', ROOT_DIR . '/assets/robot-media/originals/' . TEAM_ROBOT_MEDIA_DIR . '/');
+define('ROBOT_MEDIA_THUMBS_DIR', ROOT_DIR . '/assets/robot-media/thumbs/' . TEAM_ROBOT_MEDIA_DIR . '/');
 define('INCLUDES_DIR', ROOT_DIR . '/includes/');
 
-define('ROBOT_MEDIA_URL', '/assets/robot-media/originals/');
-define('ROBOT_MEDIA_THUMBS_URL', '/assets/robot-media/thumbs/');
+define('ROBOT_MEDIA_URL', '/assets/robot-media/originals/' . TEAM_ROBOT_MEDIA_DIR . '/');
+define('ROBOT_MEDIA_THUMBS_URL', '/assets/robot-media/thumbs/' . TEAM_ROBOT_MEDIA_DIR . '/');
 
 define('YEAR_MEDIA_URL', '/assets/year-media/');
 define('IMAGES_URL', '/assets/images/');
@@ -93,6 +93,7 @@ if(false)
     define('API_KEY', '');
     define('PRIMARY_COLOR', '');
     define('PRIMARY_COLOR_DARK', '');
+    define('TEAM_ROBOT_MEDIA_DIR', '');
 
     define('BLUE_ALLIANCE_KEY', '');
 }

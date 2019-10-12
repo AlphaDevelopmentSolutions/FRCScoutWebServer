@@ -27,7 +27,7 @@ if(isPostBack() && !empty($_FILES) && !empty(getUser()))
         $robotMedia->TeamId = $team->Id;
         $robotMedia->FileURI = base64_encode(file_get_contents($file['tmp_name']));
 
-        $robotMedia->save();
+        $mediaSaveSuccess = $robotMedia->save();
     }
 }
 ?>
@@ -173,7 +173,6 @@ if(isPostBack() && !empty($_FILES) && !empty(getUser()))
     </main>
 </div>
 <?php require_once(INCLUDES_DIR . 'bottom-scripts.php') ?>
-<?php require_once(INCLUDES_DIR . 'bottom-scripts.php') ?>
 <?php require_once(INCLUDES_DIR . 'modals.php'); ?>
 <script src="<?php echo JS_URL ?>modify-record.js.php"></script>
 <script>
@@ -203,6 +202,19 @@ if(isPostBack() && !empty($_FILES) && !empty(getUser()))
         else
             showToast('Robot media must be a .JPG or .JPEG.')
     }
+    <?php
+    }
+
+    if($mediaSaveSuccess === true)
+    {
+    ?>
+    showToast('Media saved successfully!');
+    <?php
+    }
+    else if($mediaSaveSuccess === false)
+    {
+    ?>
+    showToast('Invalid file format. Please submit a JPEG/JPG image.');
     <?php
     }
     ?>
