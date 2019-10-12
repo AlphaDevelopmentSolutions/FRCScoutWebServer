@@ -1,4 +1,5 @@
 <?php
+$bypassCoreCheck = true;
 define('ROOT_DIR', dirname('../config.php'));
 require_once(ROOT_DIR . '/classes/Api.php');
 $api = new Api();

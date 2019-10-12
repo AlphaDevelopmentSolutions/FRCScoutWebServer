@@ -1,4 +1,5 @@
 <?php
+$bypassCoreCheck = true;
 require_once("../config.php");
 require_once(ROOT_DIR . "/classes/tables/core/Teams.php");
 require_once(ROOT_DIR . "/classes/tables/core/EventTeamList.php");
