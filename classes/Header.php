@@ -44,11 +44,11 @@ class Header
             ((!loggedIn()) ?
                     '<form id="user-sign-in-form"  action="" method="post">
                             <div class="mdl-textfield mdl-js-textfield login-field-wrapper">
-                                <input class="mdl-textfield__input login-field" type="text" id="user-password" style="background-color: white !important; color: black; ">
+                                <input class="mdl-textfield__input login-field" type="text" id="user-username" style="background-color: white !important; color: black; ">
                                 <label class="mdl-textfield__label" for="username" style="padding-left: .5em; padding-right: .5em; ">Username</label>
                             </div>
                             <div class="mdl-textfield mdl-js-textfield login-field-wrapper">
-                                <input class="mdl-textfield__input login-field" id="user-username" type="password" style="background-color: white !important; color: black;">
+                                <input class="mdl-textfield__input login-field" id="user-password" type="password" style="background-color: white !important; color: black;">
                                 <label class="mdl-textfield__label" for="password" style="padding-left: .5em; padding-right: .5em; ">Password</label>
                             </div>
                             <button id="user-sign-in-button" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" style="background-color: var(--color-primary-dark) !important;">
