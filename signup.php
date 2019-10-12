@@ -197,9 +197,14 @@ require_once(ROOT_DIR . '/classes/Ajax.php');
                             </span>
                             <div class="g-recaptcha" data-sitekey="6Lfx2bsUAAAAAOUWzZjeIs1X7ASb43js5-LKB3rp"></div>
                         </div>
+                        <div class="center-div-horizontal-outer material-padding">
+                            <div class="center-div-horizontal-inner">
+                                By registering and logging in, you agree to our <a href="/privacy.html">Privacy Policy</a> and <a href="/terms.html">Terms of Use</a>.
+                            </div>
+                        </div>
                     </form>
                 </div>
-            </section>
+            </section>s
         </div>
     </main>
 </div>

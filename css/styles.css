@@ -265,11 +265,22 @@ html, body {
   height: 10px;
 }
 
-.version
+.footer-text
 {
   text-align: center;
   width: 100%;
   color: rgba(0, 0, 0, .25);
+}
+
+.footer-text a
+{
+  color: rgba(0, 0, 0, .25);
+  text-decoration: none;
+}
+
+.footer-text a:hover
+{
+  color: rgba(0, 0, 0, .35);
 }
 
 .circle-image
