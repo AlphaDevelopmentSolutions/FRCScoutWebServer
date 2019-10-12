@@ -234,8 +234,7 @@ class ScoutCardInfoKeys extends LocalTable
                                             case DataTypes::INT:
                                                 ?>
                                                 <input type="number" class="mdl-textfield__input scout-card-info-field"
-                                                       info-id="<?php echo((!empty($scoutCardInfoArray[$scoutCardInfoKey->KeyState][$scoutCardInfoKey->KeyName]->Id)) ? $scoutCardInfoArray[$scoutCardInfoKey->KeyState][$scoutCardInfoKey->KeyName]->Id : -1) ?>"
-                                                       year-id="<?php echo $year->Id ?>"
+                                                       info-id="<?php echo((!empty($scoutCardInfoArray[$scoutCardInfoKey->KeyState][$scoutCardInfoKey->KeyName]->Id)) ? $scoutCardInfoArray[$scoutCardInfoKey->KeyState][$scoutCardInfoKey->KeyName]->Id : -1) ?>" year-id="<?php echo $year->Id ?>"
                                                        event-id="<?php echo $event->BlueAllianceId ?>"
                                                        match-id="<?php echo $match->Key ?>"
                                                        team-id="<?php echo $team->Id ?>"
