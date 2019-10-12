@@ -1,7 +1,9 @@
 <?php
 
+
 class Ajax
 {
+
     private $response;
 
     public static $SUCCESS_STATUS_CODE = 'Success';
@@ -39,6 +41,8 @@ class Ajax
 
         die(json_encode($this->response));
     }
+
+
 }
 
 ?>

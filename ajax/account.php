@@ -77,7 +77,7 @@ switch ($_POST['action'])
 
 
         if (empty($username) || !validAlnum($username) || strlen($username) < 6)
-            $ajax->error('Username may only include A-Z 0-9 and must be at least 6 characters.');
+            $ajax->error('Account Username may only include A-Z 0-9 and must be at least 6 characters.');
 
         if (empty($email))
             $ajax->error('Email must not be empty.');
@@ -120,10 +120,10 @@ switch ($_POST['action'])
             $ajax->error('App Name may only include A-Z 0-9 and must be at least 6 characters.');
 
         if (empty($primaryColor) || !validAlnum($primaryColor) || strlen($primaryColor) != 6)
-            $ajax->error('Username may only include A-F 0-9 and must be 6 characters.');
+            $ajax->error('Primary color may only include A-F 0-9 and must be 6 characters.');
 
         if (empty($secondaryColor) || !validAlnum($secondaryColor) || strlen($secondaryColor) != 6)
-            $ajax->error('Username may only include A-F 0-9 and must be 6 characters.');
+            $ajax->error('Primary color may only include A-F 0-9 and must be 6 characters.');
 
         $captchaKey = $_POST['captchaKey'];
 
@@ -209,6 +209,16 @@ switch ($_POST['action'])
                 $conf->Value = $secondaryColor;
                 $conf->save();
 
+                $conf = new Config();
+                $conf->Key = 'TEAM_ROBOT_MEDIA_DIR';
+                $conf->Value = sprintf('%04x%04x-%04x-%04x-%04x-%04x%04x%04x',
+                    mt_rand(0, 0xffff), mt_rand(0, 0xffff),
+                    mt_rand(0, 0xffff),
+                    mt_rand(0, 0x0fff) | 0x4000,
+                    mt_rand(0, 0x3fff) | 0x8000,
+                    mt_rand(0, 0xffff), mt_rand(0, 0xffff), mt_rand(0, 0xffff));
+                $conf->save();
+
                 $user = new Users();
                 $user->FirstName = $adminFirstName;
                 $user->LastName = $adminLastName;
@@ -232,6 +242,10 @@ switch ($_POST['action'])
         else
             $ajax->error('Captcha invalid. Please try again.');
 
+        break;
+
+    default:
+        $ajax->error('Invalid Action.');
         break;
 }
 

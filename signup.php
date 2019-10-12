@@ -205,11 +205,11 @@ require_once(ROOT_DIR . '/classes/Ajax.php');
                         </div>
                     </form>
                 </div>
-            </section>s
+            </section>
         </div>
     </main>
 </div>
-<?php require_once(INCLUDES_DIR . 'modals.php'); ?>
+<?php require_once(INCLUDES_DIR . 'bottom-scripts.php') ?>
 <script defer>
 
     var accountBeingCreated = false;
@@ -292,7 +292,7 @@ require_once(ROOT_DIR . '/classes/Ajax.php');
             //get data from the ajax script
             $.post('<?php echo AJAX_URL ?>account.php',
                 {
-                    action: 'create',
+                    action: 'create_core',
                     username : $('#username').val(),
                     email : $('#email').val(),
                     password : $('#password').val(),
@@ -359,8 +359,6 @@ require_once(ROOT_DIR . '/classes/Ajax.php');
     };
 
 </script>
-
-<?php require_once(INCLUDES_DIR . 'bottom-scripts.php') ?>
 </body>
 </html>
 

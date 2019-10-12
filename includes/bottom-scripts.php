@@ -1,11 +1,11 @@
 <?php
-if(!loggedIn())
+if(loggedIn() === false)
 {
 ?>
 <script src="<?php echo JS_URL ?>user-sign-in.js.php"></script>
 <?php
 }
-else
+else if (loggedIn() === true)
 {
 ?>
 <script src="<?php echo JS_URL ?>user-sign-out.js.php"></script>
@@ -17,11 +17,7 @@ else
 
 <script defer src="<?php echo JS_URL ?>core-sign-out.js.php"></script>
 
-<!-- The core Firebase JS SDK is always required and must be listed first -->
 <script src="https://www.gstatic.com/firebasejs/7.0.0/firebase-app.js"></script>
-
-<!-- TODO: Add SDKs for Firebase products that you want to use
-     https://firebase.google.com/docs/web/setup#available-libraries -->
 <script src="https://www.gstatic.com/firebasejs/7.0.0/firebase-analytics.js"></script>
 
 <script>
