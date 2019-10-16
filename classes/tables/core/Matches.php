@@ -37,6 +37,45 @@ class Matches extends CoreTable
     }
 
     /**
+     * Retrieves objects from the database
+     * @param Events | null $event if specified, filters by id
+     * @param Teams | null $team if specified, filters by id
+     * @param string $orderBy order field to sort items by
+     * @param string $orderDirection direction to sort items by
+     * @return Matches[]
+     */
+    public static function getObjects($event = null, $team = null, $orderBy = 'Id', $orderDirection = 'DESC')
+    {
+        $whereStatment = "";
+        $cols = array();
+        $args = array();
+
+        //if year specified, filter by event
+        if(!empty($event))
+        {
+            $whereStatment .= ((empty($whereStatment)) ? "" : " AND ") . " ! = ? ";
+            $cols[] = 'EventId';
+            $args[] = $event->BlueAllianceId;
+        }
+
+        //if team specified, filter by team
+        if(!empty($team))
+        {
+            $whereStatment .= ((empty($whereStatment)) ? "" : " AND ") . " ? IN (!, !, !, !, !, !) ";
+
+            $cols[] = 'BlueAllianceTeamOneId';
+            $cols[] = 'BlueAllianceTeamTwoId';
+            $cols[] = 'BlueAllianceTeamThreeId';
+            $cols[] = 'RedAllianceTeamOneId';
+            $cols[] = 'RedAllianceTeamTwoId';
+            $cols[] = 'RedAllianceTeamThreeId';
+            $args[] = $team->Id;
+        }
+
+        return parent::getObjects($whereStatment, $cols, $args, $orderBy, $orderDirection);
+    }
+
+    /**
      * Gets and returns the color of the team specified in a match
      * @param Teams $team
      * @return string

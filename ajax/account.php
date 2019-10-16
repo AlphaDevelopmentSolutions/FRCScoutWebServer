@@ -244,6 +244,351 @@ switch ($_POST['action'])
 
         break;
 
+    case 'create_core_demo':
+        $username = $_POST['username'];
+        $email = $_POST['email'];
+        $password = $_POST['password'];
+        $retypePassword = $_POST['retypePassword'];
+
+        $adminFirstName = $_POST['adminFirstName'];
+        $adminLastName = $_POST['adminLastName'];
+        $adminUsername = $_POST['adminUsername'];
+        $adminPassword = $_POST['adminPassword'];
+        $adminRetypePassword = $_POST['adminRetypePassword'];
+
+        $teamNumber = $_POST['teamNumber'];
+        $appName = $_POST['appName'];
+        $apiKey = $_POST['apiKey'];
+        $primaryColor = $_POST['primaryColor'];
+        $secondaryColor = $_POST['secondaryColor'];
+
+
+        if (empty($username) || !validAlnum($username) || strlen($username) < 6)
+            $ajax->error('Account Username may only include A-Z 0-9 and must be at least 6 characters.');
+
+        if (empty($email))
+            $ajax->error('Email must not be empty.');
+
+        //check if any of the accounts details are already taken
+        $accounts = Accounts::getObjects();
+        foreach ($accounts as $account) {
+            if ($account->Username == $username)
+                $ajax->error('The username provided is already in use.');
+
+            if ($account->Email == $email)
+                $ajax->error('The email address provided is already in use.');
+        }
+
+        if (!validPassword($password))
+            $ajax->error('Main account password is invalid. Please review the password requirements.');
+
+        if ($password != $retypePassword)
+            $ajax->error('Main account passwords do not match.');
+
+        if (empty($adminFirstName) || !ctype_alpha($adminFirstName))
+            $ajax->error('Admin first name may only include A-Z.');
+
+        if (empty($adminLastName) || !ctype_alpha($adminLastName))
+            $ajax->error('Admin last name may only include A-Z.');
+
+        if (empty($adminUsername) || !validAlnum($adminUsername) || strlen($adminUsername) < 6)
+            $ajax->error('Admin username may only include A-Z 0-9 and must be at least 6 characters.');
+
+        if (!validPassword($adminPassword))
+            $ajax->error('Admin password is invalid. Please review the password requirements.');
+
+        if ($adminPassword != $adminRetypePassword)
+            $ajax->error('Admin passwords do not match.');
+
+        if (empty($teamNumber) || !ctype_digit($teamNumber))
+            $ajax->error('Team number may only be 0-9.');
+
+        if (empty($appName) || !validAlnum($appName) || strlen($appName) < 6)
+            $ajax->error('App Name may only include A-Z 0-9 and must be at least 6 characters.');
+
+        if (empty($primaryColor) || !validAlnum($primaryColor) || strlen($primaryColor) != 6)
+            $ajax->error('Primary color may only include A-F 0-9 and must be 6 characters.');
+
+        if (empty($secondaryColor) || !validAlnum($secondaryColor) || strlen($secondaryColor) != 6)
+            $ajax->error('Primary color may only include A-F 0-9 and must be 6 characters.');
+
+        $captchaKey = $_POST['captchaKey'];
+
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL,"https://www.google.com/recaptcha/api/siteverify");
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS,
+            "secret=" . CAPTCHA_SERVER_SECRET . "&response=$captchaKey&remoteip=" . $_SERVER['HTTP_CLIENT_IP']);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        $response = curl_exec($ch);
+        curl_close ($ch);
+
+        $response = json_decode($response, true);
+
+        if($response['success'])
+        {
+
+            $db = new Database();
+            $uidSuccess = false;
+            $dbId = "";
+
+            do {
+                //create uuid for the database name
+                $dbId = sprintf('%04x%04x-%04x-%04x-%04x-%04x%04x%04x',
+                    mt_rand(0, 0xffff), mt_rand(0, 0xffff),
+                    mt_rand(0, 0xffff),
+                    mt_rand(0, 0x0fff) | 0x4000,
+                    mt_rand(0, 0x3fff) | 0x8000,
+                    mt_rand(0, 0xffff), mt_rand(0, 0xffff), mt_rand(0, 0xffff));
+
+                $query = "SELECT ! FROM !.! WHERE ! = ?";
+                $cols[] = 'SCHEMA_NAME';
+                $cols[] = 'INFORMATION_SCHEMA';
+                $cols[] = 'SCHEMATA';
+                $cols[] = 'SCHEMA_NAME';
+
+                $args[] = $dbId;
+
+                //query to see if that db name is taken
+                $results = $db->query($query, $cols, $args);
+
+                //if taken, re-run script
+                if (sizeof($results) == 0)
+                    $uidSuccess = true;
+
+            } while (!$uidSuccess);
+
+            $query = "CREATE SCHEMA !";
+            $cols = array();
+            $cols[] = $dbId;
+
+            //create the DB
+            $db->query($query, $cols);
+
+            unset($db);
+
+            $db = new Database($dbId);
+
+            //create all required tables
+            if (importSqlFile($db, '../databases/v' . VERSION . '.sql')) {
+                unset($db);
+
+                define('DB_NAME', $dbId);
+
+                //add all the configs to the DB
+                $conf = new Config();
+                $conf->Key = 'APP_NAME';
+                $conf->Value = $appName;
+                $conf->save();
+
+                $conf = new Config();
+                $conf->Key = 'API_KEY';
+                $conf->Value = $apiKey;
+                $conf->save();
+
+                $conf = new Config();
+                $conf->Key = 'PRIMARY_COLOR';
+                $conf->Value = $primaryColor;
+                $conf->save();
+
+                $conf = new Config();
+                $conf->Key = 'PRIMARY_COLOR_DARK';
+                $conf->Value = $secondaryColor;
+                $conf->save();
+
+                $conf = new Config();
+                $conf->Key = 'TEAM_ROBOT_MEDIA_DIR';
+                $conf->Value = sprintf('%04x%04x-%04x-%04x-%04x-%04x%04x%04x',
+                    mt_rand(0, 0xffff), mt_rand(0, 0xffff),
+                    mt_rand(0, 0xffff),
+                    mt_rand(0, 0x0fff) | 0x4000,
+                    mt_rand(0, 0x3fff) | 0x8000,
+                    mt_rand(0, 0xffff), mt_rand(0, 0xffff), mt_rand(0, 0xffff));
+                $conf->save();
+
+                $user = new Users();
+                $user->FirstName = $adminFirstName;
+                $user->LastName = $adminLastName;
+                $user->UserName = $adminUsername;
+                $user->Password = password_hash($adminPassword, PASSWORD_ARGON2ID);
+                $user->IsAdmin = 1;
+                $user->save();
+
+                $account = new Accounts();
+                $account->TeamId = $teamNumber;
+                $account->Email = $email;
+                $account->Username = $username;
+                $account->Password = password_hash($password, PASSWORD_ARGON2ID);
+                $account->DbId = $dbId;
+                $account->save();
+
+                require_once(ROOT_DIR . "/classes/tables/core/Years.php");
+                require_once(ROOT_DIR . "/classes/tables/core/Events.php");
+                require_once(ROOT_DIR . "/classes/tables/core/Demos.php");
+                require_once(ROOT_DIR . "/classes/tables/core/Teams.php");
+                require_once(ROOT_DIR . "/classes/tables/core/Matches.php");
+                require_once(ROOT_DIR . "/classes/tables/local/ScoutCardInfoKeys.php");
+                require_once(ROOT_DIR . "/classes/tables/local/ScoutCardInfo.php");
+
+                $year = Years::withId(date('Y'));
+                $team = Teams::withId($teamNumber);
+
+                $demo = new Demos();
+                $demo->AccountId = $account->Id;
+                $demo->Expires = date("Y-m-d H:i:s", strtotime('+24 hours'));
+                $demo->save();
+
+                $scik1 = new ScoutCardInfoKeys();
+                $scik1->YearId = $year->Id;
+                $scik1->KeyState = 'Pre Game';
+                $scik1->KeyName = 'Starting Position';
+                $scik1->SortOrder = 1;
+                $scik1->MinValue = null;
+                $scik1->MaxValue = null;
+                $scik1->NullZeros = 0;
+                $scik1->IncludeInStats = 0;
+                $scik1->DataType = 'TEXT';
+                $scik1->save();
+
+                $scik1 = new ScoutCardInfoKeys();
+                $scik1->YearId = $year->Id;
+                $scik1->KeyState = 'Pre Game';
+                $scik1->KeyName = 'Starting Piece';
+                $scik1->SortOrder = 2;
+                $scik1->MinValue = null;
+                $scik1->MaxValue = null;
+                $scik1->NullZeros = 0;
+                $scik1->IncludeInStats = 0;
+                $scik1->DataType = 'TEXT';
+                $scik1->save();
+
+                $scik1 = new ScoutCardInfoKeys();
+                $scik1->YearId = $year->Id;
+                $scik1->KeyState = 'Autonomous';
+                $scik1->KeyName = 'Hatches Secured';
+                $scik1->SortOrder = 3;
+                $scik1->MinValue = 0;
+                $scik1->MaxValue = null;
+                $scik1->NullZeros = 1;
+                $scik1->IncludeInStats = 1;
+                $scik1->DataType = 'INT';
+                $scik1->save();
+
+                $scik1 = new ScoutCardInfoKeys();
+                $scik1->YearId = $year->Id;
+                $scik1->KeyState = 'Autonomous';
+                $scik1->KeyName = 'Cargo Stored';
+                $scik1->SortOrder = 4;
+                $scik1->MinValue = 0;
+                $scik1->MaxValue = null;
+                $scik1->NullZeros = 1;
+                $scik1->IncludeInStats = 1;
+                $scik1->DataType = 'INT';
+                $scik1->save();
+
+                $scik1 = new ScoutCardInfoKeys();
+                $scik1->YearId = $year->Id;
+                $scik1->KeyState = 'Teleop';
+                $scik1->KeyName = 'Hatches Secured';
+                $scik1->SortOrder = 5;
+                $scik1->MinValue = 0;
+                $scik1->MaxValue = null;
+                $scik1->NullZeros = 1;
+                $scik1->IncludeInStats = 1;
+                $scik1->DataType = 'INT';
+                $scik1->save();
+
+                $scik1 = new ScoutCardInfoKeys();
+                $scik1->YearId = $year->Id;
+                $scik1->KeyState = 'Teleop';
+                $scik1->KeyName = 'Cargo Stored';
+                $scik1->SortOrder = 6;
+                $scik1->MinValue = 0;
+                $scik1->MaxValue = null;
+                $scik1->NullZeros = 1;
+                $scik1->IncludeInStats = 1;
+                $scik1->DataType = 'INT';
+                $scik1->save();
+
+                $scik1 = new ScoutCardInfoKeys();
+                $scik1->YearId = $year->Id;
+                $scik1->KeyState = 'Post Game';
+                $scik1->KeyName = 'Notes';
+                $scik1->SortOrder = 7;
+                $scik1->MinValue = null;
+                $scik1->MaxValue = null;
+                $scik1->NullZeros = 0;
+                $scik1->IncludeInStats = 0;
+                $scik1->DataType = 'TEXT';
+                $scik1->save();
+
+                $scoutCardInfoKeys = ScoutCardInfoKeys::getObjects();
+
+                foreach(Events::getObjects($year, $team) as $event)
+                {
+                    foreach (Matches::getObjects($event, $team) as $match)
+                    {
+                        foreach ($scoutCardInfoKeys as $scoutCardInfoKey)
+                        {
+                            if ($scoutCardInfoKey->DataType == 'INT')
+                            {
+                                for($i = 0; $i < 6; $i++)
+                                {
+                                    switch ($i)
+                                    {
+                                        case 0:
+                                            $teamId = $match->BlueAllianceTeamOneId;
+                                            break;
+
+                                        case 1:
+                                            $teamId = $match->BlueAllianceTeamTwoId;
+                                            break;
+
+                                        case 2:
+                                            $teamId = $match->BlueAllianceTeamThreeId;
+                                            break;
+
+                                        case 3:
+                                            $teamId = $match->RedAllianceTeamOneId;
+                                            break;
+
+                                        case 4:
+                                            $teamId = $match->RedAllianceTeamTwoId;
+                                            break;
+
+                                        case 5:
+                                            $teamId = $match->RedAllianceTeamThreeId;
+                                            break;
+
+                                        default:
+                                            $teamId = $match->BlueAllianceTeamOneId;
+                                            break;
+                                    }
+
+                                    $scoutCardInfo = new ScoutCardInfo();
+                                    $scoutCardInfo->YearId = $year->Id;
+                                    $scoutCardInfo->EventId = $match->EventId;
+                                    $scoutCardInfo->MatchId = $match->Key;
+                                    $scoutCardInfo->TeamId = $teamId;
+                                    $scoutCardInfo->CompletedBy = '';
+                                    $scoutCardInfo->PropertyValue = rand(0, 10);
+                                    $scoutCardInfo->PropertyKeyId = $scoutCardInfoKey->Id;
+                                    $scoutCardInfo->save();
+                                }
+                            }
+                        }
+                    }
+                }
+            } else
+                $ajax->error('Error importing SQL tables.');
+
+            $ajax->success('Account created successfully!');
+        }
+        else
+            $ajax->error('Captcha invalid. Please try again.');
+
+        break;
+
     default:
         $ajax->error('Invalid Action.');
         break;

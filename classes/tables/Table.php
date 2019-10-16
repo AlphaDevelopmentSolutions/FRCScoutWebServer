@@ -116,7 +116,7 @@ abstract class Table
 
             $sql .="$columnsString) VALUES ($valuesString)";
 
-            if($insertId = self::insertOrUpdateRecords($sql, $cols, $args) > -1)
+            if(($insertId = self::insertOrUpdateRecords($sql, $cols, $args)) > -1)
             {
                 $this->Id = $insertId;
 

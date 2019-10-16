@@ -24,14 +24,43 @@ class Events extends CoreTable
         return parent::withId($id, 'BlueAllianceId');
     }
 
-
     /**
-     * Overrides parent getObjects method and provides a custom orderby arg
+     * Retrieves objects from the database
+     * @param Years | null $year if specified, filters by id
+     * @param Teams | null $team if specified, filters by id
+     * @param string $orderBy order field to sort items by
+     * @param string $orderDirection direction to sort items by
      * @return Events[]
      */
-    public static function getObjects()
+    public static function getObjects($year = null, $team = null, $orderBy = 'StartDate', $orderDirection = 'DESC')
     {
-        return parent::getObjects(null, null, null, 'StartDate');
+        $whereStatment = "";
+        $cols = array();
+        $args = array();
+
+        //if year specified, filter by year
+        if(!empty($year))
+        {
+            $whereStatment .= ((empty($whereStatment)) ? "" : " AND ") . " ! = ? ";
+            $cols[] = 'YearId';
+            $args[] = $year->Id;
+        }
+
+        //if year specified, filter by team
+        if(!empty($team))
+        {
+            require_once(ROOT_DIR . "/classes/tables/core/EventTeamList.php");
+
+            $whereStatment .= ((empty($whereStatment)) ? "" : " AND ") . " ! IN (SELECT ! FROM ! WHERE ! = ? GROUP BY !) ";
+            $cols[] = 'BlueAllianceId';
+            $cols[] = 'EventId';
+            $cols[] = EventTeamList::$TABLE_NAME;
+            $cols[] = 'TeamId';
+            $cols[] = 'EventId';
+            $args[] = $team->Id;
+        }
+
+        return parent::getObjects($whereStatment, $cols, $args, $orderBy, $orderDirection);
     }
 
     /**

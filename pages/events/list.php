@@ -27,7 +27,7 @@ $team = Teams::withId(getCoreAccount()->TeamId)
       <main class="mdl-layout__content">
           <?php
 
-          foreach($year->getEvents($team) as $event)
+          foreach(Events::getObjects($year, $team) as $event)
               echo $event->toHtml();
 
           ?>
