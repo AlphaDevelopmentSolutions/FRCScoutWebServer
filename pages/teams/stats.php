@@ -134,7 +134,7 @@ $event = Events::withId($eventId);
 
             <?php
 
-            $keys = ScoutCardInfoKeys::getKeys(null, $event);
+            $keys = ScoutCardInfoKeys::getObjects(Years::withId($event->YearId), null, true);
 
             $keyStates = array();
 

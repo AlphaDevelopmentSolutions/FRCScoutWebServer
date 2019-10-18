@@ -130,15 +130,13 @@ switch ($action)
         break;
 
     case 'GetScoutCardInfoKeys':
-        $eventId = filter_var($_POST['EventId'], FILTER_SANITIZE_STRING);
         $yearId = filter_var($_POST['YearId'], FILTER_SANITIZE_NUMBER_INT);
 
-        if (!empty($eventId) || !empty($yearId))
+        if (!empty($yearId))
         {
-            $event = (!empty($eventId)) ? Events::withId($eventId) : null;
-            $year = (!empty($yearId)) ? Years::withId($yearId) : null;
+            $year = Years::withId($yearId);
 
-            $api->success(ScoutCardInfoKeys::getKeys($year, $event));
+            $api->success(ScoutCardInfoKeys::getObjects($year));
         } else
             $api->success(ScoutCardInfoKeys::getObjects());
 

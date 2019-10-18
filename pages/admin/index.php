@@ -153,7 +153,7 @@ $htmlMysqlDatatypes =
                     <tbody>
 
                     <?php
-                    foreach (ScoutCardInfoKeys::getObjects($year, 'SortOrder', 'ASC') as $obj)
+                    foreach (ScoutCardInfoKeys::getObjects($year) as $obj)
                     {
                         ?>
                         <tr>

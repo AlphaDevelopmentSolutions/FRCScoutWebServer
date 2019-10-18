@@ -36,7 +36,7 @@ switch ($_POST['action'])
         $calcMultiTeam = count($teams) > 1 || empty($teams);
         $calcMatchTeams = !empty($match);
 
-        $scoutCardInfoKeys = ScoutCardInfoKeys::getObjects();//get all the scout card info keys from the database
+        $scoutCardInfoKeys = ScoutCardInfoKeys::getObjects(null, null, true);//get all the scout card info keys from the database
         $scoutCardInfos = ScoutCardInfo::getObjects(null, null, $event, null, null);//get all scout cards from the event / match
         $teamStatArray = array();
 

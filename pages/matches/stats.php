@@ -3,6 +3,7 @@ require_once("../../config.php");
 require_once(ROOT_DIR . "/classes/tables/core/Events.php");
 require_once(ROOT_DIR . "/classes/tables/core/Matches.php");
 require_once(ROOT_DIR . "/classes/tables/core/Teams.php");
+require_once(ROOT_DIR . "/classes/tables/core/Years.php");
 require_once(ROOT_DIR . "/classes/tables/local/ScoutCardInfoKeys.php");
 
 
@@ -69,7 +70,7 @@ if(!empty($teamId))
 
             <?php
 
-            $keys = ScoutCardInfoKeys::getKeys(null, $event);
+            $keys = ScoutCardInfoKeys::getObjects(Years::withId($event->YearId), null, true);
 
             $keyStates = array();
 

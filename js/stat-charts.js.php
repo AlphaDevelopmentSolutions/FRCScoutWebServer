@@ -5,6 +5,7 @@ require_once(ROOT_DIR . "/interfaces/AllianceColors.php");
 require_once(ROOT_DIR . "/classes/tables/local/ScoutCardInfoKeys.php");
 require_once(ROOT_DIR . "/classes/tables/core/Events.php");
 require_once(ROOT_DIR . "/classes/tables/core/Matches.php");
+require_once(ROOT_DIR . "/classes/tables/core/Years.php");
 
 $eventId = $_GET['eventId'];
 $matchId = $_GET['matchId'];
@@ -14,13 +15,13 @@ $event = Events::withId($eventId);
 if(!empty($matchId))
     $match = Matches::withId($matchId);
 
-$keys = ScoutCardInfoKeys::getKeys(null, $event);
+$keys = ScoutCardInfoKeys::getObjects(Years::withId($event->YearId), null, true);
 
 $keyStates = array();
 
 foreach ($keys as $key)
     if($key->IncludeInStats)
-        $keyStates[$key->KeyState] = $key->KeyState;
+        $keyStates[$key->KeyState][] = $key;
 ?>
 
 var <?php
@@ -117,7 +118,7 @@ function updateGraphs()
     foreach ($keyStates as $keyState => $placeholder)
     {
     ?>
-    setItems('<?php echo json_encode(ScoutCardInfoKeys::getKeys(null, $event, $keyState)) ?>', document.getElementById('<?php echo str_replace(' ', '', $keyState) . 'Chart' ?>'), $('#<?php echo 'change' . str_replace(' ', '', $keyState) . 'Item' ?>'));
+    setItems('<?php echo json_encode($placeholder) ?>', document.getElementById('<?php echo str_replace(' ', '', $keyState) . 'Chart' ?>'), $('#<?php echo 'change' . str_replace(' ', '', $keyState) . 'Item' ?>'));
     <?php
     }
     ?>
@@ -143,18 +144,14 @@ function setItems(graphPeriod, context, selectBox)
     //match the specified graphperiod to the one in the enum
     $.each(graphPeriod , function(key, value)
     {
-        if(value['IncludeInStats'] === 1)
-        {
-            //temp var to hold the default (first) value in the graph period
+        //temp var to hold the default (first) value in the graph period
+        if (defaultVal === undefined)
+            defaultVal = value['KeyState'] + ' ' + value['KeyName'];
 
-
-            if (defaultVal === undefined)
-                defaultVal = value['KeyState'] + ' ' + value['KeyName'];
-
-            if (selectBox !== null)
+        if (selectBox !== null)
             //add options to the select boxes for the items within each graph item
-                selectBox.append('<option value="' + value['KeyState'] + ' ' + value['KeyName'] + '">' + value['KeyName'] + '</option>');
-        }
+            selectBox.append('<option value="' + value['KeyState'] + ' ' + value['KeyName'] + '">' + value['KeyName'] + '</option>');
+
     });
 
     generateData(defaultVal, context);

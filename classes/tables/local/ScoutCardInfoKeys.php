@@ -23,11 +23,13 @@ class ScoutCardInfoKeys extends LocalTable
     /**
      * Retrieves objects from the database
      * @param Years | null $year if specified, filters by id
+     * @param ScoutCardInfoKeys | null $keyState if specified, filters keys by state
+     * @param boolean | null $includeInStats if specified, filters keys by include in stats flag
      * @param string $orderBy order field to sort items by
      * @param string $orderDirection direction to sort items by
      * @return ScoutCardInfoKeys[]
      */
-    public static function getObjects($year = null, $orderBy = 'SortOrder', $orderDirection = 'ASC')
+    public static function getObjects($year = null, $keyState = null, $includeInStats = null, $orderBy = 'SortOrder', $orderDirection = 'ASC')
     {
         $whereStatment = "";
         $cols = array();
@@ -41,45 +43,23 @@ class ScoutCardInfoKeys extends LocalTable
             $args[] = $year->Id;
         }
 
-        return parent::getObjects($whereStatment, $cols, $args, $orderBy, $orderDirection);
-    }
-    
-    /**
-     * Gets and returns all keys from the database
-     * @param Years | null $year if specified, filters keys by year
-     * @param Events | null $event if specified, filters keys by event
-     * @param string | null $keyState if specified, filters keys by state
-     * @return ScoutCardInfoKeys[]
-     */
-    public static function getKeys($year = null, $event = null, $keyState = null)
-    {
-        $yearId = ((!empty($year)) ? $year->Id : ((!empty($event)) ? $event->YearId : date('Y')));
-
-        $response = array();
-
-        //create the sql statement
-        $sql = "SELECT * FROM ! WHERE ! = ?";
-        $cols[] = self::$TABLE_NAME;
-
-        $cols[] = 'YearId';
-        $args[] = $yearId;
-
+        //if year specified, filter by key state
         if(!empty($keyState))
         {
-            $sql .= " AND ! = ? ";
-            $cols[] = 'KeyState';
-            $args[] = $keyState;
+            $whereStatment .= ((empty($whereStatment)) ? "" : " AND ") . " ! = ? ";
+            $cols[] = 'Id';
+            $args[] = $keyState->Id;
         }
 
-        $sql .= " ORDER BY ! ASC";
-        $cols[] = 'SortOrder';
+        //if year specified, filter by include in stat flag
+        if(!empty($includeInStats))
+        {
+            $whereStatment .= ((empty($whereStatment)) ? "" : " AND ") . " ! = ? ";
+            $cols[] = 'IncludeInStats';
+            $args[] = (($includeInStats) ? 1 : 0);
+        }
 
-        $rows = self::queryRecords($sql, $cols, $args);
-
-        foreach($rows as $row)
-            $response[] = self::withProperties($row);
-
-        return $response;
+        return parent::getObjects($whereStatment, $cols, $args, $orderBy, $orderDirection);
     }
 
     /**
@@ -191,8 +171,7 @@ class ScoutCardInfoKeys extends LocalTable
 
         //get the keys for the specified year and store the states for sections
         foreach ($scoutCardInfoKeys as $scoutCardInfoKey)
-            $scoutCardInfoKeyStates[] = $scoutCardInfoKey->KeyState;
-        $scoutCardInfoKeyStates = array_unique($scoutCardInfoKeyStates);
+            $scoutCardInfoKeyStates[$scoutCardInfoKey->Id] = $scoutCardInfoKey;
 
         ?>
         <div class="mdl-layout__tab-panel is-active">
@@ -204,10 +183,10 @@ class ScoutCardInfoKeys extends LocalTable
                     foreach ($scoutCardInfoKeyStates as $scoutCardInfoKeyState) {
                         ?>
                         <div class="mdl-card__supporting-text" style="margin: 0 40px !important;">
-                            <h5><?php echo $scoutCardInfoKeyState ?></h5>
+                            <h5><?php echo $scoutCardInfoKeyState->KeyState ?></h5>
                             <hr>
                             <?php
-                            foreach (self::getKeys($year, null, $scoutCardInfoKeyState) as $scoutCardInfoKey) {
+                            foreach (self::getObjects($year, $scoutCardInfoKeyState) as $scoutCardInfoKey) {
                                 ?>
                                 <strong class="setting-title"><?php echo $scoutCardInfoKey->KeyName ?></strong>
                                 <div class="setting-value mdl-textfield mdl-js-textfield mdl-textfield--floating-label"
