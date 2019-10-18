@@ -18,7 +18,7 @@ require_once(ROOT_DIR . '/classes/Ajax.php');
             <section class="section--center mdl-grid mdl-grid--no-spacing mdl-shadow--2dp">
                 <div class="mdl-card mdl-cell mdl-cell--12-col">
                     <div class="center-div-horizontal-outer">
-                        <h2 class="center-div-horizontal-inner" id="demo-header">Demo Account</h2>
+                        <h2 class="center-div-horizontal-inner" id="demo-header">Demo Account</h2><br>
                         <div class="mdl-tooltip mdl-tooltip--large" for="demo-header">
                             Demo accounts add default values for demo purposes.<br><br>
                             <strong>
@@ -26,6 +26,7 @@ require_once(ROOT_DIR . '/classes/Ajax.php');
                                 Demo accounts and all of its content will be deleted 24 hours after creation.
                             </strong>
                         </div>
+                        <p class="center-div-horizontal-inner" id="demo-support"><i>Please note that generating random values for the database takes about 5 minutes.</i></p>
                     </div>
                     <form method="post" action="" style="padding-top: 30px;" id="install-form">
 
