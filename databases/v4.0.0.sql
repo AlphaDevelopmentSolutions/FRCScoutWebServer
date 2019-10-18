@@ -19,7 +19,7 @@ CREATE TABLE `checklist_item_results` (
 
 DROP TABLE IF EXISTS `checklist_items`;
 CREATE TABLE `checklist_items` (
-  `Id` int(11) NOT NULL,
+  `Id` int(11) NOT NULL AUTO_INCREMENT,
   `YearId` int(11) DEFAULT '2019',
   `Title` varchar(3000) DEFAULT '',
   `Description` varchar(3000) DEFAULT '',

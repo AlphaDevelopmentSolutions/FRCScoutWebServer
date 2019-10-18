@@ -77,21 +77,24 @@ interface AdminPanels
                     $i = 0;
                     foreach ($objs as $config)
                     {
-                        $i++;
-                        $titleText = str_replace("_", " ", $config->Key);
-                        $titleText = strtolower($titleText);
-                        $titleText = ucwords($titleText);
+                        if($config->Key != 'TEAM_ROBOT_MEDIA_DIR')
+                        {
+                            $i++;
+                            $titleText = str_replace("_", " ", $config->Key);
+                            $titleText = strtolower($titleText);
+                            $titleText = ucwords($titleText);
 
-                        ?>
+                            ?>
                             <span class="setting-title">
                                 <strong><?php echo $titleText ?></strong>
                                 <span class="center-div-vertical-outer">
-                                    <div id="desc<?php echo $i ?>" class="center-div-vertical-inner material-side-padding icon material-icons">help_outline</div>
+                                    <div id="desc<?php echo $i ?>"
+                                         class="center-div-vertical-inner material-side-padding icon material-icons">help_outline</div>
                                 </span>
                                 <div class="mdl-tooltip mdl-tooltip--large" for="desc<?php echo $i ?>">
                                     <?php
 
-                                    switch($config->Key)
+                                    switch ($config->Key)
                                     {
                                         case "APP_NAME":
                                             ?>
@@ -121,11 +124,15 @@ interface AdminPanels
                                     ?>
                                 </div>
                             </span>
-                            <div class="setting-value mdl-textfield mdl-js-textfield mdl-textfield--floating-label" data-upgraded=",MaterialTextfield">
-                                <input class="<?php if(strpos(strtolower($titleText), "color")) echo "jscolor" ?> mdl-textfield__input" type="text" value="<?php echo $config->Value?>" name="<?php echo $config->Key ?>" id="<?php echo $config->Key ?>">
+                            <div class="setting-value mdl-textfield mdl-js-textfield mdl-textfield--floating-label"
+                                 data-upgraded=",MaterialTextfield">
+                                <input class="<?php if (strpos(strtolower($titleText), "color")) echo "jscolor" ?> mdl-textfield__input"
+                                       type="text" value="<?php echo $config->Value ?>"
+                                       name="<?php echo $config->Key ?>" id="<?php echo $config->Key ?>">
                             </div>
 
-                        <?php
+                            <?php
+                        }
                     }
                     ?>
                     </div>
