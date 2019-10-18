@@ -1,21 +1,24 @@
 <?php
-if(loggedIn() === false)
+if(!is_null(getCoreAccount()))
 {
+    if(loggedIn() === false && !is_null(getCoreAccount()))
+    {
+        ?>
+        <script src="<?php echo JS_URL ?>user-sign-in.js.php"></script>
+        <?php
+    }
+    else if (loggedIn() === true && !is_null(getCoreAccount()))
+    {
+        ?>
+        <script src="<?php echo JS_URL ?>user-sign-out.js.php"></script>
+        <?php
+    }
 ?>
-<script src="<?php echo JS_URL ?>user-sign-in.js.php"></script>
+    <script defer src="<?php echo JS_URL ?>core-sign-out.js.php"></script>
 <?php
 }
-else if (loggedIn() === true)
-{
-?>
-<script src="<?php echo JS_URL ?>user-sign-out.js.php"></script>
-<?php
-}
-?>
 
-<?php require_once(INCLUDES_DIR . 'modals.php'); ?>
-
-<script defer src="<?php echo JS_URL ?>core-sign-out.js.php"></script>
+require_once(INCLUDES_DIR . 'modals.php'); ?>
 
 <script src="https://www.gstatic.com/firebasejs/7.0.0/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/7.0.0/firebase-analytics.js"></script>

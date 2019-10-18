@@ -1,4 +1,5 @@
 <?php
+header("Content-type: text/javascript; charset: UTF-8");
 require_once('../config.php');
 require_once(ROOT_DIR . "/classes/Ajax.php");
 require_once(ROOT_DIR . "/classes/tables/local/ScoutCardInfoKeys.php");
