@@ -438,95 +438,95 @@ switch ($_POST['action'])
                 $demo->Expires = date("Y-m-d H:i:s", strtotime('+24 hours'));
                 $demo->save();
 
-                $scik1 = new ScoutCardInfoKeys();
-                $scik1->YearId = $year->Id;
-                $scik1->KeyState = 'Pre Game';
-                $scik1->KeyName = 'Starting Position';
-                $scik1->SortOrder = 1;
-                $scik1->MinValue = null;
-                $scik1->MaxValue = null;
-                $scik1->NullZeros = 0;
-                $scik1->IncludeInStats = 0;
-                $scik1->DataType = 'TEXT';
-                $scik1->save();
+                $scik = new ScoutCardInfoKeys();
+                $scik->YearId = $year->Id;
+                $scik->KeyState = 'Pre Game';
+                $scik->KeyName = 'Starting Position';
+                $scik->SortOrder = 1;
+                $scik->MinValue = null;
+                $scik->MaxValue = null;
+                $scik->NullZeros = false;
+                $scik->IncludeInStats = false;
+                $scik->DataType = 'TEXT';
+                $scik->save();
 
-                $scik1 = new ScoutCardInfoKeys();
-                $scik1->YearId = $year->Id;
-                $scik1->KeyState = 'Pre Game';
-                $scik1->KeyName = 'Starting Piece';
-                $scik1->SortOrder = 2;
-                $scik1->MinValue = null;
-                $scik1->MaxValue = null;
-                $scik1->NullZeros = 0;
-                $scik1->IncludeInStats = 0;
-                $scik1->DataType = 'TEXT';
-                $scik1->save();
+                $scik = new ScoutCardInfoKeys();
+                $scik->YearId = $year->Id;
+                $scik->KeyState = 'Pre Game';
+                $scik->KeyName = 'Starting Piece';
+                $scik->SortOrder = 2;
+                $scik->MinValue = null;
+                $scik->MaxValue = null;
+                $scik->NullZeros = false;
+                $scik->IncludeInStats = false;
+                $scik->DataType = 'TEXT';
+                $scik->save();
 
-                $scik1 = new ScoutCardInfoKeys();
-                $scik1->YearId = $year->Id;
-                $scik1->KeyState = 'Autonomous';
-                $scik1->KeyName = 'Hatches Secured';
-                $scik1->SortOrder = 3;
-                $scik1->MinValue = 0;
-                $scik1->MaxValue = null;
-                $scik1->NullZeros = 1;
-                $scik1->IncludeInStats = 1;
-                $scik1->DataType = 'INT';
-                $scik1->save();
+                $scik = new ScoutCardInfoKeys();
+                $scik->YearId = $year->Id;
+                $scik->KeyState = 'Autonomous';
+                $scik->KeyName = 'Hatches Secured';
+                $scik->SortOrder = 3;
+                $scik->MinValue = 0;
+                $scik->MaxValue = null;
+                $scik->NullZeros = true;
+                $scik->IncludeInStats = true;
+                $scik->DataType = 'INT';
+                $scik->save();
 
-                $scik1 = new ScoutCardInfoKeys();
-                $scik1->YearId = $year->Id;
-                $scik1->KeyState = 'Autonomous';
-                $scik1->KeyName = 'Cargo Stored';
-                $scik1->SortOrder = 4;
-                $scik1->MinValue = 0;
-                $scik1->MaxValue = null;
-                $scik1->NullZeros = 1;
-                $scik1->IncludeInStats = 1;
-                $scik1->DataType = 'INT';
-                $scik1->save();
+                $scik = new ScoutCardInfoKeys();
+                $scik->YearId = $year->Id;
+                $scik->KeyState = 'Autonomous';
+                $scik->KeyName = 'Cargo Stored';
+                $scik->SortOrder = 4;
+                $scik->MinValue = 0;
+                $scik->MaxValue = null;
+                $scik->NullZeros = true;
+                $scik->IncludeInStats = true;
+                $scik->DataType = 'INT';
+                $scik->save();
 
-                $scik1 = new ScoutCardInfoKeys();
-                $scik1->YearId = $year->Id;
-                $scik1->KeyState = 'Teleop';
-                $scik1->KeyName = 'Hatches Secured';
-                $scik1->SortOrder = 5;
-                $scik1->MinValue = 0;
-                $scik1->MaxValue = null;
-                $scik1->NullZeros = 1;
-                $scik1->IncludeInStats = 1;
-                $scik1->DataType = 'INT';
-                $scik1->save();
+                $scik = new ScoutCardInfoKeys();
+                $scik->YearId = $year->Id;
+                $scik->KeyState = 'Teleop';
+                $scik->KeyName = 'Hatches Secured';
+                $scik->SortOrder = 5;
+                $scik->MinValue = 0;
+                $scik->MaxValue = null;
+                $scik->NullZeros = true;
+                $scik->IncludeInStats = true;
+                $scik->DataType = 'INT';
+                $scik->save();
 
-                $scik1 = new ScoutCardInfoKeys();
-                $scik1->YearId = $year->Id;
-                $scik1->KeyState = 'Teleop';
-                $scik1->KeyName = 'Cargo Stored';
-                $scik1->SortOrder = 6;
-                $scik1->MinValue = 0;
-                $scik1->MaxValue = null;
-                $scik1->NullZeros = 1;
-                $scik1->IncludeInStats = 1;
-                $scik1->DataType = 'INT';
-                $scik1->save();
+                $scik = new ScoutCardInfoKeys();
+                $scik->YearId = $year->Id;
+                $scik->KeyState = 'Teleop';
+                $scik->KeyName = 'Cargo Stored';
+                $scik->SortOrder = 6;
+                $scik->MinValue = 0;
+                $scik->MaxValue = null;
+                $scik->NullZeros = true;
+                $scik->IncludeInStats = true;
+                $scik->DataType = 'INT';
+                $scik->save();
 
-                $scik1 = new ScoutCardInfoKeys();
-                $scik1->YearId = $year->Id;
-                $scik1->KeyState = 'Post Game';
-                $scik1->KeyName = 'Notes';
-                $scik1->SortOrder = 7;
-                $scik1->MinValue = null;
-                $scik1->MaxValue = null;
-                $scik1->NullZeros = 0;
-                $scik1->IncludeInStats = 0;
-                $scik1->DataType = 'TEXT';
-                $scik1->save();
+                $scik = new ScoutCardInfoKeys();
+                $scik->YearId = $year->Id;
+                $scik->KeyState = 'Post Game';
+                $scik->KeyName = 'Notes';
+                $scik->SortOrder = 7;
+                $scik->MinValue = null;
+                $scik->MaxValue = null;
+                $scik->NullZeros = false;
+                $scik->IncludeInStats = false;
+                $scik->DataType = 'TEXT';
+                $scik->save();
 
                 $scoutCardInfoKeys = ScoutCardInfoKeys::getObjects();
 
                 foreach(Events::getObjects($year, $team) as $event)
                 {
-                    foreach (Matches::getObjects($event, $team) as $match)
+                    foreach (Matches::getObjects($event) as $match)
                     {
                         foreach ($scoutCardInfoKeys as $scoutCardInfoKey)
                         {

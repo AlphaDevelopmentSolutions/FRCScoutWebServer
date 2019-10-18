@@ -111,6 +111,9 @@ switch ($_POST['action'])
                 if($scoutCardInfoKey->DataType != ScoutCardInfoKeys::withId($scoutCardInfoKey->Id)->DataType && count(ScoutCardInfo::getObjects($scoutCardInfoKey)) > 0)
                     $ajax->error("You can't change datatypes if you already have scout cards populated under this key.");
 
+                $scoutCardInfoKey->NullZeros = $scoutCardInfoKey->NullZeros == 1 ? true : false;
+                $scoutCardInfoKey->IncludeInStats = $scoutCardInfoKey->IncludeInStats == 1 ? true : false;
+
                 if($scoutCardInfoKey->save())
                     $ajax->success("Scout card info saved successfully.");
 
@@ -185,6 +188,8 @@ switch ($_POST['action'])
                     $user->UserName = null;
                     $user->Password = null;
                 }
+
+                $user->IsAdmin = $user->IsAdmin == 1 ? true : false;
 
                 if($user->save())
                     $ajax->success("User saved successfully.");

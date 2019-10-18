@@ -93,7 +93,7 @@ abstract class Table
             //iterate through each field in the current class
             foreach ($this as $key => $value)
             {
-                //dont use Id in cols or vals
+                //don't use Id in cols or vals
                 if($key != 'Id' && property_exists($this, $key))
                 {
                     //only add to insert statement if value is not empty
@@ -135,7 +135,7 @@ abstract class Table
             //iterate through each field in the current class
             foreach ($this as $key => $value)
             {
-                //dont use Id in cols or vals
+                //don't use Id in cols or vals
                 if($key != 'Id' && property_exists($this, $key))
                 {
                     if(!empty($updates))
