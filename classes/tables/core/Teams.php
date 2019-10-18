@@ -34,10 +34,10 @@ class Teams extends CoreTable
         //if obj specified, filter by id
         if(!empty($event))
         {
-            $whereStatment .= ((empty($whereStatment)) ? "" : " AND ") . " ? IN (SELECT ! FROM ! WHERE ! = ?) ";
+            $whereStatment .= ((empty($whereStatment)) ? "" : " AND ") . " ! IN (SELECT ! FROM ! WHERE ! = ?) ";
             $cols[] = 'Id';
             $cols[] = 'TeamId';
-            $cols[] = EventTeamList::$DB_NAME;
+            $cols[] = EventTeamList::$TABLE_NAME;
             $cols[] = 'EventId';
             $args[] = $event->BlueAllianceId;
         }

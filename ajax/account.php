@@ -427,8 +427,12 @@ switch ($_POST['action'])
                 require_once(ROOT_DIR . "/classes/tables/core/Demos.php");
                 require_once(ROOT_DIR . "/classes/tables/core/Teams.php");
                 require_once(ROOT_DIR . "/classes/tables/core/Matches.php");
+                require_once(ROOT_DIR . "/classes/tables/local/ChecklistItems.php");
+                require_once(ROOT_DIR . "/classes/tables/local/ChecklistItemResults.php");
                 require_once(ROOT_DIR . "/classes/tables/local/ScoutCardInfoKeys.php");
                 require_once(ROOT_DIR . "/classes/tables/local/ScoutCardInfo.php");
+                require_once(ROOT_DIR . "/classes/tables/local/RobotInfoKeys.php");
+                require_once(ROOT_DIR . "/classes/tables/local/RobotInfo.php");
 
                 $year = Years::withId(date('Y'));
                 $team = Teams::withId($teamNumber);
@@ -438,96 +442,177 @@ switch ($_POST['action'])
                 $demo->Expires = date("Y-m-d H:i:s", strtotime('+24 hours'));
                 $demo->save();
 
-                $scik = new ScoutCardInfoKeys();
-                $scik->YearId = $year->Id;
-                $scik->KeyState = 'Pre Game';
-                $scik->KeyName = 'Starting Position';
-                $scik->SortOrder = 1;
-                $scik->MinValue = null;
-                $scik->MaxValue = null;
-                $scik->NullZeros = false;
-                $scik->IncludeInStats = false;
-                $scik->DataType = 'TEXT';
-                $scik->save();
+                $obj = new ChecklistItems();
+                $obj->YearId = $year->Id;
+                $obj->Title = 'Change Battery';
+                $obj->Description = 'Grab fully charged batter and check voltage with voltmeter. Only place battery in the robot if the voltage reads 12.4+ volts. Make sure the battery is properly secured.';
+                $obj->save();
 
-                $scik = new ScoutCardInfoKeys();
-                $scik->YearId = $year->Id;
-                $scik->KeyState = 'Pre Game';
-                $scik->KeyName = 'Starting Piece';
-                $scik->SortOrder = 2;
-                $scik->MinValue = null;
-                $scik->MaxValue = null;
-                $scik->NullZeros = false;
-                $scik->IncludeInStats = false;
-                $scik->DataType = 'TEXT';
-                $scik->save();
+                $obj = new ChecklistItems();
+                $obj->YearId = $year->Id;
+                $obj->Title = 'Check Pneumatic Pressure';
+                $obj->Description = 'Ensure STORED TANK pressure exceeds 100 psi. If tank pressure is low, locate drive team member or pit leader to fill tanks.';
+                $obj->save();
 
-                $scik = new ScoutCardInfoKeys();
-                $scik->YearId = $year->Id;
-                $scik->KeyState = 'Autonomous';
-                $scik->KeyName = 'Hatches Secured';
-                $scik->SortOrder = 3;
-                $scik->MinValue = 0;
-                $scik->MaxValue = null;
-                $scik->NullZeros = true;
-                $scik->IncludeInStats = true;
-                $scik->DataType = 'INT';
-                $scik->save();
+                $obj = new ChecklistItems();
+                $obj->YearId = $year->Id;
+                $obj->Title = 'Deploy Code';
+                $obj->Description = 'Ensure code is on robot and if code is deployed, verified by a programmer.';
+                $obj->save();
 
-                $scik = new ScoutCardInfoKeys();
-                $scik->YearId = $year->Id;
-                $scik->KeyState = 'Autonomous';
-                $scik->KeyName = 'Cargo Stored';
-                $scik->SortOrder = 4;
-                $scik->MinValue = 0;
-                $scik->MaxValue = null;
-                $scik->NullZeros = true;
-                $scik->IncludeInStats = true;
-                $scik->DataType = 'INT';
-                $scik->save();
+                $obj = new ChecklistItems();
+                $obj->YearId = $year->Id;
+                $obj->Title = 'Inspect for Damage or Excessive Wear';
+                $obj->Description = 'Ensure all mechanisms are able to function correctly and that they have not sustained major damage. If excessive wear or damage is identified, alert pit leader or drive team.';
+                $obj->save();
 
-                $scik = new ScoutCardInfoKeys();
-                $scik->YearId = $year->Id;
-                $scik->KeyState = 'Teleop';
-                $scik->KeyName = 'Hatches Secured';
-                $scik->SortOrder = 5;
-                $scik->MinValue = 0;
-                $scik->MaxValue = null;
-                $scik->NullZeros = true;
-                $scik->IncludeInStats = true;
-                $scik->DataType = 'INT';
-                $scik->save();
+                $checklistItems = ChecklistItems::getObjects();
 
-                $scik = new ScoutCardInfoKeys();
-                $scik->YearId = $year->Id;
-                $scik->KeyState = 'Teleop';
-                $scik->KeyName = 'Cargo Stored';
-                $scik->SortOrder = 6;
-                $scik->MinValue = 0;
-                $scik->MaxValue = null;
-                $scik->NullZeros = true;
-                $scik->IncludeInStats = true;
-                $scik->DataType = 'INT';
-                $scik->save();
+                $obj = new ScoutCardInfoKeys();
+                $obj->YearId = $year->Id;
+                $obj->KeyState = 'Pre Game';
+                $obj->KeyName = 'Starting Position';
+                $obj->SortOrder = 1;
+                $obj->MinValue = null;
+                $obj->MaxValue = null;
+                $obj->NullZeros = false;
+                $obj->IncludeInStats = false;
+                $obj->DataType = 'TEXT';
+                $obj->save();
 
-                $scik = new ScoutCardInfoKeys();
-                $scik->YearId = $year->Id;
-                $scik->KeyState = 'Post Game';
-                $scik->KeyName = 'Notes';
-                $scik->SortOrder = 7;
-                $scik->MinValue = null;
-                $scik->MaxValue = null;
-                $scik->NullZeros = false;
-                $scik->IncludeInStats = false;
-                $scik->DataType = 'TEXT';
-                $scik->save();
+                $obj = new ScoutCardInfoKeys();
+                $obj->YearId = $year->Id;
+                $obj->KeyState = 'Pre Game';
+                $obj->KeyName = 'Starting Piece';
+                $obj->SortOrder = 2;
+                $obj->MinValue = null;
+                $obj->MaxValue = null;
+                $obj->NullZeros = false;
+                $obj->IncludeInStats = false;
+                $obj->DataType = 'TEXT';
+                $obj->save();
+
+                $obj = new ScoutCardInfoKeys();
+                $obj->YearId = $year->Id;
+                $obj->KeyState = 'Autonomous';
+                $obj->KeyName = 'Hatches Secured';
+                $obj->SortOrder = 3;
+                $obj->MinValue = 0;
+                $obj->MaxValue = null;
+                $obj->NullZeros = true;
+                $obj->IncludeInStats = true;
+                $obj->DataType = 'INT';
+                $obj->save();
+
+                $obj = new ScoutCardInfoKeys();
+                $obj->YearId = $year->Id;
+                $obj->KeyState = 'Autonomous';
+                $obj->KeyName = 'Cargo Stored';
+                $obj->SortOrder = 4;
+                $obj->MinValue = 0;
+                $obj->MaxValue = null;
+                $obj->NullZeros = true;
+                $obj->IncludeInStats = true;
+                $obj->DataType = 'INT';
+                $obj->save();
+
+                $obj = new ScoutCardInfoKeys();
+                $obj->YearId = $year->Id;
+                $obj->KeyState = 'Teleop';
+                $obj->KeyName = 'Hatches Secured';
+                $obj->SortOrder = 5;
+                $obj->MinValue = 0;
+                $obj->MaxValue = null;
+                $obj->NullZeros = true;
+                $obj->IncludeInStats = true;
+                $obj->DataType = 'INT';
+                $obj->save();
+
+                $obj = new ScoutCardInfoKeys();
+                $obj->YearId = $year->Id;
+                $obj->KeyState = 'Teleop';
+                $obj->KeyName = 'Cargo Stored';
+                $obj->SortOrder = 6;
+                $obj->MinValue = 0;
+                $obj->MaxValue = null;
+                $obj->NullZeros = true;
+                $obj->IncludeInStats = true;
+                $obj->DataType = 'INT';
+                $obj->save();
+
+                $obj = new ScoutCardInfoKeys();
+                $obj->YearId = $year->Id;
+                $obj->KeyState = 'Post Game';
+                $obj->KeyName = 'Notes';
+                $obj->SortOrder = 7;
+                $obj->MinValue = null;
+                $obj->MaxValue = null;
+                $obj->NullZeros = false;
+                $obj->IncludeInStats = false;
+                $obj->DataType = 'TEXT';
+                $obj->save();
 
                 $scoutCardInfoKeys = ScoutCardInfoKeys::getObjects();
+
+                $obj = new RobotInfoKeys();
+                $obj->YearId = $year->Id;
+                $obj->KeyState = 'Pre Game';
+                $obj->KeyName = 'Drivetrain';
+                $obj->SortOrder = 1;
+                $obj->save();
+
+                $obj = new RobotInfoKeys();
+                $obj->YearId = $year->Id;
+                $obj->KeyState = 'Pre Game';
+                $obj->KeyName = 'Robot Weight';
+                $obj->SortOrder = 2;
+                $obj->save();
+
+                $obj = new RobotInfoKeys();
+                $obj->YearId = $year->Id;
+                $obj->KeyState = 'Autonomous';
+                $obj->KeyName = 'Cargo Stored';
+                $obj->SortOrder = 3;
+                $obj->save();
+
+                $obj = new RobotInfoKeys();
+                $obj->YearId = $year->Id;
+                $obj->KeyState = 'Autonomous';
+                $obj->KeyName = 'Hatches Secured';
+                $obj->SortOrder = 4;
+                $obj->save();
+
+                $obj = new RobotInfoKeys();
+                $obj->YearId = $year->Id;
+                $obj->KeyState = 'Teleop';
+                $obj->KeyName = 'Cargo Stored';
+                $obj->SortOrder = 5;
+                $obj->save();
+
+                $obj = new RobotInfoKeys();
+                $obj->YearId = $year->Id;
+                $obj->KeyState = 'Teleop';
+                $obj->KeyName = 'Hatches Secured';
+                $obj->SortOrder = 6;
+                $obj->save();
+
+                $robotInfoKeys = RobotInfoKeys::getObjects();
 
                 foreach(Events::getObjects($year, $team) as $event)
                 {
                     foreach (Matches::getObjects($event) as $match)
                     {
+                        foreach ($checklistItems as $checklistItem)
+                        {
+                            $checklistItemResult = new ChecklistItemResults();
+                            $checklistItemResult->ChecklistItemId = $checklistItem->Id;
+                            $checklistItemResult->MatchId = $match->Key;
+                            $checklistItemResult->Status = (rand(1, 2) == 1) ? ChecklistItemResults::COMPLETE : ChecklistItemResults::INCOMPLETE;
+                            $checklistItemResult->CompletedBy = 'Demo User';
+                            $checklistItemResult->CompletedDate = date('Y-m-d H:i:s');
+                            $checklistItemResult->save();
+                        }
+
                         foreach ($scoutCardInfoKeys as $scoutCardInfoKey)
                         {
                             if ($scoutCardInfoKey->DataType == 'INT')
