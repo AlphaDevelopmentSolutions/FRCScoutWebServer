@@ -82,9 +82,6 @@ require_once(ROOT_DIR . "/classes/NavBarArray.php");
 require_once(ROOT_DIR . "/classes/NavBarLink.php");
 require_once(ROOT_DIR . "/classes/NavBarLinkArray.php");
 
-//set the user var
-$user = getUser();
-
 //These are held as placeholders for programming usage
 //Primarily so the IDE will auto-complete
 if(false)

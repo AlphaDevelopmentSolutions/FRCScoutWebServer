@@ -10,22 +10,29 @@ $ajax = new Ajax();
 switch ($_POST['action'])
 {
     case 'login_user':
-        $username = $_POST['username'];
-        $password = $_POST['password'];
-        $redirectUrl = $_POST['url'];
 
-        if(!empty($username) && !empty($password))
+        if(coreLoggedIn())
         {
-            $user = new Users();
-            $user = $user->login($username, $password);
-            if(!empty($user))
+            $username = $_POST['username'];
+            $password = $_POST['password'];
+            $redirectUrl = $_POST['url'];
+
+            if (!empty($username) && !empty($password))
             {
-                $_SESSION['user'] = serialize($user);
-                $ajax->success('Successfully logged in.');
+                $user = new Users();
+                $user = $user->login($username, $password);
+                if (!empty($user))
+                {
+                    $_SESSION['user'] = serialize($user);
+                    $ajax->success('Successfully logged in.');
+                }
             }
+
+            $ajax->error('Invalid username or password');
         }
 
-        $ajax->error('Invalid username or password');
+        $ajax->error('You must be logged in to access this page.');
+
         break;
 
     case 'logout_user':
@@ -36,19 +43,41 @@ switch ($_POST['action'])
     case 'login_core':
         $username = $_POST['username'];
         $password = $_POST['password'];
+        $captchaKey = $_POST['captchaKey'];
+
+        if(empty($captchaKey))
+            $ajax->error('Captcha must be completed.');
 
         if(!empty($username) && !empty($password))
         {
-            $user = new Accounts();
-            $user = $user->login($username, $password);
-            if(!empty($user))
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL,"https://www.google.com/recaptcha/api/siteverify");
+            curl_setopt($ch, CURLOPT_POST, 1);
+            curl_setopt($ch, CURLOPT_POSTFIELDS,
+                "secret=" . CAPTCHA_SERVER_SECRET . "&response=$captchaKey&remoteip=" . $_SERVER['HTTP_CLIENT_IP']);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            $response = curl_exec($ch);
+            curl_close ($ch);
+
+            $response = json_decode($response, true);
+
+            if($response['success'])
             {
-                $_SESSION['coreAccount'] = serialize($user);
-                $ajax->success('Successfully logged in.');
+                $user = new Accounts();
+                $user = $user->login($username, $password);
+                if (!empty($user))
+                {
+                    $_SESSION['coreAccount'] = serialize($user);
+                    $ajax->success('Successfully logged in.');
+                }
+
+                $ajax->error('Invalid username or password.');
             }
+
+            $ajax->error('Captcha invalid. Please try again.');
         }
 
-        $ajax->error('Invalid username or password');
+        $ajax->error('Username and password cannot be empty.');
         break;
 
     case 'logout_core':
@@ -75,56 +104,6 @@ switch ($_POST['action'])
         $primaryColor = $_POST['primaryColor'];
         $secondaryColor = $_POST['secondaryColor'];
 
-
-        if (empty($username) || !validAlnum($username) || strlen($username) < 6)
-            $ajax->error('Account Username may only include A-Z 0-9 and must be at least 6 characters.');
-
-        if (empty($email))
-            $ajax->error('Email must not be empty.');
-
-        //check if any of the accounts details are already taken
-        $accounts = Accounts::getObjects();
-        foreach ($accounts as $account) {
-            if ($account->Username == $username)
-                $ajax->error('The username provided is already in use.');
-
-            if ($account->Email == $email)
-                $ajax->error('The email address provided is already in use.');
-        }
-
-        if (!validPassword($password))
-            $ajax->error('Main account password is invalid. Please review the password requirements.');
-
-        if ($password != $retypePassword)
-            $ajax->error('Main account passwords do not match.');
-
-        if (empty($adminFirstName) || !ctype_alpha($adminFirstName))
-            $ajax->error('Admin first name may only include A-Z.');
-
-        if (empty($adminLastName) || !ctype_alpha($adminLastName))
-            $ajax->error('Admin last name may only include A-Z.');
-
-        if (empty($adminUsername) || !validAlnum($adminUsername) || strlen($adminUsername) < 6)
-            $ajax->error('Admin username may only include A-Z 0-9 and must be at least 6 characters.');
-
-        if (!validPassword($adminPassword))
-            $ajax->error('Admin password is invalid. Please review the password requirements.');
-
-        if ($adminPassword != $adminRetypePassword)
-            $ajax->error('Admin passwords do not match.');
-
-        if (empty($teamNumber) || !ctype_digit($teamNumber))
-            $ajax->error('Team number may only be 0-9.');
-
-        if (empty($appName) || !validAlnum($appName) || strlen($appName) < 6)
-            $ajax->error('App Name may only include A-Z 0-9 and must be at least 6 characters.');
-
-        if (empty($primaryColor) || !validAlnum($primaryColor) || strlen($primaryColor) != 6)
-            $ajax->error('Primary color may only include A-F 0-9 and must be 6 characters.');
-
-        if (empty($secondaryColor) || !validAlnum($secondaryColor) || strlen($secondaryColor) != 6)
-            $ajax->error('Primary color may only include A-F 0-9 and must be 6 characters.');
-
         $captchaKey = $_POST['captchaKey'];
 
         $ch = curl_init();
@@ -140,10 +119,58 @@ switch ($_POST['action'])
 
         if($response['success'])
         {
+            if (empty($username) || !validAlnum($username) || strlen($username) < 6)
+                $ajax->error('Account Username may only include A-Z 0-9 and must be at least 6 characters.');
 
-            $db = new Database();
-            $uidSuccess = false;
-            $dbId = "";
+            if (empty($email))
+                $ajax->error('Email must not be empty.');
+
+            //check if any of the accounts details are already taken
+            $accounts = Accounts::getObjects();
+            foreach ($accounts as $account) {
+                if ($account->Username == $username)
+                    $ajax->error('The username provided is already in use.');
+
+                if ($account->Email == $email)
+                    $ajax->error('The email address provided is already in use.');
+            }
+
+            if (!validPassword($password))
+                $ajax->error('Main account password is invalid. Please review the password requirements.');
+
+            if ($password != $retypePassword)
+                $ajax->error('Main account passwords do not match.');
+
+            if (empty($adminFirstName) || !ctype_alpha($adminFirstName))
+                $ajax->error('Admin first name may only include A-Z.');
+
+            if (empty($adminLastName) || !ctype_alpha($adminLastName))
+                $ajax->error('Admin last name may only include A-Z.');
+
+            if (empty($adminUsername) || !validAlnum($adminUsername) || strlen($adminUsername) < 6)
+                $ajax->error('Admin username may only include A-Z 0-9 and must be at least 6 characters.');
+
+            if (!validPassword($adminPassword))
+                $ajax->error('Admin password is invalid. Please review the password requirements.');
+
+            if ($adminPassword != $adminRetypePassword)
+                $ajax->error('Admin passwords do not match.');
+
+            if (empty($teamNumber) || !ctype_digit($teamNumber))
+                $ajax->error('Team number may only be 0-9.');
+
+            if (empty($appName) || !validAlnum($appName) || strlen($appName) < 6)
+                $ajax->error('App Name may only include A-Z 0-9 and must be at least 6 characters.');
+
+            if (empty($primaryColor) || !validAlnum($primaryColor) || strlen($primaryColor) != 6)
+                $ajax->error('Primary color may only include A-F 0-9 and must be 6 characters.');
+
+            if (empty($secondaryColor) || !validAlnum($secondaryColor) || strlen($secondaryColor) != 6)
+                $ajax->error('Primary color may only include A-F 0-9 and must be 6 characters.');
+
+                $db = new Database();
+                $uidSuccess = false;
+                $dbId = "";
 
             do {
                 //create uuid for the database name
@@ -262,56 +289,6 @@ switch ($_POST['action'])
         $primaryColor = $_POST['primaryColor'];
         $secondaryColor = $_POST['secondaryColor'];
 
-
-        if (empty($username) || !validAlnum($username) || strlen($username) < 6)
-            $ajax->error('Account Username may only include A-Z 0-9 and must be at least 6 characters.');
-
-        if (empty($email))
-            $ajax->error('Email must not be empty.');
-
-        //check if any of the accounts details are already taken
-        $accounts = Accounts::getObjects();
-        foreach ($accounts as $account) {
-            if ($account->Username == $username)
-                $ajax->error('The username provided is already in use.');
-
-            if ($account->Email == $email)
-                $ajax->error('The email address provided is already in use.');
-        }
-
-        if (!validPassword($password))
-            $ajax->error('Main account password is invalid. Please review the password requirements.');
-
-        if ($password != $retypePassword)
-            $ajax->error('Main account passwords do not match.');
-
-        if (empty($adminFirstName) || !ctype_alpha($adminFirstName))
-            $ajax->error('Admin first name may only include A-Z.');
-
-        if (empty($adminLastName) || !ctype_alpha($adminLastName))
-            $ajax->error('Admin last name may only include A-Z.');
-
-        if (empty($adminUsername) || !validAlnum($adminUsername) || strlen($adminUsername) < 6)
-            $ajax->error('Admin username may only include A-Z 0-9 and must be at least 6 characters.');
-
-        if (!validPassword($adminPassword))
-            $ajax->error('Admin password is invalid. Please review the password requirements.');
-
-        if ($adminPassword != $adminRetypePassword)
-            $ajax->error('Admin passwords do not match.');
-
-        if (empty($teamNumber) || !ctype_digit($teamNumber))
-            $ajax->error('Team number may only be 0-9.');
-
-        if (empty($appName) || !validAlnum($appName) || strlen($appName) < 6)
-            $ajax->error('App Name may only include A-Z 0-9 and must be at least 6 characters.');
-
-        if (empty($primaryColor) || !validAlnum($primaryColor) || strlen($primaryColor) != 6)
-            $ajax->error('Primary color may only include A-F 0-9 and must be 6 characters.');
-
-        if (empty($secondaryColor) || !validAlnum($secondaryColor) || strlen($secondaryColor) != 6)
-            $ajax->error('Primary color may only include A-F 0-9 and must be 6 characters.');
-
         $captchaKey = $_POST['captchaKey'];
 
         $ch = curl_init();
@@ -327,6 +304,55 @@ switch ($_POST['action'])
 
         if($response['success'])
         {
+
+            if (empty($username) || !validAlnum($username) || strlen($username) < 6)
+                $ajax->error('Account Username may only include A-Z 0-9 and must be at least 6 characters.');
+
+            if (empty($email))
+                $ajax->error('Email must not be empty.');
+
+            //check if any of the accounts details are already taken
+            $accounts = Accounts::getObjects();
+            foreach ($accounts as $account) {
+                if ($account->Username == $username)
+                    $ajax->error('The username provided is already in use.');
+
+                if ($account->Email == $email)
+                    $ajax->error('The email address provided is already in use.');
+            }
+
+            if (!validPassword($password))
+                $ajax->error('Main account password is invalid. Please review the password requirements.');
+
+            if ($password != $retypePassword)
+                $ajax->error('Main account passwords do not match.');
+
+            if (empty($adminFirstName) || !ctype_alpha($adminFirstName))
+                $ajax->error('Admin first name may only include A-Z.');
+
+            if (empty($adminLastName) || !ctype_alpha($adminLastName))
+                $ajax->error('Admin last name may only include A-Z.');
+
+            if (empty($adminUsername) || !validAlnum($adminUsername) || strlen($adminUsername) < 6)
+                $ajax->error('Admin username may only include A-Z 0-9 and must be at least 6 characters.');
+
+            if (!validPassword($adminPassword))
+                $ajax->error('Admin password is invalid. Please review the password requirements.');
+
+            if ($adminPassword != $adminRetypePassword)
+                $ajax->error('Admin passwords do not match.');
+
+            if (empty($teamNumber) || !ctype_digit($teamNumber))
+                $ajax->error('Team number may only be 0-9.');
+
+            if (empty($appName) || !validAlnum($appName) || strlen($appName) < 6)
+                $ajax->error('App Name may only include A-Z 0-9 and must be at least 6 characters.');
+
+            if (empty($primaryColor) || !validAlnum($primaryColor) || strlen($primaryColor) != 6)
+                $ajax->error('Primary color may only include A-F 0-9 and must be 6 characters.');
+
+            if (empty($secondaryColor) || !validAlnum($secondaryColor) || strlen($secondaryColor) != 6)
+                $ajax->error('Primary color may only include A-F 0-9 and must be 6 characters.');
 
             $db = new Database();
             $uidSuccess = false;
@@ -665,7 +691,7 @@ switch ($_POST['action'])
                     }
                 }
             } else
-                $ajax->error('Error importing SQL tables.');
+                $ajax->error('Error importing SQL tables. Please try again.');
 
             $ajax->success('Account created successfully!');
         }

@@ -282,7 +282,7 @@ interface DataTypes
 
     const TEXT_PLAIN_TEXT = "Text";
     const INT_PLAIN_TEXT = "Number";
-    const BOOL_PLAIN_TEXT = "True & False";
+    const BOOL_PLAIN_TEXT = "Checkbox";
 
     const DATA_TYPES = [self::INT, self::BOOL, self::TEXT];
 

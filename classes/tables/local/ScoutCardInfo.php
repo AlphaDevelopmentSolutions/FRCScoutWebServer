@@ -72,6 +72,28 @@ class ScoutCardInfo extends LocalTable
     }
 
     /**
+     * Overrides parent save function to overwrite existing records in case of conflicts
+     * @return bool
+     */
+    public function save()
+    {
+        require_once(ROOT_DIR . '/classes/tables/core/Teams.php');
+        require_once(ROOT_DIR . '/classes/tables/core/Events.php');
+        require_once(ROOT_DIR . '/classes/tables/core/Matches.php');
+        require_once(ROOT_DIR . '/classes/tables/core/Years.php');
+        require_once(ROOT_DIR . '/classes/tables/local/ScoutCardInfoKeys.php');
+
+        $scoutCardInfoArray = self::getObjects(ScoutCardInfoKeys::withId($this->PropertyKeyId), Years::withId($this->YearId), Events::withId($this->EventId), Matches::withId($this->MatchId), Teams::withId($this->TeamId));
+
+        foreach ($scoutCardInfoArray as $scoutCardInfo)
+        {
+            $this->Id = $scoutCardInfo->Id;
+        }
+
+        return parent::save();
+    }
+
+    /**
      * Returns the object once converted into HTML
      * @return string
      */

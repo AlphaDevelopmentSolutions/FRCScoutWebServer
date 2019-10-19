@@ -21,7 +21,6 @@ if(!getUser()->IsAdmin)
 $class = $_POST['class'];
 unset($_POST['class']);
 
-
 switch ($_POST['action'])
 {
     case 'save':
@@ -108,8 +107,9 @@ switch ($_POST['action'])
                 if(!in_array($scoutCardInfoKey->DataType, DataTypes::DATA_TYPES))
                     $ajax->error("Invalid datatype.");
 
-                if($scoutCardInfoKey->DataType != ScoutCardInfoKeys::withId($scoutCardInfoKey->Id)->DataType && count(ScoutCardInfo::getObjects($scoutCardInfoKey)) > 0)
-                    $ajax->error("You can't change datatypes if you already have scout cards populated under this key.");
+                if($scoutCardInfoKey->Id > 0)
+                    if($scoutCardInfoKey->DataType != ScoutCardInfoKeys::withId($scoutCardInfoKey->Id)->DataType && count(ScoutCardInfo::getObjects($scoutCardInfoKey)) > 0)
+                        $ajax->error("You can't change datatypes if you already have scout cards populated under this key.");
 
                 $scoutCardInfoKey->NullZeros = $scoutCardInfoKey->NullZeros == 1 ? true : false;
                 $scoutCardInfoKey->IncludeInStats = $scoutCardInfoKey->IncludeInStats == 1 ? true : false;
@@ -229,13 +229,14 @@ switch ($_POST['action'])
                     if (empty($config->Value))
                         $ajax->error("Value name cannot be empty.");
 
-                    if (!$config->save())
-                        $ajax->error("User failed to save.");
+                    if ($config->save())
+                        $ajax->success("Config saved successfully.");
                 }
 
-                $ajax->success("Config saved successfully.");
+                $ajax->error("Config failed to save.");
 
                 break;
+
             //endregion
 
             //region Info Classes
@@ -564,20 +565,5 @@ function validDate($text)
     $text = str_replace('-','', $text);
     $text = str_replace(':','', $text);
 
-    return ctype_alnum(trim($text));
-}
-
-/**
- * Checks if text is valid description
- * @param string $text to check if valid description
- * @return bool
- */
-function validDescription($text)
-{
-    $text = str_replace(' ','', $text);
-    $text = str_replace('.','', $text);
-    $text = str_replace(',','', $text);
-    $text = str_replace('?','', $text);
-    $text = str_replace('!','', $text);
     return ctype_alnum(trim($text));
 }

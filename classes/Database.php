@@ -27,17 +27,6 @@ class Database extends PDO
     }
 
     /**
-     * Quotes a param with MySQL approved quotes
-     * @param string $string to quote
-     * @param int $parameter_type
-     * @return string
-     */
-    function quote($string, $parameter_type = PDO::PARAM_STR)
-    {
-        return parent::quote($string, $parameter_type);
-    }
-
-    /**
      * Quotes columns with ` for MySQL approved column quotes
      * @param string $column to quote
      * @return string

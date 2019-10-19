@@ -1,37 +1,50 @@
 <?php
-require_once('../config.php');
-require_once('../classes/tables/core/Teams.php');
-require_once('../classes/tables/core/Events.php');
-require_once('../classes/tables/core/EventTeamList.php');
-
-set_time_limit(600);
-
-$database = new Database('core');
-$events = $database->query('DELETE FROM event_team_list');
-unset($database);
-
-foreach(Events::getObjects() as $event)
+if(php_sapi_name() != 'cli')
+    header("HTTP/1.0 401");
+else
 {
-    getTeamsAtEvent($event->BlueAllianceId);
-}
+    $bypassCoreCheck = true;
+    require_once('../config.php');
+    require_once('../classes/tables/core/Years.php');
+    require_once('../classes/tables/core/Teams.php');
+    require_once('../classes/tables/core/Events.php');
+    require_once('../classes/tables/core/EventTeamList.php');
 
-function getTeamsAtEvent($eventCode)
-{
-    $url = "https://www.thebluealliance.com/api/v3/event/" . $eventCode . "/teams?X-TBA-Auth-Key=" . BLUE_ALLIANCE_KEY;
+    set_time_limit(600);
 
-    $ch = curl_init();
+    $database = new Database('core');
+    $events = $database->query('DELETE FROM event_team_list');
+    unset($database);
 
-    curl_setopt($ch, CURLOPT_URL, $url);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
-    $response = curl_exec($ch);
-
-    $jsonObj = json_decode($response);
-    foreach ($jsonObj as $obj)
+    $yearId = empty($argv[1]) ? readline("Enter Year: ") : $argv[1];
+    $events = Events::getObjects(Years::withId($yearId));
+    $eventsSize = sizeof($events);
+    for($i = 0; $i < $eventsSize; $i++)
     {
-        $eventTeamList = new EventTeamList();
-        $eventTeamList->TeamId = $obj->team_number;
-        $eventTeamList->EventId = $eventCode;
-        $eventTeamList->save();
+        $event = $events[$i];
+        $totalPercent = round($i / $eventsSize, 2) * 100;
+
+        $url = "https://www.thebluealliance.com/api/v3/event/" . $event->BlueAllianceId . "/teams?X-TBA-Auth-Key=" . BLUE_ALLIANCE_KEY;
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+        $response = curl_exec($ch);
+
+        $eventTeamListJson = json_decode($response);
+        $eventTeamListSize = sizeof($eventTeamListJson);
+        for($j = 0; $j < $eventTeamListSize; $j++)
+        {
+            $percent = round($j / $eventTeamListSize, 2) * 100;
+
+            $obj = $eventTeamListJson[$j];
+            $eventTeamList = new EventTeamList();
+            $eventTeamList->TeamId = $obj->team_number;
+            $eventTeamList->EventId = $event->BlueAllianceId;
+
+            echo "$i / {$eventsSize} - {$totalPercent}% - $j / {$eventTeamListSize} - {$percent}% - Adding team {$obj->team_number} to event {$event->toString()}...\n";
+
+            $eventTeamList->save();
+        }
     }
 }
 ?>

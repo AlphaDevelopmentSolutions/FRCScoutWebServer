@@ -159,7 +159,6 @@ abstract class Table
             $cols[] = 'Id';
             $args[] = $this->Id;
 
-
             if($insertId = self::insertOrUpdateRecords($sql, $cols, $args) > -1)
                 return true;
 

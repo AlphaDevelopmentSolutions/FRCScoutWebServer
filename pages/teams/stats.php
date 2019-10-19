@@ -1,5 +1,6 @@
 <?php
 require_once("../../config.php");
+require_once(ROOT_DIR . "/classes/Ajax.php");
 require_once(ROOT_DIR . "/classes/tables/core/Teams.php");
 require_once(ROOT_DIR . "/classes/tables/core/Events.php");
 require_once(ROOT_DIR . "/classes/tables/core/Years.php");
@@ -179,6 +180,28 @@ $event = Events::withId($eventId);
 </div>
 <?php require_once(INCLUDES_DIR . 'bottom-scripts.php') ?>
 <script defer src="<?php echo JS_URL ?>stat-charts.js.php?eventId=<?php echo $event->BlueAllianceId ?>"></script>
-<script defer src="<?php echo JS_URL ?>get-opr.js"></script>
+<script>
+    $(document).ready(function ()
+    {
+        $.post('<?php echo AJAX_URL ?>api.php',
+            {
+                action: 'opr',
+                eventId: $('#eventId').val()
+            },
+            function (data)
+            {
+                var data = JSON.parse(data);
+
+                //check success status code
+                if (data['<?php echo Ajax::$STATUS_KEY ?>'] == '<?php echo Ajax::$SUCCESS_STATUS_CODE ?>')
+                {
+                    var response = data['<?php echo Ajax::$RESPONSE_KEY ?>'];
+                    $('#opr').html(Math.round(response['oprs']['frc' + $('#teamId').val()] * 100.00) / 100.00);
+                    $('#dpr').html(Math.round(response['dprs']['frc' + $('#teamId').val()] * 100.00) / 100.00);
+                }
+            }
+        );
+    });
+</script>
 </body>
 </html>

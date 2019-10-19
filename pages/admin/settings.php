@@ -126,7 +126,7 @@ interface AdminPanels
                             </span>
                             <div class="setting-value mdl-textfield mdl-js-textfield mdl-textfield--floating-label"
                                  data-upgraded=",MaterialTextfield">
-                                <input class="<?php if (strpos(strtolower($titleText), "color")) echo "jscolor" ?> mdl-textfield__input"
+                                <input maxlength="3000" class="<?php if (strpos(strtolower($titleText), "color")) echo "jscolor" ?> mdl-textfield__input"
                                        type="text" value="<?php echo $config->Value ?>"
                                        name="<?php echo $config->Key ?>" id="<?php echo $config->Key ?>">
                             </div>
@@ -155,7 +155,7 @@ interface AdminPanels
                         </span>
                         <div class="setting-value mdl-textfield mdl-js-textfield mdl-textfield--floating-label" data-upgraded=",MaterialTextfield">
 
-                            <input class="mdl-textfield__input" type="text" value="<?php echo $obj->FirstName ?>" name="FirstName" id="FirstName">
+                            <input maxlength="45" class="mdl-textfield__input" type="text" value="<?php echo $obj->FirstName ?>" name="FirstName" id="FirstName">
                         </div>
 
                         <span class="setting-title">
@@ -168,7 +168,7 @@ interface AdminPanels
                             </div>
                         </span>
                         <div class="setting-value mdl-textfield mdl-js-textfield mdl-textfield--floating-label" data-upgraded=",MaterialTextfield">
-                            <input class="mdl-textfield__input" type="text" value="<?php echo $obj->LastName ?>" name="LastName" id="LastName">
+                            <input maxlength="45" class="mdl-textfield__input" type="text" value="<?php echo $obj->LastName ?>" name="LastName" id="LastName">
                         </div>
 
                         <span class="setting-title">
@@ -198,7 +198,7 @@ interface AdminPanels
                                 </div>
                             </span>
                             <div class="setting-value mdl-textfield mdl-js-textfield mdl-textfield--floating-label" data-upgraded=",MaterialTextfield">
-                                <input autocomplete="new-password" class="mdl-textfield__input" type="text" value="<?php echo $obj->UserName ?>" name="UserName" id="UserName" <?php echo $obj->IsAdmin == 1 ? "" : "disabled" ?>>
+                                <input maxlength="45" autocomplete="new-password" class="mdl-textfield__input" type="text" value="<?php echo $obj->UserName ?>" name="UserName" id="UserName" <?php echo $obj->IsAdmin == 1 ? "" : "disabled" ?>>
                             </div>
 
                             <span class="setting-title">
@@ -211,7 +211,7 @@ interface AdminPanels
                                 </div>
                             </span>
                             <div class="setting-value mdl-textfield mdl-js-textfield mdl-textfield--floating-label" data-upgraded=",MaterialTextfield">
-                                <input autocomplete="new-password" class="mdl-textfield__input" type="password" value="<?php if(strlen($obj->Password) > 0) echo "•••••••••••••••••" ?>" name="Password" id="Password" <?php echo $obj->IsAdmin == 1 ? "" : "disabled" ?>>
+                                <input maxlength="200" autocomplete="new-password" class="mdl-textfield__input" type="password" value="<?php if(strlen($obj->Password) > 0) echo "•••••••••••••••••" ?>" name="Password" id="Password" <?php echo $obj->IsAdmin == 1 ? "" : "disabled" ?>>
                             </div>
                         </div>
                     </div>
@@ -256,7 +256,7 @@ interface AdminPanels
                             </div>
                         </span>
                         <div class="setting-value mdl-textfield mdl-js-textfield mdl-textfield--floating-label" data-upgraded=",MaterialTextfield">
-                            <input class="mdl-textfield__input" type="text" value="<?php echo $obj->KeyState ?>" name="KeyState" id="KeyState">
+                            <input maxlength="45" class="mdl-textfield__input" type="text" value="<?php echo $obj->KeyState ?>" name="KeyState" id="KeyState">
                         </div>
 
                         <span class="setting-title">
@@ -280,7 +280,7 @@ interface AdminPanels
                             </div>
                         </span>
                         <div class="setting-value mdl-textfield mdl-js-textfield mdl-textfield--floating-label" data-upgraded=",MaterialTextfield">
-                            <input class="mdl-textfield__input" type="text" value="<?php echo $obj->KeyName ?>" name="KeyName" id="KeyName">
+                            <input maxlength="45" class="mdl-textfield__input" type="text" value="<?php echo $obj->KeyName ?>" name="KeyName" id="KeyName">
                         </div>
 
                         <span class="setting-title">
@@ -337,7 +337,7 @@ interface AdminPanels
                             </div>
                         </span>
                         <div class="setting-value mdl-textfield mdl-js-textfield mdl-textfield--floating-label" data-upgraded=",MaterialTextfield">
-                            <input class="mdl-textfield__input" type="text" value="<?php echo $obj->KeyState ?>" name="KeyState" id="KeyState">
+                            <input maxlength="45" class="mdl-textfield__input" type="text" value="<?php echo $obj->KeyState ?>" name="KeyState" id="KeyState">
                         </div>
 
                         <span class="setting-title">
@@ -361,7 +361,7 @@ interface AdminPanels
                             </div>
                         </span>
                         <div class="setting-value mdl-textfield mdl-js-textfield mdl-textfield--floating-label" data-upgraded=",MaterialTextfield">
-                            <input class="mdl-textfield__input" type="text" value="<?php echo $obj->KeyName ?>" name="KeyName" id="KeyName">
+                            <input maxlength="45" class="mdl-textfield__input" type="text" value="<?php echo $obj->KeyName ?>" name="KeyName" id="KeyName">
                         </div>
 
                         <span class="setting-title">
@@ -390,7 +390,7 @@ interface AdminPanels
                             </div>
                         </span>
                         <div class="setting-value mdl-textfield mdl-js-textfield mdl-textfield--floating-label" data-upgraded=",MaterialTextfield">
-                            <input id="DataType" class="mdl-textfield__input mdl-js-button" type="text" value="<?php echo DataTypes::DATATYPE_TO_PLAIN_TEXT_ARRAY[$obj->DataType] ?>" name="DataType" id="DataType"/>
+                            <input maxlength="4" id="DataType" class="mdl-textfield__input mdl-js-button" type="text" value="<?php echo DataTypes::DATATYPE_TO_PLAIN_TEXT_ARRAY[$obj->DataType] ?>" name="DataType" id="DataType"/>
                             <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect" for="DataType">
                                 <?php
                                 foreach (DataTypes::DATATYPE_TO_PLAIN_TEXT_ARRAY as $key => $value)
@@ -496,7 +496,7 @@ interface AdminPanels
                                 </div>
                             </span>
                             <div class="setting-value mdl-textfield mdl-js-textfield mdl-textfield--floating-label" data-upgraded=",MaterialTextfield">
-                                <input class="mdl-textfield__input" type="text" value="<?php echo $obj->Title ?>" name="Title" id="Title">
+                                <input maxlength="3000" class="mdl-textfield__input" type="text" value="<?php echo $obj->Title ?>" name="Title" id="Title">
                             </div>
 
                             <span class="setting-title">
@@ -509,7 +509,7 @@ interface AdminPanels
                                 </div>
                             </span>
                             <div class="mdl-textfield mdl-js-textfield">
-                                <textarea class="mdl-textfield__input" type="text" rows= "4" id="Description" name="Description"><?php echo $obj->Description ?></textarea>
+                                <textarea maxlength="3000" class="mdl-textfield__input" type="text" rows= "4" id="Description" name="Description"><?php echo $obj->Description ?></textarea>
                                 <label class="mdl-textfield__label" for="Description"></label>
                             </div>
                         </div>

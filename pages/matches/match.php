@@ -131,7 +131,7 @@ if(!empty($allianceColor))
                 $(recordDiv).find('.scout-card-info-field').each(function ()
                 {
                     //prevent blank items from being created
-                    if($(this).val() !== "")
+                    if(!($(this).attr('info-id') == '-1' && $(this).val() == ""))
                         saveableRecords.push(this);
                 });
                 modifiedElements = 0;
@@ -142,7 +142,6 @@ if(!empty($allianceColor))
 
                 //save each saveable record
                 $(saveableRecords).each(function () {
-                    //prevent blank items from being created
                     saveRecord(recordType, recordId, this);
                 });
             }

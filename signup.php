@@ -22,7 +22,7 @@ require_once(ROOT_DIR . '/classes/Ajax.php');
                         <strong class="card-section-header">Account Details</strong>
                         <div class="mdl-card__supporting-text">
                             <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                                <input autocomplete="new-password" required class="mdl-textfield__input" type="text" name="username" id="username" placeholder=" ">
+                                <input maxlength="255" autocomplete="new-password" required class="mdl-textfield__input" type="text" name="username" id="username" placeholder=" ">
                                 <label class="mdl-textfield__label" >Username</label>
                                 <div class="mdl-tooltip mdl-tooltip--large" for="username">
                                     Username that will be used to log into the landing page and main site.
@@ -30,7 +30,7 @@ require_once(ROOT_DIR . '/classes/Ajax.php');
                             </div>
 
                             <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                                <input autocomplete="new-password" required class="mdl-textfield__input" type="email" name="email" id="email" placeholder=" ">
+                                <input maxlength="255" autocomplete="new-password" required class="mdl-textfield__input" type="email" name="email" id="email" placeholder=" ">
                                 <label class="mdl-textfield__label" >Email</label>
                                 <div class="mdl-tooltip mdl-tooltip--large" for="email">
                                     Contact email for the team.
@@ -76,7 +76,7 @@ require_once(ROOT_DIR . '/classes/Ajax.php');
                         <strong class="card-section-header">App Admin Account</strong>
                         <div class="mdl-card__supporting-text">
                             <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                                <input autocomplete="new-password" required class="mdl-textfield__input" type="text" name="adminFirstName" id="adminFirstName" placeholder=" ">
+                                <input maxlength="45" autocomplete="new-password" required class="mdl-textfield__input" type="text" name="adminFirstName" id="adminFirstName" placeholder=" ">
                                 <label class="mdl-textfield__label" >First Name</label>
                                 <div class="mdl-tooltip mdl-tooltip--large" for="adminFirstName">
                                     First name for your teams admin account.
@@ -84,7 +84,7 @@ require_once(ROOT_DIR . '/classes/Ajax.php');
                             </div>
 
                             <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                                <input autocomplete="new-password" required class="mdl-textfield__input" type="text" name="adminLastName" id="adminLastName" placeholder=" ">
+                                <input maxlength="45" autocomplete="new-password" required class="mdl-textfield__input" type="text" name="adminLastName" id="adminLastName" placeholder=" ">
                                 <label class="mdl-textfield__label" >Last Name</label>
                                 <div class="mdl-tooltip mdl-tooltip--large" for="adminLastName">
                                     Last name for your teams admin account.
@@ -92,7 +92,7 @@ require_once(ROOT_DIR . '/classes/Ajax.php');
                             </div>
 
                             <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                                <input autocomplete="new-password" required class="mdl-textfield__input" type="text" name="adminUsername" id="adminUsername" placeholder=" ">
+                                <input maxlength="45" autocomplete="new-password" required class="mdl-textfield__input" type="text" name="adminUsername" id="adminUsername" placeholder=" ">
                                 <label class="mdl-textfield__label" >Username</label>
                                 <div class="mdl-tooltip mdl-tooltip--large" for="adminUsername">
                                     Username for your teams page admin account.
@@ -138,7 +138,7 @@ require_once(ROOT_DIR . '/classes/Ajax.php');
                         <strong class="card-section-header">App Details</strong>
                         <div class="mdl-card__supporting-text">
                             <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                                <input  autocomplete="new-password" required class="mdl-textfield__input" type="text" name="teamNumber" id="teamNumber" placeholder=" ">
+                                <input autocomplete="new-password" required class="mdl-textfield__input" type="number" name="teamNumber" id="teamNumber" placeholder=" ">
                                 <label class="mdl-textfield__label" >Team Number</label>
                                 <div class="mdl-tooltip mdl-tooltip--large" for="teamNumber">
                                     Enter your team number and select it from the list.
@@ -146,7 +146,7 @@ require_once(ROOT_DIR . '/classes/Ajax.php');
                             </div>
 
                             <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                                <input autocomplete="new-password" required class="mdl-textfield__input" type="text" id="appName" placeholder=" ">
+                                <input maxlength="3000" autocomplete="new-password" required class="mdl-textfield__input" type="text" id="appName" placeholder=" ">
                                 <label class="mdl-textfield__label" >App Name</label>
                                 <div class="mdl-tooltip mdl-tooltip--large" for="appName">
                                     The name of your teams app.
@@ -154,7 +154,7 @@ require_once(ROOT_DIR . '/classes/Ajax.php');
                             </div>
 
                             <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                                <input autocomplete="new-password" required  class="jscolor mdl-textfield__input" type="text" id="primaryColor" value="03A9F4">
+                                <input maxlength="6" autocomplete="new-password" required  class="jscolor mdl-textfield__input" type="text" id="primaryColor" value="03A9F4">
                                 <label class="mdl-textfield__label" >Primary Color</label>
                                 <div class="mdl-tooltip mdl-tooltip--large" for="primaryColor">
                                     Primary color for the web and mobile application.
@@ -162,7 +162,7 @@ require_once(ROOT_DIR . '/classes/Ajax.php');
                             </div>
 
                             <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                                <input autocomplete="new-password" required  class="jscolor mdl-textfield__input" type="text" id="secondaryColor" value="0288D1">
+                                <input maxlength="6" autocomplete="new-password" required  class="jscolor mdl-textfield__input" type="text" id="secondaryColor" value="0288D1">
                                 <label class="mdl-textfield__label" >Secondary Color</label>
                                 <div class="mdl-tooltip mdl-tooltip--large" for="secondaryColor">
                                     Darker primary color, usually a color accent, for the web and mobile application
@@ -170,7 +170,7 @@ require_once(ROOT_DIR . '/classes/Ajax.php');
                             </div>
 
                             <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label" style="width: 100%;">
-                                <input autocomplete="new-password" required  class="mdl-textfield__input" type="text" id="apiKey" placeholder=" ">
+                                <input maxlength="3000" autocomplete="new-password" required  class="mdl-textfield__input" type="text" id="apiKey" placeholder=" ">
                                 <label class="mdl-textfield__label" >API Key</label>
                                 <div class="mdl-tooltip mdl-tooltip--large" for="apiKey">
                                     API key used for the mobile app to communicate and access data.

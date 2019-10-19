@@ -1,48 +1,74 @@
 <?php
-require_once('../config.php');
-require_once('../classes/tables/core/Teams.php');
-require_once('../classes/tables/core/Events.php');
-require_once('../classes/tables/core/EventTeamList.php');
-
-set_time_limit(600);
-
-$teamIds = array();
-
-foreach(Teams::getObjects() as $team)
+if(php_sapi_name() != 'cli')
+    header("HTTP/1.0 401");
+else
 {
-    getSocialMedia($team);
-}
+    $bypassCoreCheck = true;
+    require_once('../config.php');
+    require_once('../classes/tables/core/Teams.php');
 
-function getSocialMedia($team)
-{
-    $url = "https://www.thebluealliance.com/api/v3/team/frc" . $team->Id . "/social_media?X-TBA-Auth-Key=gGDqr1h7gbcdKAumaFgnuzPJYDox7vz6gyX1a8r9nA0VPPLYBD8q1Uj8byvUR5Lp";
+    set_time_limit(600);
 
-    $ch = curl_init();
-
-    curl_setopt($ch, CURLOPT_URL, $url);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
-    $response = curl_exec($ch);
-
-    $jsonObj = json_decode($response);
-    foreach ($jsonObj as $obj)
+    /**
+     * @param Teams $team
+     */
+    function getSocialMedia($team)
     {
-        if (strpos($obj->type, 'facebook') !== false)
-        {
-            $team->FacebookURL = $obj->foreign_key;
-        } else if (strpos($obj->type, 'twitter') !== false)
-        {
-            $team->TwitterURL = $obj->foreign_key;
-        } else if (strpos($obj->type, 'instagram') !== false)
-        {
-            $team->InstagramURL = $obj->foreign_key;
-        } else if (strpos($obj->type, 'youtube') !== false)
-        {
-            $team->YoutubeURL = $obj->foreign_key;
-        }
+        $url = "https://www.thebluealliance.com/api/v3/team/frc" . $team->Id . "/social_media?X-TBA-Auth-Key=" . BLUE_ALLIANCE_KEY;
 
-        $team->save();
+        $ch = curl_init();
+
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        $response = curl_exec($ch);
+
+        $jsonObj = json_decode($response);
+        if(sizeof($jsonObj) > 0)
+        {
+            $facebookUrl = null;
+            $twitterUrl = null;
+            $instagramUrl = null;
+            $youtubeUrl = null;
+
+            foreach ($jsonObj as $obj)
+            {
+                if (strpos($obj->type, 'facebook') !== false)
+                {
+                    $facebookUrl = $obj->foreign_key;
+
+                } else if (strpos($obj->type, 'twitter') !== false)
+                {
+                    $twitterUrl = $obj->foreign_key;
+
+                } else if (strpos($obj->type, 'instagram') !== false)
+                {
+                    $instagramUrl = $obj->foreign_key;
+
+                } else if (strpos($obj->type, 'youtube') !== false)
+                {
+                    $youtubeUrl = $obj->foreign_key;
+                }
+            }
+
+            $team->FacebookURL = $facebookUrl;
+            $team->TwitterURL = $twitterUrl;
+            $team->InstagramURL = $instagramUrl;
+            $team->YoutubeURL = $youtubeUrl;
+
+            $team->save();
+        }
     }
 
+    $teams = Teams::getObjects();
+    $teamSize = sizeof($teams);
+    for($i = 0; $i < $teamSize; $i++)
+    {
+        $team = $teams[$i];
+        $percent = round($i / $teamSize, 2) * 100;
+
+        echo "$i / {$teamSize} - {$percent}% - Getting social media for team {$team->toString()} ...\n";
+        getSocialMedia($team);
+    }
 }
 
 ?>
