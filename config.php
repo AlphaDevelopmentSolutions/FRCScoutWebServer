@@ -47,7 +47,7 @@ foreach(CoreConfig::getObjects() as $config)
 }
 
 define('ROOT_URL', 'https://' . $_SERVER['SERVER_NAME']);
-define('URL_PATH', ((coreLoggedIn()) ? '/' . getCoreAccount()->TeamId . '' : ''));
+define('URL_PATH', '/');
 
 /**
  * MEDIA FILES
@@ -67,7 +67,7 @@ define('JS_URL', '/js/');
 define('AJAX_URL', '/ajax/');
 
 
-define('PAGES_URL', URL_PATH . '/pages/');
+define('PAGES_URL', URL_PATH . 'pages/');
 define('ADMIN_URL', PAGES_URL . 'admin/');
 define('CHECKLISTS_URL', PAGES_URL . 'checklists/');
 define('EVENTS_URL', PAGES_URL . 'events/');
