@@ -321,18 +321,17 @@ switch ($_POST['action'])
             case ChecklistItemResults::class:
 
                 $checklistItemResult = ChecklistItemResults::withProperties($_POST['data']);
-                $oldChecklistItemResult = ChecklistItemResults::withId($checklistItemResult->Id);
 
-                if(empty($checklistItemResult->Id))
+                if(empty($checklistItemResult->ChecklistItemId))
                     $ajax->error("Checklist item id cannot be empty.");
 
-                if(!ctype_digit($checklistItemResult->Id))
+                if(!ctype_digit($checklistItemResult->ChecklistItemId))
                     $ajax->error("Checklist item id may only be numeric (0-9).");
 
-                if(empty($oldChecklistItemResult->MatchId))
+                if(empty($checklistItemResult->MatchId))
                     $ajax->error("Match id cannot be empty.");
 
-                if(!ctype_alnum(str_replace("_", "", $oldChecklistItemResult->MatchId)))
+                if(!ctype_alnum(str_replace("_", "", $checklistItemResult->MatchId)))
                     $ajax->error("Match id may only be alpha-numeric (A-Z 0-9).");
 
                 if(empty($checklistItemResult->Status))
@@ -347,11 +346,7 @@ switch ($_POST['action'])
                 if(!validDate($checklistItemResult->CompletedDate))
                     $ajax->error("Invalid Date.");
 
-                $oldChecklistItemResult->Status = $checklistItemResult->Status;
-                $oldChecklistItemResult->CompletedBy = $checklistItemResult->CompletedBy;
-                $oldChecklistItemResult->CompletedDate = $checklistItemResult->CompletedDate;
-
-                if($oldChecklistItemResult->save())
+                if($checklistItemResult->save())
                     $ajax->success("Scout card saved successfully.");
 
                 else

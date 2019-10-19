@@ -92,25 +92,23 @@ class ChecklistItems extends LocalTable
     }
 
     /**
-     * Returns the object once converted into HTML
-     * @return string
+     * Displays the object once converted into HTML
      */
     public function toHtml()
     {
-        $html =
-            '<div class="mdl-layout__tab-panel is-active" id="overview">
-                <section class="section--center mdl-grid mdl-grid--no-spacing mdl-shadow--2dp">
-                    <div class="mdl-card mdl-cell mdl-cell--12-col">
-                        <div class="mdl-card__supporting-text">
-                            <h4>' . $this->toString() . '</h4>
-                            ' . $this->Description . '<br><br>
-                        </div>
+        ?>
+        <div class="mdl-layout__tab-panel is-active" id="overview">
+            <section class="section--center mdl-grid mdl-grid--no-spacing mdl-shadow--2dp">
+                <div class="mdl-card mdl-cell mdl-cell--12-col">
+                    <div class="mdl-card__supporting-text">
+                        <h4><?php echo $this->toString() ?></h4>
+                        <?php echo $this->Description ?><br><br>
                     </div>
-                </section>
-            </div>';
-
-        return $html;
-    }
+                </div>
+            </section>
+        </div>
+<?php
+     }
 
     /**
      * Compiles the name of the object when displayed as a string

@@ -106,9 +106,11 @@ function saveRecord(recordType, recordId, record = undefined)
             data =
                 {
                     Id: recordId,
-                    Status: $('#Status' + recordId).val(),
-                    CompletedBy: $('#CompletedBy' + recordId).val(),
-                    CompletedDate: $('#CompletedDate' + recordId).val()
+                    ChecklistItemId: $(record).attr('checklist-item-id'),
+                    MatchId: $(record).attr('match-id'),
+                    Status: $(record).find('.Status').val(),
+                    CompletedBy: $(record).find('.CompletedBy').val(),
+                    CompletedDate: $(record).find('.CompletedDate').val() + ' ' + $(record).find('.CompletedTime').val() + ":00"
                 };
             break;
     }
