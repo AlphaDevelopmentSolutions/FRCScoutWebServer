@@ -313,6 +313,14 @@ html, body {
   width: 215px;
   height: 200px;
   background-size: cover !important;
+  background: var(--default-color-primary) no-repeat 50% 50%;
+}
+
+.year-card-image
+{
+  width: 215px;
+  height: 200px;
+  background-size: cover !important;
   background: no-repeat 50% 50%;
 }
 

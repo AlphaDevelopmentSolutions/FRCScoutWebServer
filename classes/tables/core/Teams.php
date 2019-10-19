@@ -213,7 +213,7 @@ class Teams extends CoreTable
             $html .=
                     '<div style="height: unset">' .
                     ((empty($robotMedia->FileURI)) ? '' : '<a href="' . TEAMS_URL . 'photos?eventId=' . $event->BlueAllianceId . '&teamId=' . $this->Id . '">') .
-                        '<div class="team-card-image" style="background-image: url(' . ((empty($robotMedia->FileURI)) ? IMAGES_URL . 'frc_logo.jpg' : ROBOT_MEDIA_THUMBS_URL . $robotMedia->FileURI) . ')"></div>' .
+                        '<div class="team-card-image" style="background-image: url(' . ((empty($robotMedia->FileURI)) ? IMAGES_URL . 'app-icon.png' : ROBOT_MEDIA_THUMBS_URL . $robotMedia->FileURI) . ')"></div>' .
                     ((empty($robotMedia->FileURI)) ? '' : '</a>') .
                     '</div>';
 
