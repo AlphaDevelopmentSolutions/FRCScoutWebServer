@@ -36,6 +36,29 @@ class ChecklistItemResults extends LocalTable implements Status
     }
 
     /**
+     * Overrides parent save function to overwrite existing records in case of conflicts
+     * @return bool
+     */
+    public function save()
+    {
+        require_once(ROOT_DIR . '/classes/tables/core/Teams.php');
+        require_once(ROOT_DIR . '/classes/tables/core/Events.php');
+        require_once(ROOT_DIR . '/classes/tables/core/Matches.php');
+        require_once(ROOT_DIR . '/classes/tables/core/Years.php');
+        require_once(ROOT_DIR . '/classes/tables/local/ScoutCardInfoKeys.php');
+
+        $objs = self::getObjects(Matches::withId($this->MatchId));
+
+        foreach ($objs as $obj)
+        {
+            if($this->ChecklistItemId == $obj->ChecklistItemId)
+                $this->Id = $obj->Id;
+        }
+
+        return parent::save();
+    }
+
+    /**
      * Prints the object once converted into HTML
      */
     public function toHtml()
