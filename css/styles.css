@@ -25,6 +25,19 @@ html, body {
   margin: 0;
   padding: 0;
 }
+
+@media (max-width: 600px) {
+  .mdl-layout__title, .mdl-layout-title {
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 260px) {
+  .mdl-layout__title, .mdl-layout-title {
+    font-size: 10px;
+  }
+}
+
 .mdl-demo .mdl-layout__header-row {
   padding-left: 40px;
 }
@@ -494,6 +507,8 @@ html, body {
   padding: 20px;
   width: 300px;
 }
+
+
 
 .account-login > div
 {
