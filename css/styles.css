@@ -488,6 +488,22 @@ html, body {
   margin: 0 auto;
 }
 
+.account-login
+{
+  text-align: center;
+  padding: 20px;
+  width: 300px;
+}
+
+.account-login > div
+{
+  padding: 20px;
+  background-color: white;
+  border-radius: 4px;
+  -webkit-box-shadow: 0 0 5px;
+  box-shadow: 0 0 5px;
+}
+
 .center-div-horizontal-outer
 {
   text-align: center;

@@ -41,36 +41,25 @@ class Users extends LocalTable
      */
     public function toHtml()
     {
-        $html = '<div style="width: 50%; margin: auto;">
-            <div style="height: unset" class="mdl-layout__header-row">
-                <div>
-                    <h3>Hello,</h3>
-                    <h3>' . $this->FirstName . '</h3>
-                </div>
-                <div class="circle-image" style="margin-left:auto; margin-right:0;">
-                    <i style="font-size: 200px" class="fas fa-user-circle"></i>
-                </div>
-            </div>
-            
-            <div style="margin: 0 40px;" class="mdl-card__supporting-text">
+        ?>
+        <div class="center-div-horizontal-outer">
+            <div class="center-div-horizontal-inner mdl-card__supporting-text">
                 <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                    <input disabled class="mdl-textfield__input" type="text" value="' . $this->FirstName . ' ' . $this->LastName .'" name="completedBy">
+                    <input disabled class="mdl-textfield__input" type="text" value="<?php echo $this->FirstName . ' ' . $this->LastName ?>">
                     <label class="mdl-textfield__label" >Name</label>
                 </div>
                 <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                    <input disabled class="mdl-textfield__input" type="text" value="' . $this->UserName . '" name="completedBy">
+                    <input disabled class="mdl-textfield__input" type="text" value="<?php echo $this->UserName ?>">
                     <label class="mdl-textfield__label" >Username</label>
                 </div>
-              
             </div>
             <div class="center-div-horizontal-outer">
                 <form id="user-sign-out-form" class="center-div-horizontal-inner" action="">
-                    <button type="submit" class="mdl-button mdl-js-button mdl-js-ripple-effect">Logout</button>
+                    <button type="submit" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent material-padding">Logout</button>
                 </form>
             </div>
-        </div>';
-
-        return $html;
+        </div>
+    <?php
     }
 
     /**

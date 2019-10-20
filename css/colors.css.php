@@ -34,6 +34,11 @@ Primary Colors
     background-color: var(--color-primary) !important;
 }
 
+.mdl-textfield__label:after
+{
+    background-color: var(--color-primary-dark) !important;
+}
+
 /**
 Link Colors
  */
