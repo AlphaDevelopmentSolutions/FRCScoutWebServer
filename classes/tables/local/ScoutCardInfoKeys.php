@@ -177,7 +177,7 @@ class ScoutCardInfoKeys extends LocalTable
         <div class="mdl-layout__tab-panel is-active">
             <section class="section--center mdl-grid mdl-grid--no-spacing mdl-shadow--2dp">
                 <div class="mdl-card mdl-cell mdl-cell--12-col">
-                    <h4 style="padding-left: 40px;"><a class="link" href="<?php echo TEAMS_URL . 'match-list?teamId=' . $team->Id . '&eventId=' . $event->BlueAllianceId ?>"><?php echo $team->toString() ?></a></h4>
+                    <h4 style="padding: 0 40px;"><a class="link" href="<?php echo TEAMS_URL . 'match-list?teamId=' . $team->Id . '&eventId=' . $event->BlueAllianceId ?>"><?php echo $team->toString() ?></a></h4>
                     <?php
 
                     foreach ($scoutCardInfoKeyStates as $scoutCardInfoKeyState) {

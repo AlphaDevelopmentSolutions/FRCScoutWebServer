@@ -196,7 +196,7 @@ class RobotMedia extends LocalTable
                 <section class="section--center mdl-grid mdl-grid--no-spacing mdl-shadow--2dp">
                     <div class="mdl-card mdl-cell mdl-cell--12-col">
                         <div class="mdl-card__supporting-text">
-                            <img class="robot-media" src="<?php echo ROBOT_MEDIA_URL . $this->FileURI ?>"  height="350"/>
+                            <img class="robot-media" src="<?php echo ROBOT_MEDIA_URL . $this->FileURI ?>"/>
                         </div>
                         <div class="mdl-card__actions">
                             <a target="_blank" href="<?php echo ROBOT_MEDIA_URL . $this->FileURI ?>" class="mdl-button mdl-js-button mdl-js-ripple-effect table-button delete">

@@ -76,7 +76,7 @@ class ChecklistItemResults extends LocalTable implements Status
                         <h4><?php echo $checklistItem->Title ?></h4>
                         Current Status -
                         <div class="setting-value mdl-textfield mdl-js-textfield mdl-textfield--floating-label" data-upgraded=",MaterialTextfield">
-                            <input class="mdl-textfield__input mdl-js-button Status <?php echo (($this->Status == Status::COMPLETE) ? 'good' : 'bad') ?>" style="font-weight: bold; width: unset;" id="Status<?php echo $this->ChecklistItemId ?>" type="text" value="<?php echo $this->Status ?>"/>
+                            <input class="mdl-textfield__input mdl-js-button Status <?php echo (($this->Status == Status::COMPLETE) ? 'good' : 'bad') ?>" style="font-weight: bold; min-width: 110px;" id="Status<?php echo $this->ChecklistItemId ?>" type="text" value="<?php echo $this->Status ?>"/>
                             <?php
                             if(getUser()->IsAdmin == 1)
                             {
@@ -93,15 +93,15 @@ class ChecklistItemResults extends LocalTable implements Status
                         <?php echo $checklistItem->Description ?><br><br>
                         <strong class="setting-title">Completed By</strong>
                         <div class="setting-value mdl-textfield mdl-js-textfield mdl-textfield--floating-label" data-upgraded=",MaterialTextfield">
-                            <input class="mdl-textfield__input CompletedBy" value="<?php echo $this->CompletedBy ?>">
+                            <input <?php echo getUser()->IsAdmin == 1 ? '' : 'disabled' ?> class="mdl-textfield__input CompletedBy" value="<?php echo $this->CompletedBy ?>">
                         </div>
                         <strong class="setting-title">Completed On</strong>
                         <div class="setting-value mdl-textfield mdl-js-textfield mdl-textfield--floating-label" data-upgraded=",MaterialTextfield">
-                            <input class="mdl-textfield__input CompletedDate" value="<?php echo substr($this->CompletedDate, 0, strpos($this->CompletedDate, ' ')) ?>">
+                            <input <?php echo getUser()->IsAdmin == 1 ? '' : 'disabled' ?> class="mdl-textfield__input CompletedDate" value="<?php echo substr($this->CompletedDate, 0, strpos($this->CompletedDate, ' ')) ?>">
                         </div>
                         <strong class="setting-title">Completed At</strong>
                         <div class="setting-value mdl-textfield mdl-js-textfield mdl-textfield--floating-label" data-upgraded=",MaterialTextfield">
-                            <input class="mdl-textfield__input CompletedTime" value="<?php echo substr($this->CompletedDate, strpos($this->CompletedDate, ' ') + 1) ?>">
+                            <input <?php echo getUser()->IsAdmin == 1 ? '' : 'disabled' ?> class="mdl-textfield__input CompletedTime" value="<?php echo substr($this->CompletedDate, strpos($this->CompletedDate, ' ') + 1) ?>">
                         </div>
                     </div>
                     <?php

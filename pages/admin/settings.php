@@ -68,7 +68,7 @@ interface AdminPanels
 
                 ?>
                     <script src="<?php echo JS_URL ?>jscolor.js"></script>
-                    <h4 style="padding-left: 40px;">Application Config</h4>
+                    <h4 style="padding: 0 40px;">Application Config</h4>
                     <div class="mdl-card__supporting-text">
                 <?php
                     $objs = Config::getObjects(null, null, null,"Id", "ASC");
@@ -142,7 +142,7 @@ interface AdminPanels
                 case AdminPanels::USERS:
                     $obj = Users::withId($settingId);
                 ?>
-                    <h4 style="padding-left: 40px;">User Settings</h4>
+                    <h4 style="padding: 0 40px;">User Settings</h4>
                     <div class="mdl-card__supporting-text">
                         <span class="setting-title">
                             <strong>First Name</strong>
@@ -221,7 +221,7 @@ interface AdminPanels
                 case AdminPanels::ROBOT_INFO_KEYS:
                     $obj = RobotInfoKeys::withId($settingId);
                 ?>
-                    <h4 style="padding-left: 40px;">Robot Info Settings</h4>
+                    <h4 style="padding: 0 40px;">Robot Info Settings</h4>
                     <div class="mdl-card__supporting-text">
                         <span class="setting-title">
                             <strong>Year</strong>
@@ -302,7 +302,7 @@ interface AdminPanels
                 case AdminPanels::SCOUT_CARD_INFO_KEYS:
                     $obj = ScoutCardInfoKeys::withId($settingId);
                     ?>
-                    <h4 style="padding-left: 40px;">Scout Card Info Settings</h4>
+                    <h4 style="padding: 0 40px;">Scout Card Info Settings</h4>
                     <div class="mdl-card__supporting-text">
                         <span class="setting-title">
                             <strong>Year</strong>
@@ -471,7 +471,7 @@ interface AdminPanels
                     case AdminPanels::CHECKLIST_INFO:
                         $obj = ChecklistItems::withId($settingId);
                         ?>
-                        <h4 style="padding-left: 40px;">Checlist Item Settings</h4>
+                        <h4 style="padding: 0 40px;">Checlist Item Settings</h4>
                         <div class="mdl-card__supporting-text">
                             <span class="setting-title">
                                 <strong>Year</strong>
