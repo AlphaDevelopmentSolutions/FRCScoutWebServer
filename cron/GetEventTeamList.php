@@ -12,11 +12,12 @@ else
 
     set_time_limit(600);
 
+    $yearId = empty($argv[1]) ? readline("Enter Year: ") : $argv[1];
+
     $database = new Database('core');
-    $events = $database->query('DELETE FROM event_team_list');
+    $events = $database->query('DELETE FROM event_team_list WHERE eventid LIKE "%' . $yearId . '%"');
     unset($database);
 
-    $yearId = empty($argv[1]) ? readline("Enter Year: ") : $argv[1];
     $events = Events::getObjects(Years::withId($yearId));
     $eventsSize = sizeof($events);
     for($i = 0; $i < $eventsSize; $i++)
