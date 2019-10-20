@@ -5,7 +5,7 @@ require_once(ROOT_DIR . "/classes/tables/core/Teams.php");
 require_once(ROOT_DIR . "/classes/tables/core/Events.php");
 require_once(ROOT_DIR . "/classes/tables/core/Years.php");
 require_once(ROOT_DIR . "/classes/tables/local/ScoutCardInfoKeys.php");
-
+require_once(ROOT_DIR . "/classes/tables/local/RobotMedia.php");
 
 $eventId = $_GET['eventId'];
 $teamId = $_GET['teamId'];
@@ -44,13 +44,13 @@ $event = Events::withId($eventId);
 
     $additionContent = '';
 
-    $profileMedia = $team->getProfileImage(Years::withId($event->YearId));
+    $profileMedia = RobotMedia::getObjects(null, $event, $team);
 
-    if (!empty($profileMedia->FileURI))
+    if (!empty($profileMedia))
     {
         $additionContent .=
             '<div style="height: unset" class="mdl-layout--large-screen-only mdl-layout__header-row">
-                  <div class="circle-image" style="background-image: url(' . ROBOT_MEDIA_THUMBS_URL . $profileMedia->FileURI . ')">
+                  <div class="circle-image" style="background-image: url(' . ROBOT_MEDIA_THUMBS_URL . $profileMedia[sizeof($profileMedia) - 1]->FileURI . ')">
 
                   </div>
                 </div>';

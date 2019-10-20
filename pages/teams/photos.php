@@ -64,13 +64,13 @@ if(isPostBack() && !empty($_FILES) && !empty(getUser()))
 
     $additionContent = '';
 
-    $profileMedia = $team->getProfileImage(Years::withId($event->YearId));
+    $profileMedia = RobotMedia::getObjects(null, $event, $team);
 
-    if (!empty($profileMedia->FileURI))
+    if (!empty($profileMedia))
     {
         $additionContent .=
             '<div style="height: unset" class="mdl-layout--large-screen-only mdl-layout__header-row">
-                  <div class="circle-image" style="background-image: url(' . ROBOT_MEDIA_THUMBS_URL . $profileMedia->FileURI . ')">
+                  <div class="circle-image" style="background-image: url(' . ROBOT_MEDIA_THUMBS_URL . $profileMedia[sizeof($profileMedia) - 1]->FileURI . ')">
 
                   </div>
                 </div>';
@@ -151,7 +151,7 @@ if(isPostBack() && !empty($_FILES) && !empty(getUser()))
     <main class="mdl-layout__content">
 
         <?php
-        foreach(RobotMedia::getObjects(null, $event, $team) as $robotMedia)
+        foreach($profileMedia as $robotMedia)
             $robotMedia->toHtml()
         ?>
         <?php require_once(INCLUDES_DIR . 'footer.php') ?>

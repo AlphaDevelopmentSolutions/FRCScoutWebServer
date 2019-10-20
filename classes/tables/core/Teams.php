@@ -59,33 +59,6 @@ class Teams extends CoreTable
     }
 
     /**
-     * Returns the URI of the teams profile image
-     * @param $year Years to get the image from
-     * @return RobotMedia
-     */
-    public function getProfileImage($year)
-    {
-        require_once(ROOT_DIR . '/classes/tables/local/RobotMedia.php');
-
-        //create the sql statement
-        $sql = "SELECT * FROM ! WHERE ! = ? AND ! = ? ORDER BY ! DESC LIMIT 1";
-        $cols[] = RobotMedia::$TABLE_NAME;
-        $cols[] = 'TeamId';
-        $args[] = $this->Id;
-        $cols[] = 'YearId';
-        $args[] = $year->Id;
-        $cols[] = 'Id';
-
-        $rows = self::queryRecords($sql, $cols, $args, LocalTable::$DB_NAME);
-
-        foreach ($rows as $row)
-        {
-            require_once(ROOT_DIR . "/classes/tables/local/RobotMedia.php");
-            return RobotMedia::withProperties($row);
-        }
-    }
-
-    /**
      * Gets all the events where a team is included in
      * @return Events[] List of events where the team is included
      */
@@ -203,34 +176,46 @@ class Teams extends CoreTable
     {
         require_once(ROOT_DIR . '/classes/tables/core/Events.php');
         require_once(ROOT_DIR . "/classes/tables/core/Years.php");
+        require_once(ROOT_DIR . "/classes/tables/local/RobotMedia.php");
 
-        $html =
-            '<section class="section--center mdl-grid mdl-grid--no-spacing mdl-shadow--2dp team-card">
-                <header class="section__play-btn mdl-cell mdl-cell--3-col-desktop mdl-cell--2-col-tablet mdl-cell--4-col-phone mdl-color--white mdl-color-text--white">';
+        $robotMedia = RobotMedia::getObjects(null, $event, $this)
 
-            $robotMedia = $this->getProfileImage(Years::withId($event->YearId));
+        ?>
+        <section class="section--center mdl-grid mdl-grid--no-spacing mdl-shadow--2dp team-card">
+            <header class="section__play-btn mdl-cell mdl-cell--3-col-desktop mdl-cell--2-col-tablet mdl-cell--4-col-phone mdl-color--white mdl-color-text--white">
+                <div style="height: unset">
+                <?php
+                if(empty($robotMedia))
+                {
+                ?>
+                    <a href="<?php echo TEAMS_URL . 'photos?eventId=' . $event->BlueAllianceId . '&teamId=' . $this->Id ?>">
+                <?php
+                }
+                ?>
+                    <div class="team-card-image" style="background-image: url(<?php echo ((empty($robotMedia)) ? IMAGES_URL . 'app-icon.png' : ROBOT_MEDIA_THUMBS_URL . $robotMedia[sizeof($robotMedia) - 1]->FileURI) ?>)"></div>
 
-            $html .=
-                    '<div style="height: unset">' .
-                    ((empty($robotMedia->FileURI)) ? '' : '<a href="' . TEAMS_URL . 'photos?eventId=' . $event->BlueAllianceId . '&teamId=' . $this->Id . '">') .
-                        '<div class="team-card-image" style="background-image: url(' . ((empty($robotMedia->FileURI)) ? IMAGES_URL . 'app-icon.png' : ROBOT_MEDIA_THUMBS_URL . $robotMedia->FileURI) . ')"></div>' .
-                    ((empty($robotMedia->FileURI)) ? '' : '</a>') .
-                    '</div>';
+                <?php
+                if(empty($robotMedia))
+                {
+                ?>
+                    </a>
+                <?php
+                }
+                ?>
+                </div>
+            </header>
+            <div class="mdl-card mdl-cell mdl-cell--9-col-desktop mdl-cell--6-col-tablet mdl-cell--4-col-phone">
+                <div class="mdl-card__supporting-text">
+                    <h4><?php echo $this->toString() ?></h4>
+                    <?php echo $this->City . ', ' . $this->StateProvince . ', ' . $this->Country ?>
+                </div>
+                <div class="mdl-card__actions">
+                    <a href="<?php echo TEAMS_URL . 'match-list?eventId=' . $event->BlueAllianceId . '&teamId=' . $this->Id ?>" class="mdl-button">View</a>
+                </div>
+            </div>
+        </section>
 
-            $html .=
-                '</header>
-                    <div class="mdl-card mdl-cell mdl-cell--9-col-desktop mdl-cell--6-col-tablet mdl-cell--4-col-phone">
-                        <div class="mdl-card__supporting-text">
-                            <h4>' . $this->toString() . '</h4>
-                            ' . $this->City . ', ' . $this->StateProvince . ', ' . $this->Country .
-                        '</div>
-                        <div class="mdl-card__actions">
-                            <a href="' . TEAMS_URL . 'match-list?eventId=' . $event->BlueAllianceId . '&teamId=' . $this->Id . '" class="mdl-button">View</a>
-                        </div>
-                    </div>
-                </section>';
-
-            return $html;
+    <?php
     }
 
 

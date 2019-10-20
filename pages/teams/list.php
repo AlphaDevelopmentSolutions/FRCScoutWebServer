@@ -30,7 +30,7 @@ $event = Events::withId($eventId);
         <?php
 
         foreach ($event->getTeams() as $team)
-            echo $team->toHtml($event);
+            $team->toHtml($event);
 
         ?>
 
