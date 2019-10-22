@@ -64,8 +64,10 @@ switch ($_POST['action'])
             if($response['success'])
             {
                 $user = new Accounts();
-                $user = $user->login($username, $password);
-                if (!empty($user))
+                $user->Username = $username;
+                $user->Password = $password;
+
+                if ($user->login())
                 {
                     $_SESSION['coreAccount'] = serialize($user);
                     $ajax->success('Successfully logged in.');
@@ -222,11 +224,6 @@ switch ($_POST['action'])
                 $conf->save();
 
                 $conf = new Config();
-                $conf->Key = 'API_KEY';
-                $conf->Value = $apiKey;
-                $conf->save();
-
-                $conf = new Config();
                 $conf->Key = 'PRIMARY_COLOR';
                 $conf->Value = $primaryColor;
                 $conf->save();
@@ -234,16 +231,6 @@ switch ($_POST['action'])
                 $conf = new Config();
                 $conf->Key = 'PRIMARY_COLOR_DARK';
                 $conf->Value = $secondaryColor;
-                $conf->save();
-
-                $conf = new Config();
-                $conf->Key = 'TEAM_ROBOT_MEDIA_DIR';
-                $conf->Value = sprintf('%04x%04x-%04x-%04x-%04x-%04x%04x%04x',
-                    mt_rand(0, 0xffff), mt_rand(0, 0xffff),
-                    mt_rand(0, 0xffff),
-                    mt_rand(0, 0x0fff) | 0x4000,
-                    mt_rand(0, 0x3fff) | 0x8000,
-                    mt_rand(0, 0xffff), mt_rand(0, 0xffff), mt_rand(0, 0xffff));
                 $conf->save();
 
                 $user = new Users();
@@ -260,6 +247,13 @@ switch ($_POST['action'])
                 $account->Username = $username;
                 $account->Password = password_hash($password, PASSWORD_ARGON2ID);
                 $account->DbId = $dbId;
+                $account->ApiKey = $apiKey;
+                $account->RobotMediaDir = sprintf('%04x%04x-%04x-%04x-%04x-%04x%04x%04x',
+                    mt_rand(0, 0xffff), mt_rand(0, 0xffff),
+                    mt_rand(0, 0xffff),
+                    mt_rand(0, 0x0fff) | 0x4000,
+                    mt_rand(0, 0x3fff) | 0x8000,
+                    mt_rand(0, 0xffff), mt_rand(0, 0xffff), mt_rand(0, 0xffff));
                 $account->save();
             } else
                 $ajax->error('Error importing SQL tables.');
@@ -408,11 +402,6 @@ switch ($_POST['action'])
                 $conf->save();
 
                 $conf = new Config();
-                $conf->Key = 'API_KEY';
-                $conf->Value = $apiKey;
-                $conf->save();
-
-                $conf = new Config();
                 $conf->Key = 'PRIMARY_COLOR';
                 $conf->Value = $primaryColor;
                 $conf->save();
@@ -420,16 +409,6 @@ switch ($_POST['action'])
                 $conf = new Config();
                 $conf->Key = 'PRIMARY_COLOR_DARK';
                 $conf->Value = $secondaryColor;
-                $conf->save();
-
-                $conf = new Config();
-                $conf->Key = 'TEAM_ROBOT_MEDIA_DIR';
-                $conf->Value = sprintf('%04x%04x-%04x-%04x-%04x-%04x%04x%04x',
-                    mt_rand(0, 0xffff), mt_rand(0, 0xffff),
-                    mt_rand(0, 0xffff),
-                    mt_rand(0, 0x0fff) | 0x4000,
-                    mt_rand(0, 0x3fff) | 0x8000,
-                    mt_rand(0, 0xffff), mt_rand(0, 0xffff), mt_rand(0, 0xffff));
                 $conf->save();
 
                 $user = new Users();
@@ -446,6 +425,13 @@ switch ($_POST['action'])
                 $account->Username = $username;
                 $account->Password = password_hash($password, PASSWORD_ARGON2ID);
                 $account->DbId = $dbId;
+                $account->ApiKey = $apiKey;
+                $account->RobotMediaDir = sprintf('%04x%04x-%04x-%04x-%04x-%04x%04x%04x',
+                    mt_rand(0, 0xffff), mt_rand(0, 0xffff),
+                    mt_rand(0, 0xffff),
+                    mt_rand(0, 0x0fff) | 0x4000,
+                    mt_rand(0, 0x3fff) | 0x8000,
+                    mt_rand(0, 0xffff), mt_rand(0, 0xffff), mt_rand(0, 0xffff));
                 $account->save();
 
                 require_once(ROOT_DIR . "/classes/tables/core/Years.php");

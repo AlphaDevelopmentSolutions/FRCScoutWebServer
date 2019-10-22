@@ -8,30 +8,46 @@ class Accounts extends CoreTable
     public $Username;
     public $Password;
     public $DbId;
+    public $ApiKey;
+    public $RobotMediaDir;
 
     public static $TABLE_NAME = 'accounts';
 
     /**
-     * @param $username
-     * @param $password
-     * @return static
+     * Attempts to login core acc
+     * @return boolean
      */
-    public static function login($username, $password)
+    public function login()
     {
         //create the sql statement
         $sql = "SELECT * FROM ! WHERE ! = ? LIMIT 1";
         $cols[] = self::$TABLE_NAME;
 
         $cols[] = 'Username';
-        $args[] = $username;
+        $args[] = $this->Username;
 
         $rows = self::queryRecords($sql, $cols, $args);
 
         foreach ($rows as $row)
         {
-            if(password_verify($password, $row['Password']))
-                return self::withProperties($row);
+            if(password_verify($this->Password, $row['Password']))
+            {
+                parent::loadByProperties($row);
+                return true;
+            }
         }
+
+        return false;
+    }
+
+    /**
+     * Loads account by API key
+     * @param $apiKey
+     * @return Accounts
+     */
+    public static function withApiKey($apiKey)
+    {
+        return self::withId($apiKey, "ApiKey");
     }
 
     /**

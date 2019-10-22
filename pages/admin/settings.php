@@ -77,64 +77,66 @@ interface AdminPanels
                     $i = 0;
                     foreach ($objs as $config)
                     {
-                        if($config->Key != 'TEAM_ROBOT_MEDIA_DIR')
-                        {
-                            $i++;
-                            $titleText = str_replace("_", " ", $config->Key);
-                            $titleText = strtolower($titleText);
-                            $titleText = ucwords($titleText);
+                        $i++;
+                        $titleText = str_replace("_", " ", $config->Key);
+                        $titleText = strtolower($titleText);
+                        $titleText = ucwords($titleText);
 
-                            ?>
-                            <span class="setting-title">
-                                <strong><?php echo $titleText ?></strong>
-                                <span class="center-div-vertical-outer">
-                                    <div id="desc<?php echo $i ?>"
-                                         class="center-div-vertical-inner material-side-padding icon material-icons">help_outline</div>
-                                </span>
-                                <div class="mdl-tooltip mdl-tooltip--large" for="desc<?php echo $i ?>">
-                                    <?php
-
-                                    switch ($config->Key)
-                                    {
-                                        case "APP_NAME":
-                                            ?>
-                                            The name of your teams app.
-                                            <?php
-                                            break;
-
-                                        case "API_KEY":
-                                            ?>
-                                            API key used for the mobile app to communicate and access data.
-                                            <?php
-                                            break;
-
-                                        case "PRIMARY_COLOR":
-                                            ?>
-                                            Primary color for the web and mobile application.
-                                            <?php
-                                            break;
-
-                                        case "PRIMARY_COLOR_DARK":
-                                            ?>
-                                            Darker primary color, usually a color accent, for the web and mobile application.
-                                            <?php
-                                            break;
-                                    }
-
-                                    ?>
-                                </div>
+                        ?>
+                        <span class="setting-title">
+                            <strong><?php echo $titleText ?></strong>
+                            <span class="center-div-vertical-outer">
+                                <div id="desc<?php echo $i ?>"
+                                     class="center-div-vertical-inner material-side-padding icon material-icons">help_outline</div>
                             </span>
-                            <div class="setting-value mdl-textfield mdl-js-textfield mdl-textfield--floating-label"
-                                 data-upgraded=",MaterialTextfield">
-                                <input maxlength="3000" class="<?php if (strpos(strtolower($titleText), "color")) echo "jscolor" ?> mdl-textfield__input"
-                                       type="text" value="<?php echo $config->Value ?>"
-                                       name="<?php echo $config->Key ?>" id="<?php echo $config->Key ?>">
-                            </div>
+                            <div class="mdl-tooltip mdl-tooltip--large" for="desc<?php echo $i ?>">
+                                <?php
 
-                            <?php
-                        }
+                                switch ($config->Key)
+                                {
+                                    case "APP_NAME":
+                                        ?>
+                                        The name of your teams app.
+                                        <?php
+                                        break;
+
+                                    case "PRIMARY_COLOR":
+                                        ?>
+                                        Primary color for the web and mobile application.
+                                        <?php
+                                        break;
+
+                                    case "PRIMARY_COLOR_DARK":
+                                        ?>
+                                        Darker primary color, usually a color accent, for the web and mobile application.
+                                        <?php
+                                        break;
+                                }
+                                ?>
+                            </div>
+                        </span>
+                        <div class="setting-value mdl-textfield mdl-js-textfield mdl-textfield--floating-label"
+                             data-upgraded=",MaterialTextfield">
+                            <input maxlength="3000" class="<?php if (strpos(strtolower($titleText), "color")) echo "jscolor" ?> mdl-textfield__input"
+                                   type="text" value="<?php echo $config->Value ?>"
+                                   name="<?php echo $config->Key ?>" id="<?php echo $config->Key ?>">
+                        </div>
+                        <?php
                     }
                     ?>
+                        <span class="setting-title">
+                                <strong>API Key</strong>
+                                <span class="center-div-vertical-outer">
+                                    <div id="desc<?php echo $i + 1 ?>"
+                                         class="center-div-vertical-inner material-side-padding icon material-icons">help_outline</div>
+                                </span>
+                                <div class="mdl-tooltip mdl-tooltip--large" for="desc<?php echo $i + 1 ?>">
+                                    API key used for the mobile app to communicate and to access data.
+                                </div>
+                            </span>
+                        <div class="setting-value mdl-textfield mdl-js-textfield mdl-textfield--floating-label" data-upgraded=",MaterialTextfield">
+                            <input maxlength="3000" class="mdl-textfield__input" type="text" value="<?php echo getCoreAccount()->ApiKey ?>" name="ApiKey" id="ApiKey">
+                        </div>
                     </div>
                     <?php
                 break;

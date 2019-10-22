@@ -30,7 +30,7 @@ require_once(ROOT_DIR . '/interfaces/AllianceColors.php');
  */
 if(coreLoggedIn())
     define('DB_NAME', getCoreAccount()->DbId);
-else if($bypassCoreCheck != true)
+else if($bypassCoreCheck != true && !coreLoggedIn())
     redirect('/');
 
 if(coreLoggedIn())
@@ -52,12 +52,12 @@ define('URL_PATH', '/');
 /**
  * MEDIA FILES
  */
-define('ROBOT_MEDIA_DIR', ROOT_DIR . '/assets/robot-media/originals/' . TEAM_ROBOT_MEDIA_DIR . '/');
-define('ROBOT_MEDIA_THUMBS_DIR', ROOT_DIR . '/assets/robot-media/thumbs/' . TEAM_ROBOT_MEDIA_DIR . '/');
+define('ROBOT_MEDIA_DIR', ROOT_DIR . '/assets/robot-media/originals/' . getCoreAccount()->RobotMediaDir . '/');
+define('ROBOT_MEDIA_THUMBS_DIR', ROOT_DIR . '/assets/robot-media/thumbs/' . getCoreAccount()->RobotMediaDir . '/');
 define('INCLUDES_DIR', ROOT_DIR . '/includes/');
 
-define('ROBOT_MEDIA_URL', '/assets/robot-media/originals/' . TEAM_ROBOT_MEDIA_DIR . '/');
-define('ROBOT_MEDIA_THUMBS_URL', '/assets/robot-media/thumbs/' . TEAM_ROBOT_MEDIA_DIR . '/');
+define('ROBOT_MEDIA_URL', '/assets/robot-media/originals/' . getCoreAccount()->RobotMediaDir . '/');
+define('ROBOT_MEDIA_THUMBS_URL', '/assets/robot-media/thumbs/' . getCoreAccount()->RobotMediaDir . '/');
 
 define('YEAR_MEDIA_URL', '/assets/year-media/');
 define('IMAGES_URL', '/assets/images/');
@@ -87,10 +87,8 @@ require_once(ROOT_DIR . "/classes/NavBarLinkArray.php");
 if(false)
 {
     define('APP_NAME', '');
-    define('API_KEY', '');
     define('PRIMARY_COLOR', '');
     define('PRIMARY_COLOR_DARK', '');
-    define('TEAM_ROBOT_MEDIA_DIR', '');
 
     define('BLUE_ALLIANCE_KEY', '');
 }
@@ -128,7 +126,20 @@ function coreLoggedIn()
  */
 function getCoreAccount()
 {
-    return !empty($_SESSION['coreAccount']) ? unserialize($_SESSION['coreAccount']) : null;
+    return !empty($_SESSION['coreAccount']) ? unserialize($_SESSION['coreAccount']) : null;;
+}
+
+/**
+ * Sets the core account
+ * @param $account Accounts account to add
+ */
+function setCoreAccount($account)
+{
+    if(!empty($account))
+    {
+        define('DB_NAME', $account->DbId);
+        $_SESSION['coreAccount'] = serialize($account);
+    }
 }
 
 /**

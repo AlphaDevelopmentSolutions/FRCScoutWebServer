@@ -22,13 +22,11 @@ else
 
             $db = new Database($account->DbId);
 
-            $mediaDir = $db->query('SELECT * FROM ! WHERE ! = ?', ['config', 'key'], ['TEAM_ROBOT_MEDIA_DIR'])[0]['Value'];
+            if (is_dir(ROOT_DIR . '/assets/robot-media/originals/' . $account->RobotMediaDir))
+                rmdir(ROOT_DIR . '/assets/robot-media/originals/' . $account->RobotMediaDir);
 
-            if (is_dir(ROOT_DIR . '/assets/robot-media/originals/' . $mediaDir))
-                rmdir(ROOT_DIR . '/assets/robot-media/originals/' . $mediaDir);
-
-            if (is_dir(ROOT_DIR . '/assets/robot-media/originals/' . $mediaDir))
-                rmdir(ROOT_DIR . '/assets/robot-media/thumbs/' . $mediaDir);
+            if (is_dir(ROOT_DIR . '/assets/robot-media/originals/' . $account->RobotMediaDir))
+                rmdir(ROOT_DIR . '/assets/robot-media/thumbs/' . $account->RobotMediaDir);
 
             $account->delete();
             $demo->delete();

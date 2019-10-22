@@ -213,10 +213,6 @@ switch ($_POST['action'])
                             $config->Value = $data['AppName'];
                             break;
 
-                        case "API_KEY":
-                            $config->Value = $data['ApiKey'];
-                            break;
-
                         case "PRIMARY_COLOR":
                             $config->Value = $data['PrimaryColor'];
                             break;
@@ -231,6 +227,13 @@ switch ($_POST['action'])
 
                     if ($config->save())
                         $ajax->success("Config saved successfully.");
+                }
+
+                $coreAccount = getCoreAccount();
+                if($coreAccount->ApiKey != $data['ApiKey'])
+                {
+                    $coreAccount->ApiKey = $data['ApiKey'];
+                    $coreAccount->save();
                 }
 
                 $ajax->error("Config failed to save.");
