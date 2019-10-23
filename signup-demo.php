@@ -198,7 +198,7 @@ require_once(ROOT_DIR . '/classes/Ajax.php');
                             </button>
                             <span hidden id="loading">
                                 <div class="mdl-spinner mdl-spinner--single-color mdl-js-spinner is-active"></div>
-                                Creating demo account. This will take a moment...
+                                Creating demo account. This will take a couple of minutes...
                             </span>
                             <div class="g-recaptcha" data-sitekey="6Lfx2bsUAAAAAOUWzZjeIs1X7ASb43js5-LKB3rp"></div>
                         </div>

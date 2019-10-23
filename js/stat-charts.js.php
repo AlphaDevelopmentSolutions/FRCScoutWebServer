@@ -202,124 +202,125 @@ function generateData(graphItem, context)
  */
 function createChart(context, jsonResponse, graphItem)
 {
-    var labels = []; //labels AKA team numbers to show on the Y axis
-    var graphData = []; //data AKA item averages to show on the graph
-    var backgroundColors = []; //colors to indicate bad/warning/good stats
-    var average = jsonResponse['EventAvg'][graphItem]; //get the event average
-    var matchAveragData = []; //get the event average
-
-    //match data specified
-    if(jsonResponse['MatchAvgs'] !== undefined)
+    if(Object.keys(jsonResponse).length > 0)
     {
+        var labels = []; //labels AKA team numbers to show on the Y axis
+        var graphData = []; //data AKA item averages to show on the graph
+        var backgroundColors = []; //colors to indicate bad/warning/good stats
+        var average = jsonResponse['EventAvg'][graphItem]; //get the event average
+        var matchAveragData = []; //get the event average
+
+        //match data specified
+        if (jsonResponse['MatchAvgs'] !== undefined)
+        {
+            //for each item (team) inside the graph data, calculate and store the averages
+            $.each(jsonResponse['MatchAvgs'], function (matchId, averages)
+            {
+                //dont add row for event avg
+                if (matchId !== 'EventAvg')
+                {
+                    var val = averages[graphItem]; //store the value of the teams averages for the specified item
+
+                    matchAveragData.push(val); //add the item average to the data
+                }
+            });
+        }
+
         //for each item (team) inside the graph data, calculate and store the averages
-        $.each(jsonResponse['MatchAvgs'], function(matchId, averages)
+        $.each(((matchAveragData.length > 0) ? jsonResponse[teamList[0]] : jsonResponse), function (key, averages)
         {
             //dont add row for event avg
-            if(matchId !== 'EventAvg')
+            if (key !== 'EventAvg' && key !== 'MatchAvgs')
             {
                 var val = averages[graphItem]; //store the value of the teams averages for the specified item
 
-                matchAveragData.push(val); //add the item average to the data
+                labels.push(matchAveragData.length > 0 ? 'Quals ' + key : key); //key to the label
+                graphData.push(val); //add the item average to the data
+
+                //match not specified, assign colors based on score
+                if (matchId === '')
+                {
+                    //if the average is more than double the event average, that's a good (green) stat
+                    if (val > average * 1.20)
+                        backgroundColors.push('#64FF62');
+
+                    //if the average is less than double but still greater to or equal to the event average, that's a warning (yellow) stat
+                    else if (val >= average * .8)
+                        backgroundColors.push('#FFD966');
+
+                    // bad = less than 20% lower
+                    else
+                        backgroundColors.push('#E67C73');
+                }
+
+                //match specified, assign colors based on alliance
+                else
+                    backgroundColors.push(averages['Alliance Color'] === '<?php echo AllianceColors::RED ?>' ? '<?php echo AllianceColors::RED_RGBA ?>' : '<?php echo AllianceColors::BLUE_RGBA ?>');
+
             }
         });
-    }
 
-    //for each item (team) inside the graph data, calculate and store the averages
-    $.each(((matchAveragData.length > 0) ? jsonResponse[teamList[0]] : jsonResponse), function(key, averages)
-    {
-        //dont add row for event avg
-        if(key !== 'EventAvg' && key !== 'MatchAvgs')
+        var xAxesTitle, yAxesTitle;
+
+        if (matchAveragData.length > 0)
         {
-            var val = averages[graphItem]; //store the value of the teams averages for the specified item
-
-            labels.push(matchAveragData.length > 0 ? 'Quals ' + key : key); //key to the label
-            graphData.push(val); //add the item average to the data
-
-            //match not specified, assign colors based on score
-            if(matchId === '')
-            {
-                //if the average is more than double the event average, that's a good (green) stat
-                if (val > average * 1.20)
-                    backgroundColors.push('#64FF62');
-
-                //if the average is less than double but still greater to or equal to the event average, that's a warning (yellow) stat
-                else if (val >= average * .8)
-                    backgroundColors.push('#FFD966');
-
-                // bad = less than 20% lower
-                else
-                    backgroundColors.push('#E67C73');
-            }
-
-            //match specified, assign colors based on alliance
-            else
-                backgroundColors.push(averages['Alliance Color'] === '<?php echo AllianceColors::RED ?>' ? '<?php echo AllianceColors::RED_RGBA ?>' : '<?php echo AllianceColors::BLUE_RGBA ?>');
-
+            yAxesTitle = graphItem;
+            xAxesTitle = 'Matches';
         }
-    });
-
-    var xAxesTitle, yAxesTitle;
-
-    if(matchAveragData.length > 0)
-    {
-        yAxesTitle = graphItem;
-        xAxesTitle = 'Matches';
-    }
-    else
-    {
-        xAxesTitle = (matchId === '' ? 'Average ' : '') + graphItem;
-        yAxesTitle = 'Teams';
-    }
-
-    xAxesTitle = xAxesTitle.toUpperCase();
-    yAxesTitle = yAxesTitle.toUpperCase();
-
-    var maxData = 0;
-    var minData = 0;
-
-    $(graphData).each(function(index, element)
-    {
-        if(parseInt(element) > maxData)
-            maxData = element;
-        else if(parseInt(element) < minData)
-            minData = element;
-    });
-
-    var maxData2 = 0;
-    var minData2 = 0;
-
-    $(matchAveragData).each(function(index, element)
-    {
-        if(parseInt(element) > maxData2)
-            maxData2 = element;
-        else if(parseInt(element) < minData2)
-            minData2 = element;
-    });
-
-    if(maxData2 > maxData)
-        maxData = maxData2;
-
-    if (average > maxData)
-        maxData = average;
-
-    if(minData2 < minData)
-        minData = minData2;
-
-    if (average < minData)
-        minData = average;
-
-    var lineGraph = matchAveragData.length > 0;
-
-    return new Chart(context,
+        else
         {
-            //graph type
-            type: (lineGraph) ? 'line' : 'horizontalBar',
-            data:(lineGraph) ?
-                {
-                    //match ids
-                    labels: labels,
-                    datasets:
-                        [
+            xAxesTitle = (matchId === '' ? 'Average ' : '') + graphItem;
+            yAxesTitle = 'Teams';
+        }
+
+        xAxesTitle = xAxesTitle.toUpperCase();
+        yAxesTitle = yAxesTitle.toUpperCase();
+
+        var maxData = 0;
+        var minData = 0;
+
+        $(graphData).each(function (index, element)
+        {
+            if (parseInt(element) > maxData)
+                maxData = element;
+            else if (parseInt(element) < minData)
+                minData = element;
+        });
+
+        var maxData2 = 0;
+        var minData2 = 0;
+
+        $(matchAveragData).each(function (index, element)
+        {
+            if (parseInt(element) > maxData2)
+                maxData2 = element;
+            else if (parseInt(element) < minData2)
+                minData2 = element;
+        });
+
+        if (maxData2 > maxData)
+            maxData = maxData2;
+
+        if (average > maxData)
+            maxData = average;
+
+        if (minData2 < minData)
+            minData = minData2;
+
+        if (average < minData)
+            minData = average;
+
+        var lineGraph = matchAveragData.length > 0;
+
+        return new Chart(context,
+            {
+                //graph type
+                type: (lineGraph) ? 'line' : 'horizontalBar',
+                data: (lineGraph) ?
+                    {
+                        //match ids
+                        labels: labels,
+                        datasets: [
                             {
                                 label: 'Team Average',
 
@@ -339,13 +340,12 @@ function createChart(context, jsonResponse, graphItem)
                                 borderColor: ['#F00']
                             }
                         ]
-                }
-                :
-                {
-                    //team ids
-                    labels: labels,
-                    datasets:
-                        [
+                    }
+                    :
+                    {
+                        //team ids
+                        labels: labels,
+                        datasets: [
                             {
                                 //item averages
                                 data: graphData,
@@ -354,72 +354,71 @@ function createChart(context, jsonResponse, graphItem)
                                 backgroundColor: backgroundColors
                             }
                         ]
-                },
-            options: {
-                legend:
-                    {
+                    },
+                options: {
+                    legend: {
                         //hide / show generated data name
                         display: lineGraph
                     },
-                tooltips: {
-                    callbacks: {
-                        label: function(tooltipItem)
-                        {
-                            //tooltip title
-                            return (lineGraph) ? ' ' + tooltipItem.yLabel : (matchId === '' ? 'Average ' : ' ') + tooltipItem.xLabel;
-                        }
-                    }
-                },
-                maintainAspectRatio: false,
-                responsive: true,
-                scales:
-                {
-                    yAxes: [{
-                        ticks: (lineGraph) ?
+                    tooltips: {
+                        callbacks: {
+                            label: function (tooltipItem)
                             {
-                                beginAtZero: true,
-                                max: (maxData === 0) ? 1 : Math.round((maxData * 1.1) * 100.00) / 100.00,
-                                min: ((minData >= 0) ? 0 : Math.round((minData * 1.5) * 100.00) / 100.00)
+                                //tooltip title
+                                return (lineGraph) ? ' ' + tooltipItem.yLabel : (matchId === '' ? 'Average ' : ' ') + tooltipItem.xLabel;
                             }
-                            :
-                            {},
-                        scaleLabel: {
-                            display: true,
-                            labelString: yAxesTitle
                         }
-                    }],
-                    xAxes: [{
-                        ticks: (lineGraph) ?
-                            {}
-                            :
-                            {
-                                beginAtZero: true,
-                                max: maxData * 1.05,
-                                min: ((minData >= 0) ? 0 : Math.round((minData * 1.1) * 100.00) / 100.00)
-                            },
-                        scaleLabel: {
-                            display: true,
-                            labelString: xAxesTitle
-                        }
-                    }]
-                },
-                annotation: {
-                    //adds the event average vertical line
-                    annotations: [{
-                        type: 'line',
-                        mode: (lineGraph) ? 'horizontal' : 'vertical',
-                        scaleID: (lineGraph) ? 'y-axis-0' : 'x-axis-0',
-                        value: average,
-                        borderColor: '#0288D1',
-                        borderWidth: 2,
-                        borderDash: [7],
-                        label: {
-                            enabled: true,
-                            content: 'Event Average ' + Math.round(average * 100.00) / 100.00
-                        }
-                    }]
+                    },
+                    maintainAspectRatio: false,
+                    responsive: true,
+                    scales: {
+                        yAxes: [{
+                            ticks: (lineGraph) ?
+                                {
+                                    beginAtZero: true,
+                                    max: (maxData === 0) ? 1 : Math.round((maxData * 1.1) * 100.00) / 100.00,
+                                    min: ((minData >= 0) ? 0 : Math.round((minData * 1.5) * 100.00) / 100.00)
+                                }
+                                :
+                                {},
+                            scaleLabel: {
+                                display: true,
+                                labelString: yAxesTitle
+                            }
+                        }],
+                        xAxes: [{
+                            ticks: (lineGraph) ?
+                                {}
+                                :
+                                {
+                                    beginAtZero: true,
+                                    max: maxData * 1.05,
+                                    min: ((minData >= 0) ? 0 : Math.round((minData * 1.1) * 100.00) / 100.00)
+                                },
+                            scaleLabel: {
+                                display: true,
+                                labelString: xAxesTitle
+                            }
+                        }]
+                    },
+                    annotation: {
+                        //adds the event average vertical line
+                        annotations: [{
+                            type: 'line',
+                            mode: (lineGraph) ? 'horizontal' : 'vertical',
+                            scaleID: (lineGraph) ? 'y-axis-0' : 'x-axis-0',
+                            value: average,
+                            borderColor: '#0288D1',
+                            borderWidth: 2,
+                            borderDash: [7],
+                            label: {
+                                enabled: true,
+                                content: 'Event Average ' + Math.round(average * 100.00) / 100.00
+                            }
+                        }]
+                    }
                 }
-            }
 
-        });
+            });
+    }
 }
