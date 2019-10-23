@@ -63,7 +63,7 @@ if(!empty($teamId))
         <?php
 
         //get all teams for the match
-        $teams = Teams::getObjects(null, $match);
+        $teams = Teams::getObjects(null, $match, 'Id', 'ASC');
 
         //iterate through the teams to display the cards to the page
         foreach($teams as $team)
