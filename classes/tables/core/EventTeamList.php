@@ -10,9 +10,10 @@ class EventTeamList extends CoreTable
 
     /**
      * @param null | Events $event if specified, filters by id
+     * @param CoreDatabase $database
      * @return EventTeamList[]
      */
-    public static function getObjects($event = null)
+    public static function getObjects($database, $event = null)
     {
         $whereStatment = "";
         $cols = array();
@@ -26,7 +27,7 @@ class EventTeamList extends CoreTable
         }
 
 
-        return parent::getObjects($whereStatment, $cols, $args);
+        return parent::getObjects($database, $whereStatment, $cols, $args);
     }
 
     public function toHtml()

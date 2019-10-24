@@ -13,12 +13,13 @@ class ChecklistItemResults extends LocalTable implements Status
 
     /**
      * Retrieves objects from the database
+     * @param LocalDatabase $database
      * @param Matches | null $match if specified, filters by id
      * @param string $orderBy order field to sort items by
      * @param string $orderDirection direction to sort items by
      * @return ChecklistItemResults[]
      */
-    public static function getObjects($match = null, $orderBy = 'Id', $orderDirection = 'ASC')
+    public static function getObjects($database, $match = null, $orderBy = 'Id', $orderDirection = 'ASC')
     {
         $whereStatment = "";
         $cols = array();
@@ -32,14 +33,16 @@ class ChecklistItemResults extends LocalTable implements Status
             $args[] = $match->Key;
         }
 
-        return parent::getObjects($whereStatment, $cols, $args, $orderBy, $orderDirection);
+        return parent::getObjects($database, $whereStatment, $cols, $args, $orderBy, $orderDirection);
     }
 
     /**
      * Overrides parent save function to overwrite existing records in case of conflicts
+     * @param LocalDatabase $database
+     * @param CoreDatabase $coreDatabase
      * @return bool
      */
-    public function save()
+    public function save($database, $coreDatabase)
     {
         require_once(ROOT_DIR . '/classes/tables/core/Teams.php');
         require_once(ROOT_DIR . '/classes/tables/core/Events.php');
@@ -47,7 +50,7 @@ class ChecklistItemResults extends LocalTable implements Status
         require_once(ROOT_DIR . '/classes/tables/core/Years.php');
         require_once(ROOT_DIR . '/classes/tables/local/ScoutCardInfoKeys.php');
 
-        $objs = self::getObjects(Matches::withId($this->MatchId));
+        $objs = self::getObjects($database, Matches::withId($coreDatabase, $this->MatchId));
 
         foreach ($objs as $obj)
         {
@@ -55,18 +58,19 @@ class ChecklistItemResults extends LocalTable implements Status
                 $this->Id = $obj->Id;
         }
 
-        return parent::save();
+        return parent::save($database);
     }
 
     /**
      * Prints the object once converted into HTML
+     * @param LocalDatabase $database
      */
-    public function toHtml()
+    public function toHtml($database = null)
     {
         require_once(ROOT_DIR . '/classes/tables/local/ChecklistItems.php');
 
         //get the checklist item
-        $checklistItem = ChecklistItems::withId($this->ChecklistItemId);
+        $checklistItem = ChecklistItems::withId($database, $this->ChecklistItemId);
 
         ?>
         <div class="mdl-layout__tab-panel is-active" id="overview">
@@ -128,12 +132,13 @@ class ChecklistItemResults extends LocalTable implements Status
 
     /**
      * Compiles the name of the object when displayed as a string
+     * @param LocalDatabase $database
      * @return string
      */
-    public function toString()
+    public function toString($database = null)
     {
         require_once(ROOT_DIR . '/classes/tables/local/ChecklistItems.php');
-        return ChecklistItems::withId($this->ChecklistItemId)->Title;
+        return ChecklistItems::withId($database, $this->ChecklistItemId)->Title;
     }
 
 }

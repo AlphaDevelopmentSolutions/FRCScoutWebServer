@@ -18,6 +18,8 @@ define('ROOT_DIR', __DIR__);
  */
 require_once(ROOT_DIR . '/classes/Keys.php');
 require_once(ROOT_DIR . '/classes/Database.php');
+require_once(ROOT_DIR . '/classes/CoreDatabase.php');
+require_once(ROOT_DIR . '/classes/LocalDatabase.php');
 require_once(ROOT_DIR . '/classes/tables/Table.php');
 require_once(ROOT_DIR . '/classes/tables/local/Users.php');
 require_once(ROOT_DIR . '/classes/tables/local/Config.php');
@@ -28,20 +30,25 @@ require_once(ROOT_DIR . '/interfaces/AllianceColors.php');
 /**
  * LOAD CONFIGS
  */
-if(coreLoggedIn())
+if(isCoreLoggedIn())
     define('DB_NAME', getCoreAccount()->DbId);
-else if($bypassCoreCheck != true && !coreLoggedIn())
+else if($bypassCoreCheck != true && !isCoreLoggedIn())
     redirect('/');
 
-if(coreLoggedIn())
+$coreDb = new CoreDatabase();
+
+if(isCoreLoggedIn())
+    $localDb = new LocalDatabase();
+
+if(isCoreLoggedIn())
 {
-    foreach (Config::getObjects() as $config)
+    foreach (Config::getObjects($localDb) as $config)
     {
         define($config->Key, $config->Value);
     }
 }
 
-foreach(CoreConfig::getObjects() as $config)
+foreach(CoreConfig::getObjects($coreDb) as $config)
 {
     define($config->Key, $config->Value);
 }
@@ -106,7 +113,7 @@ function isPostBack()
  * Returns if the current user is logged in
  * @return bool
  */
-function loggedIn()
+function isLoggedIn()
 {
     return !is_null(getUser());
 }
@@ -115,7 +122,7 @@ function loggedIn()
  * Returns if the current user is logged into the core of the app
  * @return bool
  */
-function coreLoggedIn()
+function isCoreLoggedIn()
 {
     return !is_null(getCoreAccount());
 }
@@ -126,7 +133,7 @@ function coreLoggedIn()
  */
 function getCoreAccount()
 {
-    return !empty($_SESSION['coreAccount']) ? unserialize($_SESSION['coreAccount']) : null;;
+    return !empty($_SESSION['coreAccount']) ? unserialize($_SESSION['coreAccount']) : null;
 }
 
 /**

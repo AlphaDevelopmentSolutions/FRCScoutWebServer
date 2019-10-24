@@ -13,6 +13,7 @@ class RobotInfo extends LocalTable
 
     /**
      * Retrieves objects from the database
+     * @param LocalDatabase $database
      * @param null | RobotInfo $robotInfo if specified, filters by id
      * @param Years | null $year if specified, filters by id
      * @param Events | null $event if specified, filters by id
@@ -20,7 +21,7 @@ class RobotInfo extends LocalTable
      * @param RobotInfoKeys[] | array $robotInfoKeys if specified, filters by robot info keys
      * @return RobotInfo[]
      */
-    public static function getObjects($robotInfo = null, $year = null, $event = null, $team = null, $robotInfoKeys = array())
+    public static function getObjects($database, $robotInfo = null, $year = null, $event = null, $team = null, $robotInfoKeys = array())
     {
         $whereStatment = "";
         $cols = array();
@@ -79,20 +80,22 @@ class RobotInfo extends LocalTable
             $whereStatment .= $appendString . ")";
         }
 
-        return parent::getObjects($whereStatment, $cols, $args);
+        return parent::getObjects($database, $whereStatment, $cols, $args);
     }
 
     /**
      * Overrides parent save function to overwrite existing records in case of conflicts
+     * @param LocalDatabase $database
+     * @param CoreDatabase $coreDatabase
      * @return bool
      */
-    public function save()
+    public function save($database, $coreDatabase)
     {
         require_once(ROOT_DIR . '/classes/tables/core/Teams.php');
         require_once(ROOT_DIR . '/classes/tables/core/Events.php');
         require_once(ROOT_DIR . '/classes/tables/core/Years.php');
 
-        $robotInfoArray = self::getObjects(null, Years::withId($this->YearId), Events::withId($this->EventId), Teams::withId($this->TeamId));
+        $robotInfoArray = self::getObjects($database, null, Years::withId($coreDatabase, $this->YearId), Events::withId($coreDatabase, $this->EventId), Teams::withId($coreDatabase, $this->TeamId));
 
         foreach ($robotInfoArray as $robotInfo)
         {
@@ -100,7 +103,7 @@ class RobotInfo extends LocalTable
                 $this->Id = $robotInfo->Id;
         }
 
-        return parent::save();
+        return parent::save($database);
     }
 
     /**

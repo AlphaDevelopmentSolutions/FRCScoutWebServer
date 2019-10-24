@@ -17,10 +17,16 @@ else
     $database->query("delete from matches where eventid like '%$yearId%';");
     unset($database);
 
-    function getMatches($eventCode)
+    $events = Events::getObjects($coreDb, Years::withId($coreDb, $yearId));
+    $eventsSize = sizeof($events);
+    for($i = 0; $i < $eventsSize; $i++)
     {
+        $event = $events[$i];
+        $percent = round($i / $eventsSize, 2) * 100;
 
-        $url = "https://www.thebluealliance.com/api/v3/event/" . $eventCode . "/matches/simple?X-TBA-Auth-Key=" . BLUE_ALLIANCE_KEY;
+        echo "$i / {$eventsSize} - {$percent}% - Getting matches for event {$event->toString()}...\n";
+
+        $url = "https://www.thebluealliance.com/api/v3/event/" . $event->BlueAllianceId . "/matches/simple?X-TBA-Auth-Key=" . BLUE_ALLIANCE_KEY;
 
         $ch = curl_init();
 
@@ -51,21 +57,9 @@ else
                 $match->BlueAllianceScore = $obj['alliances']['blue']['score'];
                 $match->RedAllianceScore = $obj['alliances']['red']['score'];
 
-                $match->save();
+                $match->save($coreDb);
             }
         }
-    }
-
-    $events = Events::getObjects(Years::withId($yearId));
-    $eventsSize = sizeof($events);
-    for($i = 0; $i < $eventsSize; $i++)
-    {
-        $event = $events[$i];
-        $percent = round($i / $eventsSize, 2) * 100;
-
-        echo "$i / {$eventsSize} - {$percent}% - Getting matches for event {$event->toString()}...\n";
-
-        getMatches($event->BlueAllianceId);
     }
 }
 

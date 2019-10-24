@@ -11,7 +11,7 @@ require_once(ROOT_DIR . "/classes/tables/local/ChecklistItems.php");
 require_once(ROOT_DIR . "/classes/tables/local/Config.php");
 
 $yearId = $_GET['yearId'];
-$year = ((empty($yearId)) ? null : Years::withId($yearId));
+$year = ((empty($yearId)) ? null : Years::withId($coreDb, $yearId));
 
 $panel = $_GET['adminPanel'];
 $settingId = $_GET['settingId'];
@@ -71,7 +71,7 @@ interface AdminPanels
                     <h4 style="padding: 0 40px;">Application Config</h4>
                     <div class="mdl-card__supporting-text">
                 <?php
-                    $objs = Config::getObjects(null, null, null,"Id", "ASC");
+                    $objs = Config::getObjects($localDb, null, null, null,"Id", "ASC");
                     $obj = new Config();
 
                     $i = 0;
@@ -142,7 +142,7 @@ interface AdminPanels
                 break;
 
                 case AdminPanels::USERS:
-                    $obj = Users::withId($settingId);
+                    $obj = Users::withId($localDb, $settingId);
                 ?>
                     <h4 style="padding: 0 40px;">User Settings</h4>
                     <div class="mdl-card__supporting-text">
@@ -221,7 +221,7 @@ interface AdminPanels
                 break;
 
                 case AdminPanels::ROBOT_INFO_KEYS:
-                    $obj = RobotInfoKeys::withId($settingId);
+                    $obj = RobotInfoKeys::withId($localDb, $settingId);
                 ?>
                     <h4 style="padding: 0 40px;">Robot Info Settings</h4>
                     <div class="mdl-card__supporting-text">
@@ -302,7 +302,7 @@ interface AdminPanels
                     break;
 
                 case AdminPanels::SCOUT_CARD_INFO_KEYS:
-                    $obj = ScoutCardInfoKeys::withId($settingId);
+                    $obj = ScoutCardInfoKeys::withId($localDb, $settingId);
                     ?>
                     <h4 style="padding: 0 40px;">Scout Card Info Settings</h4>
                     <div class="mdl-card__supporting-text">
@@ -471,7 +471,7 @@ interface AdminPanels
                     break;
 
                     case AdminPanels::CHECKLIST_INFO:
-                        $obj = ChecklistItems::withId($settingId);
+                        $obj = ChecklistItems::withId($localDb, $settingId);
                         ?>
                         <h4 style="padding: 0 40px;">Checlist Item Settings</h4>
                         <div class="mdl-card__supporting-text">

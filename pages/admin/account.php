@@ -26,7 +26,7 @@ require_once(ROOT_DIR . "/classes/tables/core/Years.php");
     ?>
     <main class="mdl-layout__content center-div-horizontal-outer">
         <?php
-        if (loggedIn())
+        if (isLoggedIn())
         {
             getUser()->toHtml();
         } else
@@ -65,7 +65,7 @@ require_once(ROOT_DIR . "/classes/tables/core/Years.php");
     </main>
 </div>
 <?php require_once(INCLUDES_DIR . 'bottom-scripts.php');
-if (loggedIn())
+if (isLoggedIn())
 {
     ?>
     <script src="<?php echo JS_URL ?>user-sign-out.js.php"></script>

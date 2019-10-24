@@ -46,7 +46,7 @@ class Header
                             <i class="fas fa-user-circle"></i>
                         </a>
                         <?php
-                        if(loggedIn() && getUser()->IsAdmin == 1)
+                        if(isLoggedIn() && getUser()->IsAdmin == 1)
                         {
                         ?>
                         <a style="color: white; text-decoration: none" href="<?php echo ((empty($this->SettingsUrl)) ? ADMIN_URL . 'list' : $this->SettingsUrl) ?>">

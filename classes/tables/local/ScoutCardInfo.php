@@ -15,6 +15,7 @@ class ScoutCardInfo extends LocalTable
 
     /**
      * Retrieves objects from the database
+     * @param LocalDatabase $database
      * @param null | ScoutCardInfoKeys $scoutCardInfoKey if specified, filters by id
      * @param Years | null $year if specified, filters by id
      * @param Events | null $event if specified, filters by id
@@ -22,7 +23,7 @@ class ScoutCardInfo extends LocalTable
      * @param Teams | null $team if specified, filters by id
      * @return ScoutCardInfo[]
      */
-    public static function getObjects($scoutCardInfoKey = null, $year = null, $event = null, $match = null, $team = null)
+    public static function getObjects($database, $scoutCardInfoKey = null, $year = null, $event = null, $match = null, $team = null)
     {
         $whereStatment = "";
         $cols = array();
@@ -68,14 +69,16 @@ class ScoutCardInfo extends LocalTable
             $args[] = $team->Id;
         }
 
-        return parent::getObjects($whereStatment, $cols, $args);
+        return parent::getObjects($database, $whereStatment, $cols, $args);
     }
 
     /**
      * Overrides parent save function to overwrite existing records in case of conflicts
+     * @param LocalDatabase $database
+     * @param CoreDatabase $coreDatabase
      * @return bool
      */
-    public function save()
+    public function save($database, $coreDatabase)
     {
         require_once(ROOT_DIR . '/classes/tables/core/Teams.php');
         require_once(ROOT_DIR . '/classes/tables/core/Events.php');
@@ -83,14 +86,14 @@ class ScoutCardInfo extends LocalTable
         require_once(ROOT_DIR . '/classes/tables/core/Years.php');
         require_once(ROOT_DIR . '/classes/tables/local/ScoutCardInfoKeys.php');
 
-        $scoutCardInfoArray = self::getObjects(ScoutCardInfoKeys::withId($this->PropertyKeyId), Years::withId($this->YearId), Events::withId($this->EventId), Matches::withId($this->MatchId), Teams::withId($this->TeamId));
+        $scoutCardInfoArray = self::getObjects($database, ScoutCardInfoKeys::withId($database, $this->PropertyKeyId), Years::withId($coreDatabase, $this->YearId), Events::withId($coreDatabase, $this->EventId), Matches::withId($coreDatabase, $this->MatchId), Teams::withId($coreDatabase, $this->TeamId));
 
         foreach ($scoutCardInfoArray as $scoutCardInfo)
         {
             $this->Id = $scoutCardInfo->Id;
         }
 
-        return parent::save();
+        return parent::save($database);
     }
 
     /**

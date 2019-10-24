@@ -10,8 +10,8 @@ require_once(ROOT_DIR . "/classes/tables/local/RobotMedia.php");
 $eventId = $_GET['eventId'];
 $teamId = $_GET['teamId'];
 
-$team = Teams::withId($teamId);
-$event = Events::withId($eventId);
+$team = Teams::withId($coreDb, $teamId);
+$event = Events::withId($coreDb, $eventId);
 ?>
 
 <!doctype html>
@@ -44,7 +44,7 @@ $event = Events::withId($eventId);
 
     $additionContent = '';
 
-    $profileMedia = RobotMedia::getObjects(null, $event, $team);
+    $profileMedia = RobotMedia::getObjects($localDb, null, $event, $team);
 
     if (!empty($profileMedia))
     {
@@ -135,7 +135,7 @@ $event = Events::withId($eventId);
 
             <?php
 
-            $keys = ScoutCardInfoKeys::getObjects(Years::withId($event->YearId), null, true);
+            $keys = ScoutCardInfoKeys::getObjects($localDb, Years::withId($coreDb, $event->YearId), null, true);
 
             $keyStates = array();
 

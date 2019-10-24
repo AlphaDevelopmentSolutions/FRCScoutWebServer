@@ -14,7 +14,7 @@ require_once(ROOT_DIR . "/classes/tables/local/ChecklistItems.php");
 
 $yearId = $_GET['yearId'];
 
-$year = ((empty($yearId)) ? null : Years::withId($yearId));
+$year = ((empty($yearId)) ? null : Years::withId($coreDb, $yearId));
 
 $panel = $_GET['adminPanel'];
 
@@ -81,7 +81,7 @@ $htmlMysqlDatatypes =
                         <tbody>
 
                         <?php
-                        foreach (Users::getObjects(null, null, null,'FirstName', 'ASC') as $obj)
+                        foreach (Users::getObjects($localDb, null, null, null,'FirstName', 'ASC') as $obj)
                         {
                             ?>
                             <tr>
@@ -117,7 +117,7 @@ $htmlMysqlDatatypes =
                 <tbody>
 
                 <?php
-                foreach (RobotInfoKeys::getObjects($year, 'SortOrder', 'ASC') as $obj)
+                foreach (RobotInfoKeys::getObjects($localDb, $year, 'SortOrder', 'ASC') as $obj)
                 {
                     ?>
                     <tr>
@@ -153,7 +153,7 @@ $htmlMysqlDatatypes =
                     <tbody>
 
                     <?php
-                    foreach (ScoutCardInfoKeys::getObjects($year) as $obj)
+                    foreach (ScoutCardInfoKeys::getObjects($localDb, $year) as $obj)
                     {
                         ?>
                         <tr>
@@ -177,7 +177,7 @@ $htmlMysqlDatatypes =
                     break;
 
                 case AdminPanels::CHECKLIST_INFO:
-                    $checklistItems = ChecklistItems::getObjects($year, 'Title', 'ASC');
+                    $checklistItems = ChecklistItems::getObjects($localDb,$year, 'Title', 'ASC');
                     ?>
                         <tr>
                             <th class="admin-table-header">Title</th>

@@ -2,14 +2,15 @@
 require_once("../../config.php");
 require_once(ROOT_DIR . "/classes/tables/core/Teams.php");
 require_once(ROOT_DIR . "/classes/tables/core/Events.php");
+require_once(ROOT_DIR . "/classes/tables/core/Matches.php");
 require_once(ROOT_DIR . "/classes/tables/core/Years.php");
 require_once(ROOT_DIR . "/classes/tables/local/RobotMedia.php");
 
 $eventId = $_GET['eventId'];
 $teamId = $_GET['teamId'];
 
-$team = Teams::withId($teamId);
-$event = Events::withId($eventId);
+$team = Teams::withId($coreDb, $teamId);
+$event = Events::withId($coreDb, $eventId);
 
 ?>
 
@@ -42,7 +43,7 @@ $event = Events::withId($eventId);
 
     $additionContent = '';
 
-    $profileMedia = RobotMedia::getObjects(null, $event, $team);
+    $profileMedia = RobotMedia::getObjects($localDb, null, $event, $team);
 
     if (!empty($profileMedia))
     {
@@ -128,13 +129,9 @@ $event = Events::withId($eventId);
     <input id="teamId" hidden disabled value="<?php echo $team->Id ?>">
 
     <main class="mdl-layout__content">
-
         <?php
-
-        foreach ($event->getMatches(null, $team) as $match)
-            echo $match->toHtml(MATCHES_URL . 'stats?eventId=' . $match->EventId . '&matchId=' . $match->Key . '&teamId=' . $team->Id, 'View Match Overview', $teamId);
-
-
+        foreach (Matches::getObjects($coreDb, $event, $team, 'MatchNumber', 'DESC') as $match)
+            $match->toHtml(MATCHES_URL . 'stats?eventId=' . $match->EventId . '&matchId=' . $match->Key . '&teamId=' . $team->Id, 'View Match Overview', $teamId);
         ?>
 
         <?php require_once(INCLUDES_DIR . 'footer.php') ?>

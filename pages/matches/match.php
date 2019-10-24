@@ -11,12 +11,12 @@ $matchId = $_GET['matchId'];
 $teamId = $_GET['teamId'];
 $allianceColor = $_GET['allianceColor'];
 
-$event = Events::withId($eventId);
+$event = Events::withId($coreDb, $eventId);
 
-$match = Matches::withId($matchId);
+$match = Matches::withId($coreDb, $matchId);
 
 if(!empty($teamId))
-    $team = Teams::withId($teamId);
+    $team = Teams::withId($coreDb, $teamId);
 
 ?>
 
@@ -63,7 +63,7 @@ if(!empty($teamId))
         <?php
 
         //get all teams for the match
-        $teams = Teams::getObjects(null, $match, 'Id', 'ASC');
+        $teams = Teams::getObjects($coreDb, null, $match, 'Id', 'ASC');
 
         //iterate through the teams to display the cards to the page
         foreach($teams as $team)
@@ -77,7 +77,7 @@ if(!empty($teamId))
                             $team->Id == $match->BlueAllianceTeamTwoId ||
                             $team->Id == $match->BlueAllianceTeamThreeId
                     )
-                        $scoutCardInfoKeys = ScoutCardInfoKeys::toCard($event, $match, $team);
+                        $scoutCardInfoKeys = ScoutCardInfoKeys::toCard($localDb, $coreDb, $event, $match, $team);
                     break;
 
                 case AllianceColors::RED:
@@ -86,7 +86,7 @@ if(!empty($teamId))
                         $team->Id == $match->RedAllianceTeamTwoId ||
                         $team->Id == $match->RedAllianceTeamThreeId
                     )
-                        $scoutCardInfoKeys = ScoutCardInfoKeys::toCard($event, $match, $team);
+                        $scoutCardInfoKeys = ScoutCardInfoKeys::toCard($localDb, $coreDb, $event, $match, $team);
                     break;
             }
         }

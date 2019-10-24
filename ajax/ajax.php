@@ -19,25 +19,25 @@ switch ($_POST['action'])
         $matchId = $_POST['matchId'];
 
         //init base vars
-        $event = Events::withId($eventId);
+        $event = Events::withId($coreDb, $eventId);
         $teams = null;
         $match = null;
 
         //assign all the teams to the array
         if (!empty($teamIds))
             foreach ($teamIds as $teamId)
-                $teams[] = Teams::withId($teamId);
+                $teams[] = Teams::withId($coreDb, $teamId);
 
         //assign the match if specified
         if (!empty($matchId))
-            $match = Matches::withId($matchId);
+            $match = Matches::withId($coreDb, $matchId);
 
         $calcSingleTeam = count($teams) == 1;
         $calcMultiTeam = count($teams) > 1 || empty($teams);
         $calcMatchTeams = !empty($match);
 
-        $scoutCardInfoKeys = ScoutCardInfoKeys::getObjects(null, null, true);//get all the scout card info keys from the database
-        $scoutCardInfos = ScoutCardInfo::getObjects(null, null, $event, null, null);//get all scout cards from the event / match
+        $scoutCardInfoKeys = ScoutCardInfoKeys::getObjects($localDb, null, null, true);//get all the scout card info keys from the database
+        $scoutCardInfos = ScoutCardInfo::getObjects($localDb, null, null, $event, null, null);//get all scout cards from the event / match
         $teamStatArray = array();
 
         if(!$calcSingleTeam)
@@ -124,7 +124,7 @@ switch ($_POST['action'])
         //Single team, show per match breakdown
         else
         {
-            $matches = $event->getMatches(null, $teams[0]);
+            $matches = Matches::getObjects($coreDb, $event, $teams[0]);
 
             $teamStatArray = $teams[0]->getStats($matches, $scoutCardInfoKeys, $scoutCardInfos); //get team stats
             $eventStats = $event->getStats($scoutCardInfoKeys, $scoutCardInfos); //get event stats

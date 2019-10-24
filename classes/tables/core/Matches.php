@@ -28,23 +28,25 @@ class Matches extends CoreTable
 
     /**
      * Overrides parent withId method and provides a custom column name to use when loading
+     * @param CoreDatabase $database
      * @param int|string $id
      * @return Matches
      */
-    public static function withId($id)
+    public static function withId($database, $id)
     {
-        return parent::withId($id, 'Key');
+        return parent::withId($database, $id, 'Key');
     }
 
     /**
      * Retrieves objects from the database
+     * @param CoreDatabase $database
      * @param Events | null $event if specified, filters by id
      * @param Teams | null $team if specified, filters by id
      * @param string $orderBy order field to sort items by
      * @param string $orderDirection direction to sort items by
      * @return Matches[]
      */
-    public static function getObjects($event = null, $team = null, $orderBy = 'Id', $orderDirection = 'DESC')
+    public static function getObjects($database, $event = null, $team = null, $orderBy = 'Id', $orderDirection = 'DESC')
     {
         $whereStatment = "";
         $cols = array();
@@ -72,7 +74,7 @@ class Matches extends CoreTable
             $args[] = $team->Id;
         }
 
-        return parent::getObjects($whereStatment, $cols, $args, $orderBy, $orderDirection);
+        return parent::getObjects($database, $whereStatment, $cols, $args, $orderBy, $orderDirection);
     }
 
     /**
@@ -89,73 +91,6 @@ class Matches extends CoreTable
 
         else
             return AllianceColors::RED;
-    }
-
-    /**
-     * Returns the amount of scout cards for a match
-     * A scout card is defined as 1 team being scouted with multiple entries in the scout_card_info database
-     * @return string
-     */
-    public function getScoutCardCount()
-    {
-        require_once(ROOT_DIR . '/interfaces/AllianceColors.php');
-
-        //create the sql statement
-        $sql = "SELECT * FROM ! WHERE ! = ? AND ! = ? GROUP BY !";
-        $cols[] = ScoutCardInfo::$TABLE_NAME;
-
-        $cols[] = 'EventId';
-        $args[] = $this->EventId;
-
-        $cols[] = 'MatchId';
-        $args[] = $this->Key;
-
-        $cols[] = 'TeamId';
-
-        return count(self::queryRecords($sql, $cols, $args));
-    }
-
-    /**
-     * Gets scout cards for a specific match
-     * @param null | Teams $team if specified, filters by team
-     * @return ScoutCardInfoArray[]
-     */
-    public function getScoutCards($team = null)
-    {
-        require_once(ROOT_DIR . '/classes/tables/local/ScoutCardInfo.php');
-        require_once(ROOT_DIR . '/classes/tables/local/ScoutCardInfoArray.php');
-
-        $response = new ScoutCardInfoArray();
-        $scoutCardInfoArray = array();
-
-        //create the sql statement
-        $sql = "SELECT * FROM ! WHERE ! = ?";
-        $cols[] = ScoutCardInfo::$TABLE_NAME;
-        $cols[] = 'MatchId';
-        $args[] = $this->Key;
-
-        //if team specified, filter by team
-        if(!empty($team))
-        {
-            $sql .= " AND ! = ? ";
-
-            $cols[] = 'TeamId';
-            $args[] = $team->Id;
-        }
-
-        $sql .= " ORDER BY ! DESC";
-        $cols[] = 'Id';
-
-        $rows = self::queryRecords($sql, $cols, $args, LocalTable::$DB_NAME);
-
-        foreach ($rows as $row)
-            $response[] = ScoutCardInfo::withProperties($row);
-
-        foreach($response as $key => $value)
-            $scoutCardInfoArray[$value->TeamId][] = $response[$key];
-
-
-        return $scoutCardInfoArray;
     }
 
     /**
@@ -290,41 +225,39 @@ class Matches extends CoreTable
      */
     public function toHtml($buttonHref = null, $buttonText = null, $teamId = null)
     {
-        $html = '
+        ?>
         <div class="mdl-layout__tab-panel is-active" id="overview">
             <section class="section--center mdl-grid mdl-grid--no-spacing mdl-shadow--2dp">
                 <div class="mdl-card mdl-cell mdl-cell--12-col">
                     <div class="mdl-card__supporting-text">
-                        <h4>' . $this->toString() . '</h4>
+                        <h4><?php echo $this->toString() ?></h4>
                         <div class="container">
                             <div class="row">
                                 <table class="match-table">
                                     <tr class="blue-alliance-bg">
-                                        <td><a href="' . TEAMS_URL . 'match-list?teamId=' . $this->BlueAllianceTeamOneId . '&eventId=' . $this->EventId .'" class="team-link ' . (($teamId == $this->BlueAllianceTeamOneId) ? " tr-selected-team " : "") . (($this->BlueAllianceScore > $this->RedAllianceScore) ? " tr-win " : "") . '">' . $this->BlueAllianceTeamOneId . '</a></td>
-                                        <td><a href="' . TEAMS_URL . 'match-list?teamId=' . $this->BlueAllianceTeamTwoId . '&eventId=' . $this->EventId .'" class="team-link ' . (($teamId == $this->BlueAllianceTeamTwoId) ? " tr-selected-team " : "") . (($this->BlueAllianceScore > $this->RedAllianceScore) ? " tr-win " : "") . '">' . $this->BlueAllianceTeamTwoId . '</a></td>
-                                        <td><a href="' . TEAMS_URL . 'match-list?teamId=' . $this->BlueAllianceTeamThreeId . '&eventId=' . $this->EventId .'" class="team-link ' . (($teamId == $this->BlueAllianceTeamThreeId) ? " tr-selected-team " : "") . (($this->BlueAllianceScore > $this->RedAllianceScore) ? " tr-win " : "") . '">' . $this->BlueAllianceTeamThreeId . '</a></td>
-                                        <td><span ' . (($this->BlueAllianceScore > $this->RedAllianceScore) ? 'style="font-weight: bold;"' : 'style="font-weight: 300;"') . '>' . $this->BlueAllianceScore . '</span></td>
+                                        <td><a href="<?php echo TEAMS_URL . 'match-list?teamId=' . $this->BlueAllianceTeamOneId . '&eventId=' . $this->EventId ?>" class="team-link <?php echo (($teamId == $this->BlueAllianceTeamOneId) ? " tr-selected-team " : "") . (($this->BlueAllianceScore > $this->RedAllianceScore) ? " tr-win " : "") ?>"><?php echo $this->BlueAllianceTeamOneId ?></a></td>
+                                        <td><a href="<?php echo TEAMS_URL . 'match-list?teamId=' . $this->BlueAllianceTeamTwoId . '&eventId=' . $this->EventId ?>" class="team-link <?php echo (($teamId == $this->BlueAllianceTeamTwoId) ? " tr-selected-team " : "") . (($this->BlueAllianceScore > $this->RedAllianceScore) ? " tr-win " : "") ?>"></a><?php echo $this->BlueAllianceTeamTwoId ?></td>
+                                        <td><a href="<?php echo TEAMS_URL . 'match-list?teamId=' . $this->BlueAllianceTeamThreeId . '&eventId=' . $this->EventId ?>" class="team-link <?php echo (($teamId == $this->BlueAllianceTeamThreeId) ? " tr-selected-team " : "") . (($this->BlueAllianceScore > $this->RedAllianceScore) ? " tr-win " : "") ?>"><?php echo $this->BlueAllianceTeamThreeId ?></a></td>
+                                        <td><span <?php echo (($this->BlueAllianceScore > $this->RedAllianceScore) ? 'style="font-weight: bold;"' : 'style="font-weight: 300;"') . '>' . $this->BlueAllianceScore ?></span></td>
                                     </tr>
                                     <tr class="red-alliance-bg">
-                                        <td><a href="' . TEAMS_URL . 'match-list?teamId=' . $this->RedAllianceTeamOneId . '&eventId=' . $this->EventId .'" class="team-link ' . (($teamId == $this->RedAllianceTeamOneId) ? " tr-selected-team " : "") . (($this->BlueAllianceScore < $this->RedAllianceScore) ? " tr-win " : "") . '">' . $this->RedAllianceTeamOneId . '</a></td>
-                                        <td><a href="' . TEAMS_URL . 'match-list?teamId=' . $this->RedAllianceTeamTwoId . '&eventId=' . $this->EventId .'" class="team-link ' . (($teamId == $this->RedAllianceTeamTwoId) ? " tr-selected-team " : "") . (($this->BlueAllianceScore < $this->RedAllianceScore) ? " tr-win " : "") . '">' . $this->RedAllianceTeamTwoId . '</a></td>
-                                        <td><a href="' . TEAMS_URL . 'match-list?teamId=' . $this->RedAllianceTeamThreeId . '&eventId=' . $this->EventId .'" class="team-link ' . (($teamId == $this->RedAllianceTeamThreeId) ? " tr-selected-team " : "") . (($this->BlueAllianceScore < $this->RedAllianceScore) ? " tr-win " : "") . '">' . $this->RedAllianceTeamThreeId . '</a></td>
-                                        <td><span ' . (($this->BlueAllianceScore < $this->RedAllianceScore) ? 'style="font-weight: bold;"' : 'style="font-weight: 300;"') . '>' . $this->RedAllianceScore . '</span></td>
+                                        <td><a href="<?php echo TEAMS_URL . 'match-list?teamId=' . $this->RedAllianceTeamOneId . '&eventId=' . $this->EventId ?>" class="team-link <?php echo (($teamId == $this->RedAllianceTeamOneId) ? " tr-selected-team " : "") . (($this->BlueAllianceScore < $this->RedAllianceScore) ? " tr-win " : "") ?>"><?php echo $this->RedAllianceTeamOneId ?></a></td>
+                                        <td><a href="<?php echo TEAMS_URL . 'match-list?teamId=' . $this->RedAllianceTeamTwoId . '&eventId=' . $this->EventId ?>" class="team-link <?php echo (($teamId == $this->RedAllianceTeamTwoId) ? " tr-selected-team " : "") . (($this->BlueAllianceScore < $this->RedAllianceScore) ? " tr-win " : "") ?>"><?php echo $this->RedAllianceTeamTwoId ?></a></td>
+                                        <td><a href="<?php echo TEAMS_URL . 'match-list?teamId=' . $this->RedAllianceTeamThreeId . '&eventId=' . $this->EventId ?>" class="team-link <?php echo (($teamId == $this->RedAllianceTeamThreeId) ? " tr-selected-team " : "") . (($this->BlueAllianceScore < $this->RedAllianceScore) ? " tr-win " : "") ?>"><?php echo $this->RedAllianceTeamThreeId ?></a></td>
+                                        <td><span <?php echo (($this->BlueAllianceScore < $this->RedAllianceScore) ? 'style="font-weight: bold;"' : 'style="font-weight: 300;"') . '>' . $this->RedAllianceScore ?></span></td>
                                     </tr>
                                 </table>
                             </div>
                         </div>
                     </div>
                     <div class="mdl-card__actions">
-                        <a href="' . $buttonHref . '" class="mdl-button">' . $buttonText . '</a>
+                        <a href="<?php echo $buttonHref ?>" class="mdl-button"><?php echo $buttonText ?></a>
                     </div>
                 </div>
             </section>
-        </div>';
-
-        return $html;
+        </div>
+    <?php
     }
-
 }
 
 ?>

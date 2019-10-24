@@ -10,12 +10,12 @@ require_once(ROOT_DIR . "/classes/tables/core/Years.php");
 $eventId = $_GET['eventId'];
 $matchId = $_GET['matchId'];
 
-$event = Events::withId($eventId);
+$event = Events::withId($coreDb, $eventId);
 
 if(!empty($matchId))
-    $match = Matches::withId($matchId);
+    $match = Matches::withId($coreDb, $matchId);
 
-$keys = ScoutCardInfoKeys::getObjects(Years::withId($event->YearId), null, true);
+$keys = ScoutCardInfoKeys::getObjects($localDb, Years::withId($coreDb, $event->YearId), null, true);
 
 $keyStates = array();
 

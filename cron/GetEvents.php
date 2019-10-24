@@ -38,7 +38,7 @@ else
 
         echo "$i / {$eventsSize} - {$percent}% - Saving event {$event->toString()}...\n";
 
-        $event->save();
+        $event->save($coreDb);
     }
 
     //cleanup duplicates

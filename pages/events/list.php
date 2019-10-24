@@ -5,9 +5,9 @@ require_once(ROOT_DIR . "/classes/tables/core/Years.php");
 require_once(ROOT_DIR . "/classes/tables/core/Teams.php");
 
 $yearId = $_GET['yearId'];
-$year = Years::withId($yearId);
+$year = Years::withId($coreDb, $yearId);
 
-$team = Teams::withId(getCoreAccount()->TeamId)
+$team = Teams::withId($coreDb, getCoreAccount()->TeamId)
 
 ?>
 
@@ -27,7 +27,7 @@ $team = Teams::withId(getCoreAccount()->TeamId)
       <main class="mdl-layout__content">
           <?php
 
-          foreach(Events::getObjects($year, $team) as $event)
+          foreach(Events::getObjects($coreDb, $year, $team) as $event)
               echo $event->toHtml();
 
           ?>

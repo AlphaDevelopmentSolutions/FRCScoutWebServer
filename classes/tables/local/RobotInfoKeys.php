@@ -12,12 +12,13 @@ class RobotInfoKeys extends LocalTable
 
     /**
      * Retrieves objects from the database
+     * @param LocalDatabase $database
      * @param Years | null $year if specified, filters by id
      * @param string $orderBy order field to sort items by
      * @param string $orderDirection direction to sort items by
      * @return RobotInfoKeys[]
      */
-    public static function getObjects($year = null, $orderBy = 'SortOrder', $orderDirection = 'ASC')
+    public static function getObjects($database, $year = null, $orderBy = 'SortOrder', $orderDirection = 'ASC')
     {
         $whereStatment = "";
         $cols = array();
@@ -30,17 +31,17 @@ class RobotInfoKeys extends LocalTable
             $args[] = $year->Id;
         }
 
-        return parent::getObjects($whereStatment, $cols, $args, $orderBy, $orderDirection);
+        return parent::getObjects($database, $whereStatment, $cols, $args, $orderBy, $orderDirection);
     }
 
     /**
      * Gets and returns all keys from the database
+     * @param LocalDatabase $database
      * @param Years | null $year if specified, filters keys by year
-     * @param Events | null $event if specified, filters keys by event
      * @param string | null $keyState if specified, filters keys by state
      * @return RobotInfoKeys[]
      */
-    public static function getKeys($year = null, $event = null, $keyState = null)
+    public static function getKeys($database, $year = null, $keyState = null)
     {
         $yearId = ((!empty($year)) ? $year->Id : ((!empty($event)) ? $event->YearId : date('Y')));
 
@@ -62,7 +63,7 @@ class RobotInfoKeys extends LocalTable
         $sql .= " ORDER BY ! ASC";
         $cols[] = 'SortOrder';
 
-        $rows = self::queryRecords($sql, $cols, $args);
+        $rows = self::queryRecords($database, $sql, $cols, $args);
 
         foreach ($rows as $row)
             $response[] = RobotInfoKeys::withProperties($row);
@@ -73,9 +74,10 @@ class RobotInfoKeys extends LocalTable
     /**
      * Override for the Table class delete function
      * Ensures all records associated with this key are deleted before deletion
+     * @param LocalDatabase $database
      * @return bool
      */
-    public function delete()
+    public function delete($database)
     {
         if (!empty($this->Id)) {
             require_once(ROOT_DIR . '/classes/tables/local/RobotInfo.php');
@@ -89,12 +91,12 @@ class RobotInfoKeys extends LocalTable
             $args[] = $this->YearId;
 
             $cols[] = 'PropertyKeyId';
-            $args[] = $this->PropertyKeyId;
+            $args[] = $this->Id;
 
-            self::deleteRecords($sql, $cols, $args);
+            self::deleteRecords($database, $sql, $cols, $args);
         }
 
-        return parent::delete();
+        return parent::delete($database);
     }
 
     public function toString()
@@ -109,18 +111,20 @@ class RobotInfoKeys extends LocalTable
 
     /**
      * Displays the object once converted into HTML
+     * @param LocalDatabase $database
+     * @param CoreDatabase $coreDatabase
      * @param $event Events
      * @param $team Teams
      */
-    public static function toCard($event, $team)
+    public static function toCard($database, $coreDatabase, $event, $team)
     {
         require_once(ROOT_DIR . "/classes/tables/core/Years.php");
 
         $robotInfoArray = array();
         $robotInfoKeyStates = array();
-        $year = Years::withId($event->YearId);
-        $robotInfoKeys = self::getObjects($year);
-        $robotInfos = RobotInfo::getObjects(null, null, $event, $team, $robotInfoKeys);
+        $year = Years::withId($coreDatabase, $event->YearId);
+        $robotInfoKeys = self::getObjects($database, $year);
+        $robotInfos = RobotInfo::getObjects($database, null, null, $event, $team, $robotInfoKeys);
 
         foreach ($robotInfos as $robotInfo) {
             $robotInfoKey = null;
@@ -150,7 +154,7 @@ class RobotInfoKeys extends LocalTable
                             <h5><?php echo $robotInfoKeyState ?></h5>
                             <hr>
                             <?php
-                            foreach (self::getKeys($year, null, $robotInfoKeyState) as $robotInfoKey) {
+                            foreach (self::getKeys($database, $year, $robotInfoKeyState) as $robotInfoKey) {
                                 ?>
                                 <strong class="setting-title"><?php echo $robotInfoKey->KeyName ?></strong>
                                 <div class="setting-value mdl-textfield mdl-js-textfield mdl-textfield--floating-label"

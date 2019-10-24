@@ -10,10 +10,10 @@ require_once(ROOT_DIR . "/classes/tables/local/ChecklistItemResults.php");
 $eventId = $_GET['eventId'];
 $matchId = $_GET['matchId'];
 
-$event = Events::withId($eventId);
+$event = Events::withId($coreDb, $eventId);
 
 if(!empty($matchId))
-    $match = Matches::withId($matchId);
+    $match = Matches::withId($coreDb, $matchId);
 ?>
 
 <!doctype html>
@@ -49,15 +49,15 @@ if(!empty($matchId))
         //no match selected, show match list
         if(empty($match))
         {
-            foreach ($event->getMatches(null, Teams::withId(getCoreAccount()->TeamId)) as $match)
+            foreach (Matches::getObjects($coreDb, $event, Teams::withId($coreDb, getCoreAccount()->TeamId), "MatchNumber", "DESC") as $match)
                 echo $match->toHtml(CHECKLISTS_URL . 'list?eventId=' . $event->BlueAllianceId . '&matchId=' . $match->Key, 'View Completed Checklist Items', getCoreAccount()->TeamId);
         }
 
         //match selected, show checklist item results for specified match
         else
         {
-            $checklistItems = ChecklistItems::getObjects(Years::withId($event->YearId));
-            $checklistItemResults = ChecklistItemResults::getObjects($match);
+            $checklistItems = ChecklistItems::getObjects($localDb, Years::withId($coreDb, $event->YearId));
+            $checklistItemResults = ChecklistItemResults::getObjects($localDb, $match);
 
             foreach ($checklistItems as $checklistItem)
             {
@@ -68,7 +68,7 @@ if(!empty($matchId))
                     if($checklistItemResult->ChecklistItemId == $checklistItem->Id && !$resultFound)
                     {
                         $resultFound = true;
-                        $checklistItemResult->toHtml();
+                        $checklistItemResult->toHtml($localDb);
                     }
                 }
 
@@ -78,7 +78,7 @@ if(!empty($matchId))
                     $checklistItemResult->MatchId = $match->Key;
                     $checklistItemResult->ChecklistItemId = $checklistItem->Id;
                     $checklistItemResult->Status = ChecklistItemResults::INCOMPLETE;
-                    $checklistItemResult->toHtml();
+                    $checklistItemResult->toHtml($localDb);
                 }
             }
         }

@@ -7,7 +7,7 @@ else
     require_once("../config.php");
     require_once(ROOT_DIR . '/classes/tables/core/Demos.php');
 
-    $demos = Demos::getObjects();
+    $demos = Demos::getObjects($coreDb);
     $demoSize = sizeof($demos);
     for($i = 0; $i < $demoSize; $i++)
     {
@@ -18,7 +18,7 @@ else
         {
             echo "$i / {$demoSize} - {$percent}% - Deleting demo with expiration {$demo->Expires()}...\n";
 
-            $account = Accounts::withId($demo->AccountId);
+            $account = Accounts::withId($coreDb, $demo->AccountId);
 
             $db = new Database($account->DbId);
 
@@ -28,8 +28,8 @@ else
             if (is_dir(ROOT_DIR . '/assets/robot-media/originals/' . $account->RobotMediaDir))
                 rmdir(ROOT_DIR . '/assets/robot-media/thumbs/' . $account->RobotMediaDir);
 
-            $account->delete();
-            $demo->delete();
+            $account->delete($coreDb);
+            $demo->delete($coreDb);
 
             $db->query('DROP DATABASE !', [$account->DbId], array());
         }

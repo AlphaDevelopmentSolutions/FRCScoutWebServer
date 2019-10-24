@@ -3,7 +3,7 @@
     $bypassCoreCheck = true;
     require_once('../config.php');
 
-if(coreLoggedIn())
+if(isCoreLoggedIn())
 {
 ?>
 :root {

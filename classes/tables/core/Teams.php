@@ -19,13 +19,14 @@ class Teams extends CoreTable
 
     /**
      * Retrieves objects from the database
+     * @param CoreDatabase $database
      * @param Events | null $event if specified, filters by id
      * @param Matches | null $match if specified, filters by id
      * @param string $orderBy order field to sort items by
      * @param string $orderDirection direction to sort items by
      * @return Teams[]
      */
-    public static function getObjects($event = null, $match = null, $orderBy = 'Id', $orderDirection = 'DESC')
+    public static function getObjects($database, $event = null, $match = null, $orderBy = 'Id', $orderDirection = 'DESC')
     {
         $whereStatment = "";
         $cols = array();
@@ -55,68 +56,7 @@ class Teams extends CoreTable
             $args[] = $match->RedAllianceTeamThreeId;
         }
 
-        return parent::getObjects($whereStatment, $cols, $args, $orderBy, $orderDirection);
-    }
-
-    /**
-     * Gets all the events where a team is included in
-     * @return Events[] List of events where the team is included
-     */
-    public function getEvents()
-    {
-        require_once(ROOT_DIR . '/classes/tables/core/Events.php');
-        require_once(ROOT_DIR . '/classes/tables/core/EventTeamList.php');
-
-        $response = array();
-
-        //create the sql statement
-        $sql = "SELECT * FROM ! WHERE ! IN (SELECT ! FROM ! WHERE ! = ?)";
-        $cols[] = Events::$TABLE_NAME;
-        $cols[] = 'BlueAllianceId';
-        $cols[] = 'EventId';
-        $cols[] = EventTeamList::$TABLE_NAME;
-        $cols[] = 'TeamId';
-        $args[] = $this->Id;
-
-        $rows = self::queryRecords($sql, $cols, $args, LocalTable::$DB_NAME);
-
-        foreach ($rows as $row)
-            $response[] = Events::withProperties($row);
-
-        return $response;
-    }
-
-    /**
-     * Gets all robot media for this team
-     * @param $year Years to get the image from
-     * @return RobotMedia[]
-     */
-    public function getRobotPhotos($year = null)
-    {
-        require_once(ROOT_DIR . '/classes/tables/local/RobotMedia.php');
-
-        $response = array();
-
-        //create the sql statement
-        $sql = "SELECT * FROM ! WHERE ! = ? " . ((empty($year)) ? "" : "AND ! = ?") . " ORDER BY ! DESC";
-        $cols[] = RobotMedia::$TABLE_NAME;
-        $cols[] = 'TeamId';
-        $args[] = $this->Id;
-
-        if(!empty($year))
-        {
-            $cols[] = 'YearId';
-            $args[] = $year->Id;
-        }
-
-        $cols[] = 'Id';
-
-        $rows = self::queryRecords($sql, $cols, $args, LocalTable::$DB_NAME);
-
-        foreach ($rows as $row)
-            $response[] = RobotMedia::withProperties($row);
-
-        return $response;
+        return parent::getObjects($database, $whereStatment, $cols, $args, $orderBy, $orderDirection);
     }
 
     /**
@@ -169,16 +109,17 @@ class Teams extends CoreTable
 
     /**
      * Returns the object once converted into HTML
+     * @param LocalDatabase $database
      * @param Events $event id of the event
      * @return string
      */
-    public function toHtml($event = null)
+    public function toHtml($database = null, $event = null)
     {
         require_once(ROOT_DIR . '/classes/tables/core/Events.php');
         require_once(ROOT_DIR . "/classes/tables/core/Years.php");
         require_once(ROOT_DIR . "/classes/tables/local/RobotMedia.php");
 
-        $robotMedia = RobotMedia::getObjects(null, $event, $this)
+        $robotMedia = RobotMedia::getObjects($database, null, $event, $this)
 
         ?>
         <section class="section--center mdl-grid mdl-grid--no-spacing mdl-shadow--2dp team-card">

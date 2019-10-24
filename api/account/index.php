@@ -28,6 +28,8 @@ switch($_POST[$api->ACTION_KEY])
         if($response['success'])
         {
             $account = Accounts::withProperties($_POST);
+            setCoreAccount($account);
+            $localDb = new LocalDatabase();
 
             if (empty($account->Username))
                 $api->badRequest("Username cannot be empty.");
@@ -35,16 +37,16 @@ switch($_POST[$api->ACTION_KEY])
             if (empty($account->Password))
                 $api->badRequest("Password cannot be empty.");
 
-            if ($account->login())
+            if ($account->login($coreDb))
             {
                 setCoreAccount($account);
 
                 require_once(ROOT_DIR . '/classes/tables/core/Teams.php');
                 require_once(ROOT_DIR . '/classes/tables/local/Config.php');
 
-                $configs = Config::getObjects();
+                $configs = Config::getObjects($localDb);
 
-                $team = Teams::withId($account->TeamId);
+                $team = Teams::withId($coreDb, $account->TeamId);
 
                 $obj = new Config();
                 $obj->Key = "TEAM_NUMBER";

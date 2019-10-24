@@ -22,6 +22,7 @@ class ScoutCardInfoKeys extends LocalTable
 
     /**
      * Retrieves objects from the database
+     * @param LocalDatabase $database
      * @param Years | null $year if specified, filters by id
      * @param ScoutCardInfoKeys | null $keyState if specified, filters keys by state
      * @param boolean | null $includeInStats if specified, filters keys by include in stats flag
@@ -29,7 +30,7 @@ class ScoutCardInfoKeys extends LocalTable
      * @param string $orderDirection direction to sort items by
      * @return ScoutCardInfoKeys[]
      */
-    public static function getObjects($year = null, $keyState = null, $includeInStats = null, $orderBy = 'SortOrder', $orderDirection = 'ASC')
+    public static function getObjects($database, $year = null, $keyState = null, $includeInStats = null, $orderBy = 'SortOrder', $orderDirection = 'ASC')
     {
         $whereStatment = "";
         $cols = array();
@@ -59,57 +60,52 @@ class ScoutCardInfoKeys extends LocalTable
             $args[] = (($includeInStats) ? 1 : 0);
         }
 
-        return parent::getObjects($whereStatment, $cols, $args, $orderBy, $orderDirection);
+        return parent::getObjects($database, $whereStatment, $cols, $args, $orderBy, $orderDirection);
     }
 
     /**
-     * @return static
+     * Gets and returns all keys from the database
+     * @param LocalDatabase $database
+     * @param Years | null $year if specified, filters keys by year
+     * @param string | null $keyState if specified, filters keys by state
+     * @return ScoutCardInfoKeys[]
      */
-    public static function withStateAndName($keyState, $keyName)
+    public static function getKeys($database, $year = null, $keyState = null)
     {
-        $instance = new self();
-        $instance->loadByStateAndKey($keyState, $keyName);
-        return $instance;
-    }
+        $yearId = ((!empty($year)) ? $year->Id : ((!empty($event)) ? $event->YearId : date('Y')));
+        $response = array();
 
-    /**
-     * Loads a new instance by its database id
-     * @return boolean
-     */
-    protected function loadByStateAndKey($keyState, $keyName)
-    {
         //create the sql statement
-        $sql = "SELECT * FROM ! WHERE ! = ? AND ! = ?";
+        $sql = "SELECT * FROM ! WHERE ! = ?";
         $cols[] = self::$TABLE_NAME;
+        $cols[] = 'YearId';
+        $args[] = $yearId;
 
-        $cols[] = 'KeyState';
-        $args[] = $keyState;
-        $cols[] = 'KeyName';
-        $args[] = $keyName;
-
-        $rows = self::queryRecords($sql, $cols, $args);
-
-        foreach ($rows as $row)
-        {
-            foreach($row as $key => $value)
-            {
-                if(property_exists($this, $key))
-                    $this->$key = $value;
-
-            }
-
-            return true;
+        if (!empty($keyState)) {
+            $sql .= " AND ! = ? ";
+            $cols[] = 'KeyState';
+            $args[] = $keyState;
         }
 
-        return false;
+        $sql .= " ORDER BY ! ASC";
+        $cols[] = 'SortOrder';
+
+        $rows = self::queryRecords($database, $sql, $cols, $args);
+
+        foreach ($rows as $row)
+            $response[] = ScoutCardInfoKeys::withProperties($row);
+
+        return $response;
     }
+
 
     /**
      * Override for the Table class delete function
      * Ensures all records associated with this key are deleted before deletion
+     * @param LocalDatabase $database
      * @return bool
      */
-    public function delete()
+    public function delete($database)
     {
         if(!empty($this->Id))
         {
@@ -126,10 +122,10 @@ class ScoutCardInfoKeys extends LocalTable
             $cols[] = 'PropertyKeyId';
             $args[] = $this->Id;
 
-            self::deleteRecords($sql, $cols, $args);
+            self::deleteRecords($database, $sql, $cols, $args);
         }
 
-        return parent::delete();
+        return parent::delete($database);
     }
 
     public function toString()
@@ -144,19 +140,21 @@ class ScoutCardInfoKeys extends LocalTable
 
     /**
      * Displays the object once converted into HTML
+     * @param LocalDatabase $database
+     * @param CoreDatabase $coreDatabase
      * @param $event Events
      * @param $match Matches
      * @param $team Teams
      */
-    public static function toCard($event, $match, $team)
+    public static function toCard($database, $coreDatabase, $event, $match, $team)
     {
         require_once(ROOT_DIR . "/classes/tables/core/Years.php");
 
         $scoutCardInfoArray = array();
         $scoutCardInfoKeyStates = array();
-        $year = Years::withId($event->YearId);
-        $scoutCardInfoKeys = self::getObjects($year);
-        $scoutCardInfos = ScoutCardInfo::getObjects(null, null, $event, $match, $team, $scoutCardInfoKeys);
+        $year = Years::withId($coreDatabase, $event->YearId);
+        $scoutCardInfoKeys = self::getObjects($database, $year);
+        $scoutCardInfos = ScoutCardInfo::getObjects($database, null, null, $event, $match, $team);
 
         foreach ($scoutCardInfos as $scoutCardInfo) {
             $scoutCardInfoKey = null;
@@ -171,7 +169,10 @@ class ScoutCardInfoKeys extends LocalTable
 
         //get the keys for the specified year and store the states for sections
         foreach ($scoutCardInfoKeys as $scoutCardInfoKey)
-            $scoutCardInfoKeyStates[$scoutCardInfoKey->Id] = $scoutCardInfoKey;
+        {
+            if(!in_array($scoutCardInfoKey->KeyState, $scoutCardInfoKeyStates))
+                $scoutCardInfoKeyStates[] = $scoutCardInfoKey->KeyState;
+        }
 
         ?>
         <div class="mdl-layout__tab-panel is-active">
@@ -180,13 +181,14 @@ class ScoutCardInfoKeys extends LocalTable
                     <h4 style="padding: 0 40px;"><a class="link" href="<?php echo TEAMS_URL . 'match-list?teamId=' . $team->Id . '&eventId=' . $event->BlueAllianceId ?>"><?php echo $team->toString() ?></a></h4>
                     <?php
 
-                    foreach ($scoutCardInfoKeyStates as $scoutCardInfoKeyState) {
+                    foreach ($scoutCardInfoKeyStates as $scoutCardInfoKeyState)
+                    {
                         ?>
                         <div class="mdl-card__supporting-text" style="margin: 0 40px !important;">
-                            <h5><?php echo $scoutCardInfoKeyState->KeyState ?></h5>
+                            <h5><?php echo $scoutCardInfoKeyState ?></h5>
                             <hr>
                             <?php
-                            foreach (self::getObjects($year, $scoutCardInfoKeyState) as $scoutCardInfoKey) {
+                            foreach (self::getKeys($database, $year, $scoutCardInfoKeyState) as $scoutCardInfoKey) {
                                 ?>
                                 <strong class="setting-title"><?php echo $scoutCardInfoKey->KeyName ?></strong>
                                 <div class="setting-value mdl-textfield mdl-js-textfield mdl-textfield--floating-label"

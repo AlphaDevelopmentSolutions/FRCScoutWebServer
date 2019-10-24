@@ -11,12 +11,13 @@ class ChecklistItems extends LocalTable
 
     /**
      * Retrieves objects from the database
+     * @param LocalDatabase $database
      * @param Years | null $year if specified, filters by id
      * @param string $orderBy order field to sort items by
      * @param string $orderDirection direction to sort items by
      * @return ChecklistItems[]
      */
-    public static function getObjects($year = null, $orderBy = 'Title', $orderDirection = 'ASC')
+    public static function getObjects($database, $year = null, $orderBy = 'Title', $orderDirection = 'ASC')
     {
         $whereStatment = "";
         $cols = array();
@@ -30,15 +31,16 @@ class ChecklistItems extends LocalTable
             $args[] = $year->Id;
         }
 
-        return parent::getObjects($whereStatment, $cols, $args, $orderBy, $orderDirection);
+        return parent::getObjects($database, $whereStatment, $cols, $args, $orderBy, $orderDirection);
     }
 
     /**
      * Override for the Table class delete function
      * Ensures all records associated with this key are deleted before deletion
+     * @param LocalDatabase $database
      * @return bool
      */
-    public function delete()
+    public function delete($database)
     {
         if(!empty($this->Id))
         {
@@ -52,43 +54,10 @@ class ChecklistItems extends LocalTable
             $cols[] = 'ChecklistItemId';
             $args[] = $this->Id;
 
-            self::deleteRecords($sql, $cols, $args);
+            self::deleteRecords($database, $sql, $cols, $args);
         }
 
-        return parent::delete();
-    }
-
-    /**
-     * Gets the results for this checklist item
-     * @param Matches | null $match if specified, filters by match
-     * @return ChecklistItemResults[]
-     */
-    public function getResults($match = null)
-    {
-        require_once(ROOT_DIR . '/classes/tables/local/ChecklistItemResults.php');
-
-        $response = array();
-
-        //create the sql statement
-        $sql = "SELECT * FROM ! WHERE ! = ?";
-        $cols[] = ChecklistItemResults::$TABLE_NAME;
-        $cols[] = 'ChecklistItemId';
-        $args[] = $this->Id;
-
-        if(!empty($match))
-        {
-            $sql .= " AND ! = ? ";
-
-            $cols[] = 'MatchId';
-            $args[] = $match->Key;
-        }
-
-        $rows = self::queryRecords($sql, $cols, $args);
-
-        foreach ($rows as $row)
-            $response[] = ChecklistItemResults::withProperties($row);
-
-        return $response;
+        return parent::delete($database);
     }
 
     /**

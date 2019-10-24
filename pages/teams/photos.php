@@ -9,8 +9,8 @@ require_once(ROOT_DIR . "/classes/tables/local/RobotMedia.php");
 $eventId = $_GET['eventId'];
 $teamId = $_GET['teamId'];
 
-$team = Teams::withId($teamId);
-$event = Events::withId($eventId);
+$team = Teams::withId($coreDb, $teamId);
+$event = Events::withId($coreDb, $eventId);
 
 //robot media submission
 if(isPostBack() && !empty($_FILES) && !empty(getUser()))
@@ -27,7 +27,7 @@ if(isPostBack() && !empty($_FILES) && !empty(getUser()))
         $robotMedia->TeamId = $team->Id;
         $robotMedia->FileURI = base64_encode(file_get_contents($file['tmp_name']));
 
-        $mediaSaveSuccess = $robotMedia->save();
+        $mediaSaveSuccess = $robotMedia->save($localDb);
     }
 }
 ?>
@@ -64,7 +64,7 @@ if(isPostBack() && !empty($_FILES) && !empty(getUser()))
 
     $additionContent = '';
 
-    $profileMedia = RobotMedia::getObjects(null, $event, $team);
+    $profileMedia = RobotMedia::getObjects($localDb, null, $event, $team);
 
     if (!empty($profileMedia))
     {

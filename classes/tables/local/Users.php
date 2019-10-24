@@ -13,11 +13,12 @@ class Users extends LocalTable
 
     /**
      * Attempts to login with the provided username and password
+     * @param LocalDatabase $database
      * @param $userName
      * @param $password
      * @return Users
      */
-    public function login($userName, $password)
+    public function login($database, $userName, $password)
     {
         //create the sql statement
         $sql = "SELECT * FROM ! WHERE ! = ? LIMIT 1";
@@ -26,7 +27,7 @@ class Users extends LocalTable
         $cols[] = 'Username';
         $args[] = $userName;
 
-        $rows = self::queryRecords($sql, $cols, $args);
+        $rows = self::queryRecords($database, $sql, $cols, $args);
 
         foreach ($rows as $row)
         {

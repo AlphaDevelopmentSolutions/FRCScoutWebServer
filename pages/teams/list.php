@@ -1,10 +1,12 @@
 <?php
 require_once("../../config.php");
 require_once(ROOT_DIR . "/classes/tables/core/Events.php");
+require_once(ROOT_DIR . "/classes/tables/core/Teams.php");
+require_once(ROOT_DIR . "/classes/tables/core/EventTeamList.php");
 
 $eventId = $_GET['eventId'];
 
-$event = Events::withId($eventId);
+$event = Events::withId($coreDb, $eventId);
 ?>
 
 <!doctype html>
@@ -29,8 +31,8 @@ $event = Events::withId($eventId);
 
         <?php
 
-        foreach ($event->getTeams() as $team)
-            $team->toHtml($event);
+        foreach (Teams::getObjects($coreDb, $event, null, 'Id', 'ASC') as $team)
+            $team->toHtml($localDb, $event);
 
         ?>
 

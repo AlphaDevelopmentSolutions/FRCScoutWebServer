@@ -16,23 +16,25 @@ class Events extends CoreTable
 
     /**
      * Overrides parent withId method and provides a custom column name to use when loading
+     * @param CoreDatabase $database
      * @param int|string $id
      * @return Events
      */
-    public static function withId($id)
+    public static function withId($database, $id)
     {
-        return parent::withId($id, 'BlueAllianceId');
+        return parent::withId($database, $id, 'BlueAllianceId');
     }
 
     /**
      * Retrieves objects from the database
+     * @param CoreDatabase $database
      * @param Years | null $year if specified, filters by id
      * @param Teams | null $team if specified, filters by id
      * @param string $orderBy order field to sort items by
      * @param string $orderDirection direction to sort items by
      * @return Events[]
      */
-    public static function getObjects($year = null, $team = null, $orderBy = 'StartDate', $orderDirection = 'DESC')
+    public static function getObjects($database, $year = null, $team = null, $orderBy = 'StartDate', $orderDirection = 'DESC')
     {
         $whereStatment = "";
         $cols = array();
@@ -60,250 +62,7 @@ class Events extends CoreTable
             $args[] = $team->Id;
         }
 
-        return parent::getObjects($whereStatment, $cols, $args, $orderBy, $orderDirection);
-    }
-
-    /**
-     * Gets teams at event
-     * @param null | Matches $match if specified, filters by teams in match
-     * @param null | Teams $team if specified, filters by team id
-     * @return Teams[]
-     */
-    public function getTeams($match = null, $team = null)
-    {
-        require_once(ROOT_DIR . '/classes/tables/core/Teams.php');
-        require_once(ROOT_DIR . '/classes/tables/core/EventTeamList.php');
-        require_once(ROOT_DIR . '/classes/tables/core/Matches.php');
-
-        $response = array();
-
-        //create the sql statement
-        $sql = "SELECT * FROM ! WHERE ! IN (SELECT ! FROM ! WHERE ! = ?)";
-        $cols[] = Teams::$TABLE_NAME;
-        $cols[] = 'Id';
-        $cols[] = 'TeamId';
-        $cols[] = EventTeamList::$TABLE_NAME;
-        $cols[] = 'EventId';
-        $args[] = $this->BlueAllianceId;
-
-        //if match specified, filter by match
-        if(!empty($match))
-        {
-            $sql .= " AND ( ! IN (SELECT ! FROM ! WHERE ! = ?) OR ";
-            $sql .= " ! IN (SELECT ! FROM ! WHERE ! = ?) OR ";
-            $sql .= " ! IN (SELECT ! FROM ! WHERE ! = ?) OR ";
-            
-            $sql .= " ! IN (SELECT ! FROM ! WHERE ! = ?) OR ";
-            $sql .= " ! IN (SELECT ! FROM ! WHERE ! = ?) OR ";
-            $sql .= " ! IN (SELECT ! FROM ! WHERE ! = ?))";
-
-            $cols[] = 'Id';
-            $cols[] = 'BlueAllianceTeamOneId';
-            $cols[] = Matches::$TABLE_NAME;
-            $cols[] = 'Key';
-            $args[] = $match->Key;
-
-            $cols[] = 'Id';
-            $cols[] = 'BlueAllianceTeamTwoId';
-            $cols[] = Matches::$TABLE_NAME;
-            $cols[] = 'Key';
-            $args[] = $match->Key;
-
-            $cols[] = 'Id';
-            $cols[] = 'BlueAllianceTeamThreeId';
-            $cols[] = Matches::$TABLE_NAME;
-            $cols[] = 'Key';
-            $args[] = $match->Key;
-
-            $cols[] = 'Id';
-            $cols[] = 'RedAllianceTeamOneId';
-            $cols[] = Matches::$TABLE_NAME;
-            $cols[] = 'Key';
-            $args[] = $match->Key;
-
-            $cols[] = 'Id';
-            $cols[] = 'RedAllianceTeamTwoId';
-            $cols[] = Matches::$TABLE_NAME;
-            $cols[] = 'Key';
-            $args[] = $match->Key;
-
-            $cols[] = 'Id';
-            $cols[] = 'RedAllianceTeamThreeId';
-            $cols[] = Matches::$TABLE_NAME;
-            $cols[] = 'Key';
-            $args[] = $match->Key;
-        }
-
-        //if team specified, filter by team
-        if(!empty($team))
-        {
-            $sql .= " AND ! = ? ";
-
-            $cols[] = 'Id';
-            $args[] = $team->Id;
-        }
-
-        $sql .= " ORDER BY ! ASC";
-        $cols[] = 'Id';
-
-        $rows = self::queryRecords($sql, $cols, $args);
-
-        foreach($rows as $row)
-            $response[] = Teams::withProperties($row);
-
-        return $response;
-    }
-
-    /**
-     * Gets all matches from this event
-     * @param Matches | null $match if specified, filters by match
-     * @param Teams | null $team if specified, filters by team
-     * @return Matches[]
-     */
-    public function getMatches($match = null, $team = null)
-    {
-        require_once(ROOT_DIR . '/classes/tables/core/Matches.php');
-        require_once(ROOT_DIR . '/classes/tables/core/Teams.php');
-
-        $response = array();
-
-        //create the sql statement
-        $sql = "SELECT * FROM ! WHERE ! = ? AND ! = ?";
-        $cols[] = Matches::$TABLE_NAME;
-        $cols[] = 'EventId';
-        $cols[] = 'MatchType';
-        $args[] = $this->BlueAllianceId;
-        $args[] = Matches::$MATCH_TYPE_QUALIFICATIONS;
-
-        //if team specified, filter by team
-        if(!empty($team))
-        {
-            $sql .= " AND ? IN (!, !, !, !, !, !) ";
-
-            $cols[] = 'BlueAllianceTeamOneId';
-            $cols[] = 'BlueAllianceTeamTwoId';
-            $cols[] = 'BlueAllianceTeamThreeId';
-            $cols[] = 'RedAllianceTeamOneId';
-            $cols[] = 'RedAllianceTeamTwoId';
-            $cols[] = 'RedAllianceTeamThreeId';
-            $args[] = $team->Id;
-        }
-
-        //if match specified, filter by match
-        if(!empty($match))
-        {
-            $sql .= " AND ! = ? ";
-
-            $cols[] = 'Key';
-            $args[] = $match->Key;
-        }
-
-        $sql .= " ORDER BY ! DESC";
-        $cols[] = 'MatchNumber';
-
-        $rows = self::queryRecords($sql, $cols, $args);
-
-        foreach($rows as $row)
-            $response[] = Matches::withProperties($row);
-
-        return $response;
-    }
-
-    /**
-     * Gets all robot info from this event
-     * @param Teams | null $team if specified, filters by team
-     * @param RobotInfo | null $robotInfo if specified, filters by robot info
-     * @return RobotInfo[]
-     */
-    public function getRobotInfo($team = null, $robotInfo = null)
-    {
-        require_once(ROOT_DIR . '/classes/tables/core/Teams.php');
-        require_once(ROOT_DIR . '/classes/tables/local/RobotInfo.php');
-
-        $response = array();
-
-        //create the sql statement
-        $sql = "SELECT * FROM ! WHERE ! = ?";
-        $cols[] = RobotInfo::$TABLE_NAME;
-
-        $cols[] = 'EventId';
-        $args[] = $this->BlueAllianceId;
-
-        //if team specified, filter by team
-        if(!empty($team))
-        {
-            $sql .= " AND ! = ? ";
-
-            $cols[] = 'TeamId';
-            $args[] = $team->Id;
-        }
-
-        //add the team query if a team was specified
-        if(!empty($robotInfo))
-        {
-            $sql .= " AND ! = ? ";
-
-            $cols[] = 'Id';
-            $args[] = $robotInfo->Id;
-        }
-
-        $sql .= " ORDER BY ! DESC";
-        $cols[] = 'Id';
-
-        $rows = self::queryRecords($sql, $cols, $args);
-
-        foreach($rows as $row)
-            $response[] = RobotInfo::withProperties($row);
-
-
-        return $response;
-    }
-
-    /**
-     * Gets all scout card info from event
-     * @param Teams | null $team if specified, filters by team
-     * @param ScoutCardInfo | null $scoutCardInfo if specified, filters by scout card info
-     * @return ScoutCardInfo[]
-     */
-    public function getScoutCardInfo($team = null, $scoutCardInfo = null)
-    {
-        require_once(ROOT_DIR . '/classes/tables/core/Teams.php');
-        require_once(ROOT_DIR . '/classes/tables/local/ScoutCardInfo.php');
-
-        $response = array();
-
-        //create the sql statement
-        $sql = "SELECT * FROM ! WHERE ! = ?";
-        $cols[] = ScoutCardInfo::$TABLE_NAME;
-
-        $cols[] = 'EventId';
-        $args[] = $this->BlueAllianceId;
-
-        //if team specified, filter by team
-        if(!empty($team))
-        {
-            $sql .= " AND ! = ? ";
-
-            $cols[] = 'TeamId';
-            $args[] = $team->Id;
-        }
-
-        //add the team query if a team was specified
-        if(!empty($scoutCardInfo))
-        {
-            $sql .= " AND ! = ? ";
-
-            $cols[] = 'Id';
-            $args[] = $scoutCardInfo->Id;
-        }
-
-        $rows = self::queryRecords($sql, $cols, $args);
-
-        foreach($rows as $row)
-            $response[] = ScoutCardInfo::withProperties($row);
-
-
-        return $response;
+        return parent::getObjects($database, $whereStatment, $cols, $args, $orderBy, $orderDirection);
     }
 
     /**

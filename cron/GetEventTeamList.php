@@ -18,7 +18,7 @@ else
     $events = $database->query('DELETE FROM event_team_list WHERE eventid LIKE "%' . $yearId . '%"');
     unset($database);
 
-    $events = Events::getObjects(Years::withId($yearId));
+    $events = Events::getObjects($coreDb, Years::withId($coreDb, $yearId));
     $eventsSize = sizeof($events);
     for($i = 0; $i < $eventsSize; $i++)
     {
@@ -44,7 +44,7 @@ else
 
             echo "$i / {$eventsSize} - {$totalPercent}% - $j / {$eventTeamListSize} - {$percent}% - Adding team {$obj->team_number} to event {$event->toString()}...\n";
 
-            $eventTeamList->save();
+            $eventTeamList->save($coreDb);
         }
     }
 }

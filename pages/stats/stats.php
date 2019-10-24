@@ -8,7 +8,7 @@ require_once(ROOT_DIR . "/classes/Ajax.php");
 
 $eventId = $_GET['eventId'];
 
-$event = Events::withId($eventId);
+$event = Events::withId($coreDb, $eventId);
 ?>
 
 <!doctype html>
@@ -51,7 +51,7 @@ $event = Events::withId($eventId);
 
             <?php
 
-            $keys = ScoutCardInfoKeys::getObjects(Years::withId($event->YearId), null, true);
+            $keys = ScoutCardInfoKeys::getObjects($localDb, Years::withId($coreDb, $event->YearId), null, true);
 
             $keyStates = array();
 

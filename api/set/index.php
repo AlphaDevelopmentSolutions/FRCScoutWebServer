@@ -5,12 +5,13 @@ require_once(ROOT_DIR . '/classes/Api.php');
 
 $api = new Api();
 
-$account = Accounts::withApiKey($_POST[$api->API_KEY]);
+$account = Accounts::withApiKey($coreDb, $_POST[$api->API_KEY]);
 
 if(empty($account->Username))
     $api->forbidden("You must be logged in to access this page");
 
 setCoreAccount($account);
+$localDb = new LocalDatabase();
 
 switch($_POST[$api->ACTION_KEY])
 {
@@ -21,7 +22,7 @@ switch($_POST[$api->ACTION_KEY])
 
         $scoutCardInfo = ScoutCardInfo::withProperties($_POST);
 
-        if ($scoutCardInfo->save())
+        if ($scoutCardInfo->save($localDb, $coreDb))
             $api->success($scoutCardInfo->Id);
         else
             $api->error('Failed to save scout card info');
@@ -34,7 +35,7 @@ switch($_POST[$api->ACTION_KEY])
 
         $robotInfo = RobotInfo::withProperties($_POST);
 
-        if ($robotInfo->save())
+        if ($robotInfo->save($localDb, $coreDb))
             $api->success($robotInfo->Id);
         else
             $api->error('Failed to save robot info');
@@ -47,7 +48,7 @@ switch($_POST[$api->ACTION_KEY])
 
         $robotMedia = RobotMedia::withProperties($_POST);
 
-        if ($robotMedia->save())
+        if ($robotMedia->save($localDb))
             $api->success($robotMedia->Id);
         else
             $api->error('Failed to save robot media');
@@ -60,7 +61,7 @@ switch($_POST[$api->ACTION_KEY])
 
         $checklistItemResult = ChecklistItemResults::withProperties($_POST);
 
-        if ($checklistItemResult->save())
+        if ($checklistItemResult->save($localDb, $coreDb))
             $api->success($checklistItemResult->Id);
         else
             $api->error('Failed to save checklist item result');

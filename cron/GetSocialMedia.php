@@ -9,11 +9,15 @@ else
 
     set_time_limit(600);
 
-    /**
-     * @param Teams $team
-     */
-    function getSocialMedia($team)
+    $teams = Teams::getObjects($coreDb);
+    $teamSize = sizeof($teams);
+    for($i = 0; $i < $teamSize; $i++)
     {
+        $team = $teams[$i];
+        $percent = round($i / $teamSize, 2) * 100;
+
+        echo "$i / {$teamSize} - {$percent}% - Getting social media for team {$team->toString()} ...\n";
+
         $url = "https://www.thebluealliance.com/api/v3/team/frc" . $team->Id . "/social_media?X-TBA-Auth-Key=" . BLUE_ALLIANCE_KEY;
 
         $ch = curl_init();
@@ -30,22 +34,17 @@ else
             $instagramUrl = null;
             $youtubeUrl = null;
 
-            foreach ($jsonObj as $obj)
-            {
-                if (strpos($obj->type, 'facebook') !== false)
-                {
+            foreach ($jsonObj as $obj) {
+                if (strpos($obj->type, 'facebook') !== false) {
                     $facebookUrl = $obj->foreign_key;
 
-                } else if (strpos($obj->type, 'twitter') !== false)
-                {
+                } else if (strpos($obj->type, 'twitter') !== false) {
                     $twitterUrl = $obj->foreign_key;
 
-                } else if (strpos($obj->type, 'instagram') !== false)
-                {
+                } else if (strpos($obj->type, 'instagram') !== false) {
                     $instagramUrl = $obj->foreign_key;
 
-                } else if (strpos($obj->type, 'youtube') !== false)
-                {
+                } else if (strpos($obj->type, 'youtube') !== false) {
                     $youtubeUrl = $obj->foreign_key;
                 }
             }
@@ -55,19 +54,8 @@ else
             $team->InstagramURL = $instagramUrl;
             $team->YoutubeURL = $youtubeUrl;
 
-            $team->save();
+            $team->save($coreDb);
         }
-    }
-
-    $teams = Teams::getObjects();
-    $teamSize = sizeof($teams);
-    for($i = 0; $i < $teamSize; $i++)
-    {
-        $team = $teams[$i];
-        $percent = round($i / $teamSize, 2) * 100;
-
-        echo "$i / {$teamSize} - {$percent}% - Getting social media for team {$team->toString()} ...\n";
-        getSocialMedia($team);
     }
 }
 

@@ -11,8 +11,8 @@ require_once(ROOT_DIR . "/classes/tables/local/RobotMedia.php");
 $eventId = $_GET['eventId'];
 $teamId = $_GET['teamId'];
 
-$team = Teams::withId($teamId);
-$event = Events::withId($eventId);
+$team = Teams::withId($coreDb, $teamId);
+$event = Events::withId($coreDb, $eventId);
 ?>
 
 <!doctype html>
@@ -42,7 +42,7 @@ $event = Events::withId($eventId);
 
     $additionContent = '';
 
-    $profileMedia = RobotMedia::getObjects(null, $event, $team);
+    $profileMedia = RobotMedia::getObjects($localDb, null, $event, $team);
 
     if (!empty($profileMedia))
     {
@@ -130,7 +130,7 @@ $event = Events::withId($eventId);
     <main class="mdl-layout__content">
 
         <?php
-            RobotInfoKeys::toCard($event, $team);
+            RobotInfoKeys::toCard($localDb, $coreDb, $event, $team);
         ?>
 
         <?php require_once(INCLUDES_DIR . 'footer.php') ?>

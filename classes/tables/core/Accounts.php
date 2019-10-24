@@ -15,9 +15,10 @@ class Accounts extends CoreTable
 
     /**
      * Attempts to login core acc
+     * @param CoreDatabase $database
      * @return boolean
      */
-    public function login()
+    public function login($database)
     {
         //create the sql statement
         $sql = "SELECT * FROM ! WHERE ! = ? LIMIT 1";
@@ -26,7 +27,7 @@ class Accounts extends CoreTable
         $cols[] = 'Username';
         $args[] = $this->Username;
 
-        $rows = self::queryRecords($sql, $cols, $args);
+        $rows = self::queryRecords($database, $sql, $cols, $args);
 
         foreach ($rows as $row)
         {
@@ -42,12 +43,13 @@ class Accounts extends CoreTable
 
     /**
      * Loads account by API key
+     * @param CoreDatabase $database
      * @param $apiKey
      * @return Accounts
      */
-    public static function withApiKey($apiKey)
+    public static function withApiKey($database, $apiKey)
     {
-        return self::withId($apiKey, "ApiKey");
+        return self::withId($database, $apiKey, "ApiKey");
     }
 
     /**

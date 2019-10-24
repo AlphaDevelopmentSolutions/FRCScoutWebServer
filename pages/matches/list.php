@@ -1,11 +1,12 @@
 <?php
 
 require_once("../../config.php");
+require_once(ROOT_DIR . "/classes/tables/core/Matches.php");
 require_once(ROOT_DIR . "/classes/tables/core/Events.php");
 
 $eventId = $_GET['eventId'];
 
-$event = Events::withId($eventId);
+$event = Events::withId($coreDb, $eventId);
 ?>
 
 <!doctype html>
@@ -30,8 +31,8 @@ $event = Events::withId($eventId);
 
         <?php
 
-        foreach ($event->getMatches() as $match)
-            echo $match->toHtml(MATCHES_URL . 'stats?eventId=' . $match->EventId . '&matchId=' . $match->Key, 'View Match Overview');
+        foreach (Matches::getObjects($coreDb, $event, null, "MatchNumber", "DESC") as $match)
+            $match->toHtml(MATCHES_URL . 'stats?eventId=' . $match->EventId . '&matchId=' . $match->Key, 'View Match Overview');
 
         ?>
 

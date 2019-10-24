@@ -12,12 +12,13 @@ class RobotMedia extends LocalTable
 
     /**
      * Retrieves objects from the database
+     * @param LocalDatabase $database
      * @param Years | null $year if specified, filters by id
      * @param Events | null $event if specified, filters by id
      * @param Teams | null $team if specified, filters by id
      * @return RobotMedia[]
      */
-    public static function getObjects($year = null, $event = null, $team = null)
+    public static function getObjects($database, $year = null, $event = null, $team = null)
     {
         $whereStatment = "";
         $cols = array();
@@ -47,41 +48,43 @@ class RobotMedia extends LocalTable
             $args[] = $team->Id;
         }
 
-        return parent::getObjects($whereStatment, $cols, $args);
+        return parent::getObjects($database, $whereStatment, $cols, $args);
     }
 
     /**
      * Overrides parent::save() method
      * Attempts to save the image before saving the record
+     * @param LocalDatabase $database
      * @param bool $bypassFileSave bypasses the file save to the system
      * @return bool
      */
-    public function save($bypassFileSave = false)
+    public function save($database, $bypassFileSave = false)
     {
         if(empty($this->Id))
         {
             if($bypassFileSave)
-                return parent::save();
+                return parent::save($database);
 
             else if($this->saveImage())
-                return parent::save();
+                return parent::save($database);
 
             return false;
         }
 
-        return parent::save();
+        return parent::save($database);
     }
 
 
     /**
      * Overrides parent::delete() method
      * Attempts to delete the image before deleting the record
+     * @param LocalDatabase $database
      * @return bool
      */
-    function delete()
+    function delete($database)
     {
         if($this->deleteImage())
-            return parent::delete();
+            return parent::delete($database);
 
         return false;
     }

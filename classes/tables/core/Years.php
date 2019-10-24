@@ -11,47 +11,6 @@ class Years extends CoreTable
     public static $TABLE_NAME = 'years';
 
     /**
-     * Gets all events within this year
-     * @param $team Teams if specified, filters events by teams assigned to it
-     * @return Events[]
-     */
-    public function getEvents($team = null)
-    {
-        require_once(ROOT_DIR . '/classes/tables/core/Events.php');
-
-        $response = array();
-
-        //create the sql statement
-        $sql = "SELECT * FROM ! WHERE ! = ? ";
-        $cols[] = Events::$TABLE_NAME;
-        $cols[] = 'YearId';
-        $args[] = $this->Id;
-
-
-        if(!empty($team))
-        {
-            require_once(ROOT_DIR . '/classes/tables/core/EventTeamList.php');
-
-            $sql .= " AND ! IN (SELECT ! FROM ! WHERE ! = ?) ";
-            $cols[] = 'BlueAllianceId';
-            $cols[] = 'EventId';
-            $cols[] = EventTeamList::$TABLE_NAME;
-            $cols[] = 'TeamId';
-            $args[] = $team->Id;
-        }
-
-        $sql .= ' ORDER BY ! DESC';
-        $cols[] = 'StartDate';
-
-        $rows = self::queryRecords($sql, $cols, $args);
-
-        foreach ($rows as $row)
-            $response[] = Events::withProperties($row);
-
-        return $response;
-    }
-
-    /**
      * Returns the object once converted into HTML
      * @return string
      */

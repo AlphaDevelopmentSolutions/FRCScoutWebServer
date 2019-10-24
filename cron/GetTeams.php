@@ -43,7 +43,7 @@ else
 
                 echo "$i / {$pageCount} - {$totalPercent}% - $j / {$teamSize} - {$percent}% - Saving team {$team->toString()}...\n";
 
-                $team->save();
+                $team->save($coreDb);
             }
         }
     }

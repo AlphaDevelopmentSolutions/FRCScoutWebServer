@@ -20,7 +20,7 @@ require_once(ROOT_DIR . "/classes/tables/core/Years.php");
       <main class="mdl-layout__content">
           <?php
 
-          foreach(Years::getObjects() as $year)
+          foreach(Years::getObjects($coreDb) as $year)
               echo $year->toHtml();
 
           ?>

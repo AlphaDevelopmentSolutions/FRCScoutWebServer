@@ -11,7 +11,7 @@ switch ($_POST['action'])
 {
     case 'login_user':
 
-        if(coreLoggedIn())
+        if(isCoreLoggedIn())
         {
             $username = $_POST['username'];
             $password = $_POST['password'];
@@ -20,7 +20,7 @@ switch ($_POST['action'])
             if (!empty($username) && !empty($password))
             {
                 $user = new Users();
-                $user = $user->login($username, $password);
+                $user = $user->login($localDb, $username, $password);
                 if (!empty($user))
                 {
                     $_SESSION['user'] = serialize($user);
@@ -67,7 +67,7 @@ switch ($_POST['action'])
                 $user->Username = $username;
                 $user->Password = $password;
 
-                if ($user->login())
+                if ($user->login($coreDb))
                 {
                     $_SESSION['coreAccount'] = serialize($user);
                     $ajax->success('Successfully logged in.');
@@ -128,7 +128,7 @@ switch ($_POST['action'])
                 $ajax->error('Email must not be empty.');
 
             //check if any of the accounts details are already taken
-            $accounts = Accounts::getObjects();
+            $accounts = Accounts::getObjects($coreDb);
             foreach ($accounts as $account) {
                 if ($account->Username == $username)
                     $ajax->error('The username provided is already in use.');
@@ -221,17 +221,17 @@ switch ($_POST['action'])
                 $conf = new Config();
                 $conf->Key = 'APP_NAME';
                 $conf->Value = $appName;
-                $conf->save();
+                $conf->save($db);
 
                 $conf = new Config();
                 $conf->Key = 'PRIMARY_COLOR';
                 $conf->Value = $primaryColor;
-                $conf->save();
+                $conf->save($db);
 
                 $conf = new Config();
                 $conf->Key = 'PRIMARY_COLOR_DARK';
                 $conf->Value = $secondaryColor;
-                $conf->save();
+                $conf->save($db);
 
                 $user = new Users();
                 $user->FirstName = $adminFirstName;
@@ -239,7 +239,7 @@ switch ($_POST['action'])
                 $user->UserName = $adminUsername;
                 $user->Password = password_hash($adminPassword, PASSWORD_ARGON2ID);
                 $user->IsAdmin = 1;
-                $user->save();
+                $user->save($db);
 
                 $account = new Accounts();
                 $account->TeamId = $teamNumber;
@@ -254,7 +254,7 @@ switch ($_POST['action'])
                     mt_rand(0, 0x0fff) | 0x4000,
                     mt_rand(0, 0x3fff) | 0x8000,
                     mt_rand(0, 0xffff), mt_rand(0, 0xffff), mt_rand(0, 0xffff));
-                $account->save();
+                $account->save($coreDb);
             } else
                 $ajax->error('Error importing SQL tables.');
 
@@ -306,7 +306,7 @@ switch ($_POST['action'])
                 $ajax->error('Email must not be empty.');
 
             //check if any of the accounts details are already taken
-            $accounts = Accounts::getObjects();
+            $accounts = Accounts::getObjects($coreDb);
             foreach ($accounts as $account) {
                 if ($account->Username == $username)
                     $ajax->error('The username provided is already in use.');
@@ -399,17 +399,17 @@ switch ($_POST['action'])
                 $conf = new Config();
                 $conf->Key = 'APP_NAME';
                 $conf->Value = $appName;
-                $conf->save();
+                $conf->save($db);
 
                 $conf = new Config();
                 $conf->Key = 'PRIMARY_COLOR';
                 $conf->Value = $primaryColor;
-                $conf->save();
+                $conf->save($db);
 
                 $conf = new Config();
                 $conf->Key = 'PRIMARY_COLOR_DARK';
                 $conf->Value = $secondaryColor;
-                $conf->save();
+                $conf->save($db);
 
                 $user = new Users();
                 $user->FirstName = $adminFirstName;
@@ -417,7 +417,7 @@ switch ($_POST['action'])
                 $user->UserName = $adminUsername;
                 $user->Password = password_hash($adminPassword, PASSWORD_ARGON2ID);
                 $user->IsAdmin = 1;
-                $user->save();
+                $user->save($db);
 
                 $account = new Accounts();
                 $account->TeamId = $teamNumber;
@@ -432,7 +432,7 @@ switch ($_POST['action'])
                     mt_rand(0, 0x0fff) | 0x4000,
                     mt_rand(0, 0x3fff) | 0x8000,
                     mt_rand(0, 0xffff), mt_rand(0, 0xffff), mt_rand(0, 0xffff));
-                $account->save();
+                $account->save($coreDb);
 
                 require_once(ROOT_DIR . "/classes/tables/core/Years.php");
                 require_once(ROOT_DIR . "/classes/tables/core/Events.php");
@@ -446,39 +446,39 @@ switch ($_POST['action'])
                 require_once(ROOT_DIR . "/classes/tables/local/RobotInfoKeys.php");
                 require_once(ROOT_DIR . "/classes/tables/local/RobotInfo.php");
 
-                $year = Years::withId(date('Y'));
-                $team = Teams::withId($teamNumber);
+                $year = Years::withId($coreDb, date('Y'));
+                $team = Teams::withId($coreDb, $teamNumber);
 
                 $demo = new Demos();
                 $demo->AccountId = $account->Id;
                 $demo->Expires = date("Y-m-d H:i:s", strtotime('+24 hours'));
-                $demo->save();
+                $demo->save($coreDb);
 
                 $obj = new ChecklistItems();
                 $obj->YearId = $year->Id;
                 $obj->Title = 'Change Battery';
                 $obj->Description = 'Grab fully charged batter and check voltage with voltmeter. Only place battery in the robot if the voltage reads 12.4+ volts. Make sure the battery is properly secured.';
-                $obj->save();
+                $obj->save($db);
 
                 $obj = new ChecklistItems();
                 $obj->YearId = $year->Id;
                 $obj->Title = 'Check Pneumatic Pressure';
                 $obj->Description = 'Ensure STORED TANK pressure exceeds 100 psi. If tank pressure is low, locate drive team member or pit leader to fill tanks.';
-                $obj->save();
+                $obj->save($db);
 
                 $obj = new ChecklistItems();
                 $obj->YearId = $year->Id;
                 $obj->Title = 'Deploy Code';
                 $obj->Description = 'Ensure code is on robot and if code is deployed, verified by a programmer.';
-                $obj->save();
+                $obj->save($db);
 
                 $obj = new ChecklistItems();
                 $obj->YearId = $year->Id;
                 $obj->Title = 'Inspect for Damage or Excessive Wear';
                 $obj->Description = 'Ensure all mechanisms are able to function correctly and that they have not sustained major damage. If excessive wear or damage is identified, alert pit leader or drive team.';
-                $obj->save();
+                $obj->save($db);
 
-                $checklistItems = ChecklistItems::getObjects();
+                $checklistItems = ChecklistItems::getObjects($db);
 
                 $obj = new ScoutCardInfoKeys();
                 $obj->YearId = $year->Id;
@@ -490,7 +490,7 @@ switch ($_POST['action'])
                 $obj->NullZeros = false;
                 $obj->IncludeInStats = false;
                 $obj->DataType = 'TEXT';
-                $obj->save();
+                $obj->save($db);
 
                 $obj = new ScoutCardInfoKeys();
                 $obj->YearId = $year->Id;
@@ -502,7 +502,7 @@ switch ($_POST['action'])
                 $obj->NullZeros = false;
                 $obj->IncludeInStats = false;
                 $obj->DataType = 'TEXT';
-                $obj->save();
+                $obj->save($db);
 
                 $obj = new ScoutCardInfoKeys();
                 $obj->YearId = $year->Id;
@@ -514,7 +514,7 @@ switch ($_POST['action'])
                 $obj->NullZeros = true;
                 $obj->IncludeInStats = true;
                 $obj->DataType = 'INT';
-                $obj->save();
+                $obj->save($db);
 
                 $obj = new ScoutCardInfoKeys();
                 $obj->YearId = $year->Id;
@@ -526,7 +526,7 @@ switch ($_POST['action'])
                 $obj->NullZeros = true;
                 $obj->IncludeInStats = true;
                 $obj->DataType = 'INT';
-                $obj->save();
+                $obj->save($db);
 
                 $obj = new ScoutCardInfoKeys();
                 $obj->YearId = $year->Id;
@@ -538,7 +538,7 @@ switch ($_POST['action'])
                 $obj->NullZeros = true;
                 $obj->IncludeInStats = true;
                 $obj->DataType = 'INT';
-                $obj->save();
+                $obj->save($db);
 
                 $obj = new ScoutCardInfoKeys();
                 $obj->YearId = $year->Id;
@@ -550,7 +550,7 @@ switch ($_POST['action'])
                 $obj->NullZeros = true;
                 $obj->IncludeInStats = true;
                 $obj->DataType = 'INT';
-                $obj->save();
+                $obj->save($db);
 
                 $obj = new ScoutCardInfoKeys();
                 $obj->YearId = $year->Id;
@@ -562,57 +562,57 @@ switch ($_POST['action'])
                 $obj->NullZeros = false;
                 $obj->IncludeInStats = false;
                 $obj->DataType = 'TEXT';
-                $obj->save();
+                $obj->save($db);
 
-                $scoutCardInfoKeys = ScoutCardInfoKeys::getObjects();
+                $scoutCardInfoKeys = ScoutCardInfoKeys::getObjects($db);
 
                 $obj = new RobotInfoKeys();
                 $obj->YearId = $year->Id;
                 $obj->KeyState = 'Pre Game';
                 $obj->KeyName = 'Drivetrain';
                 $obj->SortOrder = 1;
-                $obj->save();
+                $obj->save($db);
 
                 $obj = new RobotInfoKeys();
                 $obj->YearId = $year->Id;
                 $obj->KeyState = 'Pre Game';
                 $obj->KeyName = 'Robot Weight';
                 $obj->SortOrder = 2;
-                $obj->save();
+                $obj->save($db);
 
                 $obj = new RobotInfoKeys();
                 $obj->YearId = $year->Id;
                 $obj->KeyState = 'Autonomous';
                 $obj->KeyName = 'Cargo Stored';
                 $obj->SortOrder = 3;
-                $obj->save();
+                $obj->save($db);
 
                 $obj = new RobotInfoKeys();
                 $obj->YearId = $year->Id;
                 $obj->KeyState = 'Autonomous';
                 $obj->KeyName = 'Hatches Secured';
                 $obj->SortOrder = 4;
-                $obj->save();
+                $obj->save($db);
 
                 $obj = new RobotInfoKeys();
                 $obj->YearId = $year->Id;
                 $obj->KeyState = 'Teleop';
                 $obj->KeyName = 'Cargo Stored';
                 $obj->SortOrder = 5;
-                $obj->save();
+                $obj->save($db);
 
                 $obj = new RobotInfoKeys();
                 $obj->YearId = $year->Id;
                 $obj->KeyState = 'Teleop';
                 $obj->KeyName = 'Hatches Secured';
                 $obj->SortOrder = 6;
-                $obj->save();
+                $obj->save($db);
 
-                $robotInfoKeys = RobotInfoKeys::getObjects();
+                $robotInfoKeys = RobotInfoKeys::getObjects($db);
 
-                foreach(Events::getObjects($year, $team) as $event)
+                foreach(Events::getObjects($coreDb, $year, $team) as $event)
                 {
-                    foreach (Matches::getObjects($event) as $match)
+                    foreach (Matches::getObjects($coreDb, $event) as $match)
                     {
                         foreach ($checklistItems as $checklistItem)
                         {
@@ -622,7 +622,7 @@ switch ($_POST['action'])
                             $checklistItemResult->Status = (rand(1, 2) == 1) ? ChecklistItemResults::COMPLETE : ChecklistItemResults::INCOMPLETE;
                             $checklistItemResult->CompletedBy = 'Demo User';
                             $checklistItemResult->CompletedDate = date('Y-m-d H:i:s');
-                            $checklistItemResult->save();
+                            $checklistItemResult->save($db, $coreDb);
                         }
 
                         foreach ($scoutCardInfoKeys as $scoutCardInfoKey)
@@ -670,7 +670,7 @@ switch ($_POST['action'])
                                     $scoutCardInfo->CompletedBy = '';
                                     $scoutCardInfo->PropertyValue = rand(0, 10);
                                     $scoutCardInfo->PropertyKeyId = $scoutCardInfoKey->Id;
-                                    $scoutCardInfo->save();
+                                    $scoutCardInfo->save($db, $coreDb);
                                 }
                             }
                         }

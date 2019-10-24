@@ -53,7 +53,7 @@ switch ($_POST['action'])
                 if(!ctype_digit($robotInfoKey->SortOrder))
                     $ajax->error("Sort order may only be numeric (0-9).");
 
-                if($robotInfoKey->save())
+                if($robotInfoKey->save($localDb))
                     $ajax->success("Robot info saved successfully.");
 
                 else
@@ -108,13 +108,13 @@ switch ($_POST['action'])
                     $ajax->error("Invalid datatype.");
 
                 if($scoutCardInfoKey->Id > 0)
-                    if($scoutCardInfoKey->DataType != ScoutCardInfoKeys::withId($scoutCardInfoKey->Id)->DataType && count(ScoutCardInfo::getObjects($scoutCardInfoKey)) > 0)
+                    if($scoutCardInfoKey->DataType != ScoutCardInfoKeys::withId($localDb, $scoutCardInfoKey->Id)->DataType && count(ScoutCardInfo::getObjects($localDb, $scoutCardInfoKey)) > 0)
                         $ajax->error("You can't change datatypes if you already have scout cards populated under this key.");
 
                 $scoutCardInfoKey->NullZeros = $scoutCardInfoKey->NullZeros == 1 ? true : false;
                 $scoutCardInfoKey->IncludeInStats = $scoutCardInfoKey->IncludeInStats == 1 ? true : false;
 
-                if($scoutCardInfoKey->save())
+                if($scoutCardInfoKey->save($localDb))
                     $ajax->success("Scout card info saved successfully.");
 
                 else
@@ -138,7 +138,7 @@ switch ($_POST['action'])
                 if(empty($checklistItem->Description))
                     $ajax->error("Description cannot be empty.");
 
-                if($checklistItem->save())
+                if($checklistItem->save($localDb))
                     $ajax->success("Checklist info saved successfully.");
 
                 else
@@ -181,7 +181,7 @@ switch ($_POST['action'])
 
                     //Password still has the default dots, set from previous hashed password
                     else
-                        $user->Password = Users::withId($user->Id)->Password;
+                        $user->Password = Users::withId($localDb, $user->Id)->Password;
                 }
                 else
                 {
@@ -191,7 +191,7 @@ switch ($_POST['action'])
 
                 $user->IsAdmin = $user->IsAdmin == 1 ? true : false;
 
-                if($user->save())
+                if($user->save($localDb))
                     $ajax->success("User saved successfully.");
 
                 else
@@ -201,9 +201,19 @@ switch ($_POST['action'])
 
             case Config::class:
 
-                $configs = Config::getObjects();
+                $configs = Config::getObjects($localDb);
 
                 $data = $_POST['data'];
+
+                $coreAccount = getCoreAccount();
+                if($coreAccount->ApiKey != $data['ApiKey'])
+                {
+                    $coreAccount->ApiKey = $data['ApiKey'];
+                    if($coreAccount->save($coreDb))
+                        setCoreAccount($coreAccount);
+                }
+
+                $success = true;
 
                 foreach ($configs as $config)
                 {
@@ -225,18 +235,14 @@ switch ($_POST['action'])
                     if (empty($config->Value))
                         $ajax->error("Value name cannot be empty.");
 
-                    if ($config->save())
-                        $ajax->success("Config saved successfully.");
+                    if (!$config->save($localDb))
+                        $success = false;
                 }
 
-                $coreAccount = getCoreAccount();
-                if($coreAccount->ApiKey != $data['ApiKey'])
-                {
-                    $coreAccount->ApiKey = $data['ApiKey'];
-                    $coreAccount->save();
-                }
+                if(!$success)
+                    $ajax->error("Error saving config. Please try again.");
 
-                $ajax->error("Config failed to save.");
+                $ajax->success("Config saved successfully.");
 
                 break;
 
@@ -272,7 +278,7 @@ switch ($_POST['action'])
                 if(!ctype_digit($robotInfo->PropertyKeyId))
                     $ajax->error("Property key id may only be numeric (0-9).");
 
-                if($robotInfo->save())
+                if($robotInfo->save($localDb, $coreDb))
                     $ajax->success("Robot info saved successfully.");
 
                 else
@@ -314,7 +320,7 @@ switch ($_POST['action'])
                 if(!ctype_digit($scoutCardInfo->PropertyKeyId))
                     $ajax->error("Property key id may only be numeric (0-9).");
 
-                if($scoutCardInfo->save())
+                if($scoutCardInfo->save($localDb, $coreDb))
                     $ajax->success("Scout card saved successfully.");
 
                 else
@@ -350,7 +356,7 @@ switch ($_POST['action'])
                 if(!validDate($checklistItemResult->CompletedDate))
                     $ajax->error("Invalid Date.");
 
-                if($checklistItemResult->save())
+                if($checklistItemResult->save($localDb, $coreDb))
                     $ajax->success("Scout card saved successfully.");
 
                 else
@@ -378,9 +384,9 @@ switch ($_POST['action'])
 
             case RobotInfoKeys::class:
 
-                $robotInfoKey = RobotInfoKeys::withId($recordId);
+                $robotInfoKey = RobotInfoKeys::withId($localDb, $recordId);
 
-                if($robotInfoKey->delete())
+                if($robotInfoKey->delete($localDb))
                     $ajax->success("Robot info deleted successfully.");
 
                 else
@@ -390,9 +396,9 @@ switch ($_POST['action'])
 
             case ScoutCardInfoKeys::class:
 
-                $scoutCardInfoKey = ScoutCardInfoKeys::withId($recordId);
+                $scoutCardInfoKey = ScoutCardInfoKeys::withId($localDb, $recordId);
 
-                if($scoutCardInfoKey->delete())
+                if($scoutCardInfoKey->delete($localDb))
                     $ajax->success("Scout card info deleted successfully.");
 
                 else
@@ -402,9 +408,9 @@ switch ($_POST['action'])
 
             case ChecklistItems::class:
 
-                $checklistItem = ChecklistItems::withId($recordId);
+                $checklistItem = ChecklistItems::withId($localDb, $recordId);
 
-                if($checklistItem->delete())
+                if($checklistItem->delete($localDb))
                     $ajax->success("Checklist info deleted successfully.");
 
                 else
@@ -414,14 +420,14 @@ switch ($_POST['action'])
 
             case Users::class:
 
-                if(sizeof(Users::getObjects()) > 1)
+                if(sizeof(Users::getObjects($localDb)) > 1)
                 {
-                    $user = Users::withId($recordId);
+                    $user = Users::withId($localDb, $recordId);
 
                     if($user->Id == getUser()->Id)
                         $ajax->error("You can't delete yourself.");
 
-                    if ($user->delete())
+                    if ($user->delete($localDb))
                         $ajax->success("User deleted successfully.");
 
                     else
@@ -456,8 +462,8 @@ switch ($_POST['action'])
 
                 $success = true;
 
-                foreach(RobotInfo::getObjects(null, null, Events::withId($eventId), Teams::withId($teamId)) as $robotInfo)
-                    if(!$robotInfo->delete())
+                foreach(RobotInfo::getObjects($localDb, null, null, Events::withId($coreDb, $eventId), Teams::withId($coreDb, $teamId)) as $robotInfo)
+                    if(!$robotInfo->delete($localDb))
                         $success = false;
 
                 if($success)
@@ -494,8 +500,8 @@ switch ($_POST['action'])
 
                 $success = true;
 
-                foreach(ScoutCardInfo::getObjects(null, null, Events::withId($eventId), Matches::withId($matchId), Teams::withId($teamId)) as $robotInfo)
-                    if(!$robotInfo->delete())
+                foreach(ScoutCardInfo::getObjects($localDb, null, null, Events::withId($coreDb, $eventId), Matches::withId($coreDb, $matchId), Teams::withId($coreDb, $teamId)) as $scoutCardInfo)
+                    if(!$scoutCardInfo->delete($localDb))
                         $success = false;
 
                 if($success)
@@ -508,9 +514,9 @@ switch ($_POST['action'])
 
             case ChecklistItemResults::class:
 
-                $checklistItemResult = ChecklistItemResults::withId($recordId);
+                $checklistItemResult = ChecklistItemResults::withId($localDb, $recordId);
 
-                if($checklistItemResult->delete())
+                if($checklistItemResult->delete($localDb))
                     $ajax->success("Checklist info deleted successfully.");
 
                 else
@@ -520,9 +526,9 @@ switch ($_POST['action'])
 
             case RobotMedia::class:
 
-                $robotMedia = RobotMedia::withId($recordId);
+                $robotMedia = RobotMedia::withId($localDb, $recordId);
 
-                if($robotMedia->delete())
+                if($robotMedia->delete($localDb))
                     $ajax->success("Robot media deleted successfully.");
 
                 else

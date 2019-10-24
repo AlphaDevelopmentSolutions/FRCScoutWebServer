@@ -12,12 +12,12 @@ $matchId = $_GET['matchId'];
 $teamId = $_GET['teamId'];
 $allianceColor = $_GET['allianceColor'];
 
-$event = Events::withId($eventId);
+$event = Events::withId($coreDb, $eventId);
 
-$match = Matches::withId($matchId);
+$match = Matches::withId($coreDb, $matchId);
 
 if(!empty($teamId))
-    $team = Teams::withId($teamId);
+    $team = Teams::withId($coreDb, $teamId);
 
 ?>
 
@@ -70,7 +70,7 @@ if(!empty($teamId))
 
             <?php
 
-            $keys = ScoutCardInfoKeys::getObjects(Years::withId($event->YearId), null, true);
+            $keys = ScoutCardInfoKeys::getObjects($localDb, Years::withId($coreDb, $event->YearId), null, true);
 
             $keyStates = array();
 

@@ -5,12 +5,13 @@ require_once(ROOT_DIR . '/classes/Api.php');
 
 $api = new Api();
 
-$account = Accounts::withApiKey($_POST[$api->API_KEY]);
+$account = Accounts::withApiKey($coreDb, $_POST[$api->API_KEY]);
 
 if(empty($account->Username))
    $api->forbidden("You must be logged in to access this page");
 
 setCoreAccount($account);
+$localDb = new LocalDatabase();
 
 switch($_POST[$api->ACTION_KEY])
 {
@@ -20,9 +21,9 @@ switch($_POST[$api->ACTION_KEY])
         require_once(ROOT_DIR . '/classes/tables/core/Teams.php');
         require_once(ROOT_DIR . '/classes/tables/local/Config.php');
 
-        $configs = Config::getObjects();
+        $configs = Config::getObjects($localDb);
 
-        $team = Teams::withId($account->TeamId);
+        $team = Teams::withId($coreDb, $account->TeamId);
 
         $obj = new Config();
         $obj->Key = "TEAM_NUMBER";
@@ -49,7 +50,7 @@ switch($_POST[$api->ACTION_KEY])
         break;
 
     case 'GetUsers':
-        $api->success(Users::getObjects());
+        $api->success(Users::getObjects($localDb));
 
         break;
 
@@ -61,10 +62,10 @@ switch($_POST[$api->ACTION_KEY])
 
         if (!empty($teamId))
         {
-            $team = Teams::withId($teamId);
-            $api->success($team->getEvents());
+            $team = Teams::withId($coreDb, $teamId);
+            $api->success(Events::getObjects($coreDb, null, $team));
         } else
-            $api->success(Events::getObjects());
+            $api->success(Events::getObjects($coreDb));
 
         break;
 
@@ -72,13 +73,14 @@ switch($_POST[$api->ACTION_KEY])
 
         require_once(ROOT_DIR . '/classes/tables/core/EventTeamList.php');
 
-        $api->success(EventTeamList::getObjects());
+        $api->success(EventTeamList::getObjects($coreDb));
+        break;
 
     case 'GetYears':
 
         require_once(ROOT_DIR . '/classes/tables/core/Years.php');
 
-        $api->success(Years::getObjects());
+        $api->success(Years::getObjects($coreDb));
         break;
 
     case 'GetTeams':
@@ -89,10 +91,10 @@ switch($_POST[$api->ACTION_KEY])
 
         if (!empty($eventId))
         {
-            $event = Events::withId($eventId);
-            $api->success($event->getTeams());
+            $event = Events::withId($coreDb, $eventId);
+            $api->success(Teams::getObjects($coreDb, $event));
         } else
-            $api->success(Teams::getObjects());
+            $api->success(Teams::getObjects($coreDb));
 
         break;
 
@@ -104,10 +106,10 @@ switch($_POST[$api->ACTION_KEY])
 
         if (!empty($eventId))
         {
-            $event = Events::withId($eventId);
-            $api->success(ScoutCardInfo::getObjects(null, null, $event));
+            $event = Events::withId($coreDb, $eventId);
+            $api->success(ScoutCardInfo::getObjects($localDb, null, null, $event));
         } else
-            $api->success(ScoutCardInfo::getObjects());
+            $api->success(ScoutCardInfo::getObjects($localDb));
 
         break;
 
@@ -119,11 +121,10 @@ switch($_POST[$api->ACTION_KEY])
 
         if (!empty($yearId))
         {
-            $year = Years::withId($yearId);
-
-            $api->success(ScoutCardInfoKeys::getObjects($year));
+            $year = Years::withId($coreDb, $yearId);
+            $api->success(ScoutCardInfoKeys::getObjects($localDb, $year));
         } else
-            $api->success(ScoutCardInfoKeys::getObjects());
+            $api->success(ScoutCardInfoKeys::getObjects($localDb));
 
         break;
 
@@ -135,11 +136,10 @@ switch($_POST[$api->ACTION_KEY])
 
         if (!empty($teamId))
         {
-            $team = Teams::withId($teamId);
-
-            $api->success(RobotMedia::getObjects(null, null, $team));
+            $team = Teams::withId($coreDb, $teamId);
+            $api->success(RobotMedia::getObjects($localDb, null, null, $team));
         } else
-            $api->success(RobotMedia::getObjects());
+            $api->success(RobotMedia::getObjects($localDb));
 
         break;
 
@@ -151,11 +151,10 @@ switch($_POST[$api->ACTION_KEY])
 
         if (!empty($eventId))
         {
-            $event = Events::withId($eventId);
-
-            $api->success(RobotInfo::getObjects(null, null, $event));
+            $event = Events::withId($coreDb, $eventId);
+            $api->success(RobotInfo::getObjects($localDb, null, null, $event));
         } else
-            $api->success(RobotInfo::getObjects());
+            $api->success(RobotInfo::getObjects($localDb));
 
         break;
 
@@ -163,17 +162,15 @@ switch($_POST[$api->ACTION_KEY])
 
         require_once(ROOT_DIR . '/classes/tables/local/RobotInfoKeys.php');
 
-        $eventId = filter_var($_POST['EventId'], FILTER_SANITIZE_STRING);
         $yearId = filter_var($_POST['YearId'], FILTER_SANITIZE_NUMBER_INT);
 
         if (!empty($eventId) || !empty($yearId))
         {
-            $event = (!empty($eventId)) ? Events::withId($eventId) : null;
-            $year = (!empty($yearId)) ? Years::withId($yearId) : null;
+            $year = (!empty($yearId)) ? Years::withId($coreDb, $yearId) : null;
 
-            $api->success(RobotInfoKeys::getKeys($year, $event));
+            $api->success(RobotInfoKeys::getKeys($localDb, $year));
         } else
-            $api->success(RobotInfoKeys::getObjects());
+            $api->success(RobotInfoKeys::getObjects($localDb));
 
         break;
 
@@ -185,12 +182,11 @@ switch($_POST[$api->ACTION_KEY])
 
         if (!empty($event))
         {
-            $event = Events::withId($eventId);
-
-            $api->success(Matches::getObjects($event));
+            $event = Events::withId($coreDb, $eventId);
+            $api->success(Matches::getObjects($coreDb, $event));
 
         } else
-            $api->success(Matches::getObjects());
+            $api->success(Matches::getObjects($coreDb));
 
         break;
 
@@ -198,7 +194,7 @@ switch($_POST[$api->ACTION_KEY])
 
         require_once(ROOT_DIR . '/classes/tables/local/ChecklistItems.php');
 
-        $api->success(ChecklistItems::getObjects());
+        $api->success(ChecklistItems::getObjects($localDb));
 
         break;
 
@@ -206,7 +202,7 @@ switch($_POST[$api->ACTION_KEY])
 
         require_once(ROOT_DIR . '/classes/tables/local/ChecklistItemResults.php');
 
-        $api->success(ChecklistItemResults::getObjects());
+        $api->success(ChecklistItemResults::getObjects($localDb));
 
         break;
 
