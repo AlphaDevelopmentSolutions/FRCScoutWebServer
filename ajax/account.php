@@ -209,29 +209,28 @@ switch ($_POST['action'])
 
             unset($db);
 
-            $db = new Database($dbId);
+            $localDb = new Database($dbId);
 
             //create all required tables
-            if (importSqlFile($db, '../databases/v' . VERSION . '.sql')) {
-                unset($db);
-
+            if (importSqlFile($localDb, '../databases/v' . VERSION . '.sql'))
+            {
                 define('DB_NAME', $dbId);
 
                 //add all the configs to the DB
                 $conf = new Config();
                 $conf->Key = 'APP_NAME';
                 $conf->Value = $appName;
-                $conf->save($db);
+                $conf->save($localDb);
 
                 $conf = new Config();
                 $conf->Key = 'PRIMARY_COLOR';
                 $conf->Value = $primaryColor;
-                $conf->save($db);
+                $conf->save($localDb);
 
                 $conf = new Config();
                 $conf->Key = 'PRIMARY_COLOR_DARK';
                 $conf->Value = $secondaryColor;
-                $conf->save($db);
+                $conf->save($localDb);
 
                 $user = new Users();
                 $user->FirstName = $adminFirstName;
@@ -239,7 +238,7 @@ switch ($_POST['action'])
                 $user->UserName = $adminUsername;
                 $user->Password = password_hash($adminPassword, PASSWORD_ARGON2ID);
                 $user->IsAdmin = 1;
-                $user->save($db);
+                $user->save($localDb);
 
                 $account = new Accounts();
                 $account->TeamId = $teamNumber;
