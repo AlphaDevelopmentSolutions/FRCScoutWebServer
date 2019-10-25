@@ -21,6 +21,8 @@ else
 
     $events = json_decode($response, true);
     $eventsSize = sizeof($events);
+
+    $coreDb->beginTransaction();
     for($i = 0; $i < $eventsSize; $i++)
     {
         $percent = round($i / $eventsSize, 2) * 100;
@@ -40,10 +42,9 @@ else
 
         $event->save($coreDb);
     }
+    $coreDb->commit();
 
     //cleanup duplicates
-    $database = new Database('core');
-    $database->query("DELETE event1 FROM events event1, events event2 WHERE event1.Id < event2.Id AND event1.BlueAllianceId = event2.BlueAllianceId;");
-    unset($database);
+    $coreDb->query("DELETE event1 FROM events event1, events event2 WHERE event1.Id < event2.Id AND event1.BlueAllianceId = event2.BlueAllianceId;");
 }
 ?>

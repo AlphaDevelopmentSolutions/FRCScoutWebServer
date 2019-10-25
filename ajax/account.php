@@ -386,12 +386,14 @@ switch ($_POST['action'])
             $db->query($query, $cols);
 
             unset($db);
-
-            $db = new Database($dbId);
+            $localDb = new Database($dbId);
 
             //create all required tables
-            if (importSqlFile($db, '../databases/v' . VERSION . '.sql')) {
-                unset($db);
+            if (importSqlFile($localDb, '../databases/v' . VERSION . '.sql'))
+            {
+
+                unset($coreDb);
+                $coreDb = new CoreDatabase();
 
                 define('DB_NAME', $dbId);
 
@@ -399,17 +401,17 @@ switch ($_POST['action'])
                 $conf = new Config();
                 $conf->Key = 'APP_NAME';
                 $conf->Value = $appName;
-                $conf->save($db);
+                $conf->save($localDb);
 
                 $conf = new Config();
                 $conf->Key = 'PRIMARY_COLOR';
                 $conf->Value = $primaryColor;
-                $conf->save($db);
+                $conf->save($localDb);
 
                 $conf = new Config();
                 $conf->Key = 'PRIMARY_COLOR_DARK';
                 $conf->Value = $secondaryColor;
-                $conf->save($db);
+                $conf->save($localDb);
 
                 $user = new Users();
                 $user->FirstName = $adminFirstName;
@@ -417,7 +419,7 @@ switch ($_POST['action'])
                 $user->UserName = $adminUsername;
                 $user->Password = password_hash($adminPassword, PASSWORD_ARGON2ID);
                 $user->IsAdmin = 1;
-                $user->save($db);
+                $user->save($localDb);
 
                 $account = new Accounts();
                 $account->TeamId = $teamNumber;
@@ -449,6 +451,9 @@ switch ($_POST['action'])
                 $year = Years::withId($coreDb, date('Y'));
                 $team = Teams::withId($coreDb, $teamNumber);
 
+                $coreDb->beginTransaction();
+                $localDb->beginTransaction();
+
                 $demo = new Demos();
                 $demo->AccountId = $account->Id;
                 $demo->Expires = date("Y-m-d H:i:s", strtotime('+24 hours'));
@@ -458,27 +463,26 @@ switch ($_POST['action'])
                 $obj->YearId = $year->Id;
                 $obj->Title = 'Change Battery';
                 $obj->Description = 'Grab fully charged batter and check voltage with voltmeter. Only place battery in the robot if the voltage reads 12.4+ volts. Make sure the battery is properly secured.';
-                $obj->save($db);
+                $obj->save($localDb);
 
                 $obj = new ChecklistItems();
                 $obj->YearId = $year->Id;
                 $obj->Title = 'Check Pneumatic Pressure';
                 $obj->Description = 'Ensure STORED TANK pressure exceeds 100 psi. If tank pressure is low, locate drive team member or pit leader to fill tanks.';
-                $obj->save($db);
+                $obj->save($localDb);
 
                 $obj = new ChecklistItems();
                 $obj->YearId = $year->Id;
                 $obj->Title = 'Deploy Code';
                 $obj->Description = 'Ensure code is on robot and if code is deployed, verified by a programmer.';
-                $obj->save($db);
+                $obj->save($localDb);
 
                 $obj = new ChecklistItems();
                 $obj->YearId = $year->Id;
                 $obj->Title = 'Inspect for Damage or Excessive Wear';
                 $obj->Description = 'Ensure all mechanisms are able to function correctly and that they have not sustained major damage. If excessive wear or damage is identified, alert pit leader or drive team.';
-                $obj->save($db);
+                $obj->save($localDb);
 
-                $checklistItems = ChecklistItems::getObjects($db);
 
                 $obj = new ScoutCardInfoKeys();
                 $obj->YearId = $year->Id;
@@ -490,7 +494,7 @@ switch ($_POST['action'])
                 $obj->NullZeros = false;
                 $obj->IncludeInStats = false;
                 $obj->DataType = 'TEXT';
-                $obj->save($db);
+                $obj->save($localDb);
 
                 $obj = new ScoutCardInfoKeys();
                 $obj->YearId = $year->Id;
@@ -502,7 +506,7 @@ switch ($_POST['action'])
                 $obj->NullZeros = false;
                 $obj->IncludeInStats = false;
                 $obj->DataType = 'TEXT';
-                $obj->save($db);
+                $obj->save($localDb);
 
                 $obj = new ScoutCardInfoKeys();
                 $obj->YearId = $year->Id;
@@ -514,7 +518,7 @@ switch ($_POST['action'])
                 $obj->NullZeros = true;
                 $obj->IncludeInStats = true;
                 $obj->DataType = 'INT';
-                $obj->save($db);
+                $obj->save($localDb);
 
                 $obj = new ScoutCardInfoKeys();
                 $obj->YearId = $year->Id;
@@ -526,7 +530,7 @@ switch ($_POST['action'])
                 $obj->NullZeros = true;
                 $obj->IncludeInStats = true;
                 $obj->DataType = 'INT';
-                $obj->save($db);
+                $obj->save($localDb);
 
                 $obj = new ScoutCardInfoKeys();
                 $obj->YearId = $year->Id;
@@ -538,7 +542,7 @@ switch ($_POST['action'])
                 $obj->NullZeros = true;
                 $obj->IncludeInStats = true;
                 $obj->DataType = 'INT';
-                $obj->save($db);
+                $obj->save($localDb);
 
                 $obj = new ScoutCardInfoKeys();
                 $obj->YearId = $year->Id;
@@ -550,7 +554,7 @@ switch ($_POST['action'])
                 $obj->NullZeros = true;
                 $obj->IncludeInStats = true;
                 $obj->DataType = 'INT';
-                $obj->save($db);
+                $obj->save($localDb);
 
                 $obj = new ScoutCardInfoKeys();
                 $obj->YearId = $year->Id;
@@ -562,53 +566,60 @@ switch ($_POST['action'])
                 $obj->NullZeros = false;
                 $obj->IncludeInStats = false;
                 $obj->DataType = 'TEXT';
-                $obj->save($db);
+                $obj->save($localDb);
 
-                $scoutCardInfoKeys = ScoutCardInfoKeys::getObjects($db);
 
                 $obj = new RobotInfoKeys();
                 $obj->YearId = $year->Id;
                 $obj->KeyState = 'Pre Game';
                 $obj->KeyName = 'Drivetrain';
                 $obj->SortOrder = 1;
-                $obj->save($db);
+                $obj->save($localDb);
 
                 $obj = new RobotInfoKeys();
                 $obj->YearId = $year->Id;
                 $obj->KeyState = 'Pre Game';
                 $obj->KeyName = 'Robot Weight';
                 $obj->SortOrder = 2;
-                $obj->save($db);
+                $obj->save($localDb);
 
                 $obj = new RobotInfoKeys();
                 $obj->YearId = $year->Id;
                 $obj->KeyState = 'Autonomous';
                 $obj->KeyName = 'Cargo Stored';
                 $obj->SortOrder = 3;
-                $obj->save($db);
+                $obj->save($localDb);
 
                 $obj = new RobotInfoKeys();
                 $obj->YearId = $year->Id;
                 $obj->KeyState = 'Autonomous';
                 $obj->KeyName = 'Hatches Secured';
                 $obj->SortOrder = 4;
-                $obj->save($db);
+                $obj->save($localDb);
 
                 $obj = new RobotInfoKeys();
                 $obj->YearId = $year->Id;
                 $obj->KeyState = 'Teleop';
                 $obj->KeyName = 'Cargo Stored';
                 $obj->SortOrder = 5;
-                $obj->save($db);
+                $obj->save($localDb);
 
                 $obj = new RobotInfoKeys();
                 $obj->YearId = $year->Id;
                 $obj->KeyState = 'Teleop';
                 $obj->KeyName = 'Hatches Secured';
                 $obj->SortOrder = 6;
-                $obj->save($db);
+                $obj->save($localDb);
 
-                $robotInfoKeys = RobotInfoKeys::getObjects($db);
+                $coreDb->commit();
+                $localDb->commit();
+
+                $checklistItems = ChecklistItems::getObjects($localDb);
+                $scoutCardInfoKeys = ScoutCardInfoKeys::getObjects($localDb);
+                $robotInfoKeys = RobotInfoKeys::getObjects($localDb);
+
+                $coreDb->beginTransaction();
+                $localDb->beginTransaction();
 
                 foreach(Events::getObjects($coreDb, $year, $team) as $event)
                 {
@@ -622,7 +633,7 @@ switch ($_POST['action'])
                             $checklistItemResult->Status = (rand(1, 2) == 1) ? ChecklistItemResults::COMPLETE : ChecklistItemResults::INCOMPLETE;
                             $checklistItemResult->CompletedBy = 'Demo User';
                             $checklistItemResult->CompletedDate = date('Y-m-d H:i:s');
-                            $checklistItemResult->save($db, $coreDb);
+                            $checklistItemResult->save($localDb, $coreDb, true);
                         }
 
                         foreach ($scoutCardInfoKeys as $scoutCardInfoKey)
@@ -670,12 +681,16 @@ switch ($_POST['action'])
                                     $scoutCardInfo->CompletedBy = '';
                                     $scoutCardInfo->PropertyValue = rand(0, 10);
                                     $scoutCardInfo->PropertyKeyId = $scoutCardInfoKey->Id;
-                                    $scoutCardInfo->save($db, $coreDb);
+                                    $scoutCardInfo->save($localDb, $coreDb, true);
                                 }
                             }
                         }
                     }
                 }
+
+                $coreDb->commit();
+                $localDb->commit();
+
             } else
                 $ajax->error('Error importing SQL tables. Please try again.');
 

@@ -11,6 +11,8 @@ else
 
     $teams = Teams::getObjects($coreDb);
     $teamSize = sizeof($teams);
+
+    $coreDb->beginTransaction();
     for($i = 0; $i < $teamSize; $i++)
     {
         $team = $teams[$i];
@@ -57,6 +59,7 @@ else
             $team->save($coreDb);
         }
     }
+    $coreDb->commit();
 }
 
 ?>

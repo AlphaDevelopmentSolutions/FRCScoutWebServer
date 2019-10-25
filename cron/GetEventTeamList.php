@@ -14,12 +14,12 @@ else
 
     $yearId = empty($argv[1]) ? readline("Enter Year: ") : $argv[1];
 
-    $database = new Database('core');
-    $events = $database->query('DELETE FROM event_team_list WHERE eventid LIKE "%' . $yearId . '%"');
-    unset($database);
+    $coreDb->query('DELETE FROM event_team_list WHERE eventid LIKE "%' . $yearId . '%"');
 
     $events = Events::getObjects($coreDb, Years::withId($coreDb, $yearId));
     $eventsSize = sizeof($events);
+
+    $coreDb->beginTransaction();
     for($i = 0; $i < $eventsSize; $i++)
     {
         $event = $events[$i];
@@ -47,5 +47,6 @@ else
             $eventTeamList->save($coreDb);
         }
     }
+    $coreDb->commit();
 }
 ?>

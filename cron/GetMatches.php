@@ -13,12 +13,12 @@ else
 
     $yearId = empty($argv[1]) ? readline("Enter Year: ") : $argv[1];
 
-    $database = new Database('core');
-    $database->query("delete from matches where eventid like '%$yearId%';");
-    unset($database);
+    $coreDb->query("delete from matches where eventid like '%$yearId%';");
 
     $events = Events::getObjects($coreDb, Years::withId($coreDb, $yearId));
     $eventsSize = sizeof($events);
+
+    $coreDb->beginTransaction();
     for($i = 0; $i < $eventsSize; $i++)
     {
         $event = $events[$i];
@@ -61,6 +61,7 @@ else
             }
         }
     }
+    $coreDb->commit();
 }
 
 ?>

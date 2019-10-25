@@ -12,6 +12,8 @@ else
     set_time_limit(600);
 
     $pageCount = 17;
+
+    $coreDb->beginTransaction();
     for ($i = 0; $i < $pageCount; $i++)
     {
         $totalPercent = round($i / $pageCount, 2) * 100;
@@ -47,6 +49,7 @@ else
             }
         }
     }
+    $coreDb->commit();
 }
 
 ?>
