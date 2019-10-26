@@ -71,7 +71,7 @@ class Api
      */
     private function respond($message)
     {
-        die(json_encode(is_array($message) ? $message : [$message], JSON_PRETTY_PRINT));
+        die(json_encode(is_array($message) ? $message : [$message]));
     }
 }
 

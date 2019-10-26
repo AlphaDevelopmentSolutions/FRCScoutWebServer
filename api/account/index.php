@@ -28,8 +28,6 @@ switch($_POST[$api->ACTION_KEY])
         if($response['success'])
         {
             $account = Accounts::withProperties($_POST);
-            setCoreAccount($account);
-            $localDb = new LocalDatabase();
 
             if (empty($account->Username))
                 $api->badRequest("Username cannot be empty.");
@@ -40,6 +38,7 @@ switch($_POST[$api->ACTION_KEY])
             if ($account->login($coreDb))
             {
                 setCoreAccount($account);
+                $localDb = new LocalDatabase();
 
                 require_once(ROOT_DIR . '/classes/tables/core/Teams.php');
                 require_once(ROOT_DIR . '/classes/tables/local/Config.php');
