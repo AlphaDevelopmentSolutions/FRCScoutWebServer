@@ -14,11 +14,18 @@
  * limitations under the License.
  */
 
+:root
+{
+  --default-color-primary: #03A9F4;
+  --default-color-primary-dark: #0288D1;
+}
+
 html, body {
   font-family: 'Roboto', 'Helvetica', sans-serif;
   margin: 0;
   padding: 0;
 }
+
 .mdl-demo .mdl-layout__header-row {
   padding-left: 40px;
 }
@@ -41,6 +48,7 @@ html, body {
 .mdl-demo .mdl-layout__tab-bar {
   padding: 0;
   padding-left: 16px;
+  -webkit-box-sizing: border-box;
   box-sizing: border-box;
   height: 100%;
   width: 100%;
@@ -60,25 +68,33 @@ html, body {
 }
 .mdl-demo .mdl-card {
   height: auto;
-  display: -webkit-flex;
   display: -ms-flexbox;
+  display: -webkit-box;
   display: flex;
-  -webkit-flex-direction: column;
-      -ms-flex-direction: column;
-          flex-direction: column;
+  -ms-flex-direction: column;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  flex-direction: column;
 }
 .mdl-demo .mdl-card > * {
   height: auto;
 }
 .mdl-demo .mdl-card .mdl-card__supporting-text {
   margin: 40px;
-  -webkit-flex-grow: 1;
-      -ms-flex-positive: 1;
-          flex-grow: 1;
+  -ms-flex-positive: 1;
+  -webkit-box-flex: 1;
+  flex-grow: 1;
   padding: 0;
   color: inherit;
   width: calc(100% - 80px);
 }
+
+.mdl-card,
+.mdl-card__supporting-text
+{
+  overflow: visible !important;
+}
+
 .mdl-demo.mdl-demo .mdl-card__supporting-text h4 {
   margin-top: 0;
   margin-bottom: 20px;
@@ -115,15 +131,15 @@ html, body {
 }
 
 .mdl-demo section > header{
-  display: -webkit-flex;
   display: -ms-flexbox;
+  display: -webkit-box;
   display: flex;
-  -webkit-align-items: center;
-      -ms-flex-align: center;
-          align-items: center;
-  -webkit-justify-content: center;
-      -ms-flex-pack: center;
-          justify-content: center;
+  -ms-flex-align: center;
+  -webkit-box-align: center;
+  align-items: center;
+  -ms-flex-pack: center;
+  -webkit-box-pack: center;
+  justify-content: center;
 }
 .mdl-demo section > .section__play-btn {
   min-height: 200px;
@@ -138,29 +154,27 @@ html, body {
   right: 8px;
 }
 .mdl-demo section .section__circle {
-  display: -webkit-flex;
   display: -ms-flexbox;
+  display: -webkit-box;
   display: flex;
-  -webkit-align-items: center;
-      -ms-flex-align: center;
-          align-items: center;
-  -webkit-justify-content: flex-start;
-      -ms-flex-pack: start;
-          justify-content: flex-start;
-  -webkit-flex-grow: 0;
-      -ms-flex-positive: 0;
-          flex-grow: 0;
-  -webkit-flex-shrink: 1;
-      -ms-flex-negative: 1;
-          flex-shrink: 1;
+  -ms-flex-align: center;
+  -webkit-box-align: center;
+  align-items: center;
+  -ms-flex-pack: start;
+  -webkit-box-pack: start;
+  justify-content: flex-start;
+  -ms-flex-positive: 0;
+  -webkit-box-flex: 0;
+  flex-grow: 0;
+  -ms-flex-negative: 1;
+  flex-shrink: 1;
 }
 .mdl-demo section .section__text {
-  -webkit-flex-grow: 1;
-      -ms-flex-positive: 1;
-          flex-grow: 1;
-  -webkit-flex-shrink: 0;
-      -ms-flex-negative: 0;
-          flex-shrink: 0;
+  -ms-flex-positive: 1;
+  -webkit-box-flex: 1;
+  flex-grow: 1;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
   padding-top: 8px;
 }
 .mdl-demo section .section__text h5 {
@@ -199,9 +213,7 @@ html, body {
 .mdl-demo .mdl-card .mdl-card__supporting-text > h3:first-child {
   margin-bottom: 24px;
 }
-.mdl-demo .mdl-layout__tab-panel:not(#overview) {
-  background-color: white;
-}
+
 .mdl-demo #teams section {
   margin-bottom: 72px;
 }
@@ -213,12 +225,13 @@ html, body {
   margin: 24px;
   padding: 0;
   padding-left: 8px;
-  display: -webkit-flex;
   display: -ms-flexbox;
+  display: -webkit-box;
   display: flex;
-  -webkit-flex-direction: column;
-      -ms-flex-direction: column;
-          flex-direction: column;
+  -ms-flex-direction: column;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  flex-direction: column;
 }
 .mdl-demo .toc h4 {
   font-size: 0.9rem;
@@ -253,11 +266,22 @@ html, body {
   height: 10px;
 }
 
-.version
+.footer-text
 {
   text-align: center;
   width: 100%;
   color: rgba(0, 0, 0, .25);
+}
+
+.footer-text a
+{
+  color: rgba(0, 0, 0, .25);
+  text-decoration: none;
+}
+
+.footer-text a:hover
+{
+  color: rgba(0, 0, 0, .35);
 }
 
 .circle-image
@@ -273,10 +297,10 @@ html, body {
 
 .robot-media
 {
-
   margin-left: auto;
   margin-right: auto;
   display: block;
+  width: 350px;
 }
 
 .team-card
@@ -286,6 +310,14 @@ html, body {
 }
 
 .team-card-image
+{
+  width: 215px;
+  height: 200px;
+  background-size: cover !important;
+  background: var(--default-color-primary) no-repeat 50% 50%;
+}
+
+.year-card-image
 {
   width: 215px;
   height: 200px;
@@ -381,7 +413,6 @@ html, body {
 .table-button
 {
   font-weight: 600;
-  color: var(--color-primary-dark);
 }
 
 .admin-table-field
@@ -391,7 +422,7 @@ html, body {
 
 .admin-table-data
 {
-    text-align: center !important;
+  text-align: center !important;
 }
 
 .admin-table-wrapper
@@ -402,11 +433,220 @@ html, body {
 
 .admin-table-header
 {
-    font-size: 15px !important;
-    text-align: center !important;
+  font-size: 15px !important;
+  text-align: center !important;
 }
 
 .login-field-wrapper
 {
   width: unset !important;
+}
+
+.homescreen
+{
+  background-color: var(--default-color-primary);
+}
+
+.home-login
+{
+  text-align: center;
+  padding: 20px;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  -webkit-transform: translate(-50%, -60%);
+  -ms-transform: translate(-50%, -60%);
+  transform: translate(-50%, -60%);
+}
+
+.home-login > div
+{
+  padding: 20px;
+  background-color: white;
+  border-radius: 4px;
+  -webkit-box-shadow: 0 0 5px;
+  box-shadow: 0 0 5px;
+}
+
+.home-login > img
+{
+  padding: 5px;
+}
+
+.home-login .mdl-textfield__label:after
+{
+  background-color: var(--default-color-primary-dark) !important;
+}
+
+.home-login .mdl-textfield__label
+{
+  color: var(--default-color-primary-dark) !important;
+}
+
+.home-login button
+{
+  background-color: var(--default-color-primary-dark) !important;
+  margin: 0 auto;
+}
+
+.account-login
+{
+  text-align: center;
+  margin: 20px 0;
+  width: 90%;
+  max-width: 300px;
+}
+
+.account-login > div
+{
+  padding: 20px;
+  background-color: white;
+  border-radius: 4px;
+  -webkit-box-shadow: 0 0 5px;
+  box-shadow: 0 0 5px;
+}
+
+.center-div-horizontal-outer
+{
+  text-align: center;
+}
+
+.center-div-horizontal-inner
+{
+  display: inline-block;
+}
+
+.center-div-vertical-outer
+{
+  position: relative;
+}
+
+.center-div-vertical-inner
+{
+  position: absolute;
+  top: 50%;
+  -webkit-transform: translateY(-50%);
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
+}
+
+.create-account,
+.create-account a
+{
+  font-size: 12px;
+  font-weight: 300;
+  text-decoration: none;
+  color: white;
+  margin-top: 8px;
+}
+
+.create-account a
+{
+  font-weight: 500;
+}
+
+.create-account a:hover
+{
+  color: lightgrey;
+}
+
+.card-section-header
+{
+  padding-left: 40px;
+}
+
+.create-acc-button
+{
+  margin: 0 5px 2px 1px;
+}
+
+.setting-title
+{
+  display: inline-block;
+  padding: 20px 0;
+  width: 49%;
+}
+
+.setting-value
+{
+  width: 49%;
+}
+
+.settings-fab
+{
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 2;
+}
+
+.default-mat-button,
+.default-mat-button:hover
+{
+  background-color: var(--default-color-primary);
+  color: white;
+}
+
+.default-mat-text-button
+{
+  color: var(--default-color-primary);
+}
+
+.material-top-bottom-padding
+{
+  margin: 8px 0;
+}
+
+.material-side-padding
+{
+  margin: 0 8px;
+}
+
+.material-padding
+{
+  margin: 8px;
+}
+
+.card-buttons
+{
+  text-align: right;
+  margin: 24px;
+}
+
+.card-buttons button
+{
+  font-weight: 600;
+}
+
+.hide
+{
+  display: none;
+}
+
+.link
+{
+  text-decoration: none;
+  color: rgba(0,0,0,.54);
+}
+
+@media (max-width: 600px) {
+  .mdl-layout__title, .mdl-layout-title {
+    font-size: 14px;
+  }
+
+  .robot-media
+  {
+    width: 200px;
+  }
+}
+
+@media (max-width: 260px) {
+  .mdl-layout__title, .mdl-layout-title {
+    font-size: 10px;
+  }
+
+  .robot-media
+  {
+    width: 100px;
+  }
 }

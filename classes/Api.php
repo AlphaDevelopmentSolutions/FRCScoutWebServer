@@ -1,60 +1,78 @@
 <?php
 
-
 class Api
 {
-
-    private $response;
-
-    private $SUCCESS_STATUS_CODE = 'Success';
-    private $ERROR_STATUS_CODE = 'Error';
-
-    private $STATUS_KEY = 'Status';
-    private $RESPONSE_KEY = 'Response';
-
-    private $keyValid;
-
-    function __construct($key)
-    {
-        $this->keyValid = $key == API_KEY;
-        $this->response = array();
-    }
+    public $ACTION_KEY = 'Action';
+    public $API_KEY = 'ApiKey';
 
     /**
      * Echos a json encoded success response
-     * @param $message String | array message to display
+     * @param $message string | array message to display
      */
     function success($message)
     {
-        $this->response[$this->STATUS_KEY] = $this->SUCCESS_STATUS_CODE;
-        $this->response[$this->RESPONSE_KEY] = $message;
-
-        echo json_encode($this->response);
-
+        header("HTTP/1.0 200");
+        $this->respond($message);
     }
 
     /**
-     * Echos a json encoded success response
+     * Echos a json encoded response
      * @param $message String | array message to display
      */
     function error($message)
     {
-        $this->response[$this->STATUS_KEY] = $this->ERROR_STATUS_CODE;
-        $this->response[$this->RESPONSE_KEY] = $message;
-
-        echo json_encode($this->response);
+        header("HTTP/1.0 500");
+        $this->respond($message);
     }
 
     /**
-     * Returns if the key was valid when initializing the API
-     * @return boolean
+     * Echos a json encoded response
+     * @param $message string | array message to display
      */
-    public function getKeyValid()
+    function unauthorized($message)
     {
-        return $this->keyValid;
+        header("HTTP/1.0 401");
+        $this->respond($message);
     }
 
+    /**
+     * Echos a json encoded response
+     * @param $message string | array message to display
+     */
+    function forbidden($message)
+    {
+        header("HTTP/1.0 403");
+        $this->respond($message);
+    }
 
+    /**
+     * Echos a json encoded response
+     * @param $message string | array message to display
+     */
+    function notImplemented($message)
+    {
+        header("HTTP/1.0 501");
+        $this->respond($message);
+    }
+
+    /**
+     * Echos a json encoded response
+     * @param $message string | array message to display
+     */
+    function badRequest($message)
+    {
+        header("HTTP/1.0 400");
+        $this->respond($message);
+    }
+
+    /**
+     * Prints message to screen
+     * @param $message
+     */
+    private function respond($message)
+    {
+        die(json_encode(is_array($message) ? $message : [$message], JSON_PRETTY_PRINT));
+    }
 }
 
 ?>

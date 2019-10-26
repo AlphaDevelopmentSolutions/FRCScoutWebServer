@@ -8,15 +8,15 @@ class NavBarLink
 
     /**
      * NavBarLink constructor.
-     * @param string $Title
-     * @param string $Link
-     * @param boolean $IsActive
+     * @param string $title
+     * @param string $link
+     * @param boolean $isActive
      */
-    public function __construct($Title, $Link, $IsActive = false)
+    public function __construct($title, $link, $isActive = false)
     {
-        $this->Title = $Title;
-        $this->Link = $Link;
-        $this->IsActive = $IsActive;
+        $this->Title = $title;
+        $this->Link = $link;
+        $this->IsActive = $isActive;
     }
 
     /**

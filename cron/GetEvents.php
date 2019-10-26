@@ -1,34 +1,17 @@
 <?php
-require_once('../config.php');
-require_once('../classes/tables/Events.php');
-
-
-
-foreach (getEvents() as $eventJson)
+if(php_sapi_name() != 'cli')
+    header("HTTP/1.0 401");
+else
 {
-    $event = new Events();
-    $event->BlueAllianceId = $eventJson['key'];
-    $event->Name = $eventJson['name'];
-    $event->City = $eventJson['city'];
-    $event->StateProvince = $eventJson['state_prov'];
-    $event->Country= $eventJson['country'];
-    $event->StartDate = $eventJson['start_date'];
-    $event->EndDate = $eventJson['end_date'];
-    $event->save();
-}
+    $bypassCoreCheck = true;
+    require_once('../config.php');
+    require_once(ROOT_DIR . "/classes/tables/core/Events.php");
 
-//cleanup duplicates
-$database = new Database();
-$database->query("DELETE event1 FROM events event1, events event2 WHERE event1.Id < event2.Id AND event1.BlueAllianceId = event2.BlueAllianceId;");
-$database->close();
+    set_time_limit(600);
 
-/**
- * Queries the blue alliance API for events on a specific team
- * @return mixed
- */
-function getEvents()
-{
-    $url = "https://www.thebluealliance.com/api/v3/team/frc" . TEAM_NUMBER . "/events/" . date("Y") . "?X-TBA-Auth-Key=" . BLUE_ALLIANCE_KEY;
+    $yearId = empty($argv[1]) ? readline("Enter Year: ") : $argv[1];
+
+    $url = "https://www.thebluealliance.com/api/v3/events/" . $yearId . "?X-TBA-Auth-Key=" . BLUE_ALLIANCE_KEY;
 
     $ch = curl_init();
 
@@ -36,7 +19,32 @@ function getEvents()
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
     $response = curl_exec($ch);
 
-    return json_decode($response, true);
-}
+    $events = json_decode($response, true);
+    $eventsSize = sizeof($events);
 
+    $coreDb->beginTransaction();
+    for($i = 0; $i < $eventsSize; $i++)
+    {
+        $percent = round($i / $eventsSize, 2) * 100;
+
+        $eventJson = $events[$i];
+        $event = new Events();
+        $event->YearId = $yearId;
+        $event->BlueAllianceId = $eventJson['key'];
+        $event->Name = $eventJson['name'];
+        $event->City = $eventJson['city'];
+        $event->StateProvince = $eventJson['state_prov'];
+        $event->Country= $eventJson['country'];
+        $event->StartDate = $eventJson['start_date'];
+        $event->EndDate = $eventJson['end_date'];
+
+        echo "$i / {$eventsSize} - {$percent}% - Saving event {$event->toString()}...\n";
+
+        $event->save($coreDb);
+    }
+    $coreDb->commit();
+
+    //cleanup duplicates
+    $coreDb->query("DELETE event1 FROM events event1, events event2 WHERE event1.Id < event2.Id AND event1.BlueAllianceId = event2.BlueAllianceId;");
+}
 ?>

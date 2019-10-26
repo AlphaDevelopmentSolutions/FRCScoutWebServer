@@ -10,62 +10,94 @@ if (session_status() == PHP_SESSION_NONE)
 /**
  * CONSTANTS
  */
-define('VERSION', 'v2019.3.0.0');
+define('VERSION', '4.0.0');
 define('ROOT_DIR', __DIR__);
-
-/**
- * ERROR CORDS
- */
-define('FILE_WRITE_FAIL_CODE' , '5x01');
-define('CURL_FAIL_CODE' , '5x02');
-
-
-verifyInstall();
 
 /**
  * REQUIRED FILES
  */
+require_once(ROOT_DIR . '/classes/Keys.php');
 require_once(ROOT_DIR . '/classes/Database.php');
+require_once(ROOT_DIR . '/classes/CoreDatabase.php');
+require_once(ROOT_DIR . '/classes/LocalDatabase.php');
 require_once(ROOT_DIR . '/classes/tables/Table.php');
-require_once(ROOT_DIR . '/classes/tables/Users.php');
-require_once(ROOT_DIR . '/classes/tables/Config.php');
+require_once(ROOT_DIR . '/classes/tables/local/Users.php');
+require_once(ROOT_DIR . '/classes/tables/local/Config.php');
+require_once(ROOT_DIR . '/classes/tables/core/CoreConfig.php');
+require_once(ROOT_DIR . '/classes/tables/core/Accounts.php');
 require_once(ROOT_DIR . '/interfaces/AllianceColors.php');
 
 /**
  * LOAD CONFIGS
  */
-$configs = Config::getObjects();
-foreach($configs as $config)
+if(isCoreLoggedIn())
+    define('DB_NAME', getCoreAccount()->DbId);
+else if($bypassCoreCheck != true && !isCoreLoggedIn())
+    redirect('/');
+
+$coreDb = new CoreDatabase();
+
+if(isCoreLoggedIn())
+    $localDb = new LocalDatabase();
+
+if(isCoreLoggedIn())
+{
+    foreach (Config::getObjects($localDb) as $config)
+    {
+        define($config->Key, $config->Value);
+    }
+}
+
+foreach(CoreConfig::getObjects($coreDb) as $config)
 {
     define($config->Key, $config->Value);
 }
 
+define('ROOT_URL', 'https://' . $_SERVER['SERVER_NAME']);
+define('URL_PATH', '/');
+
 /**
  * MEDIA FILES
  */
-define('ROBOT_MEDIA_DIR', __DIR__ . '/html/assets/robot-media/');
-define('ROBOT_MEDIA_URL', URL_PATH . '/assets/robot-media/');
-define('YEAR_MEDIA_URL', URL_PATH . '/assets/year-media/');
+define('ROBOT_MEDIA_DIR', ROOT_DIR . '/assets/robot-media/originals/' . getCoreAccount()->RobotMediaDir . '/');
+define('ROBOT_MEDIA_THUMBS_DIR', ROOT_DIR . '/assets/robot-media/thumbs/' . getCoreAccount()->RobotMediaDir . '/');
+define('INCLUDES_DIR', ROOT_DIR . '/includes/');
+
+define('ROBOT_MEDIA_URL', '/assets/robot-media/originals/' . getCoreAccount()->RobotMediaDir . '/');
+define('ROBOT_MEDIA_THUMBS_URL', '/assets/robot-media/thumbs/' . getCoreAccount()->RobotMediaDir . '/');
+
+define('YEAR_MEDIA_URL', '/assets/year-media/');
+define('IMAGES_URL', '/assets/images/');
+
+define('CSS_URL', '/css/');
+define('JS_URL', '/js/');
+define('AJAX_URL', '/ajax/');
+
+
+define('PAGES_URL', URL_PATH . 'pages/');
+define('ADMIN_URL', PAGES_URL . 'admin/');
+define('CHECKLISTS_URL', PAGES_URL . 'checklists/');
+define('EVENTS_URL', PAGES_URL . 'events/');
+define('MATCHES_URL', PAGES_URL . 'matches/');
+define('STATS_URL', PAGES_URL . 'stats/');
+define('TEAMS_URL', PAGES_URL . 'teams/');
+define('YEARS_URL', PAGES_URL . 'years/');
+
 require_once(ROOT_DIR . "/classes/Header.php");
 require_once(ROOT_DIR . "/classes/NavBar.php");
 require_once(ROOT_DIR . "/classes/NavBarArray.php");
 require_once(ROOT_DIR . "/classes/NavBarLink.php");
 require_once(ROOT_DIR . "/classes/NavBarLinkArray.php");
 
-
-//set the user var
-$user = getUser();
-
 //These are held as placeholders for programming usage
 //Primarily so the IDE will auto-complete
 if(false)
 {
     define('APP_NAME', '');
-    define('TEAM_NUMBER', '');
-    define('TEAM_NAME', '');
-    define('URL_PATH', '');
+    define('PRIMARY_COLOR', '');
+    define('PRIMARY_COLOR_DARK', '');
+
     define('BLUE_ALLIANCE_KEY', '');
-    define('API_KEY', '');
 }
 
 /**
@@ -81,9 +113,40 @@ function isPostBack()
  * Returns if the current user is logged in
  * @return bool
  */
-function loggedIn()
+function isLoggedIn()
 {
     return !is_null(getUser());
+}
+
+/**
+ * Returns if the current user is logged into the core of the app
+ * @return bool
+ */
+function isCoreLoggedIn()
+{
+    return !is_null(getCoreAccount());
+}
+
+/**
+ * Returns the currently logged in user, if any
+ * @return Accounts|null
+ */
+function getCoreAccount()
+{
+    return !empty($_SESSION['coreAccount']) ? unserialize($_SESSION['coreAccount']) : null;
+}
+
+/**
+ * Sets the core account
+ * @param $account Accounts account to add
+ */
+function setCoreAccount($account)
+{
+    if(!empty($account))
+    {
+        define('DB_NAME', $account->DbId);
+        $_SESSION['coreAccount'] = serialize($account);
+    }
 }
 
 /**
@@ -96,14 +159,12 @@ function getUser()
 }
 
 /**
- * Verifies the install on then server
- * If not valid install, redirects to the install page
+ * Redirects to specified url
+ * @param $url string path to redirect to
  */
-function verifyInstall()
+function redirect($url)
 {
-    if(file_exists(__DIR__ . '/classes/Keys.php'))
-        require_once('classes/Keys.php');
-    else if (strpos($_SERVER['REQUEST_URI'], 'install.php') < 1)
-        header('Location: ' . '/install.php');
+    header('Location: ' . $url);
+    die();
 }
 ?>

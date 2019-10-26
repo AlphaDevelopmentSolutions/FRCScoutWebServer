@@ -5,17 +5,17 @@ class Database extends PDO
 
     /**
      * Database constructor.
+     * @param string | null $db name for database to access
      */
-    function __construct()
+    function __construct($db = null)
     {
 
         // Get the main settings from the array we just loaded
         $host = MYSQL_HOST;
-        $name = MYSQL_DB;
         $user = MYSQL_USER;
         $pass = MYSQL_PASSWORD;
 
-        $dsn = "mysql:host=$host;dbname=$name;charset=utf8mb4";
+        $dsn = "mysql:host=$host;" . ((!empty($db)) ? "dbname=$db;" : "") . "charset=utf8mb4";
 
         $options = [
             PDO::ATTR_EMULATE_PREPARES   => false, // turn off emulation mode for "real" prepared statements
@@ -27,25 +27,6 @@ class Database extends PDO
     }
 
     /**
-     * Destroy this instance to close the database
-     */
-    function __destruct()
-    {
-        unset($this);
-    }
-
-    /**
-     * Quotes a param with MySQL approved quotes
-     * @param string $string to quote
-     * @param int $parameter_type
-     * @return string
-     */
-    function quote($string, $parameter_type = PDO::PARAM_STR)
-    {
-        return parent::quote($string, $parameter_type);
-    }
-
-    /**
      * Quotes columns with ` for MySQL approved column quotes
      * @param string $column to quote
      * @return string
@@ -53,14 +34,6 @@ class Database extends PDO
     function quoteColumn($column)
     {
         return '`' . $column . '`';
-    }
-
-    /**
-     * Destroys the current instance of this database
-     */
-    function close()
-    {
-        $this->__destruct();
     }
 
     /**
