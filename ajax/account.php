@@ -390,7 +390,6 @@ switch ($_POST['action'])
             //create all required tables
             if (importSqlFile($localDb, '../databases/v' . VERSION . '.sql'))
             {
-
                 unset($coreDb);
                 $coreDb = new CoreDatabase();
 
