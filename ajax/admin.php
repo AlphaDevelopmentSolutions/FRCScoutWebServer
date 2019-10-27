@@ -219,15 +219,15 @@ switch ($_POST['action'])
                 {
                     switch ($config->Key)
                     {
-                        case "APP_NAME":
+                        case APP_NAME:
                             $config->Value = $data['AppName'];
                             break;
 
-                        case "PRIMARY_COLOR":
+                        case PRIMARY_COLOR:
                             $config->Value = $data['PrimaryColor'];
                             break;
 
-                        case "PRIMARY_COLOR_DARK":
+                        case PRIMARY_COLOR_DARK:
                             $config->Value = $data['PrimaryColorDark'];
                             break;
                     }

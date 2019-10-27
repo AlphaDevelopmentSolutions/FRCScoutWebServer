@@ -25,7 +25,7 @@ else
         $event = $events[$i];
         $totalPercent = round($i / $eventsSize, 2) * 100;
 
-        $url = "https://www.thebluealliance.com/api/v3/event/" . $event->BlueAllianceId . "/teams?X-TBA-Auth-Key=" . BLUE_ALLIANCE_KEY;
+        $url = "https://www.thebluealliance.com/api/v3/event/" . $event->BlueAllianceId . "/teams?X-TBA-Auth-Key=" . $_SESSION[BLUE_ALLIANCE_KEY];
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);

@@ -9,7 +9,7 @@ $ajax = new Ajax();
 switch ($_POST['action'])
 {
     case 'opr':
-        $url = "https://www.thebluealliance.com/api/v3/event/" . $_POST['eventId'] . "/oprs?X-TBA-Auth-Key=" . BLUE_ALLIANCE_KEY;
+        $url = "https://www.thebluealliance.com/api/v3/event/" . $_POST['eventId'] . "/oprs?X-TBA-Auth-Key=" . $_SESSION[BLUE_ALLIANCE_KEY];
 
         $ch = curl_init();
 

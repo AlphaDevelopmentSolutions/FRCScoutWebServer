@@ -20,7 +20,7 @@ else
 
         echo "$i / {$teamSize} - {$percent}% - Getting social media for team {$team->toString()} ...\n";
 
-        $url = "https://www.thebluealliance.com/api/v3/team/frc" . $team->Id . "/social_media?X-TBA-Auth-Key=" . BLUE_ALLIANCE_KEY;
+        $url = "https://www.thebluealliance.com/api/v3/team/frc" . $team->Id . "/social_media?X-TBA-Auth-Key=" . $_SESSION[BLUE_ALLIANCE_KEY];
 
         $ch = curl_init();
 

@@ -10,7 +10,7 @@ if (session_status() == PHP_SESSION_NONE)
 /**
  * CONSTANTS
  */
-define('VERSION', '4.0.0');
+define('VERSION', 'v4.1.0');
 define('ROOT_DIR', __DIR__);
 
 /**
@@ -40,19 +40,6 @@ $coreDb = new CoreDatabase();
 if(isCoreLoggedIn())
     $localDb = new LocalDatabase();
 
-if(isCoreLoggedIn())
-{
-    foreach (Config::getObjects($localDb) as $config)
-    {
-        define($config->Key, $config->Value);
-    }
-}
-
-foreach(CoreConfig::getObjects($coreDb) as $config)
-{
-    define($config->Key, $config->Value);
-}
-
 define('ROOT_URL', 'https://' . $_SERVER['SERVER_NAME']);
 define('URL_PATH', '/');
 
@@ -73,7 +60,6 @@ define('CSS_URL', '/css/');
 define('JS_URL', '/js/');
 define('AJAX_URL', '/ajax/');
 
-
 define('PAGES_URL', URL_PATH . 'pages/');
 define('ADMIN_URL', PAGES_URL . 'admin/');
 define('CHECKLISTS_URL', PAGES_URL . 'checklists/');
@@ -83,21 +69,42 @@ define('STATS_URL', PAGES_URL . 'stats/');
 define('TEAMS_URL', PAGES_URL . 'teams/');
 define('YEARS_URL', PAGES_URL . 'years/');
 
+define('APP_NAME', 'APP_NAME');
+define('PRIMARY_COLOR', 'PRIMARY_COLOR');
+define('PRIMARY_COLOR_DARK', 'PRIMARY_COLOR_DARK');
+
+define('BLUE_ALLIANCE_KEY', 'BLUE_ALLIANCE_KEY');
+
 require_once(ROOT_DIR . "/classes/Header.php");
 require_once(ROOT_DIR . "/classes/NavBar.php");
 require_once(ROOT_DIR . "/classes/NavBarArray.php");
 require_once(ROOT_DIR . "/classes/NavBarLink.php");
 require_once(ROOT_DIR . "/classes/NavBarLinkArray.php");
 
-//These are held as placeholders for programming usage
-//Primarily so the IDE will auto-complete
-if(false)
-{
-    define('APP_NAME', '');
-    define('PRIMARY_COLOR', '');
-    define('PRIMARY_COLOR_DARK', '');
 
-    define('BLUE_ALLIANCE_KEY', '');
+//get core user config and load it into the session
+if(isCoreLoggedIn())
+{
+    if(
+        empty($_SESSION[APP_NAME]) ||
+        empty($_SESSION[PRIMARY_COLOR]) ||
+        empty($_SESSION[PRIMARY_COLOR_DARK])
+    )
+    {
+        foreach (Config::getObjects($localDb) as $config)
+        {
+            $_SESSION[$config->Key] = $config->Value;
+        }
+    }
+}
+
+//get the core config and load it into the session
+if(empty($_SESSION[BLUE_ALLIANCE_KEY]))
+{
+    foreach(CoreConfig::getObjects($coreDb) as $config)
+    {
+        $_SESSION[$config->Key] = $config->Value;
+    }
 }
 
 /**

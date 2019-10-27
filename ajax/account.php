@@ -218,17 +218,17 @@ switch ($_POST['action'])
 
                 //add all the configs to the DB
                 $conf = new Config();
-                $conf->Key = 'APP_NAME';
+                $conf->Key = APP_NAME;
                 $conf->Value = $appName;
                 $conf->save($localDb);
 
                 $conf = new Config();
-                $conf->Key = 'PRIMARY_COLOR';
+                $conf->Key = PRIMARY_COLOR;
                 $conf->Value = $primaryColor;
                 $conf->save($localDb);
 
                 $conf = new Config();
-                $conf->Key = 'PRIMARY_COLOR_DARK';
+                $conf->Key = PRIMARY_COLOR_DARK;
                 $conf->Value = $secondaryColor;
                 $conf->save($localDb);
 
@@ -398,17 +398,17 @@ switch ($_POST['action'])
 
                 //add all the configs to the DB
                 $conf = new Config();
-                $conf->Key = 'APP_NAME';
+                $conf->Key = APP_NAME;
                 $conf->Value = $appName;
                 $conf->save($localDb);
 
                 $conf = new Config();
-                $conf->Key = 'PRIMARY_COLOR';
+                $conf->Key = PRIMARY_COLOR;
                 $conf->Value = $primaryColor;
                 $conf->save($localDb);
 
                 $conf = new Config();
-                $conf->Key = 'PRIMARY_COLOR_DARK';
+                $conf->Key = PRIMARY_COLOR_DARK;
                 $conf->Value = $secondaryColor;
                 $conf->save($localDb);
 

@@ -5,5 +5,5 @@
     <a href="mailto:hello@frcscout.com">Contact</a>
 
     <br>
-    <a href="#">v<?php echo VERSION ?></a>
+    <a href="#"><?php echo VERSION ?></a>
 </div>

@@ -21,10 +21,10 @@ function saveRecord(recordType, recordId, record = undefined)
         case "<?php echo Config::class ?>":
             data =
                 {
-                    AppName: $('#APP_NAME').val(),
+                    AppName: $('#<?php echo APP_NAME ?>').val(),
                     ApiKey: $('#ApiKey').val(),
-                    PrimaryColor: $('#PRIMARY_COLOR').val(),
-                    PrimaryColorDark: $('#PRIMARY_COLOR_DARK').val()
+                    PrimaryColor: $('#<?php echo PRIMARY_COLOR ?>').val(),
+                    PrimaryColorDark: $('#<?php echo PRIMARY_COLOR_DARK ?>').val()
                 };
             break;
 

@@ -7,8 +7,8 @@ if(isCoreLoggedIn())
 {
 ?>
 :root {
-    --color-primary: #<?php echo PRIMARY_COLOR ?>;
-    --color-primary-dark: #<?php echo PRIMARY_COLOR_DARK ?>;
+    --color-primary: #<?php echo $_SESSION[PRIMARY_COLOR] ?>;
+    --color-primary-dark: #<?php echo $_SESSION[PRIMARY_COLOR_DARK] ?>;
 }
 
 /**

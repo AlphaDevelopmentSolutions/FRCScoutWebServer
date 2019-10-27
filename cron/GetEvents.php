@@ -11,7 +11,7 @@ else
 
     $yearId = empty($argv[1]) ? readline("Enter Year: ") : $argv[1];
 
-    $url = "https://www.thebluealliance.com/api/v3/events/" . $yearId . "?X-TBA-Auth-Key=" . BLUE_ALLIANCE_KEY;
+    $url = "https://www.thebluealliance.com/api/v3/events/" . $yearId . "?X-TBA-Auth-Key=" . $_SESSION[BLUE_ALLIANCE_KEY];
 
     $ch = curl_init();
 

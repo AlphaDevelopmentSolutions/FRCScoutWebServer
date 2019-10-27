@@ -94,19 +94,19 @@ interface AdminPanels
 
                                 switch ($config->Key)
                                 {
-                                    case "APP_NAME":
+                                    case APP_NAME:
                                         ?>
                                         The name of your teams app.
                                         <?php
                                         break;
 
-                                    case "PRIMARY_COLOR":
+                                    case PRIMARY_COLOR:
                                         ?>
                                         Primary color for the web and mobile application.
                                         <?php
                                         break;
 
-                                    case "PRIMARY_COLOR_DARK":
+                                    case PRIMARY_COLOR_DARK:
                                         ?>
                                         Darker primary color, usually a color accent, for the web and mobile application.
                                         <?php

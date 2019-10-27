@@ -84,7 +84,7 @@ class Header
         if(!empty($this->Event))
         {
             ?>
-            <span class="mdl-layout-title"><?php echo APP_NAME ?></span>
+            <span class="mdl-layout-title"><?php echo $_SESSION[APP_NAME] ?></span>
             <nav class="mdl-navigation">
                 <a href="<?php echo MATCHES_URL ?>list?eventId=<?php echo $this->Event->BlueAllianceId ?>"
                    class="mdl-navigation__link">Matches</a>
@@ -102,7 +102,7 @@ class Header
         else if(!empty($this->Year))
         {
             ?>
-            <span class="mdl-layout-title"><?php echo APP_NAME ?></span>
+            <span class="mdl-layout-title"><?php echo $_SESSION[APP_NAME] ?></span>
             <nav class="mdl-navigation">
                 <a href="<?php echo EVENTS_URL ?>list?yearId=<?php echo $this->Year->Id ?>" class="mdl-navigation__link">Events</a>
                 <a href="<?php echo YEARS_URL ?>list" class="mdl-navigation__link">Years</a>
@@ -112,7 +112,7 @@ class Header
         else
         {
             ?>
-            <span class="mdl-layout-title"><?php echo APP_NAME ?></span>
+            <span class="mdl-layout-title"><?php echo $_SESSION[APP_NAME] ?></span>
             <nav class="mdl-navigation">
                 <a href="<?php echo YEARS_URL ?>list" class="mdl-navigation__link">Years</a>
             </nav>
