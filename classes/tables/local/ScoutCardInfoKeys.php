@@ -220,7 +220,7 @@ class ScoutCardInfoKeys extends LocalTable
                                                        match-id="<?php echo $match->Key ?>"
                                                        team-id="<?php echo $team->Id ?>"
                                                        info-key-id="<?php echo $scoutCardInfoKey->Id ?>"
-                                                       datatype="<?php echo $scoutCardInfoKey->DataType ?>"
+                                                        datatype="<?php echo $scoutCardInfoKey->DataType ?>"
                                                        value="<?php echo $scoutCardInfoArray[$scoutCardInfoKey->KeyState][$scoutCardInfoKey->KeyName]->PropertyValue ?>">
                                                 <?php
                                                 break;
