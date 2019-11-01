@@ -20,14 +20,14 @@ class RobotMedia extends LocalTable
      */
     public static function getObjects($database, $year = null, $event = null, $team = null)
     {
-        $whereStatment = "";
+        $whereStatement = "";
         $cols = array();
         $args = array();
 
         //if year specified, filter by year
         if(!empty($year))
         {
-            $whereStatment .= ((empty($whereStatment)) ? "" : " AND ") . " ! = ? ";
+            $whereStatement .= ((empty($whereStatement)) ? "" : " AND ") . " ! = ? ";
             $cols[] = 'YearId';
             $args[] = $year->Id;
         }
@@ -35,7 +35,7 @@ class RobotMedia extends LocalTable
         //if event specified, filter by event
         if(!empty($event))
         {
-            $whereStatment .= ((empty($whereStatment)) ? "" : " AND ") . " ! = ? ";
+            $whereStatement .= ((empty($whereStatement)) ? "" : " AND ") . " ! = ? ";
             $cols[] = 'EventId';
             $args[] = $event->BlueAllianceId;
         }
@@ -43,12 +43,12 @@ class RobotMedia extends LocalTable
         //if team specified, filter by team
         if(!empty($team))
         {
-            $whereStatment .= ((empty($whereStatment)) ? "" : " AND ") . " ! = ? ";
+            $whereStatement .= ((empty($whereStatement)) ? "" : " AND ") . " ! = ? ";
             $cols[] = 'TeamId';
             $args[] = $team->Id;
         }
 
-        return parent::getObjects($database, $whereStatment, $cols, $args);
+        return parent::getObjects($database, $whereStatement, $cols, $args);
     }
 
     /**

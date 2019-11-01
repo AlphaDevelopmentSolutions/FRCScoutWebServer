@@ -15,19 +15,19 @@ class EventTeamList extends CoreTable
      */
     public static function getObjects($database, $event = null)
     {
-        $whereStatment = "";
+        $whereStatement = "";
         $cols = array();
         $args = array();
 
         if(!empty($event))
         {
-            $whereStatment = "! = ?";
+            $whereStatement = "! = ?";
             $cols[] = "EventId";
             $args[] = $event->BlueAllianceId;
         }
 
 
-        return parent::getObjects($database, $whereStatment, $cols, $args);
+        return parent::getObjects($database, $whereStatement, $cols, $args);
     }
 
     public function toHtml()

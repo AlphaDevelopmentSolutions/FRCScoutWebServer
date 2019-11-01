@@ -25,14 +25,14 @@ class ScoutCardInfo extends LocalTable
      */
     public static function getObjects($database, $scoutCardInfoKey = null, $year = null, $event = null, $match = null, $team = null)
     {
-        $whereStatment = "";
+        $whereStatement = "";
         $cols = array();
         $args = array();
 
         //if scout card info key specified, filter by scout card info key
         if(!empty($scoutCardInfoKey))
         {
-            $whereStatment = "! = ?";
+            $whereStatement = "! = ?";
             $cols[] = "PropertyKeyId";
             $args[] = $scoutCardInfoKey->Id;
         }
@@ -40,7 +40,7 @@ class ScoutCardInfo extends LocalTable
         //if year specified, filter by year
         if(!empty($year))
         {
-            $whereStatment .= ((empty($whereStatment)) ? "" : " AND ") . " ! = ? ";
+            $whereStatement .= ((empty($whereStatement)) ? "" : " AND ") . " ! = ? ";
             $cols[] = 'YearId';
             $args[] = $year->Id;
         }
@@ -48,7 +48,7 @@ class ScoutCardInfo extends LocalTable
         //if event specified, filter by event
         if(!empty($event))
         {
-            $whereStatment .= ((empty($whereStatment)) ? "" : " AND ") . " ! = ? ";
+            $whereStatement .= ((empty($whereStatement)) ? "" : " AND ") . " ! = ? ";
             $cols[] = 'EventId';
             $args[] = $event->BlueAllianceId;
         }
@@ -56,7 +56,7 @@ class ScoutCardInfo extends LocalTable
         //if event specified, filter by event
         if(!empty($match))
         {
-            $whereStatment .= ((empty($whereStatment)) ? "" : " AND ") . " ! = ? ";
+            $whereStatement .= ((empty($whereStatement)) ? "" : " AND ") . " ! = ? ";
             $cols[] = 'MatchId';
             $args[] = $match->Key;
         }
@@ -64,12 +64,12 @@ class ScoutCardInfo extends LocalTable
         //if team specified, filter by team
         if(!empty($team))
         {
-            $whereStatment .= ((empty($whereStatment)) ? "" : " AND ") . " ! = ? ";
+            $whereStatement .= ((empty($whereStatement)) ? "" : " AND ") . " ! = ? ";
             $cols[] = 'TeamId';
             $args[] = $team->Id;
         }
 
-        return parent::getObjects($database, $whereStatment, $cols, $args);
+        return parent::getObjects($database, $whereStatement, $cols, $args);
     }
 
     /**

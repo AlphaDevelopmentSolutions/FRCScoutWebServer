@@ -20,18 +20,18 @@ class RobotInfoKeys extends LocalTable
      */
     public static function getObjects($database, $year = null, $orderBy = 'SortOrder', $orderDirection = 'ASC')
     {
-        $whereStatment = "";
+        $whereStatement = "";
         $cols = array();
         $args = array();
 
         //if year specified, filter by year
         if (!empty($year)) {
-            $whereStatment .= ((empty($whereStatment)) ? "" : " AND ") . " ! = ? ";
+            $whereStatement .= ((empty($whereStatement)) ? "" : " AND ") . " ! = ? ";
             $cols[] = 'YearId';
             $args[] = $year->Id;
         }
 
-        return parent::getObjects($database, $whereStatment, $cols, $args, $orderBy, $orderDirection);
+        return parent::getObjects($database, $whereStatement, $cols, $args, $orderBy, $orderDirection);
     }
 
     /**

@@ -48,14 +48,14 @@ class Matches extends CoreTable
      */
     public static function getObjects($database, $event = null, $team = null, $orderBy = 'Id', $orderDirection = 'DESC')
     {
-        $whereStatment = "";
+        $whereStatement = "";
         $cols = array();
         $args = array();
 
         //if year specified, filter by event
         if(!empty($event))
         {
-            $whereStatment .= ((empty($whereStatment)) ? "" : " AND ") . " ! = ? ";
+            $whereStatement .= ((empty($whereStatement)) ? "" : " AND ") . " ! = ? ";
             $cols[] = 'EventId';
             $args[] = $event->BlueAllianceId;
         }
@@ -63,7 +63,7 @@ class Matches extends CoreTable
         //if team specified, filter by team
         if(!empty($team))
         {
-            $whereStatment .= ((empty($whereStatment)) ? "" : " AND ") . " ? IN (!, !, !, !, !, !) ";
+            $whereStatement .= ((empty($whereStatement)) ? "" : " AND ") . " ? IN (!, !, !, !, !, !) ";
 
             $cols[] = 'BlueAllianceTeamOneId';
             $cols[] = 'BlueAllianceTeamTwoId';
@@ -74,7 +74,7 @@ class Matches extends CoreTable
             $args[] = $team->Id;
         }
 
-        return parent::getObjects($database, $whereStatment, $cols, $args, $orderBy, $orderDirection);
+        return parent::getObjects($database, $whereStatement, $cols, $args, $orderBy, $orderDirection);
     }
 
     /**

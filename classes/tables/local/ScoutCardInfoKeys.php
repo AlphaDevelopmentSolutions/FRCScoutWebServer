@@ -32,14 +32,14 @@ class ScoutCardInfoKeys extends LocalTable
      */
     public static function getObjects($database, $year = null, $keyState = null, $includeInStats = null, $orderBy = 'SortOrder', $orderDirection = 'ASC')
     {
-        $whereStatment = "";
+        $whereStatement = "";
         $cols = array();
         $args = array();
 
         //if year specified, filter by year
         if(!empty($year))
         {
-            $whereStatment .= ((empty($whereStatment)) ? "" : " AND ") . " ! = ? ";
+            $whereStatement .= ((empty($whereStatement)) ? "" : " AND ") . " ! = ? ";
             $cols[] = 'YearId';
             $args[] = $year->Id;
         }
@@ -47,7 +47,7 @@ class ScoutCardInfoKeys extends LocalTable
         //if year specified, filter by key state
         if(!empty($keyState))
         {
-            $whereStatment .= ((empty($whereStatment)) ? "" : " AND ") . " ! = ? ";
+            $whereStatement .= ((empty($whereStatement)) ? "" : " AND ") . " ! = ? ";
             $cols[] = 'Id';
             $args[] = $keyState->Id;
         }
@@ -55,12 +55,12 @@ class ScoutCardInfoKeys extends LocalTable
         //if year specified, filter by include in stat flag
         if(!empty($includeInStats))
         {
-            $whereStatment .= ((empty($whereStatment)) ? "" : " AND ") . " ! = ? ";
+            $whereStatement .= ((empty($whereStatement)) ? "" : " AND ") . " ! = ? ";
             $cols[] = 'IncludeInStats';
             $args[] = (($includeInStats) ? 1 : 0);
         }
 
-        return parent::getObjects($database, $whereStatment, $cols, $args, $orderBy, $orderDirection);
+        return parent::getObjects($database, $whereStatement, $cols, $args, $orderBy, $orderDirection);
     }
 
     /**

@@ -21,19 +21,19 @@ class ChecklistItemResults extends LocalTable implements Status
      */
     public static function getObjects($database, $match = null, $orderBy = 'Id', $orderDirection = 'ASC')
     {
-        $whereStatment = "";
+        $whereStatement = "";
         $cols = array();
         $args = array();
 
         //if year specified, filter by year
         if(!empty($match))
         {
-            $whereStatment .= ((empty($whereStatment)) ? "" : " AND ") . " ! = ? ";
+            $whereStatement .= ((empty($whereStatement)) ? "" : " AND ") . " ! = ? ";
             $cols[] = 'MatchId';
             $args[] = $match->Key;
         }
 
-        return parent::getObjects($database, $whereStatment, $cols, $args, $orderBy, $orderDirection);
+        return parent::getObjects($database, $whereStatement, $cols, $args, $orderBy, $orderDirection);
     }
 
     /**

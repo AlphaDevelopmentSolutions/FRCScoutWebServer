@@ -36,14 +36,14 @@ class Events extends CoreTable
      */
     public static function getObjects($database, $year = null, $team = null, $orderBy = 'StartDate', $orderDirection = 'DESC')
     {
-        $whereStatment = "";
+        $whereStatement = "";
         $cols = array();
         $args = array();
 
         //if year specified, filter by year
         if(!empty($year))
         {
-            $whereStatment .= ((empty($whereStatment)) ? "" : " AND ") . " ! = ? ";
+            $whereStatement .= ((empty($whereStatement)) ? "" : " AND ") . " ! = ? ";
             $cols[] = 'YearId';
             $args[] = $year->Id;
         }
@@ -53,7 +53,7 @@ class Events extends CoreTable
         {
             require_once(ROOT_DIR . "/classes/tables/core/EventTeamList.php");
 
-            $whereStatment .= ((empty($whereStatment)) ? "" : " AND ") . " ! IN (SELECT ! FROM ! WHERE ! = ? GROUP BY !) ";
+            $whereStatement .= ((empty($whereStatement)) ? "" : " AND ") . " ! IN (SELECT ! FROM ! WHERE ! = ? GROUP BY !) ";
             $cols[] = 'BlueAllianceId';
             $cols[] = 'EventId';
             $cols[] = EventTeamList::$TABLE_NAME;
@@ -62,7 +62,7 @@ class Events extends CoreTable
             $args[] = $team->Id;
         }
 
-        return parent::getObjects($database, $whereStatment, $cols, $args, $orderBy, $orderDirection);
+        return parent::getObjects($database, $whereStatement, $cols, $args, $orderBy, $orderDirection);
     }
 
     /**

@@ -28,14 +28,14 @@ class Teams extends CoreTable
      */
     public static function getObjects($database, $event = null, $match = null, $orderBy = 'Id', $orderDirection = 'DESC')
     {
-        $whereStatment = "";
+        $whereStatement = "";
         $cols = array();
         $args = array();
 
         //if obj specified, filter by id
         if(!empty($event))
         {
-            $whereStatment .= ((empty($whereStatment)) ? "" : " AND ") . " ! IN (SELECT ! FROM ! WHERE ! = ?) ";
+            $whereStatement .= ((empty($whereStatement)) ? "" : " AND ") . " ! IN (SELECT ! FROM ! WHERE ! = ?) ";
             $cols[] = 'Id';
             $cols[] = 'TeamId';
             $cols[] = EventTeamList::$TABLE_NAME;
@@ -46,7 +46,7 @@ class Teams extends CoreTable
         //if obj specified, filter by id
         if(!empty($match))
         {
-            $whereStatment .= ((empty($whereStatment)) ? "" : " AND ") . " ! IN (?, ?, ?, ?, ?, ?) ";
+            $whereStatement .= ((empty($whereStatement)) ? "" : " AND ") . " ! IN (?, ?, ?, ?, ?, ?) ";
             $cols[] = 'Id';
             $args[] = $match->BlueAllianceTeamOneId;
             $args[] = $match->BlueAllianceTeamTwoId;
@@ -56,7 +56,7 @@ class Teams extends CoreTable
             $args[] = $match->RedAllianceTeamThreeId;
         }
 
-        return parent::getObjects($database, $whereStatment, $cols, $args, $orderBy, $orderDirection);
+        return parent::getObjects($database, $whereStatement, $cols, $args, $orderBy, $orderDirection);
     }
 
     /**
