@@ -185,7 +185,7 @@ require_once(ROOT_DIR . '/classes/Ajax.php');
                         </div>
 
                         <div class="mdl-card__supporting-text card-buttons" style="margin-bottom: 30px;">
-                            <button onclick="window.location.replace('<?php echo ROOT_URL ?>')" type="button" class="default-mat-text-button mdl-button mdl-js-button mdl-js-ripple-effect">
+                            <button onclick="window.location.href = '<?php echo ROOT_URL ?>'" type="button" class="default-mat-text-button mdl-button mdl-js-button mdl-js-ripple-effect">
                                 <span class="button-text">Cancel</span>
                             </button>
 
@@ -316,7 +316,7 @@ require_once(ROOT_DIR . '/classes/Ajax.php');
                     var parsedData = JSON.parse(data);
 
                     if(parsedData['<?php echo Ajax::$STATUS_KEY ?>'] == '<?php echo Ajax::$SUCCESS_STATUS_CODE ?>')
-                        window.location.replace("<?php echo ROOT_URL ?>?installSuccess=1");
+                        window.location.href = "<?php echo ROOT_URL ?>?installSuccess=1";
 
                     else
                         showToast(parsedData['<?php echo Ajax::$RESPONSE_KEY ?>']);
