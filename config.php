@@ -59,12 +59,16 @@ define('URL_PATH', '/');
 /**
  * MEDIA FILES
  */
-define('ROBOT_MEDIA_DIR', ROOT_DIR . '/assets/robot-media/originals/' . getCoreAccount()->RobotMediaDir . '/');
-define('ROBOT_MEDIA_THUMBS_DIR', ROOT_DIR . '/assets/robot-media/thumbs/' . getCoreAccount()->RobotMediaDir . '/');
-define('INCLUDES_DIR', ROOT_DIR . '/includes/');
+if(isCoreLoggedIn())
+{
+    define('ROBOT_MEDIA_DIR', ROOT_DIR . '/assets/robot-media/originals/' . getCoreAccount()->RobotMediaDir . '/');
+    define('ROBOT_MEDIA_THUMBS_DIR', ROOT_DIR . '/assets/robot-media/thumbs/' . getCoreAccount()->RobotMediaDir . '/');
 
-define('ROBOT_MEDIA_URL', '/assets/robot-media/originals/' . getCoreAccount()->RobotMediaDir . '/');
-define('ROBOT_MEDIA_THUMBS_URL', '/assets/robot-media/thumbs/' . getCoreAccount()->RobotMediaDir . '/');
+    define('ROBOT_MEDIA_URL', '/assets/robot-media/originals/' . getCoreAccount()->RobotMediaDir . '/');
+    define('ROBOT_MEDIA_THUMBS_URL', '/assets/robot-media/thumbs/' . getCoreAccount()->RobotMediaDir . '/');
+}
+
+define('INCLUDES_DIR', ROOT_DIR . '/includes/');
 
 define('YEAR_MEDIA_URL', '/assets/year-media/');
 define('IMAGES_URL', '/assets/images/');
@@ -145,6 +149,13 @@ function setCoreAccount($account)
     if(!empty($account))
     {
         define('DB_NAME', $account->DbId);
+
+        define('ROBOT_MEDIA_DIR', ROOT_DIR . '/assets/robot-media/originals/' . $account->RobotMediaDir . '/');
+        define('ROBOT_MEDIA_THUMBS_DIR', ROOT_DIR . '/assets/robot-media/thumbs/' . $account->RobotMediaDir . '/');
+
+        define('ROBOT_MEDIA_URL', '/assets/robot-media/originals/' . $account->RobotMediaDir . '/');
+        define('ROBOT_MEDIA_THUMBS_URL', '/assets/robot-media/thumbs/' . $account->RobotMediaDir . '/');
+
         $_SESSION['coreAccount'] = serialize($account);
     }
 }
