@@ -40,9 +40,10 @@ class ChecklistItemResults extends LocalTable implements Status
      * Overrides parent save function to overwrite existing records in case of conflicts
      * @param LocalDatabase $database
      * @param CoreDatabase $coreDatabase
+     * @param boolean $bypassOverwriteCheck bypasses overwrite check when saving
      * @return bool
      */
-    public function save($database, $coreDatabase)
+    public function save($database, $coreDatabase, $bypassOverwriteCheck = false)
     {
         require_once(ROOT_DIR . '/classes/tables/core/Teams.php');
         require_once(ROOT_DIR . '/classes/tables/core/Events.php');
@@ -50,12 +51,15 @@ class ChecklistItemResults extends LocalTable implements Status
         require_once(ROOT_DIR . '/classes/tables/core/Years.php');
         require_once(ROOT_DIR . '/classes/tables/local/ScoutCardInfoKeys.php');
 
-        $objs = self::getObjects($database, Matches::withId($coreDatabase, $this->MatchId));
-
-        foreach ($objs as $obj)
+        if(!$bypassOverwriteCheck)
         {
-            if($this->ChecklistItemId == $obj->ChecklistItemId)
-                $this->Id = $obj->Id;
+            $objs = self::getObjects($database, Matches::withId($coreDatabase, $this->MatchId));
+
+            foreach ($objs as $obj)
+            {
+                if ($this->ChecklistItemId == $obj->ChecklistItemId)
+                    $this->Id = $obj->Id;
+            }
         }
 
         return parent::save($database);

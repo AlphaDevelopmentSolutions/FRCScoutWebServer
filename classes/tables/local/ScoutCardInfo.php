@@ -76,21 +76,25 @@ class ScoutCardInfo extends LocalTable
      * Overrides parent save function to overwrite existing records in case of conflicts
      * @param LocalDatabase $database
      * @param CoreDatabase $coreDatabase
+     * @param boolean $bypassOverwriteCheck bypasses overwrite check when saving
      * @return bool
      */
-    public function save($database, $coreDatabase)
+    public function save($database, $coreDatabase, $bypassOverwriteCheck = false)
     {
-        require_once(ROOT_DIR . '/classes/tables/core/Teams.php');
-        require_once(ROOT_DIR . '/classes/tables/core/Events.php');
-        require_once(ROOT_DIR . '/classes/tables/core/Matches.php');
-        require_once(ROOT_DIR . '/classes/tables/core/Years.php');
-        require_once(ROOT_DIR . '/classes/tables/local/ScoutCardInfoKeys.php');
-
-        $scoutCardInfoArray = self::getObjects($database, ScoutCardInfoKeys::withId($database, $this->PropertyKeyId), Years::withId($coreDatabase, $this->YearId), Events::withId($coreDatabase, $this->EventId), Matches::withId($coreDatabase, $this->MatchId), Teams::withId($coreDatabase, $this->TeamId));
-
-        foreach ($scoutCardInfoArray as $scoutCardInfo)
+        if(!$bypassOverwriteCheck)
         {
-            $this->Id = $scoutCardInfo->Id;
+            require_once(ROOT_DIR . '/classes/tables/core/Teams.php');
+            require_once(ROOT_DIR . '/classes/tables/core/Events.php');
+            require_once(ROOT_DIR . '/classes/tables/core/Matches.php');
+            require_once(ROOT_DIR . '/classes/tables/core/Years.php');
+            require_once(ROOT_DIR . '/classes/tables/local/ScoutCardInfoKeys.php');
+
+            $scoutCardInfoArray = self::getObjects($database, ScoutCardInfoKeys::withId($database, $this->PropertyKeyId), Years::withId($coreDatabase, $this->YearId), Events::withId($coreDatabase, $this->EventId), Matches::withId($coreDatabase, $this->MatchId), Teams::withId($coreDatabase, $this->TeamId));
+
+            foreach ($scoutCardInfoArray as $scoutCardInfo)
+            {
+                $this->Id = $scoutCardInfo->Id;
+            }
         }
 
         return parent::save($database);
