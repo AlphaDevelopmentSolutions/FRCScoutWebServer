@@ -102,7 +102,6 @@ switch ($_POST['action'])
 
         $teamNumber = $_POST['teamNumber'];
         $appName = $_POST['appName'];
-        $apiKey = $_POST['apiKey'];
         $primaryColor = $_POST['primaryColor'];
         $secondaryColor = $_POST['secondaryColor'];
 
@@ -240,6 +239,52 @@ switch ($_POST['action'])
                 $user->IsAdmin = 1;
                 $user->save($localDb);
 
+                $apiKeySuccess = false;
+                $apiKey = '';
+
+                do {
+                    $apiKey = '';
+
+                    foreach(str_split(sprintf( '%04x%04x%04x%04x%04x%04x%04x%04x%04x%04x%04x%04x%04x',
+                        mt_rand( 0, 0xffff ),
+                        mt_rand( 0, 0xffff ),
+                        mt_rand( 0, 0xffff ),
+                        mt_rand( 0, 0xffff ),
+                        mt_rand( 0, 0xffff ),
+                        mt_rand( 0, 0xffff ),
+                        mt_rand( 0, 0xffff ),
+                        mt_rand( 0, 0xffff ),
+                        mt_rand( 0, 0x0fff ) | 0x4000,
+                        mt_rand( 0, 0x3fff ) | 0x8000,
+                        mt_rand( 0, 0xffff ),
+                        mt_rand( 0, 0xffff ),
+                        mt_rand( 0, 0xffff ))) as $char)
+                    {
+                        if(ctype_alpha($char) && mt_rand(0, 10000) % 2 == 0)
+                            $char = strtoupper($char);
+                        $apiKey .= $char;
+                    }
+
+                    $query = "SELECT ! FROM !.! WHERE ! = ?";
+                    $cols = array();
+                    $args = array();
+
+                    $cols[] = 'SCHEMA_NAME';
+                    $cols[] = 'INFORMATION_SCHEMA';
+                    $cols[] = 'SCHEMATA';
+                    $cols[] = 'SCHEMA_NAME';
+
+                    $args[] = $apiKey;
+
+                    //query to see if that api key is taken
+                    $results = $coreDb->query($query, $cols, $args);
+
+                    //if taken, re-run script
+                    if (sizeof($results) == 0)
+                        $apiKeySuccess = true;
+
+                } while (!$apiKeySuccess);
+
                 $account = new Accounts();
                 $account->TeamId = $teamNumber;
                 $account->Email = $email;
@@ -278,7 +323,6 @@ switch ($_POST['action'])
 
         $teamNumber = $_POST['teamNumber'];
         $appName = $_POST['appName'];
-        $apiKey = $_POST['apiKey'];
         $primaryColor = $_POST['primaryColor'];
         $secondaryColor = $_POST['secondaryColor'];
 
@@ -418,6 +462,52 @@ switch ($_POST['action'])
                 $user->Password = password_hash($adminPassword, PASSWORD_ARGON2ID);
                 $user->IsAdmin = 1;
                 $user->save($localDb);
+
+                $apiKeySuccess = false;
+                $apiKey = '';
+
+                do {
+                    $apiKey = '';
+
+                    foreach(str_split(sprintf( '%04x%04x%04x%04x%04x%04x%04x%04x%04x%04x%04x%04x%04x',
+                        mt_rand( 0, 0xffff ),
+                        mt_rand( 0, 0xffff ),
+                        mt_rand( 0, 0xffff ),
+                        mt_rand( 0, 0xffff ),
+                        mt_rand( 0, 0xffff ),
+                        mt_rand( 0, 0xffff ),
+                        mt_rand( 0, 0xffff ),
+                        mt_rand( 0, 0xffff ),
+                        mt_rand( 0, 0x0fff ) | 0x4000,
+                        mt_rand( 0, 0x3fff ) | 0x8000,
+                        mt_rand( 0, 0xffff ),
+                        mt_rand( 0, 0xffff ),
+                        mt_rand( 0, 0xffff ))) as $char)
+                    {
+                        if(ctype_alpha($char) && mt_rand(0, 10000) % 2 == 0)
+                            $char = strtoupper($char);
+                        $apiKey .= $char;
+                    }
+
+                    $query = "SELECT ! FROM !.! WHERE ! = ?";
+                    $cols = array();
+                    $args = array();
+
+                    $cols[] = 'SCHEMA_NAME';
+                    $cols[] = 'INFORMATION_SCHEMA';
+                    $cols[] = 'SCHEMATA';
+                    $cols[] = 'SCHEMA_NAME';
+
+                    $args[] = $apiKey;
+
+                    //query to see if that api key is taken
+                    $results = $coreDb->query($query, $cols, $args);
+
+                    //if taken, re-run script
+                    if (sizeof($results) == 0)
+                        $apiKeySuccess = true;
+
+                } while (!$apiKeySuccess);
 
                 $account = new Accounts();
                 $account->TeamId = $teamNumber;

@@ -206,12 +206,6 @@ switch ($_POST['action'])
                 $data = $_POST['data'];
 
                 $coreAccount = getCoreAccount();
-                if($coreAccount->ApiKey != $data['ApiKey'])
-                {
-                    $coreAccount->ApiKey = $data['ApiKey'];
-                    if($coreAccount->save($coreDb))
-                        setCoreAccount($coreAccount);
-                }
 
                 $success = true;
 

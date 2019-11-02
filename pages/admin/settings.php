@@ -124,19 +124,6 @@ interface AdminPanels
                         <?php
                     }
                     ?>
-                        <span class="setting-title">
-                                <strong>API Key</strong>
-                                <span class="center-div-vertical-outer">
-                                    <div id="desc<?php echo $i + 1 ?>"
-                                         class="center-div-vertical-inner material-side-padding icon material-icons">help_outline</div>
-                                </span>
-                                <div class="mdl-tooltip mdl-tooltip--large" for="desc<?php echo $i + 1 ?>">
-                                    API key used for the mobile app to communicate and to access data.
-                                </div>
-                            </span>
-                        <div class="setting-value mdl-textfield mdl-js-textfield mdl-textfield--floating-label" data-upgraded=",MaterialTextfield">
-                            <input maxlength="3000" class="mdl-textfield__input" type="text" value="<?php echo getCoreAccount()->ApiKey ?>" name="ApiKey" id="ApiKey">
-                        </div>
                     </div>
                     <?php
                 break;

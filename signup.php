@@ -168,20 +168,6 @@ require_once(ROOT_DIR . '/classes/Ajax.php');
                                     Darker primary color, usually a color accent, for the web and mobile application
                                 </div>
                             </div>
-
-                            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label" style="width: 100%;">
-                                <input maxlength="3000" autocomplete="new-password" required  class="mdl-textfield__input" type="text" id="apiKey" placeholder=" ">
-                                <label class="mdl-textfield__label" >API Key</label>
-                                <div class="mdl-tooltip mdl-tooltip--large" for="apiKey">
-                                    API key used for the mobile app to communicate and access data.
-                                    <br>
-                                    <br>
-                                    If your would like one generated for you, click "Generate Key".
-                                </div>
-                            </div>
-                            <button onclick="generateApiKey($('#apiKey'));" id="generate-api-key" type="button" class="default-mat-button mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect">
-                                Generate Key
-                            </button>
                         </div>
 
                         <div class="mdl-card__supporting-text card-buttons" style="margin-bottom: 30px;">
@@ -304,7 +290,6 @@ require_once(ROOT_DIR . '/classes/Ajax.php');
                     adminRetypePassword : $('#adminRetypePassword').val(),
                     teamNumber : $('#teamNumber').val(),
                     appName : $('#appName').val(),
-                    apiKey : $('#apiKey').val(),
                     primaryColor : $('#primaryColor').val(),
                     secondaryColor : $('#secondaryColor').val(),
                     captchaKey: grecaptcha.getResponse()

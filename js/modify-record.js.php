@@ -22,7 +22,6 @@ function saveRecord(recordType, recordId, record = undefined)
             data =
                 {
                     AppName: $('#APP_NAME').val(),
-                    ApiKey: $('#ApiKey').val(),
                     PrimaryColor: $('#PRIMARY_COLOR').val(),
                     PrimaryColorDark: $('#PRIMARY_COLOR_DARK').val()
                 };
