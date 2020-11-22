@@ -1,6 +1,12 @@
 package com.alphadevelopmentsolutions
 
+import com.alphadevelopmentsolutions.data.models.Year
+import com.alphadevelopmentsolutions.data.tables.YearTable
 import com.alphadevelopmentsolutions.routes.Api
+import com.alphadevelopmentsolutions.singletons.GsonInstance
+import com.google.gson.Gson
+import com.zaxxer.hikari.HikariConfig
+import com.zaxxer.hikari.HikariDataSource
 import io.ktor.application.*
 import io.ktor.response.*
 import io.ktor.routing.*
@@ -20,8 +26,26 @@ import io.ktor.client.features.json.*
 import kotlinx.coroutines.*
 import io.ktor.client.features.logging.*
 import io.ktor.client.features.BrowserUserAgent
+import org.jetbrains.exposed.sql.Database
+import org.jetbrains.exposed.sql.selectAll
+import org.jetbrains.exposed.sql.transactions.transaction
 
-fun main(args: Array<String>): Unit = io.ktor.server.netty.EngineMain.main(args)
+fun main(args: Array<String>): Unit {
+
+    val config =
+            HikariConfig().apply {
+                jdbcUrl = "jdbc:mysql://localhost/app"
+                driverClassName = "com.mysql.cj.jdbc.Driver"
+                username = "testuser"
+                password = "password"
+                maximumPoolSize = 10
+            }
+
+    val dataSource = HikariDataSource(config)
+    Database.connect(dataSource)
+
+    return io.ktor.server.netty.EngineMain.main(args)
+}
 
 @Suppress("unused") // Referenced in application.conf
 @kotlin.jvm.JvmOverloads
@@ -87,6 +111,21 @@ fun Application.module(testing: Boolean = false) {
 
     routing {
         Api.getBaseData(this)
+
+        get("/") {
+            val json = transaction {
+                val years = YearTable.selectAll()
+
+                val yearList: MutableList<Year> = mutableListOf()
+                years.forEach {
+                        yearList.add(Year.fromResultRow(it))
+                }
+
+                GsonInstance.getInstance().toJson(yearList)
+            }
+
+            call.respondText(json, ContentType.Application.Json)
+        }
 
 
         get("/html-dsl") {
