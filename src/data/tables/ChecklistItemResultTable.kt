@@ -1,0 +1,12 @@
+package com.alphadevelopmentsolutions.data.tables
+
+import com.alphadevelopmentsolutions.data.models.ChecklistItemResult
+
+object ChecklistItemResultTable : ModifyTrackedTable("checklist_item_results") {
+    var checklistItemId = binary("checklist_item_id", 16)
+    var matchId = binary("match_id", 16)
+    var status = customEnumeration("status", "ENUM('COMPLETE', 'INCOMPLETE')", { value -> ChecklistItemResult.Status.valueOf(value as String)}, { it.name }).nullable()
+    var completedDate = datetime("completed_date")
+    var completedById = binary("completed_by_id", 16)
+    var isPublic = bool("is_public")
+}
