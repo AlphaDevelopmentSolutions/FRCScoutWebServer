@@ -6,6 +6,6 @@ import org.jetbrains.exposed.sql.Column
 import org.jetbrains.exposed.sql.Table
 import java.util.*
 
-abstract class ModifyableTable<T>(name: String = "") : ByteArrayTable<T>(name) {
+abstract class ModifyableTable<T: com.alphadevelopmentsolutions.data.models.ByteArrayTable>(name: String = "") : ByteArrayTable<T>(name) {
     val lastModified = datetime("last_modified")
 }

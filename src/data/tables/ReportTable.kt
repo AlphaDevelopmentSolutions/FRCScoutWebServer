@@ -1,6 +1,9 @@
 package com.alphadevelopmentsolutions.data.tables
 
-object ReportTable : ModifyableTable("reports") {
+import com.alphadevelopmentsolutions.data.models.Report
+import org.jetbrains.exposed.sql.ResultRow
+
+object ReportTable : ModifyableTable<Report>("reports") {
     var recordId = binary("record_id", 16).nullable()
     var comment = varchar("comment", 100).nullable()
     var reporterId = binary("reporter_id", 16)
@@ -8,4 +11,7 @@ object ReportTable : ModifyableTable("reports") {
     var isResolved = bool("is_resolved")
     var isNotified = bool("is_notified")
     var createdDate = datetime("created_date")
+    override fun fromResultRow(resultRow: ResultRow): Report {
+        TODO("Not yet implemented")
+    }
 }

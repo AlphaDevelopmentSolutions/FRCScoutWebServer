@@ -1,6 +1,9 @@
 package com.alphadevelopmentsolutions.data.tables
 
-object TeamTable : ModifyTrackedTable("teams") {
+import com.alphadevelopmentsolutions.data.models.Team
+import org.jetbrains.exposed.sql.ResultRow
+
+object TeamTable : ModifyTrackedTable<Team>("teams") {
     var number = integer("number")
     var name = varchar("name", 300)
     var city = varchar("city", 200).nullable()
@@ -13,4 +16,7 @@ object TeamTable : ModifyTrackedTable("teams") {
     var youtubeUrl = varchar("youtube_url", 300).nullable()
     var websiteUrl = varchar("website_url", 300).nullable()
     var avatarUri = varchar("avatar_uri", 100).nullable()
+    override fun fromResultRow(resultRow: ResultRow): Team {
+        TODO("Not yet implemented")
+    }
 }

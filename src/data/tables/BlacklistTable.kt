@@ -1,7 +1,14 @@
 package com.alphadevelopmentsolutions.data.tables
 
-object BlacklistTable : ByteArrayTable("blacklist") {
+import com.alphadevelopmentsolutions.data.models.Blacklist
+import org.jetbrains.exposed.sql.ResultRow
+
+object BlacklistTable : ByteArrayTable<Blacklist>("blacklist") {
     var ip = integer("ip")
     var added = datetime("added")
     var penaltyId = binary("penalty_id", 16)
+
+    override fun fromResultRow(resultRow: ResultRow): Blacklist {
+        TODO("Not yet implemented")
+    }
 }

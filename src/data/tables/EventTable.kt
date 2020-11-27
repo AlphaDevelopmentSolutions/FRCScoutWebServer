@@ -1,6 +1,9 @@
 package com.alphadevelopmentsolutions.data.tables
 
-object EventTable : ModifyableTable("events") {
+import com.alphadevelopmentsolutions.data.models.Event
+import org.jetbrains.exposed.sql.ResultRow
+
+object EventTable : ModifyableTable<Event>("events") {
     var yearId = binary("year_id", 16)
     var code = varchar("code", 45)
     var key = varchar("key", 45)
@@ -13,4 +16,7 @@ object EventTable : ModifyableTable("events") {
     var startTime = datetime("start_time").nullable()
     var endTime = datetime("end_time").nullable()
     var websiteUrl = varchar("website_url", 200).nullable()
+    override fun fromResultRow(resultRow: ResultRow): Event {
+        TODO("Not yet implemented")
+    }
 }

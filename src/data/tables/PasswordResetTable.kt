@@ -1,8 +1,14 @@
 package com.alphadevelopmentsolutions.data.tables
 
-object PasswordResetTable : ByteArrayTable("password_resets") {
+import com.alphadevelopmentsolutions.data.models.PasswordReset
+import org.jetbrains.exposed.sql.ResultRow
+
+object PasswordResetTable : ByteArrayTable<PasswordReset>("password_resets") {
     var userId = binary("user_id", 16)
     var expires = datetime("expires")
     var isUsed = bool("is_used")
     var createdDate = datetime("created_date")
+    override fun fromResultRow(resultRow: ResultRow): PasswordReset {
+        TODO("Not yet implemented")
+    }
 }

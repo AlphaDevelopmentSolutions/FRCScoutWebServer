@@ -113,18 +113,18 @@ fun Application.module(testing: Boolean = false) {
         Api.getBaseData(this)
 
         get("/") {
-            val json = transaction {
-                val years = YearTable.selectAll()
+//            val json = transaction {
+//                val years = YearTable.selectAll()
+//
+//                val yearList: MutableList<Year> = mutableListOf()
+//                years.forEach {
+//                        yearList.add(Year.fromResultRow(it))
+//                }
+//
+//                GsonInstance.getInstance().toJson(yearList)
+//            }
 
-                val yearList: MutableList<Year> = mutableListOf()
-                years.forEach {
-                        yearList.add(Year.fromResultRow(it))
-                }
-
-                GsonInstance.getInstance().toJson(yearList)
-            }
-
-            call.respondText(json, ContentType.Application.Json)
+//            call.respondText(json, ContentType.Application.Json)
         }
 
 

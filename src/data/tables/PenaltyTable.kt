@@ -1,7 +1,13 @@
 package com.alphadevelopmentsolutions.data.tables
 
-object PenaltyTable : ByteArrayTable("penalties") {
+import com.alphadevelopmentsolutions.data.models.Penalty
+import org.jetbrains.exposed.sql.ResultRow
+
+object PenaltyTable : ByteArrayTable<Penalty>("penalties") {
     var failedLoginAttemptCount = integer("failed_login_attempt_count")
     var withinDuration = integer("within_duration")
     var penaltyDuration = integer("penalty_duration")
+    override fun fromResultRow(resultRow: ResultRow): Penalty {
+        TODO("Not yet implemented")
+    }
 }

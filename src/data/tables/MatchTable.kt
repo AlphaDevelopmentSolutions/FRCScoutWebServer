@@ -1,6 +1,9 @@
 package com.alphadevelopmentsolutions.data.tables
 
-object MatchTable : ModifyableTable("matches") {
+import com.alphadevelopmentsolutions.data.models.Match
+import org.jetbrains.exposed.sql.ResultRow
+
+object MatchTable : ModifyableTable<Match>("matches") {
     var eventId = binary("event_id", 16)
     var key = varchar("key", 45)
     var typeId = binary("type_id", 16)
@@ -15,4 +18,7 @@ object MatchTable : ModifyableTable("matches") {
     var blueAllianceScore = integer("blue_alliance_score").nullable()
     var redAllianceScore = integer("red_alliance_score").nullable()
     var time = datetime("time").nullable()
+    override fun fromResultRow(resultRow: ResultRow): Match {
+        TODO("Not yet implemented")
+    }
 }
