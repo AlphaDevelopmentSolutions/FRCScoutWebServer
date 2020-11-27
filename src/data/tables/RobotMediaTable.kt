@@ -1,9 +1,5 @@
 package com.alphadevelopmentsolutions.data.tables
 
-import com.alphadevelopmentsolutions.data.models.TeamInvitation
-import com.alphadevelopmentsolutions.data.models.UserTeamAccountList
-import com.google.gson.annotations.SerializedName
-
 object RobotMediaTable : ModifyTrackedTable("robot_media") {
     var teamAccountId = binary("team_account_id", 16)
     var eventId = binary("event_id", 16)

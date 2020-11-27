@@ -1,9 +1,5 @@
 package com.alphadevelopmentsolutions.data.tables
 
-import com.alphadevelopmentsolutions.data.models.TeamInvitation
-import com.alphadevelopmentsolutions.data.models.UserTeamAccountList
-import com.google.gson.annotations.SerializedName
-
 object EventTable : ModifyableTable("events") {
     var yearId = binary("year_id", 16)
     var code = varchar("code", 45)

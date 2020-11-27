@@ -1,9 +1,5 @@
 package com.alphadevelopmentsolutions.data.tables
 
-import com.alphadevelopmentsolutions.data.models.TeamInvitation
-import com.alphadevelopmentsolutions.data.models.UserTeamAccountList
-import com.google.gson.annotations.SerializedName
-
 object TeamTable : ModifyTrackedTable("teams") {
     var number = integer("number")
     var name = varchar("name", 300)

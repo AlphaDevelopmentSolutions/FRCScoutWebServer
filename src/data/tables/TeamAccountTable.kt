@@ -1,9 +1,5 @@
 package com.alphadevelopmentsolutions.data.tables
 
-import com.alphadevelopmentsolutions.data.models.TeamInvitation
-import com.alphadevelopmentsolutions.data.models.UserTeamAccountList
-import com.google.gson.annotations.SerializedName
-
 object TeamAccountTable : ModifyTrackedTable("team_accounts") {
     var teamId = binary("team_id", 16)
     var name = varchar("name", 150)

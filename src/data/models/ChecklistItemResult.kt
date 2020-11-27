@@ -5,28 +5,21 @@ import org.jetbrains.exposed.sql.ResultRow
 import org.joda.time.DateTime
 
 class ChecklistItemResult(
-    val id: ByteArray,
-    val number: Int,
-    val name: String,
-    val startDate: DateTime?,
-    val endDate: DateTime?,
-    val imageUri: String?,
-    val lastModified: DateTime
-) {
+    override var id: ByteArray,
+    val checklistItemId: ByteArray,
+    val matchId: ByteArray,
+    val status: Status?,
+    val completedDate: DateTime,
+    val completedById: ByteArray,
+    val isPublic: Boolean
+) : ByteArrayTable(id) {
     companion object {
-        fun fromResultRow(resultRow: ResultRow): ChecklistItemResult =
-            ChecklistItemResult(
-                resultRow[YearTable.id],
-                resultRow[YearTable.number],
-                resultRow[YearTable.name],
-                resultRow[YearTable.startDate],
-                resultRow[YearTable.endDate],
-                resultRow[YearTable.imageUri],
-                resultRow[YearTable.lastModified]
-            )
+        enum class Status {
+
+        }
     }
 
-    enum class Status {
-
+    override fun toString(): String {
+        TODO("Not yet implemented")
     }
 }

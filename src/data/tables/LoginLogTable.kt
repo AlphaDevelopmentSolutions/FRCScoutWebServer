@@ -1,9 +1,5 @@
 package com.alphadevelopmentsolutions.data.tables
 
-import com.alphadevelopmentsolutions.data.models.TeamInvitation
-import com.alphadevelopmentsolutions.data.models.UserTeamAccountList
-import com.google.gson.annotations.SerializedName
-
 object LoginLogTable : ByteArrayTable("login_logs") {
     var username = varchar("username", 20).nullable()
     var password = varchar("password", 100).nullable()

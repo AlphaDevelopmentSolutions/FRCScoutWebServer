@@ -1,9 +1,5 @@
 package com.alphadevelopmentsolutions.data.tables
 
-import com.alphadevelopmentsolutions.data.models.TeamInvitation
-import com.alphadevelopmentsolutions.data.models.UserTeamAccountList
-import com.google.gson.annotations.SerializedName
-
 object ReportTable : ModifyableTable("reports") {
     var recordId = binary("record_id", 16).nullable()
     var comment = varchar("comment", 100).nullable()

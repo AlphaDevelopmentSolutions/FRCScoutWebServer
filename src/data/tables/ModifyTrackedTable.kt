@@ -7,7 +7,7 @@ import org.jetbrains.exposed.sql.Column
 import org.jetbrains.exposed.sql.Table
 import java.util.*
 
-open class ModifyTrackedTable(name: String = "") : ModifyableTable(name) {
+abstract class ModifyTrackedTable<T>(name: String = "") : ModifyableTable<T>(name) {
     var deletedDate = datetime("deleted_date").nullable()
     var deletedById = binary("deleted_by_id", 16).nullable()
     var modifiedById = binary("deleted_by_id", 16)

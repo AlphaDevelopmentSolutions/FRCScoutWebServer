@@ -1,9 +1,5 @@
 package com.alphadevelopmentsolutions.data.tables
 
-import com.alphadevelopmentsolutions.data.models.TeamInvitation
-import com.alphadevelopmentsolutions.data.models.UserTeamAccountList
-import com.google.gson.annotations.SerializedName
-
 object RobotInfoKeyTable : ModifyTrackedTable("robot_info_keys") {
     var stateId = binary("state_id", 16)
     var dataTypeId = binary("data_type_id", 16)
