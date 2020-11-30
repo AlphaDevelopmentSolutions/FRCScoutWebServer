@@ -3,6 +3,8 @@ package com.alphadevelopmentsolutions.data.tables
 import com.alphadevelopmentsolutions.data.models.Year
 import org.jetbrains.exposed.sql.ResultRow
 import org.jetbrains.exposed.sql.Table
+import org.jetbrains.exposed.sql.insert
+import org.jetbrains.exposed.sql.update
 
 object YearTable : ModifyableTable<Year>("years") {
     val number = integer("number")
@@ -21,4 +23,26 @@ object YearTable : ModifyableTable<Year>("years") {
             resultRow[imageUri],
             resultRow[lastModified]
         )
+
+    override fun insert(obj: Year) =
+        insert {
+            it[id] = obj.id
+            it[number] = obj.number
+            it[name] = obj.name
+            it[startDate] = obj.startDate
+            it[endDate] = obj.endDate
+            it[imageUri] = obj.imageUri
+            it[lastModified] = obj.lastModified
+        }
+
+    override fun update(obj: Year) =
+        update({ id eq obj.id }) {
+            it[id] = obj.id
+            it[number] = obj.number
+            it[name] = obj.name
+            it[startDate] = obj.startDate
+            it[endDate] = obj.endDate
+            it[imageUri] = obj.imageUri
+            it[lastModified] = obj.lastModified
+        }
 }

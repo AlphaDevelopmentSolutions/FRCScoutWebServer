@@ -2,6 +2,8 @@ package com.alphadevelopmentsolutions.data.tables
 
 import com.alphadevelopmentsolutions.data.models.ChecklistItem
 import org.jetbrains.exposed.sql.ResultRow
+import org.jetbrains.exposed.sql.insert
+import org.jetbrains.exposed.sql.update
 
 object ChecklistItemTable : ModifyTrackedTable<ChecklistItem>("checklist_items") {
     var teamAccountId = binary("team_account_id", 16)
@@ -21,4 +23,30 @@ object ChecklistItemTable : ModifyTrackedTable<ChecklistItem>("checklist_items")
             resultRow[lastModified],
             resultRow[modifiedById]
         )
+
+    override fun insert(obj: ChecklistItem) =
+        insert {
+            it[id] = obj.id
+            it[teamAccountId] = obj.teamAccountId
+            it[yearId] = obj.yearId
+            it[title] = obj.title
+            it[description] = obj.description
+            it[deletedDate] = obj.deletedDate
+            it[deletedById] = obj.deletedById
+            it[lastModified] = obj.lastModified
+            it[modifiedById] = obj.modifiedById
+        }
+
+    override fun update(obj: ChecklistItem) =
+        update({ id eq obj.id }) {
+            it[id] = obj.id
+            it[teamAccountId] = obj.teamAccountId
+            it[yearId] = obj.yearId
+            it[title] = obj.title
+            it[description] = obj.description
+            it[deletedDate] = obj.deletedDate
+            it[deletedById] = obj.deletedById
+            it[lastModified] = obj.lastModified
+            it[modifiedById] = obj.modifiedById
+        }
 }

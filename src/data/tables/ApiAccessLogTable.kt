@@ -1,7 +1,12 @@
 package com.alphadevelopmentsolutions.data.tables
 
 import com.alphadevelopmentsolutions.data.models.ApiAccessLog
+import com.alphadevelopmentsolutions.data.models.User
 import org.jetbrains.exposed.sql.ResultRow
+import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
+import org.jetbrains.exposed.sql.insert
+import org.jetbrains.exposed.sql.statements.InsertStatement
+import org.jetbrains.exposed.sql.update
 
 object ApiAccessLogTable : ByteArrayTable<ApiAccessLog>("api_access_logs") {
     var endpoint = varchar("endpoint", 45)
@@ -21,4 +26,26 @@ object ApiAccessLogTable : ByteArrayTable<ApiAccessLog>("api_access_logs") {
             resultRow[userTeamAccountListId],
             resultRow[authTokenId]
         )
+
+    override fun insert(obj: ApiAccessLog) =
+        insert {
+            it[id] = obj.id
+            it[endpoint] = obj.endpoint
+            it[ip] = obj.ip
+            it[userAgent] = obj.userAgent
+            it[time] = obj.time
+            it[userTeamAccountListId] = obj.userTeamAccountListId
+            it[authTokenId] = obj.authTokenId
+        }
+
+    override fun update(obj: ApiAccessLog) =
+        update({ id eq obj.id }) {
+            it[id] = obj.id
+            it[endpoint] = obj.endpoint
+            it[ip] = obj.ip
+            it[userAgent] = obj.userAgent
+            it[time] = obj.time
+            it[userTeamAccountListId] = obj.userTeamAccountListId
+            it[authTokenId] = obj.authTokenId
+        }
 }

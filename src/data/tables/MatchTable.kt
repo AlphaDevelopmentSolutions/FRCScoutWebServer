@@ -2,6 +2,8 @@ package com.alphadevelopmentsolutions.data.tables
 
 import com.alphadevelopmentsolutions.data.models.Match
 import org.jetbrains.exposed.sql.ResultRow
+import org.jetbrains.exposed.sql.insert
+import org.jetbrains.exposed.sql.update
 
 object MatchTable : ModifyableTable<Match>("matches") {
     var eventId = binary("event_id", 16)
@@ -38,4 +40,44 @@ object MatchTable : ModifyableTable<Match>("matches") {
             resultRow[time],
             resultRow[lastModified]
         )
+
+    override fun insert(obj: Match) =
+        insert {
+            it[id] = obj.id
+            it[eventId] = obj.eventId
+            it[key] = obj.key
+            it[typeId] = obj.typeId
+            it[setNumber] = obj.setNumber
+            it[matchNumber] = obj.matchNumber
+            it[blueAllianceTeamOneId] = obj.blueAllianceTeamOneId
+            it[blueAllianceTeamTwoId] = obj.blueAllianceTeamTwoId
+            it[blueAllianceTeamThreeId] = obj.blueAllianceTeamThreeId
+            it[redAllianceTeamOneId] = obj.redAllianceTeamOneId
+            it[redAllianceTeamTwoId] = obj.redAllianceTeamTwoId
+            it[redAllianceTeamThreeId] = obj.redAllianceTeamThreeId
+            it[blueAllianceScore] = obj.blueAllianceScore
+            it[redAllianceScore] = obj.redAllianceScore
+            it[time] = obj.time
+            it[lastModified] = obj.lastModified
+        }
+
+    override fun update(obj: Match) =
+        update({ id eq obj.id }) {
+            it[id] = obj.id
+            it[eventId] = obj.eventId
+            it[key] = obj.key
+            it[typeId] = obj.typeId
+            it[setNumber] = obj.setNumber
+            it[matchNumber] = obj.matchNumber
+            it[blueAllianceTeamOneId] = obj.blueAllianceTeamOneId
+            it[blueAllianceTeamTwoId] = obj.blueAllianceTeamTwoId
+            it[blueAllianceTeamThreeId] = obj.blueAllianceTeamThreeId
+            it[redAllianceTeamOneId] = obj.redAllianceTeamOneId
+            it[redAllianceTeamTwoId] = obj.redAllianceTeamTwoId
+            it[redAllianceTeamThreeId] = obj.redAllianceTeamThreeId
+            it[blueAllianceScore] = obj.blueAllianceScore
+            it[redAllianceScore] = obj.redAllianceScore
+            it[time] = obj.time
+            it[lastModified] = obj.lastModified
+        }
 }

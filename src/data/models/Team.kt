@@ -1,25 +1,26 @@
 package com.alphadevelopmentsolutions.data.models
 
+import com.google.gson.annotations.SerializedName
 import org.joda.time.DateTime
 
 class Team(
-    override var id: ByteArray,
-    val number: Int,
-    val name: String,
-    val city: String?,
-    val stateProvince: String?,
-    val country: String?,
-    val rookieYear: Int?,
-    val facebookUrl: String?,
-    val instagramUrl: String?,
-    val twitterUrl: String?,
-    val youtubeUrl: String?,
-    val websiteUrl: String?,
-    val avatarUri: String?,
-    override val deletedDate: DateTime?,
-    override val deletedById: ByteArray?,
-    override val lastModified: DateTime,
-    override val modifiedById: ByteArray
+    @Transient override var id: ByteArray,
+    @SerializedName("number") val number: Int,
+    @SerializedName("name") val name: String,
+    @SerializedName("city") val city: String?,
+    @SerializedName("state_province") val stateProvince: String?,
+    @SerializedName("country") val country: String?,
+    @SerializedName("rookie_year") val rookieYear: Int?,
+    @SerializedName("facebook_url") val facebookUrl: String?,
+    @SerializedName("instagram_url") val instagramUrl: String?,
+    @SerializedName("twitter_url") val twitterUrl: String?,
+    @SerializedName("youtube_url") val youtubeUrl: String?,
+    @SerializedName("website_url") val websiteUrl: String?,
+    @SerializedName("avatar_uri") val avatarUri: String?,
+    @Transient override val deletedDate: DateTime?,
+    @Transient override val deletedById: ByteArray?,
+    @Transient override val lastModified: DateTime,
+    @Transient override val modifiedById: ByteArray
 ) : ModifyTrackedTable(id, deletedDate, deletedById, lastModified, modifiedById) {
     override fun toString() =
         name

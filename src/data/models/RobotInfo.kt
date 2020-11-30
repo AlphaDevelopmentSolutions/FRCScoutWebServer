@@ -1,19 +1,20 @@
 package com.alphadevelopmentsolutions.data.models
 
+import com.google.gson.annotations.SerializedName
 import org.joda.time.DateTime
 
 class RobotInfo(
-    override var id: ByteArray,
-    val eventId: ByteArray,
-    val teamId: ByteArray,
-    val keyId: ByteArray,
-    val value: String,
-    val completedById: ByteArray,
-    val isPublic: Boolean,
-    override val deletedDate: DateTime?,
-    override val deletedById: ByteArray?,
-    override val lastModified: DateTime,
-    override val modifiedById: ByteArray
+    @Transient override var id: ByteArray,
+    @SerializedName("event_id") val eventId: ByteArray,
+    @SerializedName("team_id") val teamId: ByteArray,
+    @SerializedName("key_id") val keyId: ByteArray,
+    @SerializedName("value") val value: String,
+    @SerializedName("completed_by_id") val completedById: ByteArray,
+    @SerializedName("is_public") val isPublic: Boolean,
+    @Transient override val deletedDate: DateTime?,
+    @Transient override val deletedById: ByteArray?,
+    @Transient override val lastModified: DateTime,
+    @Transient override val modifiedById: ByteArray
 ) : ModifyTrackedTable(id, deletedDate, deletedById, lastModified, modifiedById) {
     override fun toString() =
         value

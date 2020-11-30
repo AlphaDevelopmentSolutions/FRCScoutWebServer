@@ -1,13 +1,14 @@
 package com.alphadevelopmentsolutions.data.models
 
+import com.google.gson.annotations.SerializedName
 import org.joda.time.DateTime
 
 class AuthToken(
-    override var id: ByteArray,
-    val userId: ByteArray,
-    val token: String,
-    val ip: Int,
-    val expires: DateTime
+    @Transient override var id: ByteArray,
+    @SerializedName("user_id") val userId: ByteArray,
+    @SerializedName("token") val token: String,
+    @SerializedName("ip") val ip: Int,
+    @SerializedName("expires") val expires: DateTime
 ) : ByteArrayTable(id) {
     override fun toString() =
         token

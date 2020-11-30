@@ -2,6 +2,8 @@ package com.alphadevelopmentsolutions.data.tables
 
 import com.alphadevelopmentsolutions.data.models.RobotMedia
 import org.jetbrains.exposed.sql.ResultRow
+import org.jetbrains.exposed.sql.insert
+import org.jetbrains.exposed.sql.update
 
 object RobotMediaTable : ModifyTrackedTable<RobotMedia>("robot_media") {
     var teamAccountId = binary("team_account_id", 16)
@@ -25,4 +27,34 @@ object RobotMediaTable : ModifyTrackedTable<RobotMedia>("robot_media") {
             resultRow[lastModified],
             resultRow[modifiedById]
         )
+
+    override fun insert(obj: RobotMedia) =
+        insert {
+            it[id] = obj.id
+            it[teamAccountId] = obj.teamAccountId
+            it[eventId] = obj.eventId
+            it[teamId] = obj.teamId
+            it[createdById] = obj.createdById
+            it[uri] = obj.uri
+            it[isPublic] = obj.isPublic
+            it[deletedDate] = obj.deletedDate
+            it[deletedById] = obj.deletedById
+            it[lastModified] = obj.lastModified
+            it[modifiedById] = obj.modifiedById
+        }
+
+    override fun update(obj: RobotMedia) =
+        update({ id eq obj.id }) {
+            it[id] = obj.id
+            it[teamAccountId] = obj.teamAccountId
+            it[eventId] = obj.eventId
+            it[teamId] = obj.teamId
+            it[createdById] = obj.createdById
+            it[uri] = obj.uri
+            it[isPublic] = obj.isPublic
+            it[deletedDate] = obj.deletedDate
+            it[deletedById] = obj.deletedById
+            it[lastModified] = obj.lastModified
+            it[modifiedById] = obj.modifiedById
+        }
 }

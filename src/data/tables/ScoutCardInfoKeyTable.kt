@@ -2,6 +2,8 @@ package com.alphadevelopmentsolutions.data.tables
 
 import com.alphadevelopmentsolutions.data.models.ScoutCardInfoKey
 import org.jetbrains.exposed.sql.ResultRow
+import org.jetbrains.exposed.sql.insert
+import org.jetbrains.exposed.sql.update
 
 object ScoutCardInfoKeyTable : ModifyTrackedTable<ScoutCardInfoKey>("scout_card_info_keys") {
     var stateId = binary("state_id", 16)
@@ -31,4 +33,40 @@ object ScoutCardInfoKeyTable : ModifyTrackedTable<ScoutCardInfoKey>("scout_card_
             resultRow[lastModified],
             resultRow[modifiedById]
         )
+
+    override fun insert(obj: ScoutCardInfoKey) =
+        insert {
+            it[id] = obj.id
+            it[stateId] = obj.stateId
+            it[dataTypeId] = obj.dataTypeId
+            it[name] = obj.name
+            it[description] = obj.description
+            it[order] = obj.order
+            it[min] = obj.min
+            it[max] = obj.max
+            it[nullZeros] = obj.nullZeros
+            it[includeInReports] = obj.includeInReports
+            it[deletedDate] = obj.deletedDate
+            it[deletedById] = obj.deletedById
+            it[lastModified] = obj.lastModified
+            it[modifiedById] = obj.modifiedById
+        }
+
+    override fun update(obj: ScoutCardInfoKey) =
+        update({ id eq obj.id }) {
+            it[id] = obj.id
+            it[stateId] = obj.stateId
+            it[dataTypeId] = obj.dataTypeId
+            it[name] = obj.name
+            it[description] = obj.description
+            it[order] = obj.order
+            it[min] = obj.min
+            it[max] = obj.max
+            it[nullZeros] = obj.nullZeros
+            it[includeInReports] = obj.includeInReports
+            it[deletedDate] = obj.deletedDate
+            it[deletedById] = obj.deletedById
+            it[lastModified] = obj.lastModified
+            it[modifiedById] = obj.modifiedById
+        }
 }

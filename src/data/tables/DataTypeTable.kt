@@ -2,6 +2,8 @@ package com.alphadevelopmentsolutions.data.tables
 
 import com.alphadevelopmentsolutions.data.models.DataType
 import org.jetbrains.exposed.sql.ResultRow
+import org.jetbrains.exposed.sql.insert
+import org.jetbrains.exposed.sql.update
 
 object DataTypeTable : ModifyTrackedTable<DataType>("data_types") {
     var name = varchar("name", 16)
@@ -23,4 +25,32 @@ object DataTypeTable : ModifyTrackedTable<DataType>("data_types") {
             resultRow[lastModified],
             resultRow[modifiedById]
         )
+
+    override fun insert(obj: DataType) =
+        insert {
+            it[id] = obj.id
+            it[name] = obj.name
+            it[canMax] = obj.canMax
+            it[canMin] = obj.canMin
+            it[canNullZeros] = obj.canNullZeros
+            it[canReport] = obj.canReport
+            it[deletedDate] = obj.deletedDate
+            it[deletedById] = obj.deletedById
+            it[lastModified] = obj.lastModified
+            it[modifiedById] = obj.modifiedById
+        }
+
+    override fun update(obj: DataType) =
+        update({ id eq obj.id }) {
+            it[id] = obj.id
+            it[name] = obj.name
+            it[canMax] = obj.canMax
+            it[canMin] = obj.canMin
+            it[canNullZeros] = obj.canNullZeros
+            it[canReport] = obj.canReport
+            it[deletedDate] = obj.deletedDate
+            it[deletedById] = obj.deletedById
+            it[lastModified] = obj.lastModified
+            it[modifiedById] = obj.modifiedById
+        }
 }

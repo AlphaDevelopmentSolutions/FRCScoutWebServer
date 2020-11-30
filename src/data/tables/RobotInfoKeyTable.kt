@@ -2,6 +2,8 @@ package com.alphadevelopmentsolutions.data.tables
 
 import com.alphadevelopmentsolutions.data.models.RobotInfoKey
 import org.jetbrains.exposed.sql.ResultRow
+import org.jetbrains.exposed.sql.insert
+import org.jetbrains.exposed.sql.update
 
 object RobotInfoKeyTable : ModifyTrackedTable<RobotInfoKey>("robot_info_keys") {
     var stateId = binary("state_id", 16)
@@ -31,4 +33,40 @@ object RobotInfoKeyTable : ModifyTrackedTable<RobotInfoKey>("robot_info_keys") {
             resultRow[lastModified],
             resultRow[modifiedById]
         )
+
+    override fun insert(obj: RobotInfoKey) =
+        insert {
+            it[id] = obj.id
+            it[stateId] = obj.stateId
+            it[dataTypeId] = obj.dataTypeId
+            it[name] = obj.name
+            it[description] = obj.description
+            it[order] = obj.order
+            it[min] = obj.min
+            it[max] = obj.max
+            it[nullZeros] = obj.nullZeros
+            it[includeInReports] = obj.includeInReports
+            it[deletedDate] = obj.deletedDate
+            it[deletedById] = obj.deletedById
+            it[lastModified] = obj.lastModified
+            it[modifiedById] = obj.modifiedById
+        }
+
+    override fun update(obj: RobotInfoKey) =
+        update({ id eq obj.id }) {
+            it[id] = obj.id
+            it[stateId] = obj.stateId
+            it[dataTypeId] = obj.dataTypeId
+            it[name] = obj.name
+            it[description] = obj.description
+            it[order] = obj.order
+            it[min] = obj.min
+            it[max] = obj.max
+            it[nullZeros] = obj.nullZeros
+            it[includeInReports] = obj.includeInReports
+            it[deletedDate] = obj.deletedDate
+            it[deletedById] = obj.deletedById
+            it[lastModified] = obj.lastModified
+            it[modifiedById] = obj.modifiedById
+        }
 }

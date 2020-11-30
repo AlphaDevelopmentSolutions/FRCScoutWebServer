@@ -2,6 +2,8 @@ package com.alphadevelopmentsolutions.data.tables
 
 import com.alphadevelopmentsolutions.data.models.ScoutingReport
 import org.jetbrains.exposed.sql.ResultRow
+import org.jetbrains.exposed.sql.insert
+import org.jetbrains.exposed.sql.update
 
 object ScoutingReportTable : ModifyTrackedTable<ScoutingReport>("scouting_reports") {
     var createdById = binary("created_by_id", 16)
@@ -29,4 +31,38 @@ object ScoutingReportTable : ModifyTrackedTable<ScoutingReport>("scouting_report
             resultRow[lastModified],
             resultRow[modifiedById]
         )
+
+    override fun insert(obj: ScoutingReport) =
+        insert {
+            it[id] = obj.id
+            it[createdById] = obj.createdById
+            it[teamAccountId] = obj.teamAccountId
+            it[name] = obj.name
+            it[description] = obj.description
+            it[xAxisDataType] = obj.xAxisDataType
+            it[xAxisDataUnit] = obj.xAxisDataUnit
+            it[chartType] = obj.chartType
+            it[isPublic] = obj.isPublic
+            it[deletedDate] = obj.deletedDate
+            it[deletedById] = obj.deletedById
+            it[lastModified] = obj.lastModified
+            it[modifiedById] = obj.modifiedById
+        }
+
+    override fun update(obj: ScoutingReport) =
+        update({ id eq obj.id }) {
+            it[id] = obj.id
+            it[createdById] = obj.createdById
+            it[teamAccountId] = obj.teamAccountId
+            it[name] = obj.name
+            it[description] = obj.description
+            it[xAxisDataType] = obj.xAxisDataType
+            it[xAxisDataUnit] = obj.xAxisDataUnit
+            it[chartType] = obj.chartType
+            it[isPublic] = obj.isPublic
+            it[deletedDate] = obj.deletedDate
+            it[deletedById] = obj.deletedById
+            it[lastModified] = obj.lastModified
+            it[modifiedById] = obj.modifiedById
+        }
 }

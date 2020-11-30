@@ -11,16 +11,16 @@ interface GsonInstance {
     companion object {
         private var INSTANCE: Gson? = null
 
-        fun getInstance() =
+        fun getInstance(): Gson =
             INSTANCE ?: synchronized(this) {
-                val tempInstace =
+                val tempInstance =
                     GsonBuilder()
                         .registerTypeAdapter(ByteArray::class.java, ByteArraySerializer())
                         .registerTypeAdapter(DateTime::class.java, DateTimeSerializer())
                         .create()
 
-                INSTANCE = tempInstace
-                tempInstace
+                INSTANCE = tempInstance
+                tempInstance
             }
     }
 

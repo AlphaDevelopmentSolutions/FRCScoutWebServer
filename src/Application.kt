@@ -1,34 +1,38 @@
 package com.alphadevelopmentsolutions
 
-import com.alphadevelopmentsolutions.data.models.Year
-import com.alphadevelopmentsolutions.data.tables.YearTable
+import com.alphadevelopmentsolutions.data.models.User
+import com.alphadevelopmentsolutions.data.tables.UserTable
+import com.alphadevelopmentsolutions.extensions.toByteArray
+import com.alphadevelopmentsolutions.extensions.toPassword
+import com.alphadevelopmentsolutions.extensions.toUUID
 import com.alphadevelopmentsolutions.routes.Api
 import com.alphadevelopmentsolutions.singletons.GsonInstance
-import com.google.gson.Gson
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
 import io.ktor.application.*
-import io.ktor.response.*
-import io.ktor.routing.*
-import io.ktor.http.*
-import io.ktor.html.*
-import kotlinx.html.*
-import kotlinx.css.*
-import io.ktor.http.content.*
-import io.ktor.features.*
 import io.ktor.auth.*
-import io.ktor.gson.*
 import io.ktor.client.*
 import io.ktor.client.engine.apache.*
 import io.ktor.client.features.*
 import io.ktor.client.features.auth.*
 import io.ktor.client.features.json.*
-import kotlinx.coroutines.*
 import io.ktor.client.features.logging.*
-import io.ktor.client.features.BrowserUserAgent
+import io.ktor.features.*
+import io.ktor.gson.*
+import io.ktor.html.*
+import io.ktor.http.*
+import io.ktor.http.content.*
+import io.ktor.response.*
+import io.ktor.routing.*
+import kotlinx.coroutines.runBlocking
+import kotlinx.css.*
+import kotlinx.html.*
 import org.jetbrains.exposed.sql.Database
-import org.jetbrains.exposed.sql.selectAll
+import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.transactions.transaction
+import org.joda.time.DateTime
+import org.mindrot.jbcrypt.BCrypt
+import java.util.*
 
 fun main(args: Array<String>): Unit {
 
@@ -81,6 +85,7 @@ fun Application.module(testing: Boolean = false) {
 
     install(ContentNegotiation) {
         gson {
+
         }
     }
 
@@ -113,30 +118,36 @@ fun Application.module(testing: Boolean = false) {
         Api.getBaseData(this)
 
         get("/test") {
-//            val json = transaction {
-//                val years = YearTable.selectAll()
-//
-//                val yearList: MutableList<Year> = mutableListOf()
-//                years.forEach {
-//                        yearList.add(Year.fromResultRow(it))
-//                }
-//
-//                GsonInstance.getInstance().toJson(yearList)
-//            }
 
-//            call.respondText(json, ContentType.Application.Json)
-
-            call.respondHtml {
-                head {
-                    link("test", "test")
+            val newUser =
+                User(
+                    UUID.fromString("593e565a-32bc-11eb-b2e1-5c80b67a2786").toByteArray(),
+                    "Griffin",
+                    "Sorrentino",
+                    "griffinsorrentino@gmail.com",
+                    "griffinsorrentino",
+                    "test description",
+                    "testuri",
+                    null,
+                    null,
+                    DateTime(),
+                    ByteArray(0)
+                ).apply {
+                    password = "testingpassword123".toPassword()
                 }
 
-                body {
-                    h1 { +"TEST" }
-                }
+            transaction {
+                exec("SET FOREIGN_KEY_CHECKS=0;")
             }
-        }
 
+            var result = false
+
+            transaction {
+                result = UserTable.upsert(newUser)
+            }
+
+            call.respondText(GsonInstance.getInstance().toJson(newUser), ContentType.Application.Json)
+        }
 
         get("/html-dsl") {
             call.respondHtml {

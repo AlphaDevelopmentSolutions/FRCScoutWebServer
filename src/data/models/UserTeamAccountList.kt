@@ -1,18 +1,19 @@
 package com.alphadevelopmentsolutions.data.models
 
 import com.alphadevelopmentsolutions.data.tables.YearTable
+import com.google.gson.annotations.SerializedName
 import org.jetbrains.exposed.sql.ResultRow
 import org.joda.time.DateTime
 
 class UserTeamAccountList(
-    override var id: ByteArray,
-    val userId: ByteArray,
-    val teamAccountId: ByteArray,
-    val state: State,
-    override val deletedDate: DateTime?,
-    override val deletedById: ByteArray?,
-    override val lastModified: DateTime,
-    override val modifiedById: ByteArray
+    @Transient override var id: ByteArray,
+    @SerializedName("user_id") val userId: ByteArray,
+    @SerializedName("team_account_id") val teamAccountId: ByteArray,
+    @SerializedName("state") val state: State,
+    @Transient override val deletedDate: DateTime?,
+    @Transient override val deletedById: ByteArray?,
+    @Transient override val lastModified: DateTime,
+    @Transient override val modifiedById: ByteArray
 ) : ModifyTrackedTable(id, deletedDate, deletedById, lastModified, modifiedById) {
     override fun toString() =
         state.toString()

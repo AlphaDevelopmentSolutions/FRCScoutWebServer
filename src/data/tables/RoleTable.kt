@@ -4,6 +4,8 @@ import com.alphadevelopmentsolutions.data.models.Role
 import com.google.gson.annotations.SerializedName
 import org.jetbrains.exposed.sql.ResultRow
 import org.jetbrains.exposed.sql.Table
+import org.jetbrains.exposed.sql.insert
+import org.jetbrains.exposed.sql.update
 
 object RoleTable : ModifyTrackedTable<Role>("roles") {
     var teamAccountId = binary("team_account_id", 16)
@@ -33,4 +35,40 @@ object RoleTable : ModifyTrackedTable<Role>("roles") {
             resultRow[lastModified],
             resultRow[modifiedById]
         )
+
+    override fun insert(obj: Role) =
+        insert {
+            it[id] = obj.id
+            it[teamAccountId] = obj.teamAccountId
+            it[name] = obj.name
+            it[description] = obj.description
+            it[canManageTeam] = obj.canManageTeam
+            it[canManageUsers] = obj.canManageUsers
+            it[canMatchScout] = obj.canMatchScout
+            it[canPitScout] = obj.canPitScout
+            it[canCaptureMedia] = obj.canCaptureMedia
+            it[canManageReports] = obj.canManageReports
+            it[deletedDate] = obj.deletedDate
+            it[deletedById] = obj.deletedById
+            it[lastModified] = obj.lastModified
+            it[modifiedById] = obj.modifiedById
+        }
+
+    override fun update(obj: Role) =
+        update({ id eq obj.id }) {
+            it[id] = obj.id
+            it[teamAccountId] = obj.teamAccountId
+            it[name] = obj.name
+            it[description] = obj.description
+            it[canManageTeam] = obj.canManageTeam
+            it[canManageUsers] = obj.canManageUsers
+            it[canMatchScout] = obj.canMatchScout
+            it[canPitScout] = obj.canPitScout
+            it[canCaptureMedia] = obj.canCaptureMedia
+            it[canManageReports] = obj.canManageReports
+            it[deletedDate] = obj.deletedDate
+            it[deletedById] = obj.deletedById
+            it[lastModified] = obj.lastModified
+            it[modifiedById] = obj.modifiedById
+        }
 }

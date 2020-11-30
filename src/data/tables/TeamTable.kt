@@ -3,6 +3,8 @@ package com.alphadevelopmentsolutions.data.tables
 import com.alphadevelopmentsolutions.data.models.Team
 import kotlinx.html.attributesMapOf
 import org.jetbrains.exposed.sql.ResultRow
+import org.jetbrains.exposed.sql.insert
+import org.jetbrains.exposed.sql.update
 
 object TeamTable : ModifyTrackedTable<Team>("teams") {
     var number = integer("number")
@@ -38,4 +40,46 @@ object TeamTable : ModifyTrackedTable<Team>("teams") {
             resultRow[lastModified],
             resultRow[modifiedById]
         )
+
+    override fun insert(obj: Team) =
+        insert {
+            it[id] = obj.id
+            it[number] = obj.number
+            it[name] = obj.name
+            it[city] = obj.city
+            it[stateProvince] = obj.stateProvince
+            it[country] = obj.country
+            it[rookieYear] = obj.rookieYear
+            it[facebookUrl] = obj.facebookUrl
+            it[instagramUrl] = obj.instagramUrl
+            it[twitterUrl] = obj.twitterUrl
+            it[youtubeUrl] = obj.youtubeUrl
+            it[websiteUrl] = obj.websiteUrl
+            it[avatarUri] = obj.avatarUri
+            it[deletedDate] = obj.deletedDate
+            it[deletedById] = obj.deletedById
+            it[lastModified] = obj.lastModified
+            it[modifiedById] = obj.modifiedById
+        }
+
+    override fun update(obj: Team) =
+        update({ id eq obj.id }) {
+            it[id] = obj.id
+            it[number] = obj.number
+            it[name] = obj.name
+            it[city] = obj.city
+            it[stateProvince] = obj.stateProvince
+            it[country] = obj.country
+            it[rookieYear] = obj.rookieYear
+            it[facebookUrl] = obj.facebookUrl
+            it[instagramUrl] = obj.instagramUrl
+            it[twitterUrl] = obj.twitterUrl
+            it[youtubeUrl] = obj.youtubeUrl
+            it[websiteUrl] = obj.websiteUrl
+            it[avatarUri] = obj.avatarUri
+            it[deletedDate] = obj.deletedDate
+            it[deletedById] = obj.deletedById
+            it[lastModified] = obj.lastModified
+            it[modifiedById] = obj.modifiedById
+        }
 }
