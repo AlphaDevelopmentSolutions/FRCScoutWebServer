@@ -15,11 +15,11 @@ class ChecklistItemResult(
 ) : ByteArrayTable(id) {
     companion object {
         enum class Status {
-
+            COMPLETE,
+            INCOMPLETE
         }
     }
 
-    override fun toString(): String {
-        TODO("Not yet implemented")
-    }
+    override fun toString() =
+        status?.toString() ?: ""
 }

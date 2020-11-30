@@ -12,7 +12,21 @@ object ScoutingReportTable : ModifyTrackedTable<ScoutingReport>("scouting_report
     var xAxisDataUnit = varchar("x_axis_data_unit", 45).nullable()
     var chartType = varchar("chart_type", 45).nullable()
     var isPublic = bool("is_public")
-    override fun fromResultRow(resultRow: ResultRow): ScoutingReport {
-        TODO("Not yet implemented")
-    }
+
+    override fun fromResultRow(resultRow: ResultRow) =
+        ScoutingReport(
+            resultRow[id],
+            resultRow[createdById],
+            resultRow[teamAccountId],
+            resultRow[name],
+            resultRow[description],
+            resultRow[xAxisDataType],
+            resultRow[xAxisDataUnit],
+            resultRow[chartType],
+            resultRow[isPublic],
+            resultRow[deletedDate],
+            resultRow[deletedById],
+            resultRow[lastModified],
+            resultRow[modifiedById]
+        )
 }

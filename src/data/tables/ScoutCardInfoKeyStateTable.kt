@@ -7,8 +7,18 @@ object ScoutCardInfoKeyStateTable : ModifyTrackedTable<ScoutCardInfoKeyState>("s
     var teamAccountId = binary("team_account_id", 16)
     var yearId = binary("year_id", 16)
     var name = varchar("name", 100)
-    var description = binary("description", 200).nullable()
-    override fun fromResultRow(resultRow: ResultRow): ScoutCardInfoKeyState {
-        TODO("Not yet implemented")
-    }
+    var description = varchar("description", 200).nullable()
+
+    override fun fromResultRow(resultRow: ResultRow) =
+        ScoutCardInfoKeyState(
+            resultRow[id],
+            resultRow[teamAccountId],
+            resultRow[yearId],
+            resultRow[name],
+            resultRow[description],
+            resultRow[deletedDate],
+            resultRow[deletedById],
+            resultRow[lastModified],
+            resultRow[modifiedById]
+        )
 }

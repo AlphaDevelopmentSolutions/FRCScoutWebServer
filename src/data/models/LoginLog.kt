@@ -4,14 +4,13 @@ import org.joda.time.DateTime
 
 class LoginLog(
     override var id: ByteArray,
-    val username: String,
-    val password: String,
+    val username: String?,
+    val password: String?,
     val ip: Int,
     val time: DateTime,
     val userAgent: String,
-    val userId: ByteArray
+    val userId: ByteArray?
 ) : ByteArrayTable(id) {
-    override fun toString(): String {
-        TODO("Not yet implemented")
-    }
+    override fun toString() =
+        ip.toString()
 }

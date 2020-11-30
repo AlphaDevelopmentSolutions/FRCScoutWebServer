@@ -16,7 +16,22 @@ object EventTable : ModifyableTable<Event>("events") {
     var startTime = datetime("start_time").nullable()
     var endTime = datetime("end_time").nullable()
     var websiteUrl = varchar("website_url", 200).nullable()
-    override fun fromResultRow(resultRow: ResultRow): Event {
-        TODO("Not yet implemented")
-    }
+
+    override fun fromResultRow(resultRow: ResultRow) =
+        Event(
+            resultRow[id],
+            resultRow[yearId],
+            resultRow[code],
+            resultRow[key],
+            resultRow[venue],
+            resultRow[name],
+            resultRow[address],
+            resultRow[city],
+            resultRow[stateProvince],
+            resultRow[country],
+            resultRow[startTime],
+            resultRow[endTime],
+            resultRow[websiteUrl],
+            resultRow[lastModified]
+        )
 }

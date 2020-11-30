@@ -10,7 +10,19 @@ object RobotMediaTable : ModifyTrackedTable<RobotMedia>("robot_media") {
     var createdById = binary("created_by_id", 16)
     var uri = varchar("uri", 100)
     var isPublic = bool("is_public")
-    override fun fromResultRow(resultRow: ResultRow): RobotMedia {
-        TODO("Not yet implemented")
-    }
+
+    override fun fromResultRow(resultRow: ResultRow) =
+        RobotMedia(
+            resultRow[id],
+            resultRow[teamAccountId],
+            resultRow[eventId],
+            resultRow[teamId],
+            resultRow[createdById],
+            resultRow[uri],
+            resultRow[isPublic],
+            resultRow[deletedDate],
+            resultRow[deletedById],
+            resultRow[lastModified],
+            resultRow[modifiedById]
+        )
 }

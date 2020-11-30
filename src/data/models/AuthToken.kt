@@ -9,7 +9,6 @@ class AuthToken(
     val ip: Int,
     val expires: DateTime
 ) : ByteArrayTable(id) {
-    override fun toString(): String {
-        TODO("Not yet implemented")
-    }
+    override fun toString() =
+        token
 }

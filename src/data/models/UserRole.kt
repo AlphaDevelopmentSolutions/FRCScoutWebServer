@@ -6,16 +6,8 @@ class UserRole(
     override var id: ByteArray,
     val userTeamAccountListId: ByteArray,
     val roleId: ByteArray,
-    val avatarUri: String,
     override val lastModified: DateTime
 ) : ModifyableTable(id, lastModified) {
-    override fun toString(): String {
-        TODO("Not yet implemented")
-    }
-
-    companion object {
-        enum class State {
-
-        }
-    }
+    override fun toString() =
+        "UserRole Object"
 }

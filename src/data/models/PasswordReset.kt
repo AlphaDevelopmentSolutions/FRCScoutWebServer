@@ -9,7 +9,6 @@ class PasswordReset(
     val isUsed: Boolean,
     val createdDate: DateTime
 ) : ByteArrayTable(id) {
-    override fun toString(): String {
-        TODO("Not yet implemented")
-    }
+    override fun toString() =
+        "Expires $expires"
 }

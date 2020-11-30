@@ -14,13 +14,13 @@ class UserTeamAccountList(
     override val lastModified: DateTime,
     override val modifiedById: ByteArray
 ) : ModifyTrackedTable(id, deletedDate, deletedById, lastModified, modifiedById) {
-    override fun toString(): String {
-        TODO("Not yet implemented")
-    }
+    override fun toString() =
+        state.toString()
 
     companion object {
         enum class State {
-
+            ENABLED,
+            DISABLED
         }
     }
 }

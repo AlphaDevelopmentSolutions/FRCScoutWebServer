@@ -5,7 +5,7 @@ import org.joda.time.DateTime
 class Report(
     override var id: ByteArray,
     val recordId: ByteArray?,
-    val comment: String?,
+    val comment: String,
     val reporterId: ByteArray,
     val reportedDate: DateTime,
     val isResolved: Boolean,
@@ -13,7 +13,6 @@ class Report(
     val createdDate: DateTime,
     override val lastModified: DateTime
 ) : ModifyableTable(id, lastModified) {
-    override fun toString(): String {
-        TODO("Not yet implemented")
-    }
+    override fun toString() =
+        comment
 }

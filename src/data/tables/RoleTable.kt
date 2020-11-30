@@ -15,7 +15,22 @@ object RoleTable : ModifyTrackedTable<Role>("roles") {
     var canPitScout = bool("can_pit_scout")
     var canCaptureMedia = bool("can_capture_media")
     var canManageReports = bool("can_manage_reports")
-    override fun fromResultRow(resultRow: ResultRow): Role {
-        TODO("Not yet implemented")
-    }
+
+    override fun fromResultRow(resultRow: ResultRow) =
+        Role(
+            resultRow[id],
+            resultRow[teamAccountId],
+            resultRow[name],
+            resultRow[description],
+            resultRow[canManageTeam],
+            resultRow[canManageUsers],
+            resultRow[canMatchScout],
+            resultRow[canPitScout],
+            resultRow[canCaptureMedia],
+            resultRow[canManageReports],
+            resultRow[deletedDate],
+            resultRow[deletedById],
+            resultRow[lastModified],
+            resultRow[modifiedById]
+        )
 }

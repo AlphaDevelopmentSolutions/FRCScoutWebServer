@@ -10,7 +10,15 @@ object LoginLogTable : ByteArrayTable<LoginLog>("login_logs") {
     var time = datetime("time")
     var userAgent = varchar("user_agent", 100)
     var userId = binary("user_id", 16).nullable()
-    override fun fromResultRow(resultRow: ResultRow): LoginLog {
-        TODO("Not yet implemented")
-    }
+
+    override fun fromResultRow(resultRow: ResultRow) =
+        LoginLog(
+            resultRow[id],
+            resultRow[username],
+            resultRow[password],
+            resultRow[ip],
+            resultRow[time],
+            resultRow[userAgent],
+            resultRow[userId]
+        )
 }

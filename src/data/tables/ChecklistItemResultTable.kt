@@ -10,7 +10,15 @@ object ChecklistItemResultTable : ModifyTrackedTable<ChecklistItemResult>("check
     var completedDate = datetime("completed_date")
     var completedById = binary("completed_by_id", 16)
     var isPublic = bool("is_public")
-    override fun fromResultRow(resultRow: ResultRow): ChecklistItemResult {
-        TODO("Not yet implemented")
-    }
+
+    override fun fromResultRow(resultRow: ResultRow) =
+        ChecklistItemResult(
+            resultRow[id],
+            resultRow[checklistItemId],
+            resultRow[matchId],
+            resultRow[status],
+            resultRow[completedDate],
+            resultRow[completedById],
+            resultRow[isPublic]
+        )
 }

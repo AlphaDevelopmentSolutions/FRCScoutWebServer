@@ -8,7 +8,11 @@ object BlacklistTable : ByteArrayTable<Blacklist>("blacklist") {
     var added = datetime("added")
     var penaltyId = binary("penalty_id", 16)
 
-    override fun fromResultRow(resultRow: ResultRow): Blacklist {
-        TODO("Not yet implemented")
-    }
+    override fun fromResultRow(resultRow: ResultRow) =
+        Blacklist(
+            resultRow[id],
+            resultRow[ip],
+            resultRow[added],
+            resultRow[penaltyId]
+        )
 }

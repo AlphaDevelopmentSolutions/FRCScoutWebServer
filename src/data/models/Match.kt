@@ -15,12 +15,11 @@ class Match(
     val redAllianceTeamOneId: ByteArray,
     val redAllianceTeamTwoId: ByteArray,
     val redAllianceTeamThreeId: ByteArray,
-    val blueAllianceScore: Int,
-    val redAllianceScore: Int,
-    val time: DateTime,
+    val blueAllianceScore: Int?,
+    val redAllianceScore: Int?,
+    val time: DateTime?,
     override val lastModified: DateTime
 ) : ModifyableTable(id, lastModified) {
-    override fun toString(): String {
-        TODO("Not yet implemented")
-    }
+    override fun toString() =
+        key
 }

@@ -1,6 +1,7 @@
 package com.alphadevelopmentsolutions.data.tables
 
 import com.alphadevelopmentsolutions.data.models.Team
+import kotlinx.html.attributesMapOf
 import org.jetbrains.exposed.sql.ResultRow
 
 object TeamTable : ModifyTrackedTable<Team>("teams") {
@@ -16,7 +17,25 @@ object TeamTable : ModifyTrackedTable<Team>("teams") {
     var youtubeUrl = varchar("youtube_url", 300).nullable()
     var websiteUrl = varchar("website_url", 300).nullable()
     var avatarUri = varchar("avatar_uri", 100).nullable()
-    override fun fromResultRow(resultRow: ResultRow): Team {
-        TODO("Not yet implemented")
-    }
+
+    override fun fromResultRow(resultRow: ResultRow) =
+        Team(
+            resultRow[id],
+            resultRow[number],
+            resultRow[name],
+            resultRow[city],
+            resultRow[stateProvince],
+            resultRow[country],
+            resultRow[rookieYear],
+            resultRow[facebookUrl],
+            resultRow[instagramUrl],
+            resultRow[twitterUrl],
+            resultRow[youtubeUrl],
+            resultRow[websiteUrl],
+            resultRow[avatarUri],
+            resultRow[deletedDate],
+            resultRow[deletedById],
+            resultRow[lastModified],
+            resultRow[modifiedById]
+        )
 }

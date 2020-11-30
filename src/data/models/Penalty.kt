@@ -8,7 +8,6 @@ class Penalty(
     val withinDuration: Int,
     val penaltyDuration: Int
 ) : ByteArrayTable(id) {
-    override fun toString(): String {
-        TODO("Not yet implemented")
-    }
+    override fun toString() =
+        "Duration $penaltyDuration"
 }

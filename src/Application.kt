@@ -112,7 +112,7 @@ fun Application.module(testing: Boolean = false) {
     routing {
         Api.getBaseData(this)
 
-        get("/") {
+        get("/test") {
 //            val json = transaction {
 //                val years = YearTable.selectAll()
 //
@@ -125,6 +125,16 @@ fun Application.module(testing: Boolean = false) {
 //            }
 
 //            call.respondText(json, ContentType.Application.Json)
+
+            call.respondHtml {
+                head {
+                    link("test", "test")
+                }
+
+                body {
+                    h1 { +"TEST" }
+                }
+            }
         }
 
 
@@ -132,6 +142,9 @@ fun Application.module(testing: Boolean = false) {
             call.respondHtml {
                 head {
                     link(rel = "stylesheet", href = "/styles.css")
+                    script {
+                        src = "https://code.jquery.com/jquery-3.5.1.min.js"
+                    }
                 }
 
                 body {
@@ -148,7 +161,7 @@ fun Application.module(testing: Boolean = false) {
         get("/styles.css") {
             call.respondCss {
                 body {
-                    backgroundColor = Color.red
+//                    backgroundColor = Color.red
                 }
 
                 p {

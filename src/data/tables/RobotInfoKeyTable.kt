@@ -13,7 +13,22 @@ object RobotInfoKeyTable : ModifyTrackedTable<RobotInfoKey>("robot_info_keys") {
     var max = integer("max").nullable()
     var nullZeros = bool("null_zeros").nullable()
     var includeInReports = bool("include_in_reports").nullable()
-    override fun fromResultRow(resultRow: ResultRow): RobotInfoKey {
-        TODO("Not yet implemented")
-    }
+
+    override fun fromResultRow(resultRow: ResultRow) =
+        RobotInfoKey(
+            resultRow[id],
+            resultRow[stateId],
+            resultRow[dataTypeId],
+            resultRow[name],
+            resultRow[description],
+            resultRow[order],
+            resultRow[min],
+            resultRow[max],
+            resultRow[nullZeros],
+            resultRow[includeInReports],
+            resultRow[deletedDate],
+            resultRow[deletedById],
+            resultRow[lastModified],
+            resultRow[modifiedById]
+        )
 }

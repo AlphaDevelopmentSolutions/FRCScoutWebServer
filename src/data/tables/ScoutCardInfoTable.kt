@@ -10,7 +10,19 @@ object ScoutCardInfoTable : ModifyTrackedTable<ScoutCardInfo>("scout_card_info")
     var value = varchar("value", 200)
     var completedById = binary("completed_by_id", 16)
     var isPublic = bool("is_public")
-    override fun fromResultRow(resultRow: ResultRow): ScoutCardInfo {
-        TODO("Not yet implemented")
-    }
+
+    override fun fromResultRow(resultRow: ResultRow) =
+        ScoutCardInfo(
+            resultRow[id],
+            resultRow[matchId],
+            resultRow[teamId],
+            resultRow[keyId],
+            resultRow[value],
+            resultRow[completedById],
+            resultRow[isPublic],
+            resultRow[deletedDate],
+            resultRow[deletedById],
+            resultRow[lastModified],
+            resultRow[modifiedById]
+        )
 }

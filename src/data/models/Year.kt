@@ -8,13 +8,11 @@ class Year(
     override var id: ByteArray,
     val number: Int,
     val name: String,
-    val startDate: DateTime,
-    val endDate: DateTime,
-    val imageUri: String,
+    val startDate: DateTime?,
+    val endDate: DateTime?,
+    val imageUri: String?,
     override val lastModified: DateTime
 ) : ModifyableTable(id, lastModified) {
-    override fun toString(): String {
-        TODO("Not yet implemented")
-    }
-
+    override fun toString() =
+        name
 }

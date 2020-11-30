@@ -8,7 +8,13 @@ object PasswordResetTable : ByteArrayTable<PasswordReset>("password_resets") {
     var expires = datetime("expires")
     var isUsed = bool("is_used")
     var createdDate = datetime("created_date")
-    override fun fromResultRow(resultRow: ResultRow): PasswordReset {
-        TODO("Not yet implemented")
-    }
+
+    override fun fromResultRow(resultRow: ResultRow) =
+        PasswordReset(
+            resultRow[id],
+            resultRow[userId],
+            resultRow[expires],
+            resultRow[isUsed],
+            resultRow[createdDate]
+        )
 }

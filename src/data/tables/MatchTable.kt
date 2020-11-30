@@ -18,7 +18,24 @@ object MatchTable : ModifyableTable<Match>("matches") {
     var blueAllianceScore = integer("blue_alliance_score").nullable()
     var redAllianceScore = integer("red_alliance_score").nullable()
     var time = datetime("time").nullable()
-    override fun fromResultRow(resultRow: ResultRow): Match {
-        TODO("Not yet implemented")
-    }
+
+    override fun fromResultRow(resultRow: ResultRow) =
+        Match(
+            resultRow[id],
+            resultRow[eventId],
+            resultRow[key],
+            resultRow[typeId],
+            resultRow[setNumber],
+            resultRow[matchNumber],
+            resultRow[blueAllianceTeamOneId],
+            resultRow[blueAllianceTeamTwoId],
+            resultRow[blueAllianceTeamThreeId],
+            resultRow[redAllianceTeamOneId],
+            resultRow[redAllianceTeamTwoId],
+            resultRow[redAllianceTeamThreeId],
+            resultRow[blueAllianceScore],
+            resultRow[redAllianceScore],
+            resultRow[time],
+            resultRow[lastModified]
+        )
 }

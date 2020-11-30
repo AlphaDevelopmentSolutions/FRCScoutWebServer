@@ -4,9 +4,9 @@ import org.joda.time.DateTime
 
 class Event(
     override var id: ByteArray,
-    val yearId: String,
-    val code: Boolean,
-    val key: Boolean,
+    val yearId: ByteArray,
+    val code: String,
+    val key: String,
     val venue: String,
     val name: String,
     val address: String,
@@ -18,7 +18,6 @@ class Event(
     val websiteUrl: String?,
     override val lastModified: DateTime
 ) : ModifyableTable(id, lastModified) {
-    override fun toString(): String {
-        TODO("Not yet implemented")
-    }
+    override fun toString() =
+        name
 }

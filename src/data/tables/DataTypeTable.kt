@@ -9,7 +9,18 @@ object DataTypeTable : ModifyTrackedTable<DataType>("data_types") {
     var canMin = bool("can_min")
     var canNullZeros = bool("can_null_zeros")
     var canReport = bool("can_report")
-    override fun fromResultRow(resultRow: ResultRow): DataType {
-        TODO("Not yet implemented")
-    }
+
+    override fun fromResultRow(resultRow: ResultRow) =
+        DataType(
+            resultRow[id],
+            resultRow[name],
+            resultRow[canMax],
+            resultRow[canMin],
+            resultRow[canNullZeros],
+            resultRow[canReport],
+            resultRow[deletedDate],
+            resultRow[deletedById],
+            resultRow[lastModified],
+            resultRow[modifiedById]
+        )
 }

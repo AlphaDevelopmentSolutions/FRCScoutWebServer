@@ -8,7 +8,17 @@ object RobotInfoKeyStateTable : ModifyTrackedTable<RobotInfoKeyState>("robot_inf
     var yearId = binary("year_id", 16)
     var name = varchar("name", 16)
     var description = varchar("description", 200).nullable()
-    override fun fromResultRow(resultRow: ResultRow): RobotInfoKeyState {
-        TODO("Not yet implemented")
-    }
+
+    override fun fromResultRow(resultRow: ResultRow) =
+        RobotInfoKeyState(
+            resultRow[id],
+            resultRow[teamAccountId],
+            resultRow[yearId],
+            resultRow[name],
+            resultRow[description],
+            resultRow[deletedDate],
+            resultRow[deletedById],
+            resultRow[lastModified],
+            resultRow[modifiedById]
+        )
 }

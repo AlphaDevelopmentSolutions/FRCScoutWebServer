@@ -17,7 +17,6 @@ class ScoutingReport(
     override val lastModified: DateTime,
     override val modifiedById: ByteArray
 ) : ModifyTrackedTable(id, deletedDate, deletedById, lastModified, modifiedById) {
-    override fun toString(): String {
-        TODO("Not yet implemented")
-    }
+    override fun toString() =
+        name
 }

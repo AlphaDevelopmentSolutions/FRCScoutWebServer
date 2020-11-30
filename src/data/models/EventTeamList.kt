@@ -8,7 +8,6 @@ class EventTeamList(
     val eventId: ByteArray,
     override val lastModified: DateTime
 ) : ModifyableTable(id, lastModified) {
-    override fun toString(): String {
-        TODO("Not yet implemented")
-    }
+    override fun toString() =
+        "Event Team List Object"
 }

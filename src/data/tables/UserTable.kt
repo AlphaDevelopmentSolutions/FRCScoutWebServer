@@ -13,7 +13,19 @@ object UserTable : ModifyTrackedTable<User>("users") {
     var password = varchar("first_name", 100)
     var description = varchar("first_name", 300).nullable()
     var avatarUri = varchar("first_name", 100).nullable()
-    override fun fromResultRow(resultRow: ResultRow): User {
-        TODO("Not yet implemented")
-    }
+
+    override fun fromResultRow(resultRow: ResultRow) =
+        User(
+            resultRow[id],
+            resultRow[firstName],
+            resultRow[lastName],
+            resultRow[email],
+            resultRow[username],
+            resultRow[description],
+            resultRow[avatarUri],
+            resultRow[deletedDate],
+            resultRow[deletedById],
+            resultRow[lastModified],
+            resultRow[modifiedById]
+        )
 }

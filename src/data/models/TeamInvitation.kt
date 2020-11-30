@@ -5,7 +5,7 @@ import org.joda.time.DateTime
 class TeamInvitation(
     override var id: ByteArray,
     val userTeamAccountListId: ByteArray,
-    val state: State,
+    val state: State?,
     val createdDate: DateTime,
     val createdById: ByteArray,
     override val deletedDate: DateTime?,
@@ -13,13 +13,13 @@ class TeamInvitation(
     override val lastModified: DateTime,
     override val modifiedById: ByteArray
 ) : ModifyTrackedTable(id, deletedDate, deletedById, lastModified, modifiedById) {
-    override fun toString(): String {
-        TODO("Not yet implemented")
-    }
+    override fun toString() =
+        state?.name ?: "Empty"
 
     companion object {
         enum class State {
-
+            ACCEPTED,
+            DECLINED
         }
     }
 }
