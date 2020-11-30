@@ -115,7 +115,7 @@ fun Application.module(testing: Boolean = false) {
     }
 
     routing {
-        Api.getBaseData(this)
+        Api.createRoutes(this)
 
         get("/test") {
 
@@ -146,7 +146,7 @@ fun Application.module(testing: Boolean = false) {
                 result = UserTable.upsert(newUser)
             }
 
-            call.respondText(GsonInstance.getInstance().toJson(newUser), ContentType.Application.Json)
+            call.respondText(newUser.toJson(), ContentType.Application.Json)
         }
 
         get("/html-dsl") {
