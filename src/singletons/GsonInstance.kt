@@ -6,22 +6,18 @@ import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import org.joda.time.DateTime
 
-interface GsonInstance {
+object GsonInstance {
+    private var INSTANCE: Gson? = null
 
-    companion object {
-        private var INSTANCE: Gson? = null
+    fun getInstance(): Gson =
+        INSTANCE ?: synchronized(this) {
+            val tempInstance =
+                GsonBuilder()
+                    .registerTypeAdapter(ByteArray::class.java, ByteArraySerializer())
+                    .registerTypeAdapter(DateTime::class.java, DateTimeSerializer())
+                    .create()
 
-        fun getInstance(): Gson =
-            INSTANCE ?: synchronized(this) {
-                val tempInstance =
-                    GsonBuilder()
-                        .registerTypeAdapter(ByteArray::class.java, ByteArraySerializer())
-                        .registerTypeAdapter(DateTime::class.java, DateTimeSerializer())
-                        .create()
-
-                INSTANCE = tempInstance
-                tempInstance
-            }
-    }
-
+            INSTANCE = tempInstance
+            tempInstance
+        }
 }
