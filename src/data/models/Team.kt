@@ -5,6 +5,7 @@ import org.joda.time.DateTime
 
 class Team(
     @Transient override var id: ByteArray,
+    @SerializedName("key") val key: String,
     @SerializedName("number") val number: Int,
     @SerializedName("name") val name: String,
     @SerializedName("city") val city: String?,

@@ -2,13 +2,13 @@ package com.alphadevelopmentsolutions.scraper
 
 import com.alphadevelopmentsolutions.Constants
 import com.alphadevelopmentsolutions.Credentials
+import com.alphadevelopmentsolutions.data.models.MatchType
 import com.alphadevelopmentsolutions.data.models.Year
-import com.alphadevelopmentsolutions.data.tables.EventTable
-import com.alphadevelopmentsolutions.data.tables.TeamTable
-import com.alphadevelopmentsolutions.data.tables.YearTable
+import com.alphadevelopmentsolutions.data.tables.*
 import com.alphadevelopmentsolutions.extensions.toByteArray
 import com.alphadevelopmentsolutions.routes.Route
 import com.alphadevelopmentsolutions.scraper.models.Event
+import com.alphadevelopmentsolutions.scraper.models.Match
 import com.alphadevelopmentsolutions.scraper.models.SocialMedia
 import com.alphadevelopmentsolutions.scraper.models.Team
 import io.ktor.application.*
@@ -21,6 +21,7 @@ import io.ktor.client.request.*
 import io.ktor.http.*
 import io.ktor.response.*
 import io.ktor.routing.*
+import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.joda.time.DateTime
@@ -52,6 +53,7 @@ object Scraper : Route {
             route(SUB_PATH) {
                 teams(this)
                 events(this)
+                matches(this)
             }
         }
     }
@@ -102,6 +104,7 @@ object Scraper : Route {
                     teamList.add(
                         com.alphadevelopmentsolutions.data.models.Team(
                             Constants.UUID_GENERATOR.generate().toByteArray(),
+                            jsonTeam.key,
                             jsonTeam.number,
                             jsonTeam.name,
                             jsonTeam.city,
@@ -185,6 +188,127 @@ object Scraper : Route {
                     EventTable.upsert(
                         event
                     ) { EventTable.key eq event.key }
+                }
+            }
+
+            call.respondText("Success", ContentType.Application.JavaScript)
+        }
+    }
+
+    private fun matches(route: io.ktor.routing.Route) {
+        route.get("matches") {
+
+            val matchList: MutableList<com.alphadevelopmentsolutions.data.models.Match> = mutableListOf()
+            val eventList: MutableList<com.alphadevelopmentsolutions.data.models.Event> = mutableListOf()
+            val matchTypeList: MutableList<MatchType> = mutableListOf()
+            var response: List<Match>
+
+            transaction {
+                EventTable.selectAll().map {
+                    eventList.add(EventTable.fromResultRow(it))
+                }
+
+                MatchTypeTable.selectAll().map {
+                    matchTypeList.add(MatchTypeTable.fromResultRow(it))
+                }
+            }
+
+            eventList.forEach { event ->
+                response =
+                    client.get {
+                        url("https://www.thebluealliance.com/api/v3/event/${event.key}/matches?X-TBA-Auth-Key=${Credentials.TBA_KEY}")
+                        accept(ContentType.Application.Json)
+                        contentType(ContentType.Application.Json)
+                        header("X-TBA-Auth-Key", Credentials.TBA_KEY)
+                        userAgent("")
+                    }
+
+                response.forEach { jsonMatch ->
+
+                    var blueAllianceTeamOneId: ByteArray? = null
+                    var blueAllianceTeamTwoId: ByteArray? = null
+                    var blueAllianceTeamThreeId: ByteArray? = null
+                    var redAllianceTeamOneId: ByteArray? = null
+                    var redAllianceTeamTwoId: ByteArray? = null
+                    var redAllianceTeamThreeId: ByteArray? = null
+
+
+                    transaction {
+                        jsonMatch.alliances.blueAlliance.teamKeys.forEachIndexed { index, teamKey ->
+                            TeamTable
+                                .slice(TeamTable.id)
+                                .select { TeamTable.key eq teamKey }.map {
+                                    when (index) {
+                                        0 -> blueAllianceTeamOneId = it[TeamTable.id]
+                                        1 -> blueAllianceTeamTwoId = it[TeamTable.id]
+                                        2 -> blueAllianceTeamThreeId = it[TeamTable.id]
+                                    }
+                                }
+                        }
+
+                        jsonMatch.alliances.redAlliance.teamKeys.forEachIndexed { index, teamKey ->
+                            TeamTable
+                                .slice(TeamTable.id)
+                                .select { TeamTable.key eq teamKey }.map {
+                                    when (index) {
+                                        0 -> redAllianceTeamOneId = it[TeamTable.id]
+                                        1 -> redAllianceTeamTwoId = it[TeamTable.id]
+                                        2 -> redAllianceTeamThreeId = it[TeamTable.id]
+                                    }
+                                }
+                        }
+                    }
+
+                    if (
+                        blueAllianceTeamOneId != null &&
+                        blueAllianceTeamTwoId != null &&
+                        blueAllianceTeamThreeId != null &&
+                        redAllianceTeamOneId != null &&
+                        redAllianceTeamTwoId != null &&
+                        redAllianceTeamThreeId != null
+                    ) {
+
+                        jsonMatch.compLevel.let { compLevel ->
+                            var matchType: MatchType? = null
+
+                            matchTypeList.forEach { matchTypeCandidate ->
+                                if (compLevel.name.equals(matchTypeCandidate.name, ignoreCase = true))
+                                    matchType = matchTypeCandidate
+                            }
+
+                            matchType
+                        }?.let { matchType ->
+                            matchList.add(
+                                com.alphadevelopmentsolutions.data.models.Match(
+                                    Constants.UUID_GENERATOR.generate().toByteArray(),
+                                    event.id,
+                                    jsonMatch.key,
+                                    matchType.id,
+                                    jsonMatch.setNumber,
+                                    jsonMatch.matchNumber,
+                                    blueAllianceTeamOneId!!,
+                                    blueAllianceTeamTwoId!!,
+                                    blueAllianceTeamThreeId!!,
+                                    redAllianceTeamOneId!!,
+                                    redAllianceTeamTwoId!!,
+                                    redAllianceTeamThreeId!!,
+                                    jsonMatch.alliances.blueAlliance.score,
+                                    jsonMatch.alliances.redAlliance.score,
+                                    DateTime(jsonMatch.time),
+                                    DateTime()
+                                )
+                            )
+                        }
+                    }
+
+                }
+            }
+
+            transaction {
+                matchList.forEach { match ->
+                    MatchTable.upsert(
+                        match
+                    ) { MatchTable.key eq match.key }
                 }
             }
 

@@ -5,6 +5,7 @@ import kotlinx.html.attributesMapOf
 import org.jetbrains.exposed.sql.*
 
 object TeamTable : ModifyableTable<Team>("teams") {
+    var key = varchar("key", 45)
     var number = integer("number")
     var name = varchar("name", 300)
     var city = varchar("city", 200).nullable()
@@ -21,6 +22,7 @@ object TeamTable : ModifyableTable<Team>("teams") {
     override fun fromResultRow(resultRow: ResultRow) =
         Team(
             resultRow[id],
+            resultRow[key],
             resultRow[number],
             resultRow[name],
             resultRow[city],
@@ -39,6 +41,7 @@ object TeamTable : ModifyableTable<Team>("teams") {
     override fun insert(obj: Team) =
         insert {
             it[id] = obj.id
+            it[key] = obj.key
             it[number] = obj.number
             it[name] = obj.name
             it[city] = obj.city
@@ -56,6 +59,7 @@ object TeamTable : ModifyableTable<Team>("teams") {
 
     override fun update(obj: Team, where: (SqlExpressionBuilder.() -> Op<Boolean>)?): Int =
         update(where ?: { id eq obj.id }) {
+            it[key] = obj.key
             it[number] = obj.number
             it[name] = obj.name
             it[city] = obj.city
