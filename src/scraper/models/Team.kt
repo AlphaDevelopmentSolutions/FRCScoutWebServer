@@ -10,5 +10,6 @@ class Team(
     @SerializedName("state_prov") val stateProvince: String?,
     @SerializedName("country") val country: String?,
     @SerializedName("rookie_year") val rookieYear: Int?,
-    @SerializedName("website") val websiteUrl: String?
+    @SerializedName("website") val websiteUrl: String?,
+    @SerializedName("key") val key: String
 )

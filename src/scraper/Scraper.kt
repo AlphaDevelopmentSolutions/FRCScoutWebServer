@@ -1,9 +1,11 @@
 package com.alphadevelopmentsolutions.scraper
 
 import com.alphadevelopmentsolutions.Constants
+import com.alphadevelopmentsolutions.Credentials
 import com.alphadevelopmentsolutions.data.tables.TeamTable
 import com.alphadevelopmentsolutions.extensions.toByteArray
 import com.alphadevelopmentsolutions.routes.Route
+import com.alphadevelopmentsolutions.scraper.models.SocialMedia
 import com.alphadevelopmentsolutions.scraper.models.Team
 import io.ktor.application.*
 import io.ktor.client.*
@@ -15,6 +17,7 @@ import io.ktor.client.request.*
 import io.ktor.http.*
 import io.ktor.response.*
 import io.ktor.routing.*
+import kotlinx.css.ins
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.joda.time.DateTime
 
@@ -60,6 +63,31 @@ object Scraper : Route {
                     }
 
                 response.forEach { jsonTeam ->
+                    val socialMediaList: List<SocialMedia> =
+                        client.get {
+                            url("https://www.thebluealliance.com/api/v3/team/${jsonTeam.key}/social_media?X-TBA-Auth-Key=${Credentials.TBA_KEY}")
+                            accept(ContentType.Application.Json)
+                            contentType(ContentType.Application.Json)
+                            header("X-TBA-Auth-Key", Credentials.TBA_KEY)
+                            userAgent("")
+                        }
+
+                    var facebookUrl: String? = null
+                    var instagramUrl: String? = null
+                    var twitterUrl: String? = null
+                    var youtubeUrl: String? = null
+                    var avatarUri: String? = null
+
+                    socialMediaList.forEach { socialMedia ->
+                        when (socialMedia.type) {
+                            SocialMedia.avatar -> avatarUri = socialMedia.foreignKey
+                            SocialMedia.facebook_profile -> facebookUrl = socialMedia.foreignKey
+                            SocialMedia.instagram_profile -> instagramUrl = socialMedia.foreignKey
+                            SocialMedia.twitter_profile -> twitterUrl = socialMedia.foreignKey
+                            SocialMedia.youtube_channel -> youtubeUrl = socialMedia.foreignKey
+                        }
+                    }
+
                     teamList.add(
                         com.alphadevelopmentsolutions.data.models.Team(
                             Constants.UUID_GENERATOR.generate().toByteArray(),
@@ -69,12 +97,12 @@ object Scraper : Route {
                             jsonTeam.stateProvince,
                             jsonTeam.country,
                             jsonTeam.rookieYear,
-                            null,
-                            null,
-                            null,
-                            null,
+                            facebookUrl,
+                            instagramUrl,
+                            twitterUrl,
+                            youtubeUrl,
                             jsonTeam.websiteUrl,
-                            null,
+                            avatarUri,
                             DateTime()
                         )
                     )
