@@ -28,4 +28,25 @@ abstract class ByteArrayTable<T: ByteArrayTable>(name: String = "", columnName: 
 
         return true
     }
+
+    /**
+     * Inserts or updated a record in the database
+     * @param obj [T] object to insert or update
+     * @return [Boolean] if successful
+     */
+    fun upsertAll(objList: List<T>, where: (SqlExpressionBuilder.()-> Op<Boolean>)? = null): HashMap<ByteArray, Boolean> {
+        val resultSet: HashMap<ByteArray, Boolean> = hashMapOf()
+
+        objList.forEach { obj ->
+            if (update(obj, where) < 1) {
+                insert(obj)
+
+                resultSet[obj.id] = true
+            }
+
+            resultSet[obj.id] = true
+        }
+
+        return resultSet
+    }
 }

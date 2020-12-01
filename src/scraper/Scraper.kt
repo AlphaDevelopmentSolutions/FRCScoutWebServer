@@ -2,9 +2,13 @@ package com.alphadevelopmentsolutions.scraper
 
 import com.alphadevelopmentsolutions.Constants
 import com.alphadevelopmentsolutions.Credentials
+import com.alphadevelopmentsolutions.data.models.Year
+import com.alphadevelopmentsolutions.data.tables.EventTable
 import com.alphadevelopmentsolutions.data.tables.TeamTable
+import com.alphadevelopmentsolutions.data.tables.YearTable
 import com.alphadevelopmentsolutions.extensions.toByteArray
 import com.alphadevelopmentsolutions.routes.Route
+import com.alphadevelopmentsolutions.scraper.models.Event
 import com.alphadevelopmentsolutions.scraper.models.SocialMedia
 import com.alphadevelopmentsolutions.scraper.models.Team
 import io.ktor.application.*
@@ -17,36 +21,43 @@ import io.ktor.client.request.*
 import io.ktor.http.*
 import io.ktor.response.*
 import io.ktor.routing.*
-import kotlinx.css.ins
+import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.joda.time.DateTime
 
 object Scraper : Route {
 
+    override val SUB_PATH: String
+        get() = "/scrape/"
+
+    private val client by lazy {
+        HttpClient(Apache) {
+            install(HttpTimeout) {
+            }
+
+            install(JsonFeature) {
+                serializer = GsonSerializer()
+            }
+
+            install(Logging) {
+                level = LogLevel.HEADERS
+            }
+
+            BrowserUserAgent()
+        }
+    }
+
     override fun createRoutes(routing: Routing) {
         routing {
             route(SUB_PATH) {
-                scrape(this)
+                teams(this)
+                events(this)
             }
         }
     }
 
-    private fun scrape(route: io.ktor.routing.Route) {
-        route.get("scrape") {
-            val client = HttpClient(Apache) {
-                install(HttpTimeout) {
-                }
-
-                install(JsonFeature) {
-                    serializer = GsonSerializer()
-                }
-
-                install(Logging) {
-                    level = LogLevel.HEADERS
-                }
-
-                BrowserUserAgent()
-            }
+    private fun teams(route: io.ktor.routing.Route) {
+        route.get("teams") {
 
             val teamList: MutableList<com.alphadevelopmentsolutions.data.models.Team> = mutableListOf()
             var response: List<Team>
@@ -117,6 +128,63 @@ object Scraper : Route {
                     TeamTable.upsert(
                         it
                     ) { TeamTable.number eq it.number }
+                }
+            }
+
+            call.respondText("Success", ContentType.Application.JavaScript)
+        }
+    }
+
+    private fun events(route: io.ktor.routing.Route) {
+        route.get("events") {
+
+            val eventList: MutableList<com.alphadevelopmentsolutions.data.models.Event> = mutableListOf()
+            val yearList: MutableList<Year> = mutableListOf()
+            var response: List<Event>
+
+            transaction {
+                YearTable.selectAll().map {
+                    yearList.add(YearTable.fromResultRow(it))
+                }
+            }
+
+            yearList.forEach { year ->
+                response =
+                    client.get {
+                        url("https://www.thebluealliance.com/api/v3/events/${year.number}?X-TBA-Auth-Key=${Credentials.TBA_KEY}")
+                        accept(ContentType.Application.Json)
+                        contentType(ContentType.Application.Json)
+                        header("X-TBA-Auth-Key", Credentials.TBA_KEY)
+                        userAgent("")
+                    }
+
+                response.forEach { jsonEvent ->
+                    eventList.add(
+                        com.alphadevelopmentsolutions.data.models.Event(
+                            Constants.UUID_GENERATOR.generate().toByteArray(),
+                            year.id,
+                            jsonEvent.code,
+                            jsonEvent.key,
+                            jsonEvent.venue,
+                            jsonEvent.name,
+                            jsonEvent.address,
+                            jsonEvent.city,
+                            jsonEvent.stateProvince,
+                            jsonEvent.country,
+                            jsonEvent.startTime,
+                            jsonEvent.endTime,
+                            jsonEvent.websiteUrl,
+                            DateTime()
+                        )
+                    )
+                }
+            }
+
+            transaction {
+                eventList.forEach { event ->
+                    EventTable.upsert(
+                        event
+                    ) { EventTable.key eq event.key }
                 }
             }
 
