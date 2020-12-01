@@ -1,9 +1,7 @@
 package com.alphadevelopmentsolutions.data.tables
 
 import com.alphadevelopmentsolutions.data.models.Event
-import org.jetbrains.exposed.sql.ResultRow
-import org.jetbrains.exposed.sql.insert
-import org.jetbrains.exposed.sql.update
+import org.jetbrains.exposed.sql.*
 
 object EventTable : ModifyableTable<Event>("events") {
     var yearId = binary("year_id", 16)
@@ -55,9 +53,8 @@ object EventTable : ModifyableTable<Event>("events") {
             it[lastModified] = obj.lastModified
         }
 
-    override fun update(obj: Event) =
-        update({ id eq obj.id }) {
-            it[id] = obj.id
+    override fun update(obj: Event, where: (SqlExpressionBuilder.() -> Op<Boolean>)?): Int =
+        update(where ?: { id eq obj.id }) {
             it[yearId] = obj.yearId
             it[code] = obj.code
             it[key] = obj.key

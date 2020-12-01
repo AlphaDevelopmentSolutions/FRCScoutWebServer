@@ -1,9 +1,7 @@
 package com.alphadevelopmentsolutions.data.tables
 
 import com.alphadevelopmentsolutions.data.models.ScoutCardInfo
-import org.jetbrains.exposed.sql.ResultRow
-import org.jetbrains.exposed.sql.insert
-import org.jetbrains.exposed.sql.update
+import org.jetbrains.exposed.sql.*
 
 object ScoutCardInfoTable : ModifyTrackedTable<ScoutCardInfo>("scout_card_info") {
     var matchId = binary("match_id", 16)
@@ -43,9 +41,8 @@ object ScoutCardInfoTable : ModifyTrackedTable<ScoutCardInfo>("scout_card_info")
             it[modifiedById] = obj.modifiedById
         }
 
-    override fun update(obj: ScoutCardInfo) =
-        update({ id eq obj.id }) {
-            it[id] = obj.id
+    override fun update(obj: ScoutCardInfo, where: (SqlExpressionBuilder.() -> Op<Boolean>)?): Int =
+        update(where ?: { id eq obj.id }) {
             it[matchId] = obj.matchId
             it[teamId] = obj.teamId
             it[keyId] = obj.keyId

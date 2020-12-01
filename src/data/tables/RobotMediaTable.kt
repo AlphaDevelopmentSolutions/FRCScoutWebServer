@@ -1,9 +1,7 @@
 package com.alphadevelopmentsolutions.data.tables
 
 import com.alphadevelopmentsolutions.data.models.RobotMedia
-import org.jetbrains.exposed.sql.ResultRow
-import org.jetbrains.exposed.sql.insert
-import org.jetbrains.exposed.sql.update
+import org.jetbrains.exposed.sql.*
 
 object RobotMediaTable : ModifyTrackedTable<RobotMedia>("robot_media") {
     var teamAccountId = binary("team_account_id", 16)
@@ -43,9 +41,8 @@ object RobotMediaTable : ModifyTrackedTable<RobotMedia>("robot_media") {
             it[modifiedById] = obj.modifiedById
         }
 
-    override fun update(obj: RobotMedia) =
-        update({ id eq obj.id }) {
-            it[id] = obj.id
+    override fun update(obj: RobotMedia, where: (SqlExpressionBuilder.() -> Op<Boolean>)?): Int =
+        update(where ?: { id eq obj.id }) {
             it[teamAccountId] = obj.teamAccountId
             it[eventId] = obj.eventId
             it[teamId] = obj.teamId

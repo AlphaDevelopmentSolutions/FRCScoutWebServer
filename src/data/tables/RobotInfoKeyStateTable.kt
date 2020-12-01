@@ -1,9 +1,7 @@
 package com.alphadevelopmentsolutions.data.tables
 
 import com.alphadevelopmentsolutions.data.models.RobotInfoKeyState
-import org.jetbrains.exposed.sql.ResultRow
-import org.jetbrains.exposed.sql.insert
-import org.jetbrains.exposed.sql.update
+import org.jetbrains.exposed.sql.*
 
 object RobotInfoKeyStateTable : ModifyTrackedTable<RobotInfoKeyState>("robot_info_key_states") {
     var teamAccountId = binary("team_account_id", 16)
@@ -37,9 +35,8 @@ object RobotInfoKeyStateTable : ModifyTrackedTable<RobotInfoKeyState>("robot_inf
             it[modifiedById] = obj.modifiedById
         }
 
-    override fun update(obj: RobotInfoKeyState) =
-        update({ id eq obj.id }) {
-            it[id] = obj.id
+    override fun update(obj: RobotInfoKeyState, where: (SqlExpressionBuilder.() -> Op<Boolean>)?): Int =
+        update(where ?: { id eq obj.id }) {
             it[teamAccountId] = obj.teamAccountId
             it[yearId] = obj.yearId
             it[name] = obj.name

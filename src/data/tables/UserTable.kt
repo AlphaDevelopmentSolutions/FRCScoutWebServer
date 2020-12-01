@@ -1,9 +1,8 @@
 package com.alphadevelopmentsolutions.data.tables
 
 import com.alphadevelopmentsolutions.data.models.User
-import org.jetbrains.exposed.sql.ResultRow
-import org.jetbrains.exposed.sql.insert
-import org.jetbrains.exposed.sql.update
+import org.jetbrains.exposed.sql.*
+import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 
 object UserTable : ModifyTrackedTable<User>("users") {
     var firstName = varchar("first_name", 30)
@@ -45,8 +44,8 @@ object UserTable : ModifyTrackedTable<User>("users") {
             it[modifiedById] = obj.modifiedById
         }
 
-    override fun update(obj: User) =
-        update({ UserTable.id eq obj.id }) {
+    override fun update(obj: User, where: (SqlExpressionBuilder.() -> Op<Boolean>)?): Int =
+        update(where ?: { UserRoleTable.id eq obj.id }) {
             it[firstName] = obj.firstName
             it[lastName] = obj.lastName
             it[email] = obj.email

@@ -1,9 +1,7 @@
 package com.alphadevelopmentsolutions.data.tables
 
 import com.alphadevelopmentsolutions.data.models.AuthToken
-import org.jetbrains.exposed.sql.ResultRow
-import org.jetbrains.exposed.sql.insert
-import org.jetbrains.exposed.sql.update
+import org.jetbrains.exposed.sql.*
 
 object AuthTokenTable : ByteArrayTable<AuthToken>("auth_tokens") {
     var userId = binary("user_id", 16)
@@ -20,16 +18,15 @@ object AuthTokenTable : ByteArrayTable<AuthToken>("auth_tokens") {
 
     override fun insert(obj: AuthToken) =
         insert {
-            it[userId] = obj.userId
             it[id] = obj.id
+            it[userId] = obj.userId
             it[ip] = obj.ip
             it[expires] = obj.expires
         }
 
-    override fun update(obj: AuthToken) =
-        update({ id eq obj.id }) {
+    override fun update(obj: AuthToken, where: (SqlExpressionBuilder.() -> Op<Boolean>)?): Int =
+        update(where ?: { id eq obj.id }) {
             it[userId] = obj.userId
-            it[id] = obj.id
             it[ip] = obj.ip
             it[expires] = obj.expires
         }

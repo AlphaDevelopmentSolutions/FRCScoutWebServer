@@ -1,9 +1,7 @@
 package com.alphadevelopmentsolutions.data.tables
 
 import com.alphadevelopmentsolutions.data.models.TeamAccount
-import org.jetbrains.exposed.sql.ResultRow
-import org.jetbrains.exposed.sql.insert
-import org.jetbrains.exposed.sql.update
+import org.jetbrains.exposed.sql.*
 
 object TeamAccountTable : ModifyTrackedTable<TeamAccount>("team_accounts") {
     var teamId = binary("team_id", 16)
@@ -52,9 +50,8 @@ object TeamAccountTable : ModifyTrackedTable<TeamAccount>("team_accounts") {
             it[modifiedById] = obj.modifiedById
         }
 
-    override fun update(obj: TeamAccount) =
-        update({ id eq obj.id }) {
-            it[id] = obj.id
+    override fun update(obj: TeamAccount, where: (SqlExpressionBuilder.() -> Op<Boolean>)?): Int =
+        update(where ?: { id eq obj.id }) {
             it[teamId] = obj.teamId
             it[name] = obj.name
             it[description] = obj.description

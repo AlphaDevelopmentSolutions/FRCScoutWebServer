@@ -1,9 +1,7 @@
 package com.alphadevelopmentsolutions.data.tables
 
 import com.alphadevelopmentsolutions.data.models.Match
-import org.jetbrains.exposed.sql.ResultRow
-import org.jetbrains.exposed.sql.insert
-import org.jetbrains.exposed.sql.update
+import org.jetbrains.exposed.sql.*
 
 object MatchTable : ModifyableTable<Match>("matches") {
     var eventId = binary("event_id", 16)
@@ -61,9 +59,8 @@ object MatchTable : ModifyableTable<Match>("matches") {
             it[lastModified] = obj.lastModified
         }
 
-    override fun update(obj: Match) =
-        update({ id eq obj.id }) {
-            it[id] = obj.id
+    override fun update(obj: Match, where: (SqlExpressionBuilder.() -> Op<Boolean>)?): Int =
+        update(where ?: { id eq obj.id }) {
             it[eventId] = obj.eventId
             it[key] = obj.key
             it[typeId] = obj.typeId

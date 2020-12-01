@@ -1,13 +1,11 @@
 package com.alphadevelopmentsolutions
 
+import com.alphadevelopmentsolutions.scraper.Scraper
 import com.alphadevelopmentsolutions.data.models.*
-import com.alphadevelopmentsolutions.data.tables.*
 import com.alphadevelopmentsolutions.extensions.toByteArray
 import com.alphadevelopmentsolutions.extensions.toIP
 import com.alphadevelopmentsolutions.extensions.toPassword
-import com.alphadevelopmentsolutions.extensions.toUUID
 import com.alphadevelopmentsolutions.routes.Api
-import com.alphadevelopmentsolutions.singletons.GsonInstance
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
 import io.ktor.application.*
@@ -29,10 +27,8 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.css.*
 import kotlinx.html.*
 import org.jetbrains.exposed.sql.Database
-import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.joda.time.DateTime
-import org.mindrot.jbcrypt.BCrypt
 import java.util.*
 
 fun main(args: Array<String>): Unit {
@@ -117,6 +113,7 @@ fun Application.module(testing: Boolean = false) {
 
     routing {
         Api.createRoutes(this)
+        Scraper.createRoutes(this)
 
         get("/test") {
 

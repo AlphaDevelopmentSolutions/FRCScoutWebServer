@@ -1,9 +1,7 @@
 package com.alphadevelopmentsolutions.data.tables
 
 import com.alphadevelopmentsolutions.data.models.ChecklistItemResult
-import org.jetbrains.exposed.sql.ResultRow
-import org.jetbrains.exposed.sql.insert
-import org.jetbrains.exposed.sql.update
+import org.jetbrains.exposed.sql.*
 
 object ChecklistItemResultTable : ModifyTrackedTable<ChecklistItemResult>("checklist_item_results") {
     var checklistItemId = binary("checklist_item_id", 16)
@@ -35,9 +33,8 @@ object ChecklistItemResultTable : ModifyTrackedTable<ChecklistItemResult>("check
             it[isPublic] = obj.isPublic
         }
 
-    override fun update(obj: ChecklistItemResult) =
-        update({ id eq obj.id }) {
-            it[id] = obj.id
+    override fun update(obj: ChecklistItemResult, where: (SqlExpressionBuilder.() -> Op<Boolean>)?): Int =
+        update(where ?: { id eq obj.id }) {
             it[checklistItemId] = obj.checklistItemId
             it[matchId] = obj.matchId
             it[status] = obj.status

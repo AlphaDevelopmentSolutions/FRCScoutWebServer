@@ -23,13 +23,14 @@ object Api : Route {
 
     override val SUB_PATH: String = "/api/"
 
-    fun createRoutes(routing: Routing) =
+    override fun createRoutes(routing: Routing) {
         routing {
             route(SUB_PATH) {
                 getData(this)
                 setData(this)
             }
         }
+    }
 
     private fun init(call: ApplicationCall): Credentials? {
         // Temporary GET variables

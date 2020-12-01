@@ -2,9 +2,7 @@ package com.alphadevelopmentsolutions.data.tables
 
 import com.alphadevelopmentsolutions.data.models.Team
 import kotlinx.html.attributesMapOf
-import org.jetbrains.exposed.sql.ResultRow
-import org.jetbrains.exposed.sql.insert
-import org.jetbrains.exposed.sql.update
+import org.jetbrains.exposed.sql.*
 
 object TeamTable : ModifyableTable<Team>("teams") {
     var number = integer("number")
@@ -56,9 +54,8 @@ object TeamTable : ModifyableTable<Team>("teams") {
             it[lastModified] = obj.lastModified
         }
 
-    override fun update(obj: Team) =
-        update({ id eq obj.id }) {
-            it[id] = obj.id
+    override fun update(obj: Team, where: (SqlExpressionBuilder.() -> Op<Boolean>)?): Int =
+        update(where ?: { id eq obj.id }) {
             it[number] = obj.number
             it[name] = obj.name
             it[city] = obj.city

@@ -1,9 +1,7 @@
 package com.alphadevelopmentsolutions.data.tables
 
 import com.alphadevelopmentsolutions.data.models.Report
-import org.jetbrains.exposed.sql.ResultRow
-import org.jetbrains.exposed.sql.insert
-import org.jetbrains.exposed.sql.update
+import org.jetbrains.exposed.sql.*
 
 object ReportTable : ModifyableTable<Report>("reports") {
     var recordId = binary("record_id", 16).nullable()
@@ -40,9 +38,8 @@ object ReportTable : ModifyableTable<Report>("reports") {
             it[lastModified] = obj.lastModified
         }
 
-    override fun update(obj: Report) =
-        update({ id eq obj.id }) {
-            it[id] = obj.id
+    override fun update(obj: Report, where: (SqlExpressionBuilder.() -> Op<Boolean>)?): Int =
+        update(where ?: { id eq obj.id }) {
             it[recordId] = obj.recordId
             it[comment] = obj.comment
             it[reporterId] = obj.reporterId

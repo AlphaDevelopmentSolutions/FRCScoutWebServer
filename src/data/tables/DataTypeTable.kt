@@ -1,9 +1,7 @@
 package com.alphadevelopmentsolutions.data.tables
 
 import com.alphadevelopmentsolutions.data.models.DataType
-import org.jetbrains.exposed.sql.ResultRow
-import org.jetbrains.exposed.sql.insert
-import org.jetbrains.exposed.sql.update
+import org.jetbrains.exposed.sql.*
 
 object DataTypeTable : ModifyTrackedTable<DataType>("data_types") {
     var name = varchar("name", 16)
@@ -40,9 +38,8 @@ object DataTypeTable : ModifyTrackedTable<DataType>("data_types") {
             it[modifiedById] = obj.modifiedById
         }
 
-    override fun update(obj: DataType) =
-        update({ id eq obj.id }) {
-            it[id] = obj.id
+    override fun update(obj: DataType, where: (SqlExpressionBuilder.() -> Op<Boolean>)?): Int =
+        update(where ?: { id eq obj.id }) {
             it[name] = obj.name
             it[canMax] = obj.canMax
             it[canMin] = obj.canMin

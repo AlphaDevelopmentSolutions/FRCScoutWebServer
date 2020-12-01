@@ -2,9 +2,7 @@ package com.alphadevelopmentsolutions.data.tables
 
 import com.alphadevelopmentsolutions.data.models.UserTeamAccountList
 import com.google.gson.annotations.SerializedName
-import org.jetbrains.exposed.sql.ResultRow
-import org.jetbrains.exposed.sql.insert
-import org.jetbrains.exposed.sql.update
+import org.jetbrains.exposed.sql.*
 
 object UserTeamAccountListTable : ModifyTrackedTable<UserTeamAccountList>("user_team_account_list") {
     var userId = binary("user_id", 16)
@@ -35,9 +33,8 @@ object UserTeamAccountListTable : ModifyTrackedTable<UserTeamAccountList>("user_
             it[modifiedById] = obj.modifiedById
         }
 
-    override fun update(obj: UserTeamAccountList) =
-        update({ id eq obj.id }) {
-            it[id] = obj.id
+    override fun update(obj: UserTeamAccountList, where: (SqlExpressionBuilder.() -> Op<Boolean>)?): Int =
+        update(where ?: { id eq obj.id }) {
             it[userId] = obj.userId
             it[teamAccountId] = obj.teamAccountId
             it[state] = obj.state

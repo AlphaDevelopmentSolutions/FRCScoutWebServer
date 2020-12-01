@@ -1,9 +1,7 @@
 package com.alphadevelopmentsolutions.data.tables
 
 import com.alphadevelopmentsolutions.data.models.PasswordReset
-import org.jetbrains.exposed.sql.ResultRow
-import org.jetbrains.exposed.sql.insert
-import org.jetbrains.exposed.sql.update
+import org.jetbrains.exposed.sql.*
 
 object PasswordResetTable : ByteArrayTable<PasswordReset>("password_resets") {
     var userId = binary("user_id", 16)
@@ -29,9 +27,8 @@ object PasswordResetTable : ByteArrayTable<PasswordReset>("password_resets") {
             it[createdDate] = obj.createdDate
         }
 
-    override fun update(obj: PasswordReset) =
-        update({ id eq obj.id }) {
-            it[id] = obj.id
+    override fun update(obj: PasswordReset, where: (SqlExpressionBuilder.() -> Op<Boolean>)?): Int =
+        update(where ?: { id eq obj.id }) {
             it[userId] = obj.userId
             it[expires] = obj.expires
             it[isUsed] = obj.isUsed

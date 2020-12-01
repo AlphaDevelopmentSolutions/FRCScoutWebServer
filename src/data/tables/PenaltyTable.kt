@@ -1,9 +1,7 @@
 package com.alphadevelopmentsolutions.data.tables
 
 import com.alphadevelopmentsolutions.data.models.Penalty
-import org.jetbrains.exposed.sql.ResultRow
-import org.jetbrains.exposed.sql.insert
-import org.jetbrains.exposed.sql.update
+import org.jetbrains.exposed.sql.*
 
 object PenaltyTable : ByteArrayTable<Penalty>("penalties") {
     var failedLoginAttemptCount = integer("failed_login_attempt_count")
@@ -26,9 +24,8 @@ object PenaltyTable : ByteArrayTable<Penalty>("penalties") {
             it[penaltyDuration] = obj.penaltyDuration
         }
 
-    override fun update(obj: Penalty) =
-        update({ id eq obj.id }) {
-            it[id] = obj.id
+    override fun update(obj: Penalty, where: (SqlExpressionBuilder.() -> Op<Boolean>)?): Int =
+        update(where ?: { id eq obj.id }) {
             it[failedLoginAttemptCount] = obj.failedLoginAttemptCount
             it[withinDuration] = obj.withinDuration
             it[penaltyDuration] = obj.penaltyDuration

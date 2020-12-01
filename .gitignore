@@ -6,3 +6,6 @@ build/*
 build
 .gradle
 .gradle/*
+
+Credentials.kt
+src/Credentials.kt
