@@ -6,7 +6,7 @@ import org.jetbrains.exposed.sql.ResultRow
 import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.update
 
-object TeamTable : ModifyTrackedTable<Team>("teams") {
+object TeamTable : ModifyableTable<Team>("teams") {
     var number = integer("number")
     var name = varchar("name", 300)
     var city = varchar("city", 200).nullable()
@@ -35,10 +35,7 @@ object TeamTable : ModifyTrackedTable<Team>("teams") {
             resultRow[youtubeUrl],
             resultRow[websiteUrl],
             resultRow[avatarUri],
-            resultRow[deletedDate],
-            resultRow[deletedById],
-            resultRow[lastModified],
-            resultRow[modifiedById]
+            resultRow[lastModified]
         )
 
     override fun insert(obj: Team) =
@@ -56,10 +53,7 @@ object TeamTable : ModifyTrackedTable<Team>("teams") {
             it[youtubeUrl] = obj.youtubeUrl
             it[websiteUrl] = obj.websiteUrl
             it[avatarUri] = obj.avatarUri
-            it[deletedDate] = obj.deletedDate
-            it[deletedById] = obj.deletedById
             it[lastModified] = obj.lastModified
-            it[modifiedById] = obj.modifiedById
         }
 
     override fun update(obj: Team) =
@@ -77,9 +71,6 @@ object TeamTable : ModifyTrackedTable<Team>("teams") {
             it[youtubeUrl] = obj.youtubeUrl
             it[websiteUrl] = obj.websiteUrl
             it[avatarUri] = obj.avatarUri
-            it[deletedDate] = obj.deletedDate
-            it[deletedById] = obj.deletedById
             it[lastModified] = obj.lastModified
-            it[modifiedById] = obj.modifiedById
         }
 }

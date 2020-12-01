@@ -11,7 +11,7 @@ import org.jetbrains.exposed.sql.update
 object ApiAccessLogTable : ByteArrayTable<ApiAccessLog>("api_access_logs") {
     var endpoint = varchar("endpoint", 45)
     var ip = integer("ip")
-    var userAgent = varchar("user_agent", 100)
+    var userAgent = varchar("user_agent", 200)
     var time = datetime("time")
     var userTeamAccountListId = binary("user_team_account_list_id", 16).nullable()
     var authTokenId = binary("auth_token_id", 16).nullable()

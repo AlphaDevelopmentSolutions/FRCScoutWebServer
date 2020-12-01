@@ -15,6 +15,8 @@ object GsonInstance {
                 GsonBuilder()
                     .registerTypeAdapter(ByteArray::class.java, ByteArraySerializer())
                     .registerTypeAdapter(DateTime::class.java, DateTimeSerializer())
+                    .serializeNulls()
+                    .disableHtmlEscaping()
                     .create()
 
             INSTANCE = tempInstance

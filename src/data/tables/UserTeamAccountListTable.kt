@@ -9,7 +9,7 @@ import org.jetbrains.exposed.sql.update
 object UserTeamAccountListTable : ModifyTrackedTable<UserTeamAccountList>("user_team_account_list") {
     var userId = binary("user_id", 16)
     var teamAccountId = binary("team_account_id", 16)
-    var state = customEnumeration("state", "ENUM('ENABLED', 'DISABLED')", { UserTeamAccountList.Companion.State.valueOf(it as String) }, { it.name })
+    var state = customEnumeration("state", "ENUM('ENABLED', 'DISABLED')", { UserTeamAccountList.Companion.State.valueOf(it as String) }, { it.name }).nullable()
 
     override fun fromResultRow(resultRow: ResultRow) =
         UserTeamAccountList(

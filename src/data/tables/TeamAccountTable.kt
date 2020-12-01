@@ -12,8 +12,8 @@ object TeamAccountTable : ModifyTrackedTable<TeamAccount>("team_accounts") {
     var username = varchar("username", 45)
     var ownerId = binary("owner_id", 16)
     var avatarUri = varchar("avatar_uri", 100).nullable()
-    var primaryColor = varchar("primary_color", 7)
-    var accentColor = varchar("accent_color", 7)
+    var primaryColor = varchar("primary_color", 7).nullable()
+    var accentColor = varchar("accent_color", 7).nullable()
     var createdDate = datetime("created_date")
 
     override fun fromResultRow(resultRow: ResultRow) =

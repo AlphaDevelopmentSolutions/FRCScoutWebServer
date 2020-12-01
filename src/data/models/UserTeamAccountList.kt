@@ -9,7 +9,7 @@ class UserTeamAccountList(
     @Transient override var id: ByteArray,
     @SerializedName("user_id") val userId: ByteArray,
     @SerializedName("team_account_id") val teamAccountId: ByteArray,
-    @SerializedName("state") val state: State,
+    @SerializedName("state") val state: State?,
     @Transient override val deletedDate: DateTime?,
     @Transient override val deletedById: ByteArray?,
     @Transient override val lastModified: DateTime,

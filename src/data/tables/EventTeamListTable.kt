@@ -6,7 +6,7 @@ import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.update
 
 object EventTeamListTable : ModifyableTable<EventTeamList>("event_team_list") {
-    var teamId = binary("team_account", 16)
+    var teamId = binary("team_id", 16)
     var eventId = binary("event_id", 16)
 
     override fun fromResultRow(resultRow: ResultRow) =

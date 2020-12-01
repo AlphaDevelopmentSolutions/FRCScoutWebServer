@@ -17,11 +17,8 @@ class Team(
     @SerializedName("youtube_url") val youtubeUrl: String?,
     @SerializedName("website_url") val websiteUrl: String?,
     @SerializedName("avatar_uri") val avatarUri: String?,
-    @Transient override val deletedDate: DateTime?,
-    @Transient override val deletedById: ByteArray?,
-    @Transient override val lastModified: DateTime,
-    @Transient override val modifiedById: ByteArray
-) : ModifyTrackedTable(id, deletedDate, deletedById, lastModified, modifiedById) {
+    @Transient override val lastModified: DateTime
+) : ModifyableTable(id, lastModified) {
     override fun toString() =
         name
 }
