@@ -6,6 +6,7 @@ import com.alphadevelopmentsolutions.extensions.toByteArray
 import com.alphadevelopmentsolutions.extensions.toIP
 import com.alphadevelopmentsolutions.extensions.toPassword
 import com.alphadevelopmentsolutions.routes.Api
+import com.alphadevelopmentsolutions.routes.Setup
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
 import io.ktor.application.*
@@ -114,96 +115,7 @@ fun Application.module(testing: Boolean = false) {
     routing {
         Api.createRoutes(this)
         Scraper.createRoutes(this)
-
-        get("/test") {
-
-            val newUser =
-                User(
-                    UUID.fromString("593e565a-32bc-11eb-b2e1-5c80b67a2786").toByteArray(),
-                    "Griffin",
-                    "Sorrentino",
-                    "griffinsorrentino@gmail.com",
-                    "griffinsorrentino",
-                    "test description",
-                    "testuri",
-                    null,
-                    null,
-                    DateTime(),
-                    ByteArray(0)
-                ).apply {
-                    password = "testingpassword123".toPassword()
-                }
-
-            val authToken =
-                AuthToken(
-                    Constants.UUID_GENERATOR.generate().toByteArray(),
-                    newUser.id,
-                    "127.0.0.1".toIP() ?: 0,
-                    DateTime(System.currentTimeMillis())
-                )
-
-            val team =
-                Team(
-                    Constants.UUID_GENERATOR.generate().toByteArray(),
-                    5885,
-                    "Villanova Wiredcats",
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
-                    DateTime()
-                )
-
-            val teamAccount =
-                TeamAccount(
-                    Constants.UUID_GENERATOR.generate().toByteArray(),
-                    team.id,
-                    "Villanova Team Account",
-                    null,
-                    "wiredcats",
-                    newUser.id,
-                    null,
-                    null,
-                    null,
-                    DateTime(),
-                    null,
-                    null,
-                    DateTime(),
-                    newUser.id
-                )
-
-            val userTeamAccountList =
-                UserTeamAccountList(
-                    Constants.UUID_GENERATOR.generate().toByteArray(),
-                    newUser.id,
-                    teamAccount.id,
-                    UserTeamAccountList.Companion.State.ENABLED,
-                    null,
-                    null,
-                    DateTime(),
-                    newUser.id
-                )
-
-            transaction {
-                exec("SET FOREIGN_KEY_CHECKS=0;")
-            }
-
-            transaction {
-//                UserTable.upsert(newUser)
-//                AuthTokenTable.upsert(authToken)
-//                TeamTable.upsert(team)
-//                TeamAccountTable.upsert(teamAccount)
-//                UserTeamAccountListTable.upsert(userTeamAccountList)
-            }
-
-            call.respondText(newUser.toJson(), ContentType.Application.Json)
-        }
+        Setup.createRoutes(this)
 
         get("/html-dsl") {
             call.respondHtml {
