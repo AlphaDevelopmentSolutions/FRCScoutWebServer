@@ -45,7 +45,7 @@ object UserTable : ModifyTrackedTable<User>("users") {
         }
 
     override fun update(obj: User, where: (SqlExpressionBuilder.() -> Op<Boolean>)?): Int =
-        update(where ?: { UserRoleTable.id eq obj.id }) {
+        update(where ?: { id eq obj.id }) {
             it[firstName] = obj.firstName
             it[lastName] = obj.lastName
             it[email] = obj.email

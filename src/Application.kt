@@ -51,7 +51,7 @@ fun main(args: Array<String>): Unit {
 
 @Suppress("unused") // Referenced in application.conf
 @kotlin.jvm.JvmOverloads
-fun Application.module(testing: Boolean = false) {
+fun Application.module(testing: Boolean = true) {
     install(Compression) {
         gzip {
             priority = 1.0
@@ -115,7 +115,9 @@ fun Application.module(testing: Boolean = false) {
     routing {
         Api.createRoutes(this)
         Scraper.createRoutes(this)
-        Setup.createRoutes(this)
+
+        if (testing)
+            Setup.createRoutes(this)
 
         get("/html-dsl") {
             call.respondHtml {

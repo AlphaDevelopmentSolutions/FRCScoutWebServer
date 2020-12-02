@@ -4,7 +4,7 @@ import com.alphadevelopmentsolutions.data.models.MatchType
 import org.jetbrains.exposed.sql.*
 
 object MatchTypeTable : ModifyableTable<MatchType>("match_types") {
-    var key = varchar("key", 4)
+    var key = customEnumeration("key", "ENUM('qm', 'ef', 'qf', 'sf', 'f')", { MatchType.Key.valueOf(it as String) }, { it.name })
     var name = varchar("name", 45)
 
     override fun fromResultRow(resultRow: ResultRow) =
