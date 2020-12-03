@@ -1,23 +1,14 @@
 package com.alphadevelopmentsolutions.scraper
 
 import com.alphadevelopmentsolutions.Constants
-import com.alphadevelopmentsolutions.Credentials
 import com.alphadevelopmentsolutions.data.models.MatchType
 import com.alphadevelopmentsolutions.data.models.Year
 import com.alphadevelopmentsolutions.data.tables.*
 import com.alphadevelopmentsolutions.extensions.toByteArray
 import com.alphadevelopmentsolutions.routes.Route
-import com.alphadevelopmentsolutions.scraper.models.Match
 import com.alphadevelopmentsolutions.scraper.models.SocialMedia
-import com.alphadevelopmentsolutions.scraper.models.Team
 import com.alphadevelopmentsolutions.singletons.ScraperInstance
 import io.ktor.application.*
-import io.ktor.client.*
-import io.ktor.client.engine.apache.*
-import io.ktor.client.features.*
-import io.ktor.client.features.json.*
-import io.ktor.client.features.logging.*
-import io.ktor.client.request.*
 import io.ktor.http.*
 import io.ktor.response.*
 import io.ktor.routing.*
@@ -34,14 +25,14 @@ object Scraper : Route {
     override fun createRoutes(routing: Routing) {
         routing {
             route(SUB_PATH) {
-                teams(this)
-                events(this)
-                matches(this)
+                scrapeTeams(this)
+                scrapeEvents(this)
+                scrapeMatches(this)
             }
         }
     }
 
-    private fun teams(route: io.ktor.routing.Route) {
+    private fun scrapeTeams(route: io.ktor.routing.Route) {
         route.get("teams") {
 
             val teamList: MutableList<com.alphadevelopmentsolutions.data.models.Team> = mutableListOf()
@@ -117,7 +108,7 @@ object Scraper : Route {
         }
     }
 
-    private fun events(route: io.ktor.routing.Route) {
+    private fun scrapeEvents(route: io.ktor.routing.Route) {
         route.get("events") {
 
             val eventList: MutableList<com.alphadevelopmentsolutions.data.models.Event> = mutableListOf()
@@ -168,7 +159,7 @@ object Scraper : Route {
         }
     }
 
-    private fun matches(route: io.ktor.routing.Route) {
+    private fun scrapeMatches(route: io.ktor.routing.Route) {
         route.get("matches") {
 
             val matchList: MutableList<com.alphadevelopmentsolutions.data.models.Match> = mutableListOf()
