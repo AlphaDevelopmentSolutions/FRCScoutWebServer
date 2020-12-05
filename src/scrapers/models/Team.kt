@@ -1,4 +1,4 @@
-package com.alphadevelopmentsolutions.scraper.models
+package com.alphadevelopmentsolutions.scrapers.models
 
 import com.google.gson.annotations.SerializedName
 import org.joda.time.DateTime

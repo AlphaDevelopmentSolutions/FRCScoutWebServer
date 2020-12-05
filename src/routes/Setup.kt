@@ -114,7 +114,7 @@ object Setup : Route {
                     Year(
                         Constants.UUID_GENERATOR.generate().toByteArray(),
                         2018,
-                        "test year 2018",
+                        "FIRST Power Up",
                         null,
                         null,
                         null,
@@ -125,7 +125,7 @@ object Setup : Route {
                     Year(
                         Constants.UUID_GENERATOR.generate().toByteArray(),
                         2019,
-                        "test year 2018",
+                        "Destination: Deep Space",
                         null,
                         null,
                         null,
@@ -136,7 +136,7 @@ object Setup : Route {
                     Year(
                         Constants.UUID_GENERATOR.generate().toByteArray(),
                         2020,
-                        "test year 2018",
+                        "Infinite Recharge",
                         null,
                         null,
                         null,

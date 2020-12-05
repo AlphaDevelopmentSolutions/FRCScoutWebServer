@@ -1,10 +1,10 @@
 package com.alphadevelopmentsolutions.singletons
 
 import com.alphadevelopmentsolutions.Credentials
-import com.alphadevelopmentsolutions.scraper.models.Event
-import com.alphadevelopmentsolutions.scraper.models.Match
-import com.alphadevelopmentsolutions.scraper.models.SocialMedia
-import com.alphadevelopmentsolutions.scraper.models.Team
+import com.alphadevelopmentsolutions.scrapers.models.Event
+import com.alphadevelopmentsolutions.scrapers.models.Match
+import com.alphadevelopmentsolutions.scrapers.models.SocialMedia
+import com.alphadevelopmentsolutions.scrapers.models.Team
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.Response

@@ -24,6 +24,7 @@ import io.ktor.http.*
 import io.ktor.http.content.*
 import io.ktor.response.*
 import io.ktor.routing.*
+import io.ktor.sessions.*
 import kotlinx.coroutines.runBlocking
 import kotlinx.css.*
 import kotlinx.html.*
@@ -38,8 +39,8 @@ fun main(args: Array<String>): Unit {
             HikariConfig().apply {
                 jdbcUrl = "jdbc:mysql://localhost/app"
                 driverClassName = "com.mysql.cj.jdbc.Driver"
-                username = "testuser"
-                password = "password"
+                username = "root"
+                password = "root"
                 maximumPoolSize = 10
             }
 

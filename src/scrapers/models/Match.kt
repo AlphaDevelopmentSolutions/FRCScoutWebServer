@@ -1,7 +1,6 @@
-package com.alphadevelopmentsolutions.scraper.models
+package com.alphadevelopmentsolutions.scrapers.models
 
 import com.google.gson.annotations.SerializedName
-import org.joda.time.DateTime
 
 class Match(
     @SerializedName("key") val key: String,

@@ -1,5 +1,6 @@
-package com.alphadevelopmentsolutions.scraper.models
+package com.alphadevelopmentsolutions.scrapers.models
 
+import com.alphadevelopmentsolutions.scrapers.models.Alliance
 import com.google.gson.annotations.SerializedName
 
 class Alliances(

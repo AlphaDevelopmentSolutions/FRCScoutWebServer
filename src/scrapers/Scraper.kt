@@ -6,14 +6,14 @@ import com.alphadevelopmentsolutions.data.models.Year
 import com.alphadevelopmentsolutions.data.tables.*
 import com.alphadevelopmentsolutions.extensions.toByteArray
 import com.alphadevelopmentsolutions.routes.Route
-import com.alphadevelopmentsolutions.scraper.models.SocialMedia
+import com.alphadevelopmentsolutions.scrapers.models.SocialMedia
 import com.alphadevelopmentsolutions.singletons.ScraperInstance
 import io.ktor.application.*
 import io.ktor.http.*
 import io.ktor.response.*
 import io.ktor.routing.*
-import org.jetbrains.exposed.sql.select
-import org.jetbrains.exposed.sql.selectAll
+import org.jetbrains.exposed.sql.*
+import org.jetbrains.exposed.sql.transactions.TransactionManager
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.joda.time.DateTime
 
@@ -47,12 +47,13 @@ object Scraper : Route {
 
                         var socialMediaList: List<SocialMedia> = listOf()
 
-                        val socialMediaResponse = ScraperInstance.getInstance().getSocialMedia(jsonTeam.key).execute()
-                        if (socialMediaResponse.isSuccessful) {
-                            socialMediaResponse.body()?.let { tempList ->
-                                socialMediaList = tempList
-                            }
-                        }
+                        // Temp disabled to speed up scraping
+//                        val socialMediaResponse = ScraperInstance.getInstance().getSocialMedia(jsonTeam.key).execute()
+//                        if (socialMediaResponse.isSuccessful) {
+//                            socialMediaResponse.body()?.let { tempList ->
+//                                socialMediaList = tempList
+//                            }
+//                        }
 
                         var facebookUrl: String? = null
                         var instagramUrl: String? = null
@@ -167,7 +168,12 @@ object Scraper : Route {
             val matchTypeList: MutableList<MatchType> = mutableListOf()
 
             transaction {
-                EventTable.selectAll().map {
+                EventTable
+                    .leftJoin(YearTable, { YearTable.id }, { EventTable.yearId })
+                    .select {
+                        YearTable.number eq 2019
+                    }
+                    .map {
                     eventList.add(EventTable.fromResultRow(it))
                 }
 
@@ -190,29 +196,48 @@ object Scraper : Route {
 
 
                         transaction {
+                            var blueAllianceTeamOneKey = ""
+                            var blueAllianceTeamTwoKey = ""
+                            var blueAllianceTeamThreeKey = ""
+                            var redAllianceTeamOneKey = ""
+                            var redAllianceTeamTwoKey = ""
+                            var redAllianceTeamThreeKey = ""
+
                             jsonMatch.alliances.blueAlliance.teamKeys.forEachIndexed { index, teamKey ->
-                                TeamTable
-                                    .slice(TeamTable.id)
-                                    .select { TeamTable.key eq teamKey }.map {
-                                        when (index) {
-                                            0 -> blueAllianceTeamOneId = it[TeamTable.id]
-                                            1 -> blueAllianceTeamTwoId = it[TeamTable.id]
-                                            2 -> blueAllianceTeamThreeId = it[TeamTable.id]
-                                        }
-                                    }
+                                when (index) {
+                                    0 -> blueAllianceTeamOneKey = teamKey
+                                    1 -> blueAllianceTeamTwoKey = teamKey
+                                    2 -> blueAllianceTeamThreeKey = teamKey
+                                }
                             }
 
                             jsonMatch.alliances.redAlliance.teamKeys.forEachIndexed { index, teamKey ->
-                                TeamTable
-                                    .slice(TeamTable.id)
-                                    .select { TeamTable.key eq teamKey }.map {
-                                        when (index) {
-                                            0 -> redAllianceTeamOneId = it[TeamTable.id]
-                                            1 -> redAllianceTeamTwoId = it[TeamTable.id]
-                                            2 -> redAllianceTeamThreeId = it[TeamTable.id]
-                                        }
-                                    }
+                                when (index) {
+                                    0 -> redAllianceTeamOneKey = teamKey
+                                    1 -> redAllianceTeamTwoKey = teamKey
+                                    2 -> redAllianceTeamThreeKey = teamKey
+                                }
                             }
+                            
+                            TeamTable
+                                .slice(TeamTable.id, TeamTable.key)
+                                .select {
+                                    (TeamTable.key eq blueAllianceTeamOneKey) or
+                                            (TeamTable.key eq blueAllianceTeamTwoKey) or 
+                                            (TeamTable.key eq blueAllianceTeamThreeKey) or 
+                                            (TeamTable.key eq redAllianceTeamOneKey) or 
+                                            (TeamTable.key eq redAllianceTeamTwoKey) or 
+                                            (TeamTable.key eq redAllianceTeamThreeKey)
+                                }.map {
+                                    when (it[TeamTable.key]) {
+                                        blueAllianceTeamOneKey -> blueAllianceTeamOneId = it[TeamTable.id]   
+                                        blueAllianceTeamTwoKey -> blueAllianceTeamTwoId = it[TeamTable.id]
+                                        blueAllianceTeamThreeKey -> blueAllianceTeamThreeId = it[TeamTable.id]
+                                        redAllianceTeamOneKey -> redAllianceTeamOneId = it[TeamTable.id]   
+                                        redAllianceTeamTwoKey -> redAllianceTeamTwoId = it[TeamTable.id]
+                                        redAllianceTeamThreeKey -> redAllianceTeamThreeId = it[TeamTable.id]
+                                    }
+                                }
                         }
 
                         if (
@@ -228,7 +253,7 @@ object Scraper : Route {
                                 var matchType: MatchType? = null
 
                                 matchTypeList.forEach { matchTypeCandidate ->
-                                    if (compLevel.name.equals(matchTypeCandidate.name, ignoreCase = true))
+                                    if (compLevel.name.equals(matchTypeCandidate.key.name, ignoreCase = true))
                                         matchType = matchTypeCandidate
                                 }
 

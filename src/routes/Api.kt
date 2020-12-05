@@ -40,15 +40,14 @@ object Api : Route {
 
         val request = call.request
         val origin = request.origin
-        val params = call.receiveParameters()
 
         val token =
-            params["token"]?.let {
+            request.cookies["token"]?.let {
                 UUID.fromString(it).toByteArray()
             }
 
         val lastModified: DateTime =
-            params["since"].let {
+            request.cookies["since"].let {
                 if (it != null) {
                     val formatter = SimpleDateFormat()
                     formatter.applyPattern("yyyy-MM-dd HH:mm:ss")
@@ -103,7 +102,9 @@ object Api : Route {
             }
         }
 
-        call.respond(HttpStatusCode.Unauthorized)
+        if (credentials == null)
+            call.respond(HttpStatusCode.Unauthorized)
+
 
         return credentials
     }
@@ -113,248 +114,246 @@ object Api : Route {
      */
     private fun getData(route: io.ktor.routing.Route) =
         route.post("get") {
-            withContext(Dispatchers.IO) {
-                val credentials = init(call) ?: return@withContext
+            val credentials = init(call) ?: return@post
 
-                val checklistItemList = mutableListOf<ChecklistItem>()
-                val checklistItemResultList = mutableListOf<ChecklistItemResult>()
-                val dataTypeList = mutableListOf<DataType>()
-                val eventList = mutableListOf<Event>()
-                val eventTeamListList = mutableListOf<EventTeamList>()
-                val matchList = mutableListOf<Match>()
-                val matchTypeList = mutableListOf<MatchType>()
-                val robotInfoList = mutableListOf<RobotInfo>()
-                val robotInfoKeyList = mutableListOf<RobotInfoKey>()
-                val robotInfoKeyStateList = mutableListOf<RobotInfoKeyState>()
-                val robotMediaList = mutableListOf<RobotMedia>()
-                val roleList = mutableListOf<Role>()
-                val scoutCardInfoList = mutableListOf<ScoutCardInfo>()
-                val scoutCardInfoKeyList = mutableListOf<ScoutCardInfoKey>()
-                val scoutCardInfoKeyStateList = mutableListOf<ScoutCardInfoKeyState>()
-                val teamList = mutableListOf<Team>()
-                val userList = mutableListOf<User>()
-                val userRoleList = mutableListOf<UserRole>()
-                val userTeamAccountListList = mutableListOf<UserTeamAccountList>()
-                val yearList = mutableListOf<Year>()
+            val checklistItemList = mutableListOf<ChecklistItem>()
+            val checklistItemResultList = mutableListOf<ChecklistItemResult>()
+            val dataTypeList = mutableListOf<DataType>()
+            val eventList = mutableListOf<Event>()
+            val eventTeamListList = mutableListOf<EventTeamList>()
+            val matchList = mutableListOf<Match>()
+            val matchTypeList = mutableListOf<MatchType>()
+            val robotInfoList = mutableListOf<RobotInfo>()
+            val robotInfoKeyList = mutableListOf<RobotInfoKey>()
+            val robotInfoKeyStateList = mutableListOf<RobotInfoKeyState>()
+            val robotMediaList = mutableListOf<RobotMedia>()
+            val roleList = mutableListOf<Role>()
+            val scoutCardInfoList = mutableListOf<ScoutCardInfo>()
+            val scoutCardInfoKeyList = mutableListOf<ScoutCardInfoKey>()
+            val scoutCardInfoKeyStateList = mutableListOf<ScoutCardInfoKeyState>()
+            val teamList = mutableListOf<Team>()
+            val userList = mutableListOf<User>()
+            val userRoleList = mutableListOf<UserRole>()
+            val userTeamAccountListList = mutableListOf<UserTeamAccountList>()
+            val yearList = mutableListOf<Year>()
 
-                val teamAccountIdList: MutableList<ByteArray> = mutableListOf()
+            val teamAccountIdList: MutableList<ByteArray> = mutableListOf()
 
-                credentials.teamAccountList.forEach {
-                    teamAccountIdList.add(it.id)
-                }
-
-                transaction {
-                    ChecklistItemTable
-                        .select {
-                            (ChecklistItemTable.teamAccountId inList teamAccountIdList) and
-                                    (ChecklistItemTable.lastModified greater credentials.lastModified)
-                        }
-                        .map {
-                            checklistItemList.add(ChecklistItemTable.fromResultRow(it))
-                        }
-
-                    ChecklistItemResultTable
-                        .leftJoin(ChecklistItemTable, { checklistItemId }, { ChecklistItemTable.id })
-                        .select {
-                            (ChecklistItemTable.teamAccountId inList teamAccountIdList) and
-                                    (ChecklistItemResultTable.lastModified greater credentials.lastModified)
-                        }
-                        .map {
-                            checklistItemResultList.add(ChecklistItemResultTable.fromResultRow(it))
-                        }
-
-                    DataTypeTable
-                        .select { DataTypeTable.lastModified greater credentials.lastModified }
-                        .map {
-                            dataTypeList.add(DataTypeTable.fromResultRow(it))
-                        }
-
-                    EventTable
-                        .select { EventTable.lastModified greater credentials.lastModified}
-                        .map {
-                            eventList.add(EventTable.fromResultRow(it))
-                        }
-
-                    EventTeamListTable
-                        .select { EventTeamListTable.lastModified greater credentials.lastModified }
-                        .map {
-                            eventTeamListList.add(EventTeamListTable.fromResultRow(it))
-                        }
-
-                    MatchTable
-                        .select { MatchTable.lastModified greater credentials.lastModified }
-                        .map {
-                            matchList.add(MatchTable.fromResultRow(it))
-                        }
-
-                    MatchTypeTable
-                        .select { MatchTypeTable.lastModified greater credentials.lastModified }
-                        .map {
-                            matchTypeList.add(MatchTypeTable.fromResultRow(it))
-                        }
-
-                    RobotInfoTable
-                        .leftJoin(RobotInfoKeyTable, { RobotInfoKeyTable.id }, { RobotInfoTable.keyId })
-                        .leftJoin(RobotInfoKeyStateTable, { RobotInfoKeyStateTable.id }, { RobotInfoKeyTable.stateId })
-                        .select {
-                            (RobotInfoKeyStateTable.teamAccountId inList teamAccountIdList) and
-                                    (RobotInfoTable.lastModified greater credentials.lastModified)
-                        }
-                        .map {
-                            robotInfoList.add(RobotInfoTable.fromResultRow(it))
-                        }
-
-                    RobotInfoKeyTable
-                        .leftJoin(RobotInfoKeyStateTable, { RobotInfoKeyStateTable.id }, { RobotInfoKeyTable.stateId })
-                        .select {
-                            (RobotInfoKeyStateTable.teamAccountId inList teamAccountIdList) and
-                                    (RobotInfoKeyTable.lastModified greater credentials.lastModified)
-                        }
-                        .map {
-                            robotInfoKeyList.add(RobotInfoKeyTable.fromResultRow(it))
-                        }
-
-                    RobotInfoKeyStateTable
-                        .select {
-                            (RobotInfoKeyStateTable.teamAccountId inList teamAccountIdList) and
-                                    (RobotInfoKeyStateTable.lastModified greater credentials.lastModified)
-                        }
-                        .map {
-                            robotInfoKeyStateList.add(RobotInfoKeyStateTable.fromResultRow(it))
-                        }
-
-                    RobotInfoKeyStateTable
-                        .select {
-                            (RobotInfoKeyStateTable.teamAccountId inList teamAccountIdList) and
-                                    (RobotInfoKeyStateTable.lastModified greater credentials.lastModified)
-                        }
-                        .map {
-                            robotInfoKeyStateList.add(RobotInfoKeyStateTable.fromResultRow(it))
-                        }
-
-                    RoleTable
-                        .select {
-                            (RoleTable.teamAccountId inList teamAccountIdList) and
-                                    (RoleTable.lastModified greater credentials.lastModified)
-                        }
-                        .map {
-                            roleList.add(RoleTable.fromResultRow(it))
-                        }
-
-                    ScoutCardInfoTable
-                        .leftJoin(ScoutCardInfoKeyTable, { ScoutCardInfoKeyTable.id }, { ScoutCardInfoTable.keyId })
-                        .leftJoin(ScoutCardInfoKeyStateTable, { ScoutCardInfoKeyStateTable.id }, { ScoutCardInfoKeyTable.stateId })
-                        .select {
-                            (ScoutCardInfoKeyStateTable.teamAccountId inList teamAccountIdList) and
-                                    (ScoutCardInfoTable.lastModified greater credentials.lastModified)
-                        }
-                        .map {
-                            scoutCardInfoList.add(ScoutCardInfoTable.fromResultRow(it))
-                        }
-
-                    ScoutCardInfoKeyTable
-                        .leftJoin(ScoutCardInfoKeyStateTable, { ScoutCardInfoKeyStateTable.id }, { ScoutCardInfoKeyTable.stateId })
-                        .select {
-                            (ScoutCardInfoKeyStateTable.teamAccountId inList teamAccountIdList) and
-                                    (ScoutCardInfoKeyTable.lastModified greater credentials.lastModified)
-                        }
-                        .map {
-                            scoutCardInfoKeyList.add(ScoutCardInfoKeyTable.fromResultRow(it))
-                        }
-
-                    ScoutCardInfoKeyStateTable
-                        .select {
-                            (ScoutCardInfoKeyStateTable.teamAccountId inList teamAccountIdList) and
-                                    (ScoutCardInfoKeyStateTable.lastModified greater credentials.lastModified)
-                        }
-                        .map {
-                            scoutCardInfoKeyStateList.add(ScoutCardInfoKeyStateTable.fromResultRow(it))
-                        }
-
-                    TeamTable
-                        .select {
-                            TeamTable.lastModified greater credentials.lastModified
-                        }
-                        .map {
-                            teamList.add(TeamTable.fromResultRow(it))
-                        }
-
-                    UserTable
-                        .leftJoin(UserTeamAccountListTable, { UserTeamAccountListTable.userId }, { UserTable.id })
-                        .select {
-                            (UserTeamAccountListTable.teamAccountId inList teamAccountIdList) and
-                                    (UserTable.lastModified greater credentials.lastModified)
-                        }
-                        .map {
-                            userList.add(UserTable.fromResultRow(it))
-                        }
-
-                    UserRoleTable
-                        .leftJoin(UserTeamAccountListTable, { UserTeamAccountListTable.id }, { UserRoleTable.userTeamAccountListId })
-                        .select {
-                            (UserTeamAccountListTable.teamAccountId inList teamAccountIdList) and
-                                    (UserRoleTable.lastModified greater credentials.lastModified)
-                        }
-                        .map {
-                            userRoleList.add(UserRoleTable.fromResultRow(it))
-                        }
-
-                    UserTeamAccountListTable
-                        .select {
-                            (UserTeamAccountListTable.teamAccountId inList teamAccountIdList) and
-                                    (UserTeamAccountListTable.lastModified greater credentials.lastModified)
-                        }
-                        .map {
-                            userTeamAccountListList.add(UserTeamAccountListTable.fromResultRow(it))
-                        }
-
-                    YearTable
-                        .select {
-                            YearTable.lastModified greater credentials.lastModified
-                        }
-                        .map {
-                            yearList.add(YearTable.fromResultRow(it))
-                        }
-
-                }
-
-                val teamAccountList: MutableList<TeamAccount> = mutableListOf()
-
-                credentials.teamAccountList.forEach {
-                    if (it.lastModified > credentials.lastModified)
-                        teamAccountList.add(it)
-                }
-
-                val appData =
-                    AppData(
-                        checklistItemList,
-                        checklistItemResultList,
-                        dataTypeList,
-                        eventList,
-                        eventTeamListList,
-                        matchList,
-                        matchTypeList,
-                        robotInfoList,
-                        robotInfoKeyList,
-                        robotInfoKeyStateList,
-                        robotMediaList,
-                        roleList,
-                        scoutCardInfoList,
-                        scoutCardInfoKeyList,
-                        scoutCardInfoKeyStateList,
-                        teamList,
-                        teamAccountList,
-                        userList,
-                        userRoleList,
-                        userTeamAccountListList,
-                        yearList
-                    )
-
-                call.respondText(
-                    GsonInstance.getInstance().toJson(appData),
-                    ContentType.Application.Json
-                )
+            credentials.teamAccountList.forEach {
+                teamAccountIdList.add(it.id)
             }
+
+            transaction {
+                ChecklistItemTable
+                    .select {
+                        (ChecklistItemTable.teamAccountId inList teamAccountIdList) and
+                                (ChecklistItemTable.lastModified greater credentials.lastModified)
+                    }
+                    .map {
+                        checklistItemList.add(ChecklistItemTable.fromResultRow(it))
+                    }
+
+                ChecklistItemResultTable
+                    .leftJoin(ChecklistItemTable, { checklistItemId }, { ChecklistItemTable.id })
+                    .select {
+                        (ChecklistItemTable.teamAccountId inList teamAccountIdList) and
+                                (ChecklistItemResultTable.lastModified greater credentials.lastModified)
+                    }
+                    .map {
+                        checklistItemResultList.add(ChecklistItemResultTable.fromResultRow(it))
+                    }
+
+                DataTypeTable
+                    .select { DataTypeTable.lastModified greater credentials.lastModified }
+                    .map {
+                        dataTypeList.add(DataTypeTable.fromResultRow(it))
+                    }
+
+                EventTable
+                    .select { EventTable.lastModified greater credentials.lastModified}
+                    .map {
+                        eventList.add(EventTable.fromResultRow(it))
+                    }
+
+                EventTeamListTable
+                    .select { EventTeamListTable.lastModified greater credentials.lastModified }
+                    .map {
+                        eventTeamListList.add(EventTeamListTable.fromResultRow(it))
+                    }
+
+                MatchTable
+                    .select { MatchTable.lastModified greater credentials.lastModified }
+                    .map {
+                        matchList.add(MatchTable.fromResultRow(it))
+                    }
+
+                MatchTypeTable
+                    .select { MatchTypeTable.lastModified greater credentials.lastModified }
+                    .map {
+                        matchTypeList.add(MatchTypeTable.fromResultRow(it))
+                    }
+
+                RobotInfoTable
+                    .leftJoin(RobotInfoKeyTable, { RobotInfoKeyTable.id }, { RobotInfoTable.keyId })
+                    .leftJoin(RobotInfoKeyStateTable, { RobotInfoKeyStateTable.id }, { RobotInfoKeyTable.stateId })
+                    .select {
+                        (RobotInfoKeyStateTable.teamAccountId inList teamAccountIdList) and
+                                (RobotInfoTable.lastModified greater credentials.lastModified)
+                    }
+                    .map {
+                        robotInfoList.add(RobotInfoTable.fromResultRow(it))
+                    }
+
+                RobotInfoKeyTable
+                    .leftJoin(RobotInfoKeyStateTable, { RobotInfoKeyStateTable.id }, { RobotInfoKeyTable.stateId })
+                    .select {
+                        (RobotInfoKeyStateTable.teamAccountId inList teamAccountIdList) and
+                                (RobotInfoKeyTable.lastModified greater credentials.lastModified)
+                    }
+                    .map {
+                        robotInfoKeyList.add(RobotInfoKeyTable.fromResultRow(it))
+                    }
+
+                RobotInfoKeyStateTable
+                    .select {
+                        (RobotInfoKeyStateTable.teamAccountId inList teamAccountIdList) and
+                                (RobotInfoKeyStateTable.lastModified greater credentials.lastModified)
+                    }
+                    .map {
+                        robotInfoKeyStateList.add(RobotInfoKeyStateTable.fromResultRow(it))
+                    }
+
+                RobotInfoKeyStateTable
+                    .select {
+                        (RobotInfoKeyStateTable.teamAccountId inList teamAccountIdList) and
+                                (RobotInfoKeyStateTable.lastModified greater credentials.lastModified)
+                    }
+                    .map {
+                        robotInfoKeyStateList.add(RobotInfoKeyStateTable.fromResultRow(it))
+                    }
+
+                RoleTable
+                    .select {
+                        (RoleTable.teamAccountId inList teamAccountIdList) and
+                                (RoleTable.lastModified greater credentials.lastModified)
+                    }
+                    .map {
+                        roleList.add(RoleTable.fromResultRow(it))
+                    }
+
+                ScoutCardInfoTable
+                    .leftJoin(ScoutCardInfoKeyTable, { ScoutCardInfoKeyTable.id }, { ScoutCardInfoTable.keyId })
+                    .leftJoin(ScoutCardInfoKeyStateTable, { ScoutCardInfoKeyStateTable.id }, { ScoutCardInfoKeyTable.stateId })
+                    .select {
+                        (ScoutCardInfoKeyStateTable.teamAccountId inList teamAccountIdList) and
+                                (ScoutCardInfoTable.lastModified greater credentials.lastModified)
+                    }
+                    .map {
+                        scoutCardInfoList.add(ScoutCardInfoTable.fromResultRow(it))
+                    }
+
+                ScoutCardInfoKeyTable
+                    .leftJoin(ScoutCardInfoKeyStateTable, { ScoutCardInfoKeyStateTable.id }, { ScoutCardInfoKeyTable.stateId })
+                    .select {
+                        (ScoutCardInfoKeyStateTable.teamAccountId inList teamAccountIdList) and
+                                (ScoutCardInfoKeyTable.lastModified greater credentials.lastModified)
+                    }
+                    .map {
+                        scoutCardInfoKeyList.add(ScoutCardInfoKeyTable.fromResultRow(it))
+                    }
+
+                ScoutCardInfoKeyStateTable
+                    .select {
+                        (ScoutCardInfoKeyStateTable.teamAccountId inList teamAccountIdList) and
+                                (ScoutCardInfoKeyStateTable.lastModified greater credentials.lastModified)
+                    }
+                    .map {
+                        scoutCardInfoKeyStateList.add(ScoutCardInfoKeyStateTable.fromResultRow(it))
+                    }
+
+                TeamTable
+                    .select {
+                        TeamTable.lastModified greater credentials.lastModified
+                    }
+                    .map {
+                        teamList.add(TeamTable.fromResultRow(it))
+                    }
+
+                UserTable
+                    .leftJoin(UserTeamAccountListTable, { UserTeamAccountListTable.userId }, { UserTable.id })
+                    .select {
+                        (UserTeamAccountListTable.teamAccountId inList teamAccountIdList) and
+                                (UserTable.lastModified greater credentials.lastModified)
+                    }
+                    .map {
+                        userList.add(UserTable.fromResultRow(it))
+                    }
+
+                UserRoleTable
+                    .leftJoin(UserTeamAccountListTable, { UserTeamAccountListTable.id }, { UserRoleTable.userTeamAccountListId })
+                    .select {
+                        (UserTeamAccountListTable.teamAccountId inList teamAccountIdList) and
+                                (UserRoleTable.lastModified greater credentials.lastModified)
+                    }
+                    .map {
+                        userRoleList.add(UserRoleTable.fromResultRow(it))
+                    }
+
+                UserTeamAccountListTable
+                    .select {
+                        (UserTeamAccountListTable.teamAccountId inList teamAccountIdList) and
+                                (UserTeamAccountListTable.lastModified greater credentials.lastModified)
+                    }
+                    .map {
+                        userTeamAccountListList.add(UserTeamAccountListTable.fromResultRow(it))
+                    }
+
+                YearTable
+                    .select {
+                        YearTable.lastModified greater credentials.lastModified
+                    }
+                    .map {
+                        yearList.add(YearTable.fromResultRow(it))
+                    }
+
+            }
+
+            val teamAccountList: MutableList<TeamAccount> = mutableListOf()
+
+            credentials.teamAccountList.forEach {
+                if (it.lastModified > credentials.lastModified)
+                    teamAccountList.add(it)
+            }
+
+            val appData =
+                AppData(
+                    checklistItemList,
+                    checklistItemResultList,
+                    dataTypeList,
+                    eventList,
+                    eventTeamListList,
+                    matchList,
+                    matchTypeList,
+                    robotInfoList,
+                    robotInfoKeyList,
+                    robotInfoKeyStateList,
+                    robotMediaList,
+                    roleList,
+                    scoutCardInfoList,
+                    scoutCardInfoKeyList,
+                    scoutCardInfoKeyStateList,
+                    teamList,
+                    teamAccountList,
+                    userList,
+                    userRoleList,
+                    userTeamAccountListList,
+                    yearList
+                )
+
+            call.respondText(
+                GsonInstance.getInstance().toJson(appData),
+                ContentType.Application.Json
+            )
         }
 
     private fun setData(route: io.ktor.routing.Route) =
